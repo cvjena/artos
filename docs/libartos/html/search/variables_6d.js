@@ -41,7 +41,7 @@ var searchData=
   ['m_5fverbose',['m_verbose',['../class_a_r_t_o_s_1_1_model_learner.html#ac9df8d3e93d1fe60aa7d65881f798231',1,'ARTOS::ModelLearner']]],
   ['mean',['mean',['../class_a_r_t_o_s_1_1_stationary_background.html#a7d9e92c165d1d077f4709779237f7b57',1,'ARTOS::StationaryBackground']]],
   ['mixtures',['mixtures',['../class_a_r_t_o_s_1_1_d_p_m_detection.html#ad5a3b982804edd7fd6919b6d205fe867',1,'ARTOS::DPMDetection']]],
-  ['modelassoc',['modelAssoc',['../struct_sample.html#a4475f72fe54f68d9670322394c1279a2',1,'Sample']]],
+  ['modelassoc',['modelAssoc',['../struct_a_r_t_o_s_1_1_sample.html#a473240bb249c9d97fd6bfebb55671fb4',1,'ARTOS::Sample']]],
   ['modelindex',['modelIndex',['../struct_a_r_t_o_s_1_1_detection.html#a5f80d78d9ab055e478417e2aa65de204',1,'ARTOS::Detection']]],
   ['modelindices',['modelIndices',['../class_a_r_t_o_s_1_1_d_p_m_detection.html#a4f6dc608ca07aa13048a7c33e2f958de',1,'ARTOS::DPMDetection']]],
   ['mtime',['mtime',['../struct_a_r_t_o_s_1_1_tar_file_info.html#a4e69f7cc9039ce7da841addf4735f650',1,'ARTOS::TarFileInfo']]]

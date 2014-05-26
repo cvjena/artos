@@ -20,12 +20,6 @@
 <script type="text/javascript">
   $(document).ready(function() { searchBox.OnSelectItem(0); });
 </script>
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Config({
-    extensions: ["tex2jax.js"],
-    jax: ["input/TeX","output/HTML-CSS"],
-});
-</script><script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
@@ -114,42 +108,42 @@ $(document).ready(function(){initNavTree('sysutils_8h_source.html','');});
 </div><!--header-->
 <div class="contents">
 <a href="sysutils_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;</div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#ifndef SYSUTILS_H</span></div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define SYSUTILS_H</span></div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;std::string <a class="code" href="sysutils_8cc.html#ac3919d78126216c5952dca24933b799e">get_cwd</a>();</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="sysutils_8cc.html#a571a0929f8f46631452ebe9720588540">change_cwd</a>(<span class="keyword">const</span> std::string &amp; wd);</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#ifndef SYSUTILS_H</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define SYSUTILS_H</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;std::string <a class="code" href="sysutils_8cc.html#ac3919d78126216c5952dca24933b799e">get_cwd</a>();</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="sysutils_8cc.html#a571a0929f8f46631452ebe9720588540">change_cwd</a>(<span class="keyword">const</span> std::string &amp; wd);</div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;std::string <a class="code" href="sysutils_8cc.html#ad6db4dab9a77cd6740ecd629a94d66ab">real_path</a>(<span class="keyword">const</span> std::string &amp; path);</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;std::string <a class="code" href="sysutils_8cc.html#aee71e58e973859aa3cff81672124fc36">extract_dirname</a>(<span class="keyword">const</span> std::string &amp; path);</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;std::string <a class="code" href="sysutils_8cc.html#aba491b60b98d44c64cbe8faf6fe56c81">extract_basename</a>(<span class="keyword">const</span> std::string &amp; path);</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;std::string <a class="code" href="sysutils_8cc.html#a9f553f0e7879b17ba31ff13349402053">replace_file_extension</a>(<span class="keyword">const</span> std::string &amp; path, <span class="keyword">const</span> std::string &amp; newExtension);</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;std::string <a class="code" href="sysutils_8cc.html#a830125924ecdba4b09a0a90b67e1bf26">strip_file_extension</a>(<span class="keyword">const</span> std::string &amp; path);</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;std::string <a class="code" href="sysutils_8cc.html#aea7fafd2be88e54c39022ea792fd76e2">join_path</a>(<span class="keywordtype">int</span> numComponents, ...);</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;std::string <a class="code" href="sysutils_8cc.html#ad6db4dab9a77cd6740ecd629a94d66ab">real_path</a>(<span class="keyword">const</span> std::string &amp; path);</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;std::string <a class="code" href="sysutils_8cc.html#aee71e58e973859aa3cff81672124fc36">extract_dirname</a>(<span class="keyword">const</span> std::string &amp; path);</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;std::string <a class="code" href="sysutils_8cc.html#aba491b60b98d44c64cbe8faf6fe56c81">extract_basename</a>(<span class="keyword">const</span> std::string &amp; path);</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;std::string <a class="code" href="sysutils_8cc.html#a9f553f0e7879b17ba31ff13349402053">replace_file_extension</a>(<span class="keyword">const</span> std::string &amp; path, <span class="keyword">const</span> std::string &amp; newExtension);</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;std::string <a class="code" href="sysutils_8cc.html#a830125924ecdba4b09a0a90b67e1bf26">strip_file_extension</a>(<span class="keyword">const</span> std::string &amp; path);</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;std::string <a class="code" href="sysutils_8cc.html#aea7fafd2be88e54c39022ea792fd76e2">join_path</a>(<span class="keywordtype">int</span> numComponents, ...);</div>
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="sysutils_8cc.html#a3b20134fe3370eb84f95a12e7dc72bbb">is_file</a>(<span class="keyword">const</span> std::string &amp; path);</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="sysutils_8cc.html#a673ec6a3fa94cbc71c56abc7c767c37e">is_dir</a>(<span class="keyword">const</span> std::string &amp; path);</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="sysutils_8cc.html#a3b20134fe3370eb84f95a12e7dc72bbb">is_file</a>(<span class="keyword">const</span> std::string &amp; path);</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="sysutils_8cc.html#a673ec6a3fa94cbc71c56abc7c767c37e">is_dir</a>(<span class="keyword">const</span> std::string &amp; path);</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="preprocessor"></span></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="sysutils_8h.html">sysutils.h</a></li>
-    <li class="footer">Generated on Thu May 22 2014 22:37:35 for ARTOS by
+    <li class="footer">Generated on Mon May 26 2014 19:34:44 for ARTOS by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.4 </li>
   </ul>

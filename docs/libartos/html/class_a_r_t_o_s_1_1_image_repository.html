@@ -20,12 +20,6 @@
 <script type="text/javascript">
   $(document).ready(function() { searchBox.OnSelectItem(0); });
 </script>
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Config({
-    extensions: ["tex2jax.js"],
-    jax: ["input/TeX","output/HTML-CSS"],
-});
-</script><script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
@@ -159,9 +153,9 @@ Protected Attributes</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Provides access to synsets and images in an image repository (ImageNet in this case). This class also serves as a factory for <a class="el" href="struct_a_r_t_o_s_1_1_synset.html">Synset</a> instances.</p>
 <p>All images and bounding box annotations as well as a synset list file have to be stored on disk in a directory, which will be referred to as "repository directory" or "repoDirectory".</p>
-<p>The images of a synset are expected to be packed together in an uncompressed (!) Tar archive which is located at &lt;repoDirectory&gt;/Images/&lt;synsetId&gt;.tar.</p>
-<p>The bounding box annotations (one XML file per image) of each synset are also expected to be packed together in an uncompressed (!) Tar archive which is located at &lt;repoDirectory&gt;/Annotation/&lt;synsetId&gt;.tar.</p>
-<p>Last, but not least, the synset list file should be located at &lt;repoDirectory&gt;/synset_wordlist.txt and contains one record per line consisting of the synsets id, followed by a space and a list of words or phrases describing the synset (e. g. "n02119789 kit fox, Vulpes macrotis").</p>
+<p>The images of a synset are expected to be packed together in an uncompressed (!) Tar archive which is located at <code>&lt;repoDirectory&gt;/Images/&lt;synsetId&gt;.tar</code>.</p>
+<p>The bounding box annotations (one XML file per image) of each synset are also expected to be packed together in an uncompressed (!) Tar archive which is located at <code>&lt;repoDirectory&gt;/Annotation/&lt;synsetId&gt;.tar</code>.</p>
+<p>Last, but not least, the synset list file should be located at <code>&lt;repoDirectory&gt;/synset_wordlist.txt</code> and contains one record per line consisting of the synsets id, followed by a space and a list of words or phrases describing the synset (e. g. "n02119789 kit fox, Vulpes macrotis").</p>
 <dl class="section author"><dt>Author</dt><dd>Bjoern Barz <a href="#" onclick="location.href='mai'+'lto:'+'bjo'+'er'+'n.b'+'ar'+'z@u'+'ni'+'-je'+'na'+'.de'; return false;">bjoer<span style="display: none;">.nosp@m.</span>n.ba<span style="display: none;">.nosp@m.</span>rz@un<span style="display: none;">.nosp@m.</span>i-je<span style="display: none;">.nosp@m.</span>na.de</a> </dd></dl>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a92a2fac1f0ad67d7bf8f6ce259fb3d3e"></a>
@@ -557,7 +551,7 @@ Here is the call graph for this function:</div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespace_a_r_t_o_s.html">ARTOS</a></li><li class="navelem"><a class="el" href="class_a_r_t_o_s_1_1_image_repository.html">ImageRepository</a></li>
-    <li class="footer">Generated on Thu May 22 2014 22:37:35 for ARTOS by
+    <li class="footer">Generated on Mon May 26 2014 19:34:44 for ARTOS by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.4 </li>
   </ul>

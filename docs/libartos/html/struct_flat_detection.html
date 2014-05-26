@@ -20,12 +20,6 @@
 <script type="text/javascript">
   $(document).ready(function() { searchBox.OnSelectItem(0); });
 </script>
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Config({
-    extensions: ["tex2jax.js"],
-    jax: ["input/TeX","output/HTML-CSS"],
-});
-</script><script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
@@ -139,12 +133,7 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a88d5fddf79b7c8c16eb6565585049e65"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Procedural C-style interface to <a class="el" href="namespace_a_r_t_o_s.html">ARTOS</a>, the Adaptive Real-Time Object Detection system.</p>
-<p>This file provides a procedural interface to the object detection, whitened HOG model learning and image retrieval functionalities of <a class="el" href="namespace_a_r_t_o_s.html">ARTOS</a> for integrating libartos into other projects created with any programming language.</p>
-<p>The <b>detection interface</b> is handle-controlled. First, you create a detector instance by calling <code>create_detector</code>, which returns a (numerical) handle. Any other detection related functions take this handle as first parameter and will operate on that detector instance. Add some models to the detector using either <code>add_model</code> or <code>add_models</code> and run the detector on your images with one of the <code>detect_*</code> functions. Don't forget to destroy the detector instance using <code>destroy_detector</code> if you don't need it any more.</p>
-<p>To <b>learn new models</b> either the all-in-one short-cut functions like <code>learn_imagenet</code> or <code>learn_files_jpeg</code> can be used or the handle-controlled learner interface, which is more complex, but gives you more control over the details of the model learning process. A learner instance is created by calling <code>create_learner</code>. After that, samples can be added either from ImageNet, from file or from raw pixel data using one of the <code>learner_add_*</code> functions. The actual learning step is performed by <code>learner_run</code> and, optionally, <code>learner_optimize_th</code>. Finally, the learned model can be saved with <code>learner_save</code>. The all-in-one short-cut functions mentioned above handle all those steps with just one function call.</p>
-<p>The <b>ImageNet interface</b> provides functionality for searching synsets and extracting whole images as well as samples of objects from them to disk. In-memory extraction as provided by the object-oriented interface, <code>ImageRepository</code> and it's related classes, is not supported in this C-style library interface. In the default implementation, all images and annotations from ImageNet have to be downloaded and made available on the filesystem (that are some terabytes of data). See the documentation of the <code>ImageRepository</code> class for how to structure your local copy of ImageNet.</p>
-<dl class="section author"><dt>Author</dt><dd>Bjoern Barz <a href="#" onclick="location.href='mai'+'lto:'+'bjo'+'er'+'n.b'+'ar'+'z@u'+'ni'+'-je'+'na'+'.de'; return false;">bjoer<span style="display: none;">.nosp@m.</span>n.ba<span style="display: none;">.nosp@m.</span>rz@un<span style="display: none;">.nosp@m.</span>i-je<span style="display: none;">.nosp@m.</span>na.de</a> Holds information about a detection on an image, such as the name of the detected class, the ID of the associated synset the detection score and the bounding box, while <code>left</code> and <code>top</code> are inside, but <code>right</code> and <code>bottom</code> just outside the rectangle, so that it's width can be calculated as <code>right - left</code>. </dd></dl>
+<div class="textblock"><p>Holds information about a detection on an image, such as the name of the detected class, the ID of the associated synset the detection score and the bounding box, while <code>left</code> and <code>top</code> are inside, but <code>right</code> and <code>bottom</code> just outside the rectangle, so that it's width can be calculated as <code>right - left</code>. </p>
 </div><h2 class="groupheader">Member Data Documentation</h2>
 <a class="anchor" id="a88d5fddf79b7c8c16eb6565585049e65"></a>
 <div class="memitem">
@@ -239,7 +228,7 @@ Public Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="struct_flat_detection.html">FlatDetection</a></li>
-    <li class="footer">Generated on Thu May 22 2014 22:37:35 for ARTOS by
+    <li class="footer">Generated on Mon May 26 2014 19:34:44 for ARTOS by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.4 </li>
   </ul>

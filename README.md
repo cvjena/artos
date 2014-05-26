@@ -35,7 +35,7 @@ In addition, the following 3-rd party libraries are required by *libartos*:
 ### PyARTOS ###
 
 The Python graphical user interface to ARTOS requires **Python version 2.7 or higher**. It has been designed to work with Python 2.7 as well with Python 3.2 or later.  
-PyARTOS has been tested successfully with Python 2.7.6, Python 3.3 and Python 3.4.
+PyARTOS has been tested successfully with Python 2.7.6, Python 3.3.4 and Python 3.4.0.
 
 The following Python modules are required:
 

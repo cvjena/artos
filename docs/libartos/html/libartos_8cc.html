@@ -20,12 +20,6 @@
 <script type="text/javascript">
   $(document).ready(function() { searchBox.OnSelectItem(0); });
 </script>
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Config({
-    extensions: ["tex2jax.js"],
-    jax: ["input/TeX","output/HTML-CSS"],
-});
-</script><script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
@@ -673,9 +667,9 @@ Here is the call graph for this function:</div>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">detector</td><td>The handle of the detector instance obtained by <a class="el" href="libartos_8cc.html#aed0d3c1b0087bef0be65409cd18263bb">create_detector()</a>. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">image_data</td><td>The pixel data of the image in row-major order. Row 0: R,G,B,R,G,B,...; Row 1: R,G,B,R,G,B,...; ... </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">image_width</td><td>The width of the image. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">image_height</td><td>The height of the image. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">img_data</td><td>The pixel data of the image in row-major order. Row 0: R,G,B,R,G,B,...; Row 1: R,G,B,R,G,B,...; ... </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">img_width</td><td>The width of the image. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">img_height</td><td>The height of the image. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">grayscale</td><td>If set to true, a bit depth of 1 byte per pixel is assumed (intensity), otherwise bit depth is set to 3 (RGB). </td></tr>
     <tr><td class="paramdir">[out]</td><td class="paramname">detection_buf</td><td>A beforehand allocated buffer array of <a class="el" href="struct_flat_detection.html">FlatDetection</a> structs, that will be filled up with the detection results ordered descending by their detection score. </td></tr>
     <tr><td class="paramdir">[in,out]</td><td class="paramname">detection_buf_size</td><td>The number of allocated array slots of <code>detection_buf</code>. In turn, the number of actually stored results will be written to this pointer's location. </td></tr>
@@ -1324,9 +1318,9 @@ Here is the call graph for this function:</div>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">learner</td><td>The handle of the learner instance obtained by <a class="el" href="libartos_8cc.html#a9f7fdace1ea6d000c58d6798594414b4">create_learner()</a>. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">image_data</td><td>The pixel data of the image in row-major order. Row 0: R,G,B,R,G,B,...; Row 1: R,G,B,R,G,B,...; ... </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">image_width</td><td>The width of the image. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">image_height</td><td>The height of the image. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">img_data</td><td>The pixel data of the image in row-major order. Row 0: R,G,B,R,G,B,...; Row 1: R,G,B,R,G,B,...; ... </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">img_width</td><td>The width of the image. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">img_height</td><td>The height of the image. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">grayscale</td><td>If set to true, a bit depth of 1 byte per pixel is assumed (intensity), otherwise bit depth is set to 3 (RGB). </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">bboxes</td><td>Pointer to an array of <a class="el" href="struct_flat_bounding_box.html">FlatBoundingBox</a> structs giving the bounding box(es) around the objects of interest on the given image. If this is set to NULL or one of the given bounding boxes is empty (a rectangle with zero area), the entire image will be considered to show the object. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">num_bboxes</td><td>Number of entries in the <code>bboxes</code> array. Is ignored, if <code>bboxes</code> is NULL. </td></tr>
@@ -1780,8 +1774,8 @@ Here is the call graph for this function:</div>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">repo_directory</td><td>The path to the repository directory. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">phrase</td><td>The search phrase: a string of space-separated keywords. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">synset_buf</td><td>A beforehand allocated buffer array of <a class="el" href="struct_synset_search_result.html">SynsetSearchResult</a> structs, that will be filled up with the search results ordered descending by a score which specifies how well this synset's description matches the search phrase (higher is better). </td></tr>
-    <tr><td class="paramdir">[in,out]</td><td class="paramname">synset_buf_size</td><td>The number of allocated array slots of <code>synset_buf</code>. In turn, the number of actually stored results will be written to this pointer's location. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">result_buf</td><td>A beforehand allocated buffer array of <a class="el" href="struct_synset_search_result.html">SynsetSearchResult</a> structs, that will be filled up with the search results ordered descending by a score which specifies how well this synset's description matches the search phrase (higher is better). </td></tr>
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">result_buf_size</td><td>The number of allocated array slots of <code>synset_buf</code>. In turn, the number of actually stored results will be written to this pointer's location. </td></tr>
   </table>
   </dd>
 </dl>
@@ -1861,7 +1855,7 @@ Here is the call graph for this function:</div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="libartos_8cc.html">libartos.cc</a></li>
-    <li class="footer">Generated on Thu May 22 2014 22:37:35 for ARTOS by
+    <li class="footer">Generated on Mon May 26 2014 19:34:44 for ARTOS by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.4 </li>
   </ul>

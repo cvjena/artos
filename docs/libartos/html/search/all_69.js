@@ -14,7 +14,7 @@ var searchData=
   ['imagerepository',['ImageRepository',['../class_a_r_t_o_s_1_1_image_repository.html#a92a2fac1f0ad67d7bf8f6ce259fb3d3e',1,'ARTOS::ImageRepository::ImageRepository(const std::string &amp;repoDirectory)'],['../class_a_r_t_o_s_1_1_image_repository.html#a3f982f1244b2866e722e98c6bb08fca8',1,'ARTOS::ImageRepository::ImageRepository(const ImageRepository &amp;other)']]],
   ['imagerepository_2ecc',['ImageRepository.cc',['../_image_repository_8cc.html',1,'']]],
   ['imagerepository_2eh',['ImageRepository.h',['../_image_repository_8h.html',1,'']]],
-  ['img',['img',['../struct_sample.html#a73064f436028c42c25a3cf72c74947c1',1,'Sample']]],
+  ['img',['img',['../struct_a_r_t_o_s_1_1_sample.html#a01f49439602f1d246cc428247f44adc1',1,'ARTOS::Sample']]],
   ['index',['index',['../struct_a_r_t_o_s_1_1_tar_file_info.html#a99de878fd3f6af53409829714ae6e837',1,'ARTOS::TarFileInfo']]],
   ['inith',['inith',['../class_a_r_t_o_s_1_1_d_p_m_detection.html#aca8b9e1d71671a6325c71c17b909406e',1,'ARTOS::DPMDetection']]],
   ['initw',['initw',['../class_a_r_t_o_s_1_1_d_p_m_detection.html#a60d0cc7b412d04a25e0b70a41fee9e17',1,'ARTOS::DPMDetection']]],

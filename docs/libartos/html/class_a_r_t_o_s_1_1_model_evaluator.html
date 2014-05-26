@@ -20,12 +20,6 @@
 <script type="text/javascript">
   $(document).ready(function() { searchBox.OnSelectItem(0); });
 </script>
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Config({
-    extensions: ["tex2jax.js"],
-    jax: ["input/TeX","output/HTML-CSS"],
-});
-</script><script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
@@ -149,7 +143,7 @@ Public Types</h2></td></tr>
 <tr class="memitem:a0a07ffe9da2759192ae99a8afa8e5a39"><td class="memItemLeft" align="right" valign="top">typedef std::vector&lt; std::pair<br class="typebreak"/>
 &lt; int, <a class="el" href="struct_a_r_t_o_s_1_1_detection.html">Detection</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_a_r_t_o_s_1_1_model_evaluator.html#a0a07ffe9da2759192ae99a8afa8e5a39">SampleDetectionsVector</a></td></tr>
 <tr class="separator:a0a07ffe9da2759192ae99a8afa8e5a39"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a01f6a6b5df9055807fe5c725b066463d"><td class="memItemLeft" align="right" valign="top">typedef FFLD::Mixture *(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_a_r_t_o_s_1_1_model_evaluator.html#a01f6a6b5df9055807fe5c725b066463d">LOOFunc</a> )(const FFLD::Mixture *orig, const <a class="el" href="struct_sample.html">Sample</a> *sample, const unsigned int objectIndex, const unsigned int numLeftOut, void *data)</td></tr>
+<tr class="memitem:a01f6a6b5df9055807fe5c725b066463d"><td class="memItemLeft" align="right" valign="top">typedef FFLD::Mixture *(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_a_r_t_o_s_1_1_model_evaluator.html#a01f6a6b5df9055807fe5c725b066463d">LOOFunc</a> )(const FFLD::Mixture *orig, const <a class="el" href="struct_a_r_t_o_s_1_1_sample.html">Sample</a> *sample, const unsigned int objectIndex, const unsigned int numLeftOut, void *data)</td></tr>
 <tr class="separator:a01f6a6b5df9055807fe5c725b066463d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
@@ -169,9 +163,9 @@ float &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el"
 <tr class="separator:a8979269a8d0f73a8e8d0a613cad76bf3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9b9ef60f388c3fd53c1b04aae81d7f42"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_a_r_t_o_s_1_1_model_evaluator.html#a9b9ef60f388c3fd53c1b04aae81d7f42">computeAveragePrecision</a> (const unsigned int modelIndex=0) const </td></tr>
 <tr class="separator:a9b9ef60f388c3fd53c1b04aae81d7f42"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7430c554715656da96d4b70ce5efa2de"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_a_r_t_o_s_1_1_model_evaluator.html#a7430c554715656da96d4b70ce5efa2de">testModels</a> (const std::vector&lt; <a class="el" href="struct_sample.html">Sample</a> * &gt; &amp;positive, unsigned int maxSamples=0, const std::vector&lt; FFLD::JPEGImage &gt; *negative=NULL, const unsigned int granularity=100, <a class="el" href="defs_8h.html#ab9c43744b7d48c87a16c800876456db0">ProgressCallback</a> progressCB=NULL, void *cbData=NULL, <a class="el" href="class_a_r_t_o_s_1_1_model_evaluator.html#a01f6a6b5df9055807fe5c725b066463d">LOOFunc</a> looFunc=NULL, void *looData=NULL)</td></tr>
+<tr class="memitem:a7430c554715656da96d4b70ce5efa2de"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_a_r_t_o_s_1_1_model_evaluator.html#a7430c554715656da96d4b70ce5efa2de">testModels</a> (const std::vector&lt; <a class="el" href="struct_a_r_t_o_s_1_1_sample.html">Sample</a> * &gt; &amp;positive, unsigned int maxSamples=0, const std::vector&lt; FFLD::JPEGImage &gt; *negative=NULL, const unsigned int granularity=100, <a class="el" href="namespace_a_r_t_o_s.html#abd37b5ade3218ab1d45852bc71bb0e52">ProgressCallback</a> progressCB=NULL, void *cbData=NULL, <a class="el" href="class_a_r_t_o_s_1_1_model_evaluator.html#a01f6a6b5df9055807fe5c725b066463d">LOOFunc</a> looFunc=NULL, void *looData=NULL)</td></tr>
 <tr class="separator:a7430c554715656da96d4b70ce5efa2de"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7853079bdd9b9daa5c44c19ab7e23026"><td class="memItemLeft" align="right" valign="top">virtual std::vector&lt; unsigned int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_a_r_t_o_s_1_1_model_evaluator.html#a7853079bdd9b9daa5c44c19ab7e23026">runDetector</a> (<a class="el" href="class_a_r_t_o_s_1_1_model_evaluator.html#a0a07ffe9da2759192ae99a8afa8e5a39">SampleDetectionsVector</a> &amp;detections, const std::vector&lt; <a class="el" href="struct_sample.html">Sample</a> * &gt; &amp;positive, unsigned int maxSamples=0, const std::vector&lt; FFLD::JPEGImage &gt; *negative=NULL, <a class="el" href="defs_8h.html#ab9c43744b7d48c87a16c800876456db0">ProgressCallback</a> progressCB=NULL, void *cbData=NULL, <a class="el" href="class_a_r_t_o_s_1_1_model_evaluator.html#a01f6a6b5df9055807fe5c725b066463d">LOOFunc</a> looFunc=NULL, void *looData=NULL)</td></tr>
+<tr class="memitem:a7853079bdd9b9daa5c44c19ab7e23026"><td class="memItemLeft" align="right" valign="top">virtual std::vector&lt; unsigned int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_a_r_t_o_s_1_1_model_evaluator.html#a7853079bdd9b9daa5c44c19ab7e23026">runDetector</a> (<a class="el" href="class_a_r_t_o_s_1_1_model_evaluator.html#a0a07ffe9da2759192ae99a8afa8e5a39">SampleDetectionsVector</a> &amp;detections, const std::vector&lt; <a class="el" href="struct_a_r_t_o_s_1_1_sample.html">Sample</a> * &gt; &amp;positive, unsigned int maxSamples=0, const std::vector&lt; FFLD::JPEGImage &gt; *negative=NULL, <a class="el" href="namespace_a_r_t_o_s.html#abd37b5ade3218ab1d45852bc71bb0e52">ProgressCallback</a> progressCB=NULL, void *cbData=NULL, <a class="el" href="class_a_r_t_o_s_1_1_model_evaluator.html#a01f6a6b5df9055807fe5c725b066463d">LOOFunc</a> looFunc=NULL, void *looData=NULL)</td></tr>
 <tr class="separator:a7853079bdd9b9daa5c44c19ab7e23026"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2b2a9c24819d86f149385a4d9a7b082f"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_a_r_t_o_s_1_1_model_evaluator.html#a2b2a9c24819d86f149385a4d9a7b082f">dumpTestResults</a> (const std::string &amp;filename, const int modelIndex=-1, const bool headline=true, const unsigned int measures=0, const char separator= ';') const </td></tr>
 <tr class="separator:a2b2a9c24819d86f149385a4d9a7b082f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -249,7 +243,7 @@ unsigned int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="e
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef FFLD::Mixture*(* ARTOS::ModelEvaluator::LOOFunc)(const FFLD::Mixture *orig, const <a class="el" href="struct_sample.html">Sample</a> *sample, const unsigned int objectIndex, const unsigned int numLeftOut, void *data)</td>
+          <td class="memname">typedef FFLD::Mixture*(* ARTOS::ModelEvaluator::LOOFunc)(const FFLD::Mixture *orig, const <a class="el" href="struct_a_r_t_o_s_1_1_sample.html">Sample</a> *sample, const unsigned int objectIndex, const unsigned int numLeftOut, void *data)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -457,7 +451,7 @@ unsigned int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="e
 <p>Returns a vector with F-measure values for each threshold of a specific model based on the test results. So, <a class="el" href="class_a_r_t_o_s_1_1_model_evaluator.html#a7430c554715656da96d4b70ce5efa2de">testModels()</a> must have been called before.</p>
 <p>The F-measure is defined as: </p>
 <p class="formulaDsp">
-\[\frac{(1 + b^2) \cdot precision \cdot recall}{b^2 \cdot precision + recall}\]
+<img class="formulaDsp" alt="\[\frac{(1 + b^2) \cdot precision \cdot recall}{b^2 \cdot precision + recall}\]" src="form_0.png"/>
 </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -643,7 +637,7 @@ unsigned int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="e
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const std::vector&lt; <a class="el" href="struct_sample.html">Sample</a> * &gt; &amp;&#160;</td>
+          <td class="paramtype">const std::vector&lt; <a class="el" href="struct_a_r_t_o_s_1_1_sample.html">Sample</a> * &gt; &amp;&#160;</td>
           <td class="paramname"><em>positive</em>, </td>
         </tr>
         <tr>
@@ -661,7 +655,7 @@ unsigned int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="e
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="defs_8h.html#ab9c43744b7d48c87a16c800876456db0">ProgressCallback</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="namespace_a_r_t_o_s.html#abd37b5ade3218ab1d45852bc71bb0e52">ProgressCallback</a>&#160;</td>
           <td class="paramname"><em>progressCB</em> = <code>NULL</code>, </td>
         </tr>
         <tr>
@@ -698,7 +692,7 @@ unsigned int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="e
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[out]</td><td class="paramname">detections</td><td>A vector which will be filled with detection results. Each result is a pair of an integral value and the actual detection. The integral value specifies, which image the object has been detected on, with positive values being indices of the <code>positive</code> vector and negative values like -i meaning the i-th negative sample.</td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">positive</td><td>Vector with pointers to positive samples, given as <a class="el" href="struct_sample.html">Sample</a> structures, which the detector will be run against. The <code>modelAssoc</code> vector of those structures indicates, which one of the models added to this evaluator (identified by it's index) is expected to detect that object. For all over models, that sample will be ignored.</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">positive</td><td>Vector with pointers to positive samples, given as <a class="el" href="struct_a_r_t_o_s_1_1_sample.html">Sample</a> structures, which the detector will be run against. The <code>modelAssoc</code> vector of those structures indicates, which one of the models added to this evaluator (identified by it's index) is expected to detect that object. For all over models, that sample will be ignored.</td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">maxSamples</td><td>Maximum number of positive samples to test <em>each</em> model against. Set this to 0 to run the detector against all samples belonging to the respective model.</td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">negative</td><td>Pointer to a vector of JPEGImages which are negative samples and, thus, must not contain any object of the class to be detected by the models. This parameter is optional and may be <code>NULL</code>.</td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">progressCB</td><td>Optionally, a callback that is called after each run of the detector against a sample. The first parameter to the callback will be the number of samples processed and the second parameter will be the total number of samples to be processed.</td></tr>
@@ -722,7 +716,7 @@ unsigned int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="e
         <tr>
           <td class="memname">void ModelEvaluator::testModels </td>
           <td>(</td>
-          <td class="paramtype">const std::vector&lt; <a class="el" href="struct_sample.html">Sample</a> * &gt; &amp;&#160;</td>
+          <td class="paramtype">const std::vector&lt; <a class="el" href="struct_a_r_t_o_s_1_1_sample.html">Sample</a> * &gt; &amp;&#160;</td>
           <td class="paramname"><em>positive</em>, </td>
         </tr>
         <tr>
@@ -746,7 +740,7 @@ unsigned int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="e
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="defs_8h.html#ab9c43744b7d48c87a16c800876456db0">ProgressCallback</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="namespace_a_r_t_o_s.html#abd37b5ade3218ab1d45852bc71bb0e52">ProgressCallback</a>&#160;</td>
           <td class="paramname"><em>progressCB</em> = <code>NULL</code>, </td>
         </tr>
         <tr>
@@ -782,7 +776,7 @@ unsigned int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="e
 <p>Runs the detector on given images containing the positive samples and, optionally, some negative images containing no instance of the object class to be detected and stores basic measures (number of true and false positives) for each possible threshold for each model. Those results may then be retrieved via <a class="el" href="class_a_r_t_o_s_1_1_model_evaluator.html#a6468d15900c10d8115bc63ed0f847f11">getResults()</a>.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">positive</td><td>Vector with pointers to positive samples, given as <a class="el" href="struct_sample.html">Sample</a> structures, which the detector will be run against. The <code>modelAssoc</code> vector of those structures indicates, which one of the models added to this evaluator (identified by it's index) is expected to detect that object. For all over models, that sample will be ignored.</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">positive</td><td>Vector with pointers to positive samples, given as <a class="el" href="struct_a_r_t_o_s_1_1_sample.html">Sample</a> structures, which the detector will be run against. The <code>modelAssoc</code> vector of those structures indicates, which one of the models added to this evaluator (identified by it's index) is expected to detect that object. For all over models, that sample will be ignored.</td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">maxSamples</td><td>Maximum number of positive samples to test <em>each</em> model against. Set this to 0 to run the detector against all samples belonging to the respective model.</td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">negative</td><td>Pointer to a vector of JPEGImages which are negative samples and, thus, must not contain any object of the class to be detected by the models. This parameter is optional and may be <code>NULL</code>.</td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">granularity</td><td>Specifies the "resolution" or "precision" of the threshold scale. The distance from one threshold to the next one will be 1/granularity.</td></tr>
@@ -888,7 +882,7 @@ unsigned int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="e
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespace_a_r_t_o_s.html">ARTOS</a></li><li class="navelem"><a class="el" href="class_a_r_t_o_s_1_1_model_evaluator.html">ModelEvaluator</a></li>
-    <li class="footer">Generated on Thu May 22 2014 22:37:36 for ARTOS by
+    <li class="footer">Generated on Mon May 26 2014 19:34:44 for ARTOS by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.4 </li>
   </ul>

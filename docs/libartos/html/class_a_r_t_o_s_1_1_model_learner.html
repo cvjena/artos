@@ -20,12 +20,6 @@
 <script type="text/javascript">
   $(document).ready(function() { searchBox.OnSelectItem(0); });
 </script>
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Config({
-    extensions: ["tex2jax.js"],
-    jax: ["input/TeX","output/HTML-CSS"],
-});
-</script><script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
@@ -174,7 +168,7 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a8af887aaa85edd3d83e1dacac1fc5112"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aef8309e9ca958854283ea2303262588e"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_a_r_t_o_s_1_1_model_learner.html#aef8309e9ca958854283ea2303262588e">addPositiveSample</a> (const FFLD::JPEGImage &amp;sample, const std::vector&lt; FFLD::Rectangle &gt; &amp;boundingBoxes)</td></tr>
 <tr class="separator:aef8309e9ca958854283ea2303262588e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7703aedb2696cdacc8b7983a90a714ba"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_a_r_t_o_s_1_1_model_learner.html#a7703aedb2696cdacc8b7983a90a714ba">learn</a> (const unsigned int maxAspectClusters=1, const unsigned int maxWHOClusters=1, <a class="el" href="defs_8h.html#ab9c43744b7d48c87a16c800876456db0">ProgressCallback</a> progressCB=NULL, void *cbData=NULL)</td></tr>
+<tr class="memitem:a7703aedb2696cdacc8b7983a90a714ba"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_a_r_t_o_s_1_1_model_learner.html#a7703aedb2696cdacc8b7983a90a714ba">learn</a> (const unsigned int maxAspectClusters=1, const unsigned int maxWHOClusters=1, <a class="el" href="namespace_a_r_t_o_s.html#abd37b5ade3218ab1d45852bc71bb0e52">ProgressCallback</a> progressCB=NULL, void *cbData=NULL)</td></tr>
 <tr class="separator:a7703aedb2696cdacc8b7983a90a714ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a35956ad7e24b2b91bd8ef838d68e7753"><td class="memItemLeft" align="right" valign="top">virtual const std::vector<br class="typebreak"/>
 &lt; float &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_a_r_t_o_s_1_1_model_learner.html#a35956ad7e24b2b91bd8ef838d68e7753">optimizeThreshold</a> (const unsigned int maxPositive=0, const std::vector&lt; FFLD::JPEGImage &gt; *negative=NULL, const float b=1.0f, ProgressCallback progressCB=NULL, void *cbData=NULL)</td></tr>
@@ -212,7 +206,8 @@ Protected Attributes</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Handles learning of WHO (<em>Whitened Histogram of Orientations</em> [Hariharan et. al.]) models using Linear Discriminant Analysis (LDA).</p>
-<p>Here's our <b>learning method</b> in a nutshell: \(m = \Sigma^{-1} \cdot (\mu_{pos} - \mu_{neg})\) Average the HOG (<em>Histogram of Oriented Gradients</em> [Dalal &amp; Triggs]) features of each positive sample, centre them by subtracting the previously learned negative mean <code>neg</code> and decorrelate ("whiten") them with the also previously learned covariance matrix <code>S</code>.</p>
+<p>Here's our <b>learning method</b> in a nutshell: <img class="formulaInl" alt="$m = \Sigma^{-1} \cdot (\mu_{pos} - \mu_{neg})$" src="form_1.png"/></p>
+<p>Average the HOG (<em>Histogram of Oriented Gradients</em> [Dalal &amp; Triggs]) features of each positive sample, centre them by subtracting the previously learned negative mean <code>neg</code> and decorrelate ("whiten") them with the also previously learned covariance matrix <code>S</code>.</p>
 <p>The typical <b>work-flow</b> for using this class is as follows:</p>
 <ol type="1">
 <li>Create a new model learner and pass in background statistics as <a class="el" href="class_a_r_t_o_s_1_1_stationary_background.html">StationaryBackground</a> object or file name.</li>
@@ -640,7 +635,7 @@ Protected Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="defs_8h.html#ab9c43744b7d48c87a16c800876456db0">ProgressCallback</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="namespace_a_r_t_o_s.html#abd37b5ade3218ab1d45852bc71bb0e52">ProgressCallback</a>&#160;</td>
           <td class="paramname"><em>progressCB</em> = <code>NULL</code>, </td>
         </tr>
         <tr>
@@ -714,7 +709,7 @@ Here is the call graph for this function:</div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="defs_8h.html#ab9c43744b7d48c87a16c800876456db0">ProgressCallback</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="namespace_a_r_t_o_s.html#abd37b5ade3218ab1d45852bc71bb0e52">ProgressCallback</a>&#160;</td>
           <td class="paramname"><em>progressCB</em> = <code>NULL</code>, </td>
         </tr>
         <tr>
@@ -737,7 +732,7 @@ Here is the call graph for this function:</div>
 </div><div class="memdoc">
 <p>Finds the optimal thresholds for the models learned previously with <a class="el" href="class_a_r_t_o_s_1_1_model_learner.html#a7703aedb2696cdacc8b7983a90a714ba">learn()</a> by testing them against the positive samples and, optionally, some additional negative samples to maximize the F-measure of each model: </p>
 <p class="formulaDsp">
-\[\frac{(1 + b^2) \cdot precision \cdot recall}{b^2 \cdot precision + recall}\]
+<img class="formulaDsp" alt="\[\frac{(1 + b^2) \cdot precision \cdot recall}{b^2 \cdot precision + recall}\]" src="form_0.png"/>
 </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -886,7 +881,7 @@ Here is the call graph for this function:</div>
 <p>Changes the background statistics used by this <a class="el" href="class_a_r_t_o_s_1_1_model_learner.html">ModelLearner</a> for centring and whitening.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">bg</td><td>Path to a file containing the new background statistics. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">bgFile</td><td>Path to a file containing the new background statistics. </td></tr>
   </table>
   </dd>
 </dl>
@@ -1102,7 +1097,7 @@ Here is the call graph for this function:</div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespace_a_r_t_o_s.html">ARTOS</a></li><li class="navelem"><a class="el" href="class_a_r_t_o_s_1_1_model_learner.html">ModelLearner</a></li>
-    <li class="footer">Generated on Thu May 22 2014 22:37:36 for ARTOS by
+    <li class="footer">Generated on Mon May 26 2014 19:34:44 for ARTOS by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.4 </li>
   </ul>

@@ -1,5 +1,6 @@
 var namespace_a_r_t_o_s =
 [
+    [ "Sample", "struct_a_r_t_o_s_1_1_sample.html", "struct_a_r_t_o_s_1_1_sample" ],
     [ "Detection", "struct_a_r_t_o_s_1_1_detection.html", "struct_a_r_t_o_s_1_1_detection" ],
     [ "DPMDetection", "class_a_r_t_o_s_1_1_d_p_m_detection.html", "class_a_r_t_o_s_1_1_d_p_m_detection" ],
     [ "ImageRepository", "class_a_r_t_o_s_1_1_image_repository.html", "class_a_r_t_o_s_1_1_image_repository" ],

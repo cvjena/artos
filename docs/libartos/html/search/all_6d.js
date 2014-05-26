@@ -46,7 +46,7 @@ var searchData=
   ['mixedimageiterator',['MixedImageIterator',['../class_a_r_t_o_s_1_1_mixed_image_iterator.html',1,'ARTOS']]],
   ['mixedimageiterator',['MixedImageIterator',['../class_a_r_t_o_s_1_1_mixed_image_iterator.html#a487cec459e30b15308036f46fba2d1dd',1,'ARTOS::MixedImageIterator::MixedImageIterator(const std::string &amp;aRepoDirectory, const unsigned int &amp;aPerSynset)'],['../class_a_r_t_o_s_1_1_mixed_image_iterator.html#a9fb635f72248fbe354de748a4d6005e7',1,'ARTOS::MixedImageIterator::MixedImageIterator(const MixedImageIterator &amp;other)']]],
   ['mixtures',['mixtures',['../class_a_r_t_o_s_1_1_d_p_m_detection.html#ad5a3b982804edd7fd6919b6d205fe867',1,'ARTOS::DPMDetection']]],
-  ['modelassoc',['modelAssoc',['../struct_sample.html#a4475f72fe54f68d9670322394c1279a2',1,'Sample']]],
+  ['modelassoc',['modelAssoc',['../struct_a_r_t_o_s_1_1_sample.html#a473240bb249c9d97fd6bfebb55671fb4',1,'ARTOS::Sample']]],
   ['modelevaluator',['ModelEvaluator',['../class_a_r_t_o_s_1_1_model_evaluator.html',1,'ARTOS']]],
   ['modelevaluator',['ModelEvaluator',['../class_a_r_t_o_s_1_1_model_evaluator.html#aadc53ac189e8f5601b2c896e6df17e97',1,'ARTOS::ModelEvaluator::ModelEvaluator(double overlap=0.5, int padding=12, int interval=10)'],['../class_a_r_t_o_s_1_1_model_evaluator.html#aa585d8b466d7e77f937722e50697d1ff',1,'ARTOS::ModelEvaluator::ModelEvaluator(const std::string &amp;modelfile, double overlap=0.5, int padding=12, int interval=10)'],['../class_a_r_t_o_s_1_1_model_evaluator.html#a5fe905e67df1c051aca0355062430a75',1,'ARTOS::ModelEvaluator::ModelEvaluator(const FFLD::Mixture &amp;model, double overlap=0.5, int padding=12, int interval=10)']]],
   ['modelevaluator_2ecc',['ModelEvaluator.cc',['../_model_evaluator_8cc.html',1,'']]],

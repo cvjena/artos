@@ -14,7 +14,7 @@ namespace ARTOS
 * autocorrelation function read before.  
 * The great deal behind this: Each covariance between two cells \f$x_{i,j}\f$ and \f$x_{m,n}\f$ only depends on the offset \f$(m-i, n-j)\f$.
 * Since there are only N offsets given a total of N cells, the autocorrelation function only has to come up with
-* \f$N * num\_features^2\f$ instead of \f$N^2 * num\_features^2\f$, which the full covariance matrix needs.  
+* \f$\mathcal{O}(N \cdot num\_features^2)\f$ instead of \f$\mathcal{O}(N^2 \cdot num\_features^2)\f$, which the full covariance matrix needs.  
 * Therefore, N, i. e. the number of spatial offsets used for learning the statistics, is the upper bound for the number
 * of rows and columns of reconstructed covariance matrices.
 *

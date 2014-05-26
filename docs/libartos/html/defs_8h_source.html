@@ -20,12 +20,6 @@
 <script type="text/javascript">
   $(document).ready(function() { searchBox.OnSelectItem(0); });
 </script>
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Config({
-    extensions: ["tex2jax.js"],
-    jax: ["input/TeX","output/HTML-CSS"],
-});
-</script><script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
@@ -120,24 +114,29 @@ $(document).ready(function(){initNavTree('defs_8h_source.html','');});
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &quot;ffld/JPEGImage.h&quot;</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &quot;ffld/Rectangle.h&quot;</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;</div>
-<div class="line"><a name="l00008"></a><span class="lineno"><a class="code" href="defs_8h.html#ab9c43744b7d48c87a16c800876456db0">    8</a></span>&#160;<span class="keyword">typedef</span> void (*<a class="code" href="defs_8h.html#ab9c43744b7d48c87a16c800876456db0">ProgressCallback</a>)(<span class="keywordtype">unsigned</span> int, <span class="keywordtype">unsigned</span> int, <span class="keywordtype">void</span>*);</div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;</div>
-<div class="line"><a name="l00013"></a><span class="lineno"><a class="code" href="struct_sample.html">   13</a></span>&#160;<span class="keyword">struct </span><a class="code" href="struct_sample.html">Sample</a></div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;{</div>
-<div class="line"><a name="l00015"></a><span class="lineno"><a class="code" href="struct_sample.html#a73064f436028c42c25a3cf72c74947c1">   15</a></span>&#160;    FFLD::JPEGImage <a class="code" href="struct_sample.html#a73064f436028c42c25a3cf72c74947c1">img</a>; </div>
-<div class="line"><a name="l00016"></a><span class="lineno"><a class="code" href="struct_sample.html#a52808f187455d38a04851bba5eeb7f8c">   16</a></span>&#160;    std::vector&lt;FFLD::Rectangle&gt; <a class="code" href="struct_sample.html#a52808f187455d38a04851bba5eeb7f8c">bboxes</a>; </div>
-<div class="line"><a name="l00017"></a><span class="lineno"><a class="code" href="struct_sample.html#a4475f72fe54f68d9670322394c1279a2">   17</a></span>&#160;    std::vector&lt;unsigned int&gt; <a class="code" href="struct_sample.html#a4475f72fe54f68d9670322394c1279a2">modelAssoc</a>; </div>
-<div class="line"><a name="l00018"></a><span class="lineno"><a class="code" href="struct_sample.html#aa5e7f98208f88af530af44b88da25616">   18</a></span>&#160;    <span class="keyword">virtual</span> <a class="code" href="struct_sample.html#aa5e7f98208f88af530af44b88da25616">~Sample</a>() { };</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;};</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="keyword">namespace </span>ARTOS</div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;{</div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;</div>
+<div class="line"><a name="l00011"></a><span class="lineno"><a class="code" href="namespace_a_r_t_o_s.html#abd37b5ade3218ab1d45852bc71bb0e52">   11</a></span>&#160;<span class="keyword">typedef</span> void (*<a class="code" href="namespace_a_r_t_o_s.html#abd37b5ade3218ab1d45852bc71bb0e52">ProgressCallback</a>)(<span class="keywordtype">unsigned</span> int, <span class="keywordtype">unsigned</span> int, <span class="keywordtype">void</span>*);</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;</div>
+<div class="line"><a name="l00016"></a><span class="lineno"><a class="code" href="struct_a_r_t_o_s_1_1_sample.html">   16</a></span>&#160;<span class="keyword">struct </span><a class="code" href="struct_a_r_t_o_s_1_1_sample.html">Sample</a></div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;{</div>
+<div class="line"><a name="l00018"></a><span class="lineno"><a class="code" href="struct_a_r_t_o_s_1_1_sample.html#a01f49439602f1d246cc428247f44adc1">   18</a></span>&#160;    FFLD::JPEGImage <a class="code" href="struct_a_r_t_o_s_1_1_sample.html#a01f49439602f1d246cc428247f44adc1">img</a>; </div>
+<div class="line"><a name="l00019"></a><span class="lineno"><a class="code" href="struct_a_r_t_o_s_1_1_sample.html#acea70e868e3ed97dba669e3cbc3f70f1">   19</a></span>&#160;    std::vector&lt;FFLD::Rectangle&gt; <a class="code" href="struct_a_r_t_o_s_1_1_sample.html#acea70e868e3ed97dba669e3cbc3f70f1">bboxes</a>; </div>
+<div class="line"><a name="l00020"></a><span class="lineno"><a class="code" href="struct_a_r_t_o_s_1_1_sample.html#a473240bb249c9d97fd6bfebb55671fb4">   20</a></span>&#160;    std::vector&lt;unsigned int&gt; <a class="code" href="struct_a_r_t_o_s_1_1_sample.html#a473240bb249c9d97fd6bfebb55671fb4">modelAssoc</a>; </div>
+<div class="line"><a name="l00021"></a><span class="lineno"><a class="code" href="struct_a_r_t_o_s_1_1_sample.html#a55831a85347d9470d800b760844ea099">   21</a></span>&#160;    <span class="keyword">virtual</span> <a class="code" href="struct_a_r_t_o_s_1_1_sample.html#a55831a85347d9470d800b760844ea099">~Sample</a>() { };</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;};</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;}</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#endif</span></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="defs_8h.html">defs.h</a></li>
-    <li class="footer">Generated on Thu May 22 2014 22:37:35 for ARTOS by
+    <li class="footer">Generated on Mon May 26 2014 19:34:43 for ARTOS by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.4 </li>
   </ul>

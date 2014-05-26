@@ -21,7 +21,7 @@ var hierarchy =
     [ "Rectangle", null, [
       [ "ARTOS::Detection", "struct_a_r_t_o_s_1_1_detection.html", null ]
     ] ],
-    [ "Sample", "struct_sample.html", [
+    [ "ARTOS::Sample", "struct_a_r_t_o_s_1_1_sample.html", [
       [ "ARTOS::WHOSample", "struct_a_r_t_o_s_1_1_w_h_o_sample.html", null ]
     ] ],
     [ "ARTOS::ModelLearner::Size", "struct_a_r_t_o_s_1_1_model_learner_1_1_size.html", null ],

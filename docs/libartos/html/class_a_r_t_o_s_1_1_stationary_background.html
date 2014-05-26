@@ -20,12 +20,6 @@
 <script type="text/javascript">
   $(document).ready(function() { searchBox.OnSelectItem(0); });
 </script>
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Config({
-    extensions: ["tex2jax.js"],
-    jax: ["input/TeX","output/HTML-CSS"],
-});
-</script><script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
@@ -191,7 +185,7 @@ Public Attributes</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Class for reading and writing stationary background statistics, i. e. general mean and covariance, from/to a binary file.</p>
-<p>Beyond that, this class is also capable of reconstructing a covariance matrix of a specific size from the stationary autocorrelation function read before. The great deal behind this: Each covariance between two cells <code>x_ij</code> and <code>x_mn</code> only depends on the offset (<code>m-i</code>, <code>n-j</code>). Since there are only N offsets given a total of N cells, the autocorrelation function only has to come up with <code>N * num_features^2</code> instead of <code>N^2 * num_features^2</code>, which the full covariance matrix needs. Therefore, N, i. e. the number of spatial offsets used for learning the statistics, is the upper bound for the number of rows and columns of reconstructed covariance matrices.</p>
+<p>Beyond that, this class is also capable of reconstructing a covariance matrix of a specific size from the stationary autocorrelation function read before. The great deal behind this: Each covariance between two cells <img class="formulaInl" alt="$x_{i,j}$" src="form_2.png"/> and <img class="formulaInl" alt="$x_{m,n}$" src="form_3.png"/> only depends on the offset <img class="formulaInl" alt="$(m-i, n-j)$" src="form_4.png"/>. Since there are only N offsets given a total of N cells, the autocorrelation function only has to come up with <img class="formulaInl" alt="$\mathcal{O}(N \cdot num\_features^2)$" src="form_7.png"/> instead of <img class="formulaInl" alt="$\mathcal{O}(N^2 \cdot num\_features^2)$" src="form_8.png"/>, which the full covariance matrix needs. Therefore, N, i. e. the number of spatial offsets used for learning the statistics, is the upper bound for the number of rows and columns of reconstructed covariance matrices.</p>
 <dl class="section author"><dt>Author</dt><dd>Bjoern Barz <a href="#" onclick="location.href='mai'+'lto:'+'bjo'+'er'+'n.b'+'ar'+'z@u'+'ni'+'-je'+'na'+'.de'; return false;">bjoer<span style="display: none;">.nosp@m.</span>n.ba<span style="display: none;">.nosp@m.</span>rz@un<span style="display: none;">.nosp@m.</span>i-je<span style="display: none;">.nosp@m.</span>na.de</a> </dd></dl>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a class="anchor" id="a475baa7536212a32863fc30873b77bc3"></a>
@@ -443,7 +437,7 @@ Here is the call graph for this function:</div>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Reconstructs a covariance matrix from the spatial autocorrelation function for a specific number of rows and columns. The resulting 4-D matrix is of the form cov(xy1, xy2)(feature1, feature2), while linearisation of a spatial position (x, y) to xy is done in row-major order.</p>
+<p>Reconstructs a covariance matrix from the spatial autocorrelation function for a specific number of rows and columns. The resulting 4-D matrix is of the form <code>cov(xy1, xy2)(feature1, feature2)</code>, while linearisation of a spatial position (x, y) to xy is done in row-major order.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">rows</td><td>Number of rows to reconstruct the covariance matrix for.</td></tr>
@@ -733,7 +727,7 @@ Here is the call graph for this function:</div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespace_a_r_t_o_s.html">ARTOS</a></li><li class="navelem"><a class="el" href="class_a_r_t_o_s_1_1_stationary_background.html">StationaryBackground</a></li>
-    <li class="footer">Generated on Thu May 22 2014 22:37:36 for ARTOS by
+    <li class="footer">Generated on Mon May 26 2014 19:34:44 for ARTOS by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.4 </li>
   </ul>

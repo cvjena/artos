@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['sample',['Sample',['../struct_sample.html',1,'']]],
+  ['sample',['Sample',['../struct_a_r_t_o_s_1_1_sample.html',1,'ARTOS']]],
   ['sampledetectionsvector',['SampleDetectionsVector',['../class_a_r_t_o_s_1_1_model_evaluator.html#a0a07ffe9da2759192ae99a8afa8e5a39',1,'ARTOS::ModelEvaluator']]],
   ['save',['save',['../class_a_r_t_o_s_1_1_model_learner.html#a068517d1502a0535ad6d82d2f3e4fa89',1,'ARTOS::ModelLearner']]],
   ['score',['score',['../struct_a_r_t_o_s_1_1_detection.html#a22f567f139ef1d79c44b9fdd7bedffd4',1,'ARTOS::Detection::score()'],['../struct_synset_search_result.html#a3d03c970e7021f3f9af44f80af305385',1,'SynsetSearchResult::score()'],['../struct_flat_detection.html#a806c938dd4122e68ec93ca9492e08e45',1,'FlatDetection::score()']]],

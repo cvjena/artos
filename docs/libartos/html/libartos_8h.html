@@ -20,12 +20,6 @@
 <script type="text/javascript">
   $(document).ready(function() { searchBox.OnSelectItem(0); });
 </script>
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Config({
-    extensions: ["tex2jax.js"],
-    jax: ["input/TeX","output/HTML-CSS"],
-});
-</script><script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
@@ -198,7 +192,14 @@ Functions</h2></td></tr>
 <tr class="memitem:af07331ddce7bbb8bed2e8b398137b796"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="libartos_8h.html#af07331ddce7bbb8bed2e8b398137b796">extract_mixed_images</a> (const char *repo_directory, const char *out_directory, const unsigned int num_images, const unsigned int per_synset=1)</td></tr>
 <tr class="separator:af07331ddce7bbb8bed2e8b398137b796"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Typedef Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Procedural C-style interface to <a class="el" href="namespace_a_r_t_o_s.html">ARTOS</a>, the Adaptive Real-Time Object Detection system.</p>
+<p>This file provides a procedural interface to the object detection, whitened HOG model learning and image retrieval functionalities of <a class="el" href="namespace_a_r_t_o_s.html">ARTOS</a> for integrating libartos into other projects created with any programming language.</p>
+<p>The <b>detection interface</b> is handle-controlled. First, you create a detector instance by calling <code>create_detector</code>, which returns a (numerical) handle. Any other detection related functions take this handle as first parameter and will operate on that detector instance. Add some models to the detector using either <code>add_model</code> or <code>add_models</code> and run the detector on your images with one of the <code>detect_*</code> functions. Don't forget to destroy the detector instance using <code>destroy_detector</code> if you don't need it any more.</p>
+<p>To <b>learn new models</b> either the all-in-one short-cut functions like <code>learn_imagenet</code> or <code>learn_files_jpeg</code> can be used or the handle-controlled learner interface, which is more complex, but gives you more control over the details of the model learning process. A learner instance is created by calling <code>create_learner</code>. After that, samples can be added either from ImageNet, from file or from raw pixel data using one of the <code>learner_add_*</code> functions. The actual learning step is performed by <code>learner_run</code> and, optionally, <code>learner_optimize_th</code>. Finally, the learned model can be saved with <code>learner_save</code>. The all-in-one short-cut functions mentioned above handle all those steps with just one function call.</p>
+<p>The <b>ImageNet interface</b> provides functionality for searching synsets and extracting whole images as well as samples of objects from them to disk. In-memory extraction as provided by the object-oriented interface, <code>ImageRepository</code> and it's related classes, is not supported in this C-style library interface. In the default implementation, all images and annotations from ImageNet have to be downloaded and made available on the filesystem (that are some terabytes of data). See the documentation of the <code>ImageRepository</code> class for how to structure your local copy of ImageNet.</p>
+<dl class="section author"><dt>Author</dt><dd>Bjoern Barz <a href="#" onclick="location.href='mai'+'lto:'+'bjo'+'er'+'n.b'+'ar'+'z@u'+'ni'+'-je'+'na'+'.de'; return false;">bjoer<span style="display: none;">.nosp@m.</span>n.ba<span style="display: none;">.nosp@m.</span>rz@un<span style="display: none;">.nosp@m.</span>i-je<span style="display: none;">.nosp@m.</span>na.de</a> </dd></dl>
+</div><h2 class="groupheader">Typedef Documentation</h2>
 <a class="anchor" id="aa25fe66263e5e34e8c77106dfcf276ec"></a>
 <div class="memitem">
 <div class="memproto">
@@ -642,9 +643,9 @@ Here is the call graph for this function:</div>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">detector</td><td>The handle of the detector instance obtained by <a class="el" href="libartos_8cc.html#aed0d3c1b0087bef0be65409cd18263bb">create_detector()</a>. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">image_data</td><td>The pixel data of the image in row-major order. Row 0: R,G,B,R,G,B,...; Row 1: R,G,B,R,G,B,...; ... </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">image_width</td><td>The width of the image. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">image_height</td><td>The height of the image. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">img_data</td><td>The pixel data of the image in row-major order. Row 0: R,G,B,R,G,B,...; Row 1: R,G,B,R,G,B,...; ... </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">img_width</td><td>The width of the image. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">img_height</td><td>The height of the image. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">grayscale</td><td>If set to true, a bit depth of 1 byte per pixel is assumed (intensity), otherwise bit depth is set to 3 (RGB). </td></tr>
     <tr><td class="paramdir">[out]</td><td class="paramname">detection_buf</td><td>A beforehand allocated buffer array of <a class="el" href="struct_flat_detection.html">FlatDetection</a> structs, that will be filled up with the detection results ordered descending by their detection score. </td></tr>
     <tr><td class="paramdir">[in,out]</td><td class="paramname">detection_buf_size</td><td>The number of allocated array slots of <code>detection_buf</code>. In turn, the number of actually stored results will be written to this pointer's location. </td></tr>
@@ -1214,9 +1215,9 @@ Here is the call graph for this function:</div>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">learner</td><td>The handle of the learner instance obtained by <a class="el" href="libartos_8cc.html#a9f7fdace1ea6d000c58d6798594414b4">create_learner()</a>. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">image_data</td><td>The pixel data of the image in row-major order. Row 0: R,G,B,R,G,B,...; Row 1: R,G,B,R,G,B,...; ... </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">image_width</td><td>The width of the image. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">image_height</td><td>The height of the image. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">img_data</td><td>The pixel data of the image in row-major order. Row 0: R,G,B,R,G,B,...; Row 1: R,G,B,R,G,B,...; ... </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">img_width</td><td>The width of the image. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">img_height</td><td>The height of the image. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">grayscale</td><td>If set to true, a bit depth of 1 byte per pixel is assumed (intensity), otherwise bit depth is set to 3 (RGB). </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">bboxes</td><td>Pointer to an array of <a class="el" href="struct_flat_bounding_box.html">FlatBoundingBox</a> structs giving the bounding box(es) around the objects of interest on the given image. If this is set to NULL or one of the given bounding boxes is empty (a rectangle with zero area), the entire image will be considered to show the object. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">num_bboxes</td><td>Number of entries in the <code>bboxes</code> array. Is ignored, if <code>bboxes</code> is NULL. </td></tr>
@@ -1606,8 +1607,8 @@ Here is the call graph for this function:</div>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">repo_directory</td><td>The path to the repository directory. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">phrase</td><td>The search phrase: a string of space-separated keywords. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">synset_buf</td><td>A beforehand allocated buffer array of <a class="el" href="struct_synset_search_result.html">SynsetSearchResult</a> structs, that will be filled up with the search results ordered descending by a score which specifies how well this synset's description matches the search phrase (higher is better). </td></tr>
-    <tr><td class="paramdir">[in,out]</td><td class="paramname">synset_buf_size</td><td>The number of allocated array slots of <code>synset_buf</code>. In turn, the number of actually stored results will be written to this pointer's location. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">result_buf</td><td>A beforehand allocated buffer array of <a class="el" href="struct_synset_search_result.html">SynsetSearchResult</a> structs, that will be filled up with the search results ordered descending by a score which specifies how well this synset's description matches the search phrase (higher is better). </td></tr>
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">result_buf_size</td><td>The number of allocated array slots of <code>synset_buf</code>. In turn, the number of actually stored results will be written to this pointer's location. </td></tr>
   </table>
   </dd>
 </dl>
@@ -1630,7 +1631,7 @@ Here is the call graph for this function:</div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="libartos_8h.html">libartos.h</a></li>
-    <li class="footer">Generated on Thu May 22 2014 22:37:35 for ARTOS by
+    <li class="footer">Generated on Mon May 26 2014 19:34:44 for ARTOS by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.4 </li>
   </ul>
