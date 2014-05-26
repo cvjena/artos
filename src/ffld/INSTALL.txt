@@ -1,0 +1,103 @@
+                          Implementation of the paper
+                "Exact Acceleration of Linear Object Detectors"
+               12th European Conference on Computer Vision, 2012.
+
+      Copyright (c) 2012 Idiap Research Institute, <http://www.idiap.ch/>
+              Written by Charles Dubout <charles.dubout@idiap.ch>
+
+
+                                 PREREQUISITES
+
+FFLD requires that various libraries be available for use in the build
+procedure.
+
+Eigen version 3.1 or later
+  Eigen is a C++ template library for linear algebra: matrices, vectors,
+  numerical solvers, and related algorithms.
+  Download it at <http://eigen.tuxfamily.org/> and make sure it is accessible by
+  your compiler.
+  Alternatively you can simply uncompress the downloaded Eigen archive into the
+  ffld folder.
+
+Libfftw3f (or libfftw3 if the option FFLD_HOGPYRAMID_DOUBLE is on)
+  A C subroutine library for computing the discrete Fourier transform (DFT) in
+  one or more dimension, of arbitrary input size, and of both real and complex
+  complex data (as well as of even/odd data, i.e. the discrete cosine/sine
+  transforms or DCT/DST). 
+  There are no CMake FFTW package, so CMakeLists.txt looks for it in the
+  standard paths.
+
+Libjpeg
+  A widely used C library for reading and writing JPEG image files.
+  Found automatically using CMake FIND_PACKAGE(JPEG).
+
+Libxml2
+  The XML C parser and toolkit developed for the Gnome project (but usable
+  outside of the Gnome platform), it is free software available under the MIT
+  License.
+  Found automatically using CMake FIND_PACKAGE(LibXml2).
+
+OpenMP
+  An API for multi-platform shared-memory parallel programming in C/C++ and
+  Fortran.
+  Found automatically using CMake FIND_PACKAGE(OpenMP).
+  Not required, but stronlgy recommended on multi-core systems to take
+  advantage of multithreading.
+  This is not only a library but also a compiler extension, so refer to your
+  compiler documentation for any information.
+
+SimpleOpt
+  A cross-platform command line library which can parse almost any of the
+  standard command line formats in use today.
+  Already included in the FFLD archive.
+
+
+                                 CONFIGURATION
+
+A few options can be configured before building FFLD. None are enabled by
+default. To modify them, run ccmake or simply replace OFF by ON in the file
+CMakeLists.txt.
+
+FFLD_HOGPYRAMID_FELZENSZWALB_FEATURES
+  Use Felzenszwalb's original features (slower and not as accurate as they do
+  no angular interpolation, provided for compatibility only).
+
+FFLD_HOGPYRAMID_DOUBLE
+  Use double scalar values instead of float (slower, uses twice the amount of
+  memory, and the increase in precision is not necessarily useful).
+
+
+                                    BUILDING
+
+If you do not already have Eigen, below is the quickest way to get it
+
+  cd ffld
+  wget http://bitbucket.org/eigen/eigen/get/3.1.1.tar.gz
+  tar xzf 3.1.1.tar.gz
+  mv eigen-*/Eigen .
+  rm -rf eigen-*
+
+The last 2 steps are optional, they simply delete useless files.
+It is recommended to build the software in a separate directory. For example
+
+  cd ffld
+  mkdir build
+  cd build
+
+Then use CMake to generate the necessary Makefiles
+
+  cmake ..
+
+Then build the software with
+
+  make
+
+
+                               TESTING (optional)
+
+Run
+
+  ./ffld --model ../bicycle.txt --images . --threshold=-0.5 ../bicycle.jpg
+
+If the software was built successfully the current folder should contain a
+bicycle.jpg image where the bicycle was detected.

@@ -1,0 +1,15 @@
+<map id="learn_files_jpeg" name="learn_files_jpeg">
+<area shape="rect" id="node3" href="$class_a_r_t_o_s_1_1_stationary_background.html#a1f0385ffbb6ce834fa20a0ad9fb141d2" title="ARTOS::StationaryBackground\l::empty" alt="" coords="167,5,369,51"/>
+<area shape="rect" id="node5" href="$class_a_r_t_o_s_1_1_model_learner.html#a8af887aaa85edd3d83e1dacac1fc5112" title="ARTOS::ModelLearner\l::addPositiveSample" alt="" coords="191,74,345,121"/>
+<area shape="rect" id="node7" href="$class_a_r_t_o_s_1_1_model_learner.html#a7703aedb2696cdacc8b7983a90a714ba" title="ARTOS::ModelLearner\l::learn" alt="" coords="191,143,345,190"/>
+<area shape="rect" id="node15" href="$libartos_8cc.html#ab26d6e028f46bc3aa09f44de6d1701e6" title="populate_progress" alt="" coords="204,213,332,243"/>
+<area shape="rect" id="node17" href="$class_a_r_t_o_s_1_1_model_learner.html#a35956ad7e24b2b91bd8ef838d68e7753" title="ARTOS::ModelLearner\l::optimizeThreshold" alt="" coords="191,266,345,313"/>
+<area shape="rect" id="node27" href="$class_a_r_t_o_s_1_1_model_learner.html#a068517d1502a0535ad6d82d2f3e4fa89" title="ARTOS::ModelLearner\l::save" alt="" coords="191,335,345,382"/>
+<area shape="rect" id="node9" href="$namespace_a_r_t_o_s.html#a13910115ab667592b26511453d72a9d2" title="ARTOS::repeatedKMeansClustering" alt="" coords="420,99,652,128"/>
+<area shape="rect" id="node13" href="$namespace_a_r_t_o_s.html#a04d256e698b1056a935847df6c69ac34" title="ARTOS::mergeNearbyClusters" alt="" coords="435,152,637,181"/>
+<area shape="rect" id="node11" href="$namespace_a_r_t_o_s.html#a9353cb7d44add44ac35800f4109cf929" title="ARTOS::kMeansClustering" alt="" coords="701,99,883,128"/>
+<area shape="rect" id="node19" href="$class_a_r_t_o_s_1_1_d_p_m_detection.html#af0a95dcd6dc893401d68fa50a8929338" title="ARTOS::DPMDetection\l::addModel" alt="" coords="455,205,617,251"/>
+<area shape="rect" id="node21" href="$_model_learner_8cc.html#a91d69ccde8c4ff04cc3378e4afed9c31" title="loo_who" alt="" coords="501,275,571,304"/>
+<area shape="rect" id="node23" href="$class_a_r_t_o_s_1_1_model_evaluator.html#a7430c554715656da96d4b70ce5efa2de" title="ARTOS::ModelEvaluator\l::testModels" alt="" coords="453,327,619,374"/>
+<area shape="rect" id="node25" href="$class_a_r_t_o_s_1_1_model_evaluator.html#a8979269a8d0f73a8e8d0a613cad76bf3" title="ARTOS::ModelEvaluator\l::getMaxFMeasure" alt="" coords="453,397,619,443"/>
+</map>

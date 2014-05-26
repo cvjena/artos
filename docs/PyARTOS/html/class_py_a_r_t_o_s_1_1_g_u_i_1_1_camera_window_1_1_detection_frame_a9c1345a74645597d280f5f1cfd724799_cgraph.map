@@ -1,0 +1,9 @@
+<map id="PyARTOS.GUI.CameraWindow.DetectionFrame.__init__" name="PyARTOS.GUI.CameraWindow.DetectionFrame.__init__">
+<area shape="rect" id="node3" href="$class_py_a_r_t_o_s_1_1_g_u_i_1_1_batch_window_1_1_detection_frame.html#ad45f28f1c416ac73f8657d15c7581279" title="PyARTOS.GUI.BatchWindow.\lDetectionFrame._createWidgets" alt="" coords="284,5,495,51"/>
+<area shape="rect" id="node5" href="$class_py_a_r_t_o_s_1_1_g_u_i_1_1_batch_window_1_1_batch_window.html#af9d63d065f601d24a5d4fb9a2834405f" title="PyARTOS.GUI.BatchWindow.\lBatchWindow._createWidgets" alt="" coords="289,74,489,121"/>
+<area shape="rect" id="node7" href="$class_py_a_r_t_o_s_1_1_g_u_i_1_1_camera_sampler_1_1_camera_sample_dialog.html#adcaaeb21352ad7fe2a3d7ed78b9b4965" title="PyARTOS.GUI.CameraSampler.\lCameraSampleDialog._createWidgets" alt="" coords="268,143,511,190"/>
+<area shape="rect" id="node9" href="$class_py_a_r_t_o_s_1_1_g_u_i_1_1_camera_window_1_1_detection_frame.html#a68d43ae409a869915377c37facdc1be8" title="PyARTOS.GUI.CameraWindow.\lDetectionFrame._createWidgets" alt="" coords="283,213,496,259"/>
+<area shape="rect" id="node11" href="$class_py_a_r_t_o_s_1_1_g_u_i_1_1_batch_window_1_1_batch_window.html#a334fe80c114bf8d8f51aa4eb5ffa5fdf" title="PyARTOS.GUI.BatchWindow.\lBatchWindow.onDestroy" alt="" coords="289,282,489,329"/>
+<area shape="rect" id="node13" href="$class_py_a_r_t_o_s_1_1_g_u_i_1_1_camera_sampler_1_1_camera_sample_dialog.html#ac624e46d80ec71d221683c1618e3b759" title="PyARTOS.GUI.CameraSampler.\lCameraSampleDialog.onDestroy" alt="" coords="283,351,496,398"/>
+<area shape="rect" id="node15" href="$class_py_a_r_t_o_s_1_1_g_u_i_1_1_camera_window_1_1_detection_frame.html#a34a239d68e8fe611344a308154a8664b" title="PyARTOS.GUI.CameraWindow.\lDetectionFrame.onDestroy" alt="" coords="283,421,496,467"/>
+</map>

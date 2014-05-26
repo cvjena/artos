@@ -1,0 +1,5 @@
+<map id="PyARTOS.GUI.BatchWindow.BatchWindow.selectAndProcessImages" name="PyARTOS.GUI.BatchWindow.BatchWindow.selectAndProcessImages">
+<area shape="rect" id="node3" href="$class_py_a_r_t_o_s_1_1_g_u_i_1_1_batch_window_1_1_batch_window.html#ac3f924bc236479e770d157de24fc8ce7" title="PyARTOS.GUI.BatchWindow.\lBatchWindow.processImages" alt="" coords="276,5,476,51"/>
+<area shape="rect" id="node5" href="$class_py_a_r_t_o_s_1_1_g_u_i_1_1_batch_window_1_1_batch_window.html#a222fa0b1045fa3e54ec6a8c508ba6186" title="PyARTOS.GUI.BatchWindow.\lBatchWindow.onImageProcessed" alt="" coords="267,74,485,121"/>
+<area shape="rect" id="node7" href="$class_py_a_r_t_o_s_1_1_g_u_i_1_1_batch_window_1_1_batch_window.html#a6e15378a216ebc72f35d2a35e55592bd" title="PyARTOS.GUI.BatchWindow.\lBatchWindow.displayDetection\lResult" alt="" coords="535,65,737,129"/>
+</map>

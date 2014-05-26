@@ -1,0 +1,14 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node3" href="$class_py_a_r_t_o_s_1_1artos__wrapper_1_1___lib_a_r_t_o_s.html" title="PyARTOS.artos_wrapper.\l_LibARTOS" alt="" coords="148,5,321,51"/>
+<area shape="rect" id="node5" href="$class_py_a_r_t_o_s_1_1_camera_1_1_cv_capture_1_1_capture.html" title="PyARTOS.Camera.CvCapture.\lCapture" alt="" coords="132,74,337,121"/>
+<area shape="rect" id="node7" href="$class_py_a_r_t_o_s_1_1_camera_1_1_pygame_capture_1_1_capture.html" title="PyARTOS.Camera.PygameCapture.\lCapture" alt="" coords="117,143,352,190"/>
+<area shape="rect" id="node9" href="$class_py_a_r_t_o_s_1_1_camera_1_1_win_capture_1_1_capture.html" title="PyARTOS.Camera.WinCapture.\lCapture" alt="" coords="129,213,340,259"/>
+<area shape="rect" id="node11" href="$class_py_a_r_t_o_s_1_1detecting_1_1_bounding_box.html" title="PyARTOS.detecting.BoundingBox" alt="" coords="124,283,345,312"/>
+<area shape="rect" id="node15" href="$class_py_a_r_t_o_s_1_1detecting_1_1_detector.html" title="PyARTOS.detecting.Detector" alt="" coords="137,336,332,365"/>
+<area shape="rect" id="node17" href="$class_py_a_r_t_o_s_1_1imagenet_1_1_image_repository.html" title="PyARTOS.imagenet.ImageRepository" alt="" coords="113,389,356,419"/>
+<area shape="rect" id="node19" href="$class_py_a_r_t_o_s_1_1learning_1_1_model.html" title="PyARTOS.learning.Model" alt="" coords="149,443,320,472"/>
+<area shape="rect" id="node21" href="$class_py_a_r_t_o_s_1_1learning_1_1_model_learner.html" title="PyARTOS.learning.ModelLearner" alt="" coords="128,496,341,525"/>
+<area shape="rect" id="node23" href="$class_py_a_r_t_o_s_1_1learning_1_1_model_manager.html" title="PyARTOS.learning.ModelManager" alt="" coords="124,549,345,579"/>
+<area shape="rect" id="node25" href="$class_py_a_r_t_o_s_1_1utils_1_1_timer.html" title="PyARTOS.utils.Timer" alt="" coords="160,603,309,632"/>
+<area shape="rect" id="node13" href="$class_py_a_r_t_o_s_1_1detecting_1_1_detection.html" title="PyARTOS.detecting.Detection" alt="" coords="407,283,607,312"/>
+</map>

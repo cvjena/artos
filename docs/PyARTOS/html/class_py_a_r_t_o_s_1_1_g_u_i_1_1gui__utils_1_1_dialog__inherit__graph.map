@@ -1,0 +1,6 @@
+<map id="PyARTOS.GUI.gui_utils.Dialog" name="PyARTOS.GUI.gui_utils.Dialog">
+<area shape="rect" id="node5" href="$class_py_a_r_t_o_s_1_1_g_u_i_1_1_camera_sampler_1_1_camera_sample_dialog.html" title="PyARTOS.GUI.CameraSampler.\lCameraSampleDialog" alt="" coords="380,5,593,51"/>
+<area shape="rect" id="node7" href="$class_py_a_r_t_o_s_1_1_g_u_i_1_1_camera_sampler_1_1_device_selection_dialog.html" title="PyARTOS.GUI.CameraSampler.\lDeviceSelectionDialog" alt="" coords="380,74,593,121"/>
+<area shape="rect" id="node9" href="$class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_learn_dialog.html" title="PyARTOS.GUI.ModelCatalogue.\lLearnDialog" alt="" coords="380,143,593,190"/>
+<area shape="rect" id="node11" href="$class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_progress_window.html" title="PyARTOS.GUI.ModelCatalogue.\lProgressWindow" alt="" coords="380,213,593,259"/>
+</map>

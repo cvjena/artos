@@ -1,0 +1,6 @@
+<map id="search_synsets" name="search_synsets">
+<area shape="rect" id="node3" href="$class_a_r_t_o_s_1_1_image_repository.html#a9211412e3267c81081b079ec84dac7bf" title="ARTOS::ImageRepository\l::searchSynsets" alt="" coords="169,50,343,97"/>
+<area shape="rect" id="node5" href="$strutils_8cc.html#aaabaa0e351013e83c538d0c97f219ca8" title="splitString" alt="" coords="432,5,512,35"/>
+<area shape="rect" id="node7" href="$strutils_8cc.html#a9773e1731d0f9b16cb94e62b0ad35353" title="strtolower" alt="" coords="433,59,511,88"/>
+<area shape="rect" id="node9" href="$class_a_r_t_o_s_1_1_synset_iterator.html#ae96086bd598ecc34e59c6fcda311d1ca" title="ARTOS::SynsetIterator\l::ready" alt="" coords="393,111,551,158"/>
+</map>

@@ -1,0 +1,6 @@
+<map id="PyARTOS.learning.ModelManager.deleteModel" name="PyARTOS.learning.ModelManager.deleteModel">
+<area shape="rect" id="node3" href="$class_py_a_r_t_o_s_1_1config_1_1___config.html#a09e28eb01df79c3a6ec59678cdc217cf" title="PyARTOS.config._Config.save" alt="" coords="341,5,544,35"/>
+<area shape="rect" id="node5" href="$class_py_a_r_t_o_s_1_1learning_1_1_model_learner.html#ac310796a5e29edba44a5fc5a3ded5c86" title="PyARTOS.learning.ModelLearner.save" alt="" coords="320,59,565,88"/>
+<area shape="rect" id="node7" href="$class_py_a_r_t_o_s_1_1learning_1_1_model.html#ad427426efb560684e1667a0f57e3ec7b" title="PyARTOS.learning.Model.save" alt="" coords="341,112,544,141"/>
+<area shape="rect" id="node9" href="$class_py_a_r_t_o_s_1_1learning_1_1_model_manager.html#a21b2354ce5c09a4baa4904f6863c3cf0" title="PyARTOS.learning.ModelManager.save" alt="" coords="316,165,569,195"/>
+</map>

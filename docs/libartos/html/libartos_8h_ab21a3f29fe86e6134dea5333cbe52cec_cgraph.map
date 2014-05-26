@@ -1,0 +1,6 @@
+<map id="learner_add_synset" name="learner_add_synset">
+<area shape="rect" id="node3" href="$libartos_8cc.html#a7f0b115c2293574072fc57cc5e5b6137" title="is_valid_learner_handle" alt="" coords="199,5,356,35"/>
+<area shape="rect" id="node5" href="$class_a_r_t_o_s_1_1_image_repository.html#a181a1aef6315324ee6df03f61f60e1f4" title="ARTOS::ImageRepository\l::getRepoDirectory" alt="" coords="191,58,364,105"/>
+<area shape="rect" id="node7" href="$class_a_r_t_o_s_1_1_image_repository.html#ae0534d95c36c744b9e7209dfad8f30f3" title="ARTOS::ImageRepository\l::getSynset" alt="" coords="191,127,364,174"/>
+<area shape="rect" id="node9" href="$class_a_r_t_o_s_1_1_synset_iterator.html#ae96086bd598ecc34e59c6fcda311d1ca" title="ARTOS::SynsetIterator\l::ready" alt="" coords="415,127,572,174"/>
+</map>

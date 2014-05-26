@@ -1,0 +1,21 @@
+var searchData=
+[
+  ['artos_5fdetect_5fres_5finvalid_5fimage',['ARTOS_DETECT_RES_INVALID_IMAGE',['../libartos__def_8h.html#af32c16b53d69d504829c69b859fb0e06',1,'libartos_def.h']]],
+  ['artos_5fdetect_5fres_5finvalid_5fimg_5fdata',['ARTOS_DETECT_RES_INVALID_IMG_DATA',['../libartos__def_8h.html#a19fa1f3f0c37978b230db65dc9c596be',1,'libartos_def.h']]],
+  ['artos_5fdetect_5fres_5finvalid_5fmodel_5ffile',['ARTOS_DETECT_RES_INVALID_MODEL_FILE',['../libartos__def_8h.html#af15f0b0ce6fd7388017efe95d6557518',1,'libartos_def.h']]],
+  ['artos_5fdetect_5fres_5finvalid_5fmodel_5flist_5ffile',['ARTOS_DETECT_RES_INVALID_MODEL_LIST_FILE',['../libartos__def_8h.html#ad920b497c0fc92737518388339e2d698',1,'libartos_def.h']]],
+  ['artos_5fdetect_5fres_5fno_5fmodels',['ARTOS_DETECT_RES_NO_MODELS',['../libartos__def_8h.html#af420e705e114ee3fbc5841bd097b1838',1,'libartos_def.h']]],
+  ['artos_5fimgrepo_5fres_5finvalid_5frepository',['ARTOS_IMGREPO_RES_INVALID_REPOSITORY',['../libartos__def_8h.html#aa22b645671bf3aa572e90bbd512ea94d',1,'libartos_def.h']]],
+  ['artos_5fimgrepo_5fres_5fsynset_5fnot_5ffound',['ARTOS_IMGREPO_RES_SYNSET_NOT_FOUND',['../libartos__def_8h.html#ab9c6b83225c29815e41be402792e7b1a',1,'libartos_def.h']]],
+  ['artos_5flearn_5fres_5ffailed',['ARTOS_LEARN_RES_FAILED',['../libartos__def_8h.html#aebfbf429c7f0187d35d978a36c8c101a',1,'libartos_def.h']]],
+  ['artos_5flearn_5fres_5finvalid_5fbg_5ffile',['ARTOS_LEARN_RES_INVALID_BG_FILE',['../libartos__def_8h.html#a7837902764d6439a1f9141fe4375d5b5',1,'libartos_def.h']]],
+  ['artos_5flearn_5fres_5finvalid_5fimg_5fdata',['ARTOS_LEARN_RES_INVALID_IMG_DATA',['../libartos__def_8h.html#a47f28724348574a8b6ef7a82ba27d0ed',1,'libartos_def.h']]],
+  ['artos_5flearn_5fres_5fmodel_5fnot_5flearned',['ARTOS_LEARN_RES_MODEL_NOT_LEARNED',['../libartos__def_8h.html#a9ae510fb92c5a5d1a1f08afe67183ecf',1,'libartos_def.h']]],
+  ['artos_5flearn_5fres_5fno_5fsamples',['ARTOS_LEARN_RES_NO_SAMPLES',['../libartos__def_8h.html#a7a4be0624e552f71c31d39c58ce46c62',1,'libartos_def.h']]],
+  ['artos_5fres_5fdirectory_5fnot_5ffound',['ARTOS_RES_DIRECTORY_NOT_FOUND',['../libartos__def_8h.html#a8f9602d3bb20e093b626ec5fbcd2d730',1,'libartos_def.h']]],
+  ['artos_5fres_5ffile_5faccess_5fdenied',['ARTOS_RES_FILE_ACCESS_DENIED',['../libartos__def_8h.html#af5dbd4b22c1a98e8149bc3c0e8e2d7b3',1,'libartos_def.h']]],
+  ['artos_5fres_5ffile_5fnot_5ffound',['ARTOS_RES_FILE_NOT_FOUND',['../libartos__def_8h.html#a2cf9a8e7ceb757c3e6f4fb99da67dbfb',1,'libartos_def.h']]],
+  ['artos_5fres_5finternal_5ferror',['ARTOS_RES_INTERNAL_ERROR',['../libartos__def_8h.html#a721853a5d9cc62466350ea3c4a93d27e',1,'libartos_def.h']]],
+  ['artos_5fres_5finvalid_5fhandle',['ARTOS_RES_INVALID_HANDLE',['../libartos__def_8h.html#abe766efb88b51423ef8cf84359633aa5',1,'libartos_def.h']]],
+  ['artos_5fres_5fok',['ARTOS_RES_OK',['../libartos__def_8h.html#ac44dcc5fb94dbd379592eebba2df6d11',1,'libartos_def.h']]]
+];

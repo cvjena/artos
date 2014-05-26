@@ -1,0 +1,9 @@
+<map id="PyARTOS.GUI.ModelCatalogue.CatalogueWindow.__init__" name="PyARTOS.GUI.ModelCatalogue.CatalogueWindow.__init__">
+<area shape="rect" id="node3" href="$class_py_a_r_t_o_s_1_1_g_u_i_1_1_batch_window_1_1_batch_window.html#a334fe80c114bf8d8f51aa4eb5ffa5fdf" title="PyARTOS.GUI.BatchWindow.\lBatchWindow.onDestroy" alt="" coords="277,5,477,51"/>
+<area shape="rect" id="node5" href="$class_py_a_r_t_o_s_1_1_g_u_i_1_1_camera_sampler_1_1_camera_sample_dialog.html#ac624e46d80ec71d221683c1618e3b759" title="PyARTOS.GUI.CameraSampler.\lCameraSampleDialog.onDestroy" alt="" coords="271,74,484,121"/>
+<area shape="rect" id="node7" href="$class_py_a_r_t_o_s_1_1_g_u_i_1_1_camera_window_1_1_detection_frame.html#a34a239d68e8fe611344a308154a8664b" title="PyARTOS.GUI.CameraWindow.\lDetectionFrame.onDestroy" alt="" coords="271,143,484,190"/>
+<area shape="rect" id="node9" href="$class_py_a_r_t_o_s_1_1_g_u_i_1_1_camera_window_1_1_camera_window.html#a6cf97b9c81ef6a7da8ab6ab329d066c1" title="PyARTOS.GUI.CameraWindow.\lCameraWindow.onDestroy" alt="" coords="271,213,484,259"/>
+<area shape="rect" id="node11" href="$class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_model_widget.html#ad129eef29c50dc87ae4fb8bfb4126734" title="PyARTOS.GUI.ModelCatalogue.\lModelWidget.onDestroy" alt="" coords="271,282,484,329"/>
+<area shape="rect" id="node15" href="$class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_catalogue_window.html#a2d2410364d45a203aeeb40ace2a8cca0" title="PyARTOS.GUI.ModelCatalogue.\lCatalogueWindow.onDestroy" alt="" coords="271,351,484,398"/>
+<area shape="rect" id="node13" href="$class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_model_widget.html#a1d7595a0c046d14fdf4c6e50d2b32ec2" title="PyARTOS.GUI.ModelCatalogue.\lModelWidget._updateThumbnails" alt="" coords="535,282,748,329"/>
+</map>

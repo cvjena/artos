@@ -1,0 +1,5 @@
+<map id="ARTOS::StationaryBackground::computeFlattenedCovariance" name="ARTOS::StationaryBackground::computeFlattenedCovariance">
+<area shape="rect" id="node3" href="$class_a_r_t_o_s_1_1_stationary_background.html#aad9a7a50f4e57211c7cae821327df1e4" title="ARTOS::StationaryBackground\l::getNumFeatures" alt="" coords="260,5,463,51"/>
+<area shape="rect" id="node5" href="$class_a_r_t_o_s_1_1_stationary_background.html#a297919d54f44a7afb375c6876101f6b4" title="ARTOS::StationaryBackground\l::computeCovariance" alt="" coords="260,74,463,121"/>
+<area shape="rect" id="node7" href="$class_a_r_t_o_s_1_1_stationary_background.html#ab6076681e9ec838fe30ea769e91f7a1b" title="ARTOS::StationaryBackground\l::getMaxOffset" alt="" coords="513,74,716,121"/>
+</map>
