@@ -468,7 +468,12 @@ const vector<float> & ModelLearner::optimizeThreshold(const unsigned int maxPosi
         eval.testModels(positive, maxPositive, negative, 100, progressCB, cbData, looFunc, looData);
         if (this->m_verbose)
         {
-            cerr << "Tested models against ~" << maxPositive * this->m_models.size() << " positive";
+            cerr << "Tested models against ";
+            if (maxPositive > 0)
+                cerr << "~" << maxPositive * this->m_models.size();
+            else
+                cerr << this->getNumSamples();
+            cerr << " positive";
             if (negative != NULL)
                 cerr << " and " << negative->size() << " negative";
             cerr << " samples in " << stop() << " ms." << endl;

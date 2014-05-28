@@ -34,11 +34,15 @@ unsigned int ImageNetModelLearner::addPositiveSamplesFromSynset(const Synset & s
     unsigned int numSamples = 0;
     for (SynsetImageIterator imgIt = synset.getImageIterator(true); imgIt.ready() && (maxSamples == 0 || (unsigned int) imgIt < maxSamples); ++imgIt)
     {
-        SynsetImage img = *imgIt;
-        if (img.loadBoundingBoxes())
+        SynsetImage simg = *imgIt;
+        if (simg.loadBoundingBoxes())
         {
-            this->addPositiveSample(img.getImage(), img.bboxes);
-            numSamples += img.bboxes.size();
+            JPEGImage & img = simg.getImage();
+            if (!img.empty())
+            {
+                this->addPositiveSample(img, simg.bboxes);
+                numSamples += simg.bboxes.size();
+            }
         }
     }
     if (this->m_verbose)
@@ -54,7 +58,7 @@ const vector<float> & ImageNetModelLearner::optimizeThreshold(const unsigned int
     if (numNegative > 0)
     {
         negative = new vector<JPEGImage>();
-        for (MixedImageIterator imgIt = this->m_repo.getMixedIterator(); imgIt.ready() && (unsigned int) imgIt < numNegative; ++imgIt)
+        for (MixedImageIterator imgIt = this->m_repo.getMixedIterator(); imgIt.ready() && negative->size() < numNegative; ++imgIt)
         {
             SynsetImage img = *imgIt;
             if (this->m_addedSynsets.find(img.getSynsetId()) == this->m_addedSynsets.end())

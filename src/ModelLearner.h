@@ -189,7 +189,7 @@ public:
     /**
     * Finds the optimal thresholds for the models learned previously with learn() by testing them against the
     * positive samples and, optionally, some additional negative samples to maximize the F-measure of each model:
-    * \f[\frac{(1 + b^2) \cdot precision \cdot recall}{b^2 \cdot precision + recall}\f]
+    * \f[\frac{(1 + b^2) \cdot \mbox{precision} \cdot \mbox{recall}}{b^2 \cdot \mbox{precision} + \mbox{recall}}\f]
     *
     * @param[in] maxPositive Maximum number of positive samples to test the models against. Set this to 0
     * to run the detector against all samples.

@@ -102,7 +102,7 @@ public:
     * So, testModels() must have been called before.
     *
     * The F-measure is defined as:
-    * \f[\frac{(1 + b^2) \cdot precision \cdot recall}{b^2 \cdot precision + recall}\f]
+    * \f[\frac{(1 + b^2) \cdot \mbox{precision} \cdot \mbox{recall}}{b^2 \cdot \mbox{precision} + \mbox{recall}}\f]
     *
     * @param[in] modelIndex The index of the model to retrieve F-measure values for.
     *

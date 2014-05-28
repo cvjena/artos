@@ -23,7 +23,7 @@ ARTOS – README
 
 ### libartos ###
 
-The ARTOS C++ library incorporates the *Fast Fourier Linear Detector* (FFLD) [v1] for DPM detection and the *Eigen* Library [v3.1] for the linear algebra stuff. Both are already bundled with ARTOS.
+The ARTOS C++ library incorporates a modified version of the *Fast Fourier Linear Detector* (FFLD) [v1] for DPM detection and the *Eigen* Library [v3.1] for the linear algebra stuff. Both are already bundled with ARTOS.
 
 In addition, the following 3-rd party libraries are required by *libartos*:
 

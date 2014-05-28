@@ -234,7 +234,17 @@ vector<unsigned int> ModelEvaluator::runDetector(SampleDetectionsVector & detect
                 }
             }
         // Run detector and store detections
-        this->detect(positive[i]->img, sampleDetections);
+        try
+        {
+            this->detect(positive[i]->img, sampleDetections);
+        }
+        catch (const bad_alloc&)
+        {
+            sampleDetections.clear();
+            for (modelAssocIt = positive[i]->modelAssoc.begin(); modelAssocIt != positive[i]->modelAssoc.end(); modelAssocIt++)
+                if (*modelAssocIt < numModels)
+                    numPositive[*modelAssocIt] -= 1;
+        }
         for (detection = sampleDetections.begin(); detection != sampleDetections.end(); detection++)
             if (find(positive[i]->modelAssoc.begin(), positive[i]->modelAssoc.end(), detection->modelIndex)
                     != positive[i]->modelAssoc.end())
@@ -262,7 +272,14 @@ vector<unsigned int> ModelEvaluator::runDetector(SampleDetectionsVector & detect
         for (int i = 0; i < negative->size(); i++)
             if (!(*negative)[i].empty())
             {
-                this->detect((*negative)[i], sampleDetections);
+                try
+                {
+                    this->detect((*negative)[i], sampleDetections);
+                }
+                catch (const bad_alloc&)
+                {
+                    sampleDetections.clear();
+                }
                 for (detection = sampleDetections.begin(); detection != sampleDetections.end(); detection++)
                     detections.push_back(pair<int, Detection>(-1 * (i + 1), *detection));
                 sampleDetections.clear();
