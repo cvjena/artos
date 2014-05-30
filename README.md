@@ -54,7 +54,7 @@ The following Python modules are required:
           - Binaries: http://www.pythonware.com/products/pil/index.htm
 
       - Python 3:  
-        Since *PIL* is not available for Python 3 until now, the [*Pillow*][1] fork can be used as a drop-in replacement.
+        Since *PIL* is not available for Python 3 until now, the *[Pillow][1]* fork can be used as a drop-in replacement.
 
           - Packages: *python3-imaging* and *python3-imaging-tk*
           - Inofficial Pillow binaries: http://www.lfd.uci.edu/~gohlke/pythonlibs/#pillow
@@ -63,7 +63,7 @@ The following Python modules are required:
       - Unix:
           - **python-opencv**
           - **pygame**: http://www.pygame.org/download.shtml
-      - Windows (32-bit): **VideoCapture** (>= 0.9-5): http://videocapture.sourceforge.net/
+      - Windows: **VideoCapture** (>= 0.9-5): http://videocapture.sourceforge.net/
 
 Note that neither *python-opencv* nor *VideoCapture* are available for Python 3 until now (May 2014).  
 Anyway, adding support for a new or another video capturing module can be done easily by adding a new camera abstraction class to the `PyARTOS.Camera` sub-package.
@@ -72,7 +72,7 @@ Anyway, adding support for a new or another video capturing module can be done e
 3. Building the library
 -----------------------
 
-Building *libartos* requires [**CMake**][2] and a **C++ compiler**. It has been successfully built using the **GNU C++ Compiler**. Other compilers may be supported too, but have not been tested.
+Building *libartos* requires **[CMake][2]** and a **C++ compiler**. It has been successfully built using the **GNU C++ Compiler**. Other compilers may be supported too, but have not been tested.
 
 To build *libartos* on **Unix**, run the following from the ARTOS root directory:
 
@@ -89,7 +89,7 @@ To build *libartos* on **Windows**, use the *CMake GUI* to create a *MinGW Makef
 4. Setting up the environment
 -----------------------------
 
-The use of the [**ImageNet**][3] image repository is an essential part of the ARTOS-workflow.  
+The use of the **[ImageNet][3]** image repository is an essential part of the ARTOS-workflow.  
 Hence, before the first use of *ARTOS*, you need to download:
 
 1. **a (full) copy of the ImageNet image data for all synsets**
