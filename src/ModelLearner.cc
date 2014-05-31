@@ -420,7 +420,8 @@ bool ModelLearner::learn(const unsigned int maxAspectClusters, const unsigned in
     this->m_clusterSizes.assign(this->m_models.size(), 0);
     for (sample = this->m_samples.begin(); sample != this->m_samples.end(); sample++)
         for (i = 0; i < sample->modelAssoc.size(); i++)
-            this->m_clusterSizes[sample->modelAssoc[i]]++;
+            if (sample->modelAssoc[i] < this->m_clusterSizes.size())
+                this->m_clusterSizes[sample->modelAssoc[i]]++;
     
     return true;
 }
@@ -531,6 +532,7 @@ Mixture * loo_who(const Mixture * orig, const Sample * sample, const unsigned in
     loo_data_t * looData = reinterpret_cast<loo_data_t*>(data);
     const WHOSample * whoSample = dynamic_cast<const WHOSample*>(sample);
     if (whoSample != NULL && whoSample->whoFeatures[objectIndex].size() > 0
+            && whoSample->modelAssoc[objectIndex] < looData->clusterSizes->size()
             && (*(looData->clusterSizes))[whoSample->modelAssoc[objectIndex]] > numLeftOut + 1)
     {
         unsigned int clusterSize = (*(looData->clusterSizes))[whoSample->modelAssoc[objectIndex]];

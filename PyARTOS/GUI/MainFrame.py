@@ -12,11 +12,13 @@ try:
     import tkinter as Tkinter
     from tkinter import N, E, S, W
     from tkinter import ttk
+    from tkinter import messagebox as tkMessageBox
 except:
     # Python 2
     import Tkinter
     from Tkinter import N, E, S, W
     import ttk
+    import tkMessageBox
 
 import os
 from PIL import Image, ImageTk

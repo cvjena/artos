@@ -7,3 +7,4 @@
 \form#6:$N^2 * num\_features^2$
 \form#7:$\mathcal{O}(N \cdot num\_features^2)$
 \form#8:$\mathcal{O}(N^2 \cdot num\_features^2)$
+\form#9:\[\frac{(1 + b^2) \cdot \mbox{precision} \cdot \mbox{recall}}{b^2 \cdot \mbox{precision} + \mbox{recall}}\]
