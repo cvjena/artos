@@ -176,10 +176,7 @@ vector<unsigned int> ModelEvaluator::runDetector(SampleDetectionsVector & detect
     // Set up parameters for progress callback
     unsigned int totalNumSamples, numSamplesProcessed = 0;
     if (maxSamples == 0 || maxSamples > positive.size())
-    {
-        maxSamples = positive.size();
-        totalNumSamples = maxSamples;
-    }
+        totalNumSamples = positive.size();
     else
         totalNumSamples = maxSamples * numPositive.size();
     if (negative != NULL)
@@ -208,12 +205,12 @@ vector<unsigned int> ModelEvaluator::runDetector(SampleDetectionsVector & detect
     vector<unsigned int>::const_iterator modelAssocIt;
     unsigned int modelAssocIndex;
     bool needSample;
-    for (int i = 0; i < positive.size() && *(min_element(numPositive.begin(), numPositive.end())) < maxSamples; i++)
+    for (int i = 0; i < positive.size() && (maxSamples == 0 || *(min_element(numPositive.begin(), numPositive.end())) < maxSamples); i++)
     {
         // Check if we need this sample at all
         needSample = false;
         for (modelAssocIt = positive[i]->modelAssoc.begin(); modelAssocIt != positive[i]->modelAssoc.end(); modelAssocIt++)
-            if (*modelAssocIt < numModels && numPositive[*modelAssocIt] < maxSamples)
+            if (maxSamples == 0 || *modelAssocIt < numModels && numPositive[*modelAssocIt] < maxSamples)
                 needSample = true;
         if (!needSample)
             continue;
