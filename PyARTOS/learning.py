@@ -447,7 +447,7 @@ class ModelManager(object):
         """
         
         object.__init__(self)
-        self.filename = listfile
+        self.filename = os.path.abspath(listfile)
         try:
             with open(listfile) as file:
                 self._readFile(file)
@@ -519,12 +519,12 @@ class ModelManager(object):
         disabled  - If set to true, the record will be written to the model list file, but will be 'commented out'.
         """
         
-        if os.path.isabs(modelfile):
-            basedir = os.path.dirname(self.filename)
-            if basedir[-1] not in ('/', '\\'):
-                basedir += os.path.sep
-            if modelfile.startswith(basedir):
-                modelfile = modelfile[len(basedir):]
+        abspath = modelfile if os.path.isabs(modelfile) else os.path.abspath(modelfile)
+        basedir = os.path.dirname(self.filename)
+        if basedir[-1] not in ('/', '\\'):
+            basedir += os.path.sep
+        if abspath.startswith(basedir):
+            modelfile = abspath[len(basedir):]
         self.models.append({
             'classname' : classname.strip(),
             'modelfile' : modelfile,
@@ -550,6 +550,15 @@ class ModelManager(object):
                 os.remove(modelfile)
             del self.models[modelIndex]
             self.save()
+    
+    
+    def getModelPath(self, modelIndex):
+        """Returns the full absolute path to a specific model file at the index given by `modelIndex` in the `models` list."""
+        
+        if (modelIndex < 0) or (modelIndex >= len(self.models)):
+            return None
+        modelfile = self.models[modelIndex]['modelfile']
+        return modelfile if os.path.isabs(modelfile) else os.path.join(os.path.dirname(self.filename), modelfile)
     
     
     def readModel(self, model):

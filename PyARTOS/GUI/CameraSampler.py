@@ -130,6 +130,12 @@ class CameraSampleDialog(gui_utils.Dialog):
                 self.frame = frame.copy()
                 if self.lblInstructions['width'] <= 0:
                     self.lblInstructions['width'] = frame.size[0]
+                # Scale down for displaying if camera input is too large for screen
+                screenSize = self.winfo_screenwidth(), self.winfo_screenheight()
+                maxSize = (screenSize[0] - 100, screenSize[1] - 300)
+                if (frame.size[0] > maxSize[0]) or (frame.size[1] > maxSize[1]):
+                    frame.thumbnail(maxSize, Image.BILINEAR)
+                self.frameThumb = frame.copy()
                 # Draw bounding box
                 if self.boundingBox:
                     frame = self.boundingBox.drawToImage(frame)
@@ -148,7 +154,7 @@ class CameraSampleDialog(gui_utils.Dialog):
             return
         if self.boundingBox:
             # Capture sample
-            self.samples.append((self.frame.copy(), BoundingBox(self.boundingBox)))
+            self.samples.append((self.frame.copy(), BoundingBox(self.boundingBox.scale(float(self.frame.size[0]) / float(self.frameThumb.size[0])))))
             self.status.set('{} of {}'.format(len(self.samples), self.numSamples) if self.numSamples > 0 else '{} samples captured'.format(len(self.samples)))
             if (self.numSamples > 0) and (len(self.samples) >= self.numSamples):
                 self.destroy()
@@ -251,7 +257,7 @@ class CameraSampleDialog(gui_utils.Dialog):
                 self.boundingBox.top = coords[1]
                 self.drawingEdges = (self.drawingEdges - {S}) | {N}
         # Draw bounding box
-        self.lblVideo._img = ImageTk.PhotoImage(self.boundingBox.drawToImage(self.frame.copy()))
+        self.lblVideo._img = ImageTk.PhotoImage(self.boundingBox.drawToImage(self.frameThumb.copy()))
         self.lblVideo['image'] = self.lblVideo._img
     
     

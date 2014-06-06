@@ -222,7 +222,7 @@ class ModelWidget(ttk.Frame):
         
         if LearnDialog.check(self._cw.modelDir.get()):
             dlg = LearnDialog(self, mode = LearnDialog.MODE_INSITU, modelDir = self._cw.modelDir.get(),
-                              adapt = self._cw.modelManager.models[self.modelIndex]['modelfile'],
+                              adapt = self._cw.modelManager.getModelPath(self.modelIndex),
                               parent = self._cw)
             self.wait_window(dlg)
             self._updateModel()

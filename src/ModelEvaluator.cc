@@ -63,6 +63,8 @@ float ModelEvaluator::computeAveragePrecision(const unsigned int modelIndex) con
             if (result->tp + result->fp > 0)
                 maxPrecision = max(static_cast<float>(result->tp) / static_cast<float>(result->tp + result->fp), maxPrecision);
         }
+        if (currentRecall > 1e-6) // always include recall == 0
+            ap += maxPrecision * currentRecall;
     }
     return ap;
 }
@@ -98,8 +100,8 @@ void ModelEvaluator::testModels(const vector<Sample*> & positive, unsigned int m
             
             // Count true positives and total amount of detections for each threshold
             // from minScore to maxScore in steps of 1/granularity
-            int iMinScore = floor(minScore * granularity);
-            int iMaxScore = ceil(maxScore * granularity);
+            int iMinScore = round(minScore * granularity);
+            int iMaxScore = round(maxScore * granularity);
             Eigen::Array<float, 1, Eigen::Dynamic> tp(iMaxScore - iMinScore + 1);
             tp.setConstant(0);
             Eigen::Array<float, 1, Eigen::Dynamic> fp(tp);

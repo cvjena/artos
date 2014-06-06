@@ -124,6 +124,9 @@ class CameraWindow(Tkinter.Toplevel):
     """A toplevel window that is used to detect objects in a video stream from a camera."""
 
 
+    MAX_VIDEO_SIZE = (640, 480)
+
+
     def selectModelDir(self):
         """Shows a dialog for selecting the model directory."""
         newDir = tkFileDialog.askdirectory(parent = self, mustexist = True, initialdir = self.modelDir.get())
@@ -207,6 +210,9 @@ class CameraWindow(Tkinter.Toplevel):
         try:
             frame = self.currentDevice.grabFrame()
             if not (frame is None):
+                # Scale down if camera input is high-resolution
+                if (frame.size[0] > self.__class__.MAX_VIDEO_SIZE[0]) or (frame.size[1] > self.__class__.MAX_VIDEO_SIZE[1]):
+                    frame.thumbnail(self.__class__.MAX_VIDEO_SIZE, Image.BILINEAR)
                 # Draw bounding boxes
                 for color, d in zip(self.frmDetection.classColors, self.detections):
                     frame = d.drawToImage(frame, color)

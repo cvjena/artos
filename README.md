@@ -51,10 +51,10 @@ The following Python modules are required:
 
       - Python 2:
           - Packages: *python-imaging* and *python-imaging-tk*
-          - Binaries: http://www.pythonware.com/products/pil/index.htm
+          - Binaries for Win32: http://www.pythonware.com/products/pil/index.htm
 
-      - Python 3:  
-        Since *PIL* is not available for Python 3 until now, the *[Pillow][1]* fork can be used as a drop-in replacement.
+      - Python 3 and Python 2 64-bit:  
+        Since *PIL* isn't being developed anymore and, thus, not available for Python 3, the *[Pillow][1]* fork can be used as a drop-in replacement.
 
           - Packages: *python3-imaging* and *python3-imaging-tk*
           - Inofficial Pillow binaries: http://www.lfd.uci.edu/~gohlke/pythonlibs/#pillow
