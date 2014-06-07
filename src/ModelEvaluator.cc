@@ -218,7 +218,6 @@ vector<unsigned int> ModelEvaluator::runDetector(SampleDetectionsVector & detect
             if (*modelAssocIt < numModels)
             {
                 numPositive[*modelAssocIt] += 1;
-                numSamplesProcessed++;
                 if (looFunc != NULL) // Check for leave-one-out replacement
                 {
                     replacement = looFunc(this->mixtures[classnames[*modelAssocIt]], positive[i], modelAssocIndex, numLeftOut[*modelAssocIt], looData);
@@ -261,6 +260,7 @@ vector<unsigned int> ModelEvaluator::runDetector(SampleDetectionsVector & detect
             this->inith = -1;
         }
         // Update progress
+        numSamplesProcessed++;
         if (progressCB != NULL)
             progressCB(numSamplesProcessed, totalNumSamples, cbData);
     }

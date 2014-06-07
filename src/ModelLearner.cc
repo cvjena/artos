@@ -353,7 +353,7 @@ bool ModelLearner::learn(const unsigned int maxAspectClusters, const unsigned in
             // Cluster by WHO features
             Eigen::VectorXi whoClusterAssignment = Eigen::VectorXi::Zero(whoFeatures.rows());
             Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> tmpCentroids;
-            repeatedKMeansClustering(whoFeatures, maxWHOClusters, &whoClusterAssignment, &tmpCentroids);
+            repeatedKMeansClustering(whoFeatures, maxWHOClusters, &whoClusterAssignment, &tmpCentroids, 30);
             // Ignore clusters with too few samples
             if (this->m_verbose)
             {
