@@ -36,7 +36,12 @@ void kMeansClustering(const Eigen::MatrixBase<Derived> & dataPoints, const unsig
     Eigen::VectorXi assign(numDataPoints);
     
     // Choose k initial centroids at random
-    std::srand(std::time(NULL));
+    static bool seededRand = false;
+    if (!seededRand)
+    {
+        std::srand(std::time(NULL));
+        seededRand = true;
+    }
     {
         int r;
         Eigen::Matrix<bool, Eigen::Dynamic, 1> chosen(numDataPoints);
@@ -129,7 +134,7 @@ void repeatedKMeansClustering(const Eigen::MatrixBase<Derived> & dataPoints, con
     Eigen::VectorXi assign(numDataPoints);
     
     // Run kMeansClustering() multiple times
-    Scalar reconstError, minReconstError;
+    double reconstError, minReconstError;
     for (unsigned int i = 0; i < numRuns; i++)
     {
         // Cluster
@@ -137,7 +142,7 @@ void repeatedKMeansClustering(const Eigen::MatrixBase<Derived> & dataPoints, con
         // Compute reconstruction error
         reconstError = 0;
         for (unsigned int j = 0; j < numDataPoints; j++)
-            reconstError += (dataPoints.row(j) - centr.row(assign(j))).squaredNorm();
+            reconstError += static_cast<double>((dataPoints.row(j) - centr.row(assign(j))).squaredNorm());
         // Update results
         if (i == 0 || reconstError < minReconstError)
         {
