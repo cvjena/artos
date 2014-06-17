@@ -188,6 +188,18 @@ public:
                             ProgressCallback progressCB = NULL, void * cbData = NULL,
                             LOOFunc looFunc = NULL, void * looData = NULL);
     
+    virtual std::vector<float> computeOptimalBiasCombination(const std::vector<Sample*> & positive, unsigned int maxSamples = 0,
+                                                             const std::vector<FFLD::JPEGImage> * negative = NULL,
+                                                             const unsigned int granularity = 100, const float b = 1.0f,
+                                                             ProgressCallback progressCB = NULL, void * cbData = NULL,
+                                                             LOOFunc looFunc = NULL, void * looData = NULL);
+    
+    virtual std::vector<float> searchOptimalBiasCombination(const std::vector<Sample*> & positive, unsigned int maxSamples = 0,
+                                                            const std::vector<FFLD::JPEGImage> * negative = NULL,
+                                                            const unsigned int granularity = 100, const float b = 1.0f,
+                                                            ProgressCallback progressCB = NULL, void * cbData = NULL,
+                                                            LOOFunc looFunc = NULL, void * looData = NULL);
+    
     /**
     * Runs the detector on given images containing the positive samples and, optionally, some negative
     * images containing no instance of the object class to be detected.

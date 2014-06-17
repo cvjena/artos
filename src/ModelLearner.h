@@ -125,7 +125,7 @@ public:
     const std::vector<FFLD::HOGPyramid::Level> & getModels() { return this->m_models; };
     
     /**
-    * @return The threshold for the learned models determined by optimizeThreshold(), which will be 0 if
+    * @return The thresholds for the learned models determined by optimizeThreshold(), which will be 0 if
     * optimizeThreshold() hasn't been called yet or has failed.
     */
     const std::vector<float> & getThresholds() const { return this->m_thresholds; };
@@ -135,6 +135,12 @@ public:
     * An empty vector will be returned if no model has been learned yet.
     */
     const std::vector<unsigned int> & getClusterSizes() const { return this->m_clusterSizes; };
+    
+    /**
+    * @return The factors `f` which have been used to normalize each model by `w = w/f`.
+    * An empty vector will be returned if no model has been learned yet.
+    */
+    const std::vector<FFLD::HOGPyramid::Scalar> & getNormFactors() const { return this->m_normFactors; };
     
     /**
     * Resets this learner to it's initial state and makes it forget all learned models, thresholds and added samples.
@@ -167,6 +173,11 @@ public:
     *
     * Optionally, clustering can be performed before learning, first by aspect ratio, then by WHO features. A separate model
     * will be learned for each cluster. Thus, the maximum number of learned models will be `maxAspectClusters * maxWHOClusters`.
+    *
+    * The learned models will be provided with estimated thresholds, according to the following formula:
+    * \f[\frac{\mu_0^T \Sigma^-1 \mu_0 - \mu_1^T \Sigma^-1 \mu_1}{2}\f]
+    * That formula lacks an additive term of \f$\ln \left ( \frac{\varphi}{\varphi - 1} \right )\f$ involving a-priori probabilities
+    * and, thus, is not optimal. Hence, you'll probably want to call optimizeThreshold() after learning the models.
     *
     * @param[in] maxAspectClusters Maximum number of clusters to form by the aspect ratio of the samples.
     *
@@ -215,6 +226,11 @@ public:
     virtual const std::vector<float> & optimizeThreshold(const unsigned int maxPositive = 0,
                                                          const std::vector<FFLD::JPEGImage> * negative = NULL,
                                                          const float b = 1.0f,
+                                                         ProgressCallback progressCB = NULL, void * cbData = NULL);
+    
+    virtual const std::vector<float> & optimizeThresholdCombination(const unsigned int maxPositive = 0,
+                                                         const std::vector<FFLD::JPEGImage> * negative = NULL,
+                                                         int mode = 1, const float b = 1.0f,
                                                          ProgressCallback progressCB = NULL, void * cbData = NULL);
     
     /**

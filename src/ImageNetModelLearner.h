@@ -157,6 +157,11 @@ public:
                                                          const unsigned int numNegative = 0,
                                                          const float b = 1.0f,
                                                          ProgressCallback progressCB = NULL, void * cbData = NULL);
+    
+    virtual const std::vector<float> & optimizeThresholdCombination(const unsigned int maxPositive = 0,
+                                                         const unsigned int numNegative = 0,
+                                                         int mode = 1, const float b = 1.0f,
+                                                         ProgressCallback progressCB = NULL, void * cbData = NULL);
 
 
 protected:

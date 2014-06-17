@@ -18,6 +18,12 @@ import math, re, os, ctypes
 
 class ModelLearner(object):
     """Handles learning of WHO (Whitened Histogram of Orientations) models."""
+    
+    
+    THOPT_NONE = artos_wrapper.THOPT_NONE
+    THOPT_OVERLAPPING = artos_wrapper.THOPT_OVERLAPPING
+    THOPT_LOOCV = artos_wrapper.THOPT_LOOCV
+    
 
     def __init__(self, bgFile, imageRepository = None, thOptLOOCV = True):
         """Constructs and initializes a new model learner using given stationary background statistics and a given image repository.
@@ -122,6 +128,9 @@ class ModelLearner(object):
         
         Before calling this, some positive samples must have been added.
         
+        The learned models will be provided with estimated thresholds. The estimate lacks an additive term involving a-priori probabilities
+        and, thus, is not optimal. Hence, you'll probably want to call optimizeThreshold() afterwards.
+        
         maxAspectClusters - Maximum number of clusters to form by the aspect ratio of the samples.
         maxWHOClusters - Maximum number of clusters to form by the WHO feature vectors of the samples of a single aspect ratio cluster.
         """
@@ -168,7 +177,7 @@ class ModelLearner(object):
     @staticmethod
     def learnModelFromSynset(imageRepository, synsetId, bgFile, modelfile, add = True, \
                              maxAspectClusters = 2, maxWHOClusters = 3, \
-                             thOptNumPositive = 0, thOptNumNegative = 0, thOptLOOCV = True, progressCallback = None):
+                             thOptNumPositive = 0, thOptNumNegative = 0, thOptMode = THOPT_LOOCV, progressCallback = None):
         """All-in-one short-cut method for learning a new WHO model from positive samples extracted from an ImageNet synset.
         
         imageRepository - Either the path to the image repository or an imagenet.ImageRepository instance.
@@ -184,11 +193,13 @@ class ModelLearner(object):
                            Set this to 0 to run the detector against all samples.
         thOptNumNegative - Number of negative samples taken from different synsets for finding the optimal threshold.
                            Every detection on one of these images will be considered as a false positive.
-        thOptLOOCV - If set to true, Leave-one-out-cross-validation will be performed for threshold optimization.
-                     This will increase memory usage, since the WHO features of all samples have to be stored for this,
-                     and will slow down threshold optimization as well as the model learning step if only one WHO cluster
-                     is used. But it will guarantee that no model is tested against a sample it has been learned from
-                     for threshold optimization.
+        thOptMode - Controls the mode of threshold optimization.
+                    If set to THOPT_LOOCV, Leave-one-out-cross-validation will be performed for threshold optimization.
+                    This will increase memory usage, since the WHO features of all samples have to be stored for this,
+                    and will slow down threshold optimization as well as the model learning step if only one WHO cluster
+                    is used. But it will guarantee that no model is tested against a sample it has been learned from
+                    for threshold optimization, like it's done with THOPT_OVERLAPPING.
+                    Setting this to THOPT_NONE will turn off threshold optimization. In that case, estimated thresholds will be used.
         progressCallback - Optionally, a callback which is called between the steps of the learning process to populate the progress.  
                            The first parameter to the callback will be the number of steps performed in the entire process,
                            the second one will be the total number of steps. To date, the entire process is divided into three steps:
@@ -207,13 +218,13 @@ class ModelLearner(object):
              else ctypes.cast(None, artos_wrapper.overall_progress_cb_t)
         libartos.learn_imagenet(utils.str2bytes(repoDirectory), utils.str2bytes(synsetId), utils.str2bytes(bgFile), \
                                 utils.str2bytes(modelfile), add, maxAspectClusters, maxWHOClusters, \
-                                thOptNumPositive, thOptNumNegative, thOptLOOCV, cb, True)
+                                thOptNumPositive, thOptNumNegative, thOptMode, cb, True)
 
 
     @staticmethod
     def learnModelFromFiles(imageFiles, boundingBoxes, bgFile, modelfile, add = True, \
                             maxAspectClusters = 2, maxWHOClusters = 3, \
-                            thOptNumPositive = 0, thOptNumNegative = 0, thOptLOOCV = True, progressCallback = None):
+                            thOptNumPositive = 0, thOptNumNegative = 0, thOptMode = THOPT_LOOCV, progressCallback = None):
         """All-in-one short-cut method for learning a new WHO model from JPEG files.
         
         imageFiles - Sequence with paths of JPEG files to use as positive samples.
@@ -233,11 +244,13 @@ class ModelLearner(object):
                            Set this to 0 to run the detector against all samples.
         thOptNumNegative - Number of negative samples taken from different synsets for finding the optimal threshold.
                            Every detection on one of these images will be considered as a false positive.
-        thOptLOOCV - If set to true, Leave-one-out-cross-validation will be performed for threshold optimization.
-                     This will increase memory usage, since the WHO features of all samples have to be stored for this,
-                     and will slow down threshold optimization as well as the model learning step if only one WHO cluster
-                     is used. But it will guarantee that no model is tested against a sample it has been learned from
-                     for threshold optimization.
+        thOptMode - Controls the mode of threshold optimization.
+                    If set to THOPT_LOOCV, Leave-one-out-cross-validation will be performed for threshold optimization.
+                    This will increase memory usage, since the WHO features of all samples have to be stored for this,
+                    and will slow down threshold optimization as well as the model learning step if only one WHO cluster
+                    is used. But it will guarantee that no model is tested against a sample it has been learned from
+                    for threshold optimization, like it's done with THOPT_OVERLAPPING.
+                    Setting this to THOPT_NONE will turn off threshold optimization. In that case, estimated thresholds will be used.
         progressCallback - Optionally, a callback which is called between the steps of the learning process to populate the progress.  
                            The first parameter to the callback will be the number of steps performed in the entire process,
                            the second one will be the total number of steps. To date, the entire process is divided into three steps:
@@ -272,7 +285,7 @@ class ModelLearner(object):
         cb = artos_wrapper.overall_progress_cb_t(progressCallback) if not progressCallback is None \
              else ctypes.cast(None, artos_wrapper.overall_progress_cb_t)
         libartos.learn_files_jpeg(filenames, len(filenames), bboxes, utils.str2bytes(bgFile), utils.str2bytes(modelfile), \
-                                  add, maxAspectClusters, maxWHOClusters, thOptNumPositive, thOptNumNegative, thOptLOOCV, cb)
+                                  add, maxAspectClusters, maxWHOClusters, thOptNumPositive, thOptNumNegative, thOptMode, cb)
 
 
 

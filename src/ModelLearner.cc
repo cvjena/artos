@@ -147,6 +147,7 @@ bool ModelLearner::learn(const unsigned int maxAspectClusters, const unsigned in
 {
     this->m_models.clear();
     this->m_normFactors.clear();
+    this->m_thresholds.clear();
     if (this->m_bg.empty() || this->m_samples.empty() || this->m_bg.getNumFeatures() > HOGPyramid::NbFeatures)
         return false;
 
@@ -169,7 +170,7 @@ bool ModelLearner::learn(const unsigned int maxAspectClusters, const unsigned in
                 aspects(i) = static_cast<float>(bbox->height()) / static_cast<float>(bbox->width());
         // Perform k-means clustering
         Eigen::VectorXf centroids;
-        repeatedKMeansClustering(aspects, maxAspectClusters, &aspectClusterAssignment, &centroids);
+        repeatedKMeansClustering(aspects, maxAspectClusters, &aspectClusterAssignment, &centroids, 100);
         mergeNearbyClusters(aspectClusterAssignment, centroids, 0.2f);
         numAspectClusters = centroids.rows();
         if (this->m_verbose)
@@ -225,6 +226,13 @@ bool ModelLearner::learn(const unsigned int maxAspectClusters, const unsigned in
                     cerr << "Reconstruction of covariance matrix failed - skipping this cluster" << endl;
                     stop();
                 }
+                for (sample = this->m_samples.begin(), i = 0; sample != this->m_samples.end(); sample++)
+                    for (bbox = sample->bboxes.begin(), j = 0; bbox != sample->bboxes.end(); bbox++, j++, i++)
+                        if (aspectClusterAssignment(i) == c)
+                            sample->modelAssoc[j] = static_cast<unsigned int>(-1);
+                progressStep += 2;
+                if (progressCB != NULL)
+                    progressCB(progressStep, progressTotal, cbData);
                 continue;
             }
             if (this->m_verbose)
@@ -253,13 +261,30 @@ bool ModelLearner::learn(const unsigned int maxAspectClusters, const unsigned in
         if (progressCB != NULL)
             progressCB(progressStep, progressTotal, cbData);
         
+        // Compute negative bias term in advance: mu_0'*S^-1*mu_0
+        Eigen::VectorXf hogVector(modelSize.height * modelSize.width * HOGPyramid::NbFeatures);
+        Eigen::VectorXf negVector(hogVector.size());
+        negVector.setConstant(0.0f);
+        // Replicate negative mean over all cells
+        for (i = 0, l = 0; i < modelSize.height; i++)
+            for (j = 0; j < modelSize.width; j++)
+                for (k = 0; k < HOGPyramid::NbFeatures; k++, l++)
+                    negVector(l) = negMean(k);
+        float biasNeg = negVector.dot(llt.solve(negVector));
+        if (this->m_verbose)
+        {
+            cerr << "Computed negative bias term in " << stop() << " ms." << endl;
+            start();
+        }
+        
         // Extract HOG features from samples, optionally cluster and whiten them 
         HOGPyramid::Level positive = HOGPyramid::Level::Constant( // accumulator for positive features
             modelSize.height, modelSize.width, HOGPyramid::Cell::Zero()
         );
         Eigen::VectorXf posVector(positive.rows() * positive.cols() * HOGPyramid::NbFeatures); // flattened version of `positive`
         Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> whoCentroids;
-        if (maxWHOClusters <= 1 && !this->m_loocv)
+        Eigen::VectorXf biases;
+        if ((maxWHOClusters <= 1 || samplesPerAspectCluster[c] == 1) && !this->m_loocv)
         {
             // Procedure without WHO clustering and LOOCV:
             // Just average over all positive samples, centre and whiten them.
@@ -281,27 +306,30 @@ bool ModelLearner::learn(const unsigned int maxAspectClusters, const unsigned in
                 start();
             }
             
-            // Average and centre positive features
-            for (i = 0; i < positive.size(); i++)
-                positive(i) = (positive(i) / static_cast<float>(this->getNumSamples())) - negMean;
+            // Average positive features and flatten the matrix into a vector
+            for (i = 0, l = 0; i < positive.rows(); i++)
+                for (j = 0; j < positive.cols(); j++)
+                    for (k = 0; k < HOGPyramid::NbFeatures; k++, l++)
+                        posVector(l) = positive(i, j)(k) / static_cast<float>(this->getNumSamples());
+            
+            // Centre positive features
+            Eigen::VectorXf posCentred = posVector - negVector;
             if (this->m_verbose)
             {
                 cerr << "Centred positive feature vector in " << stop() << " ms." << endl;
                 start();
             }
             
-            // Flatten positive feature matrix into vector
-            for (i = 0, l = 0; i < positive.rows(); i++)
-                for (j = 0; j < positive.cols(); j++)
-                    for (k = 0; k < HOGPyramid::NbFeatures; k++, l++)
-                        posVector(l) = positive(i, j)(k);
-            
-            // Now we compute MODEL = cov^-1 * (pos - neg) = cov^-1 * posVector = (L * LT)^-1 * posVector = LT^-1 * L^-1 * posVector
-            // llt.solveInPlace() will do this for us by solving the linear equation system cov * MODEL = posVector
-            llt.solveInPlace(posVector);
+            // Now we compute MODEL = cov^-1 * (pos - neg) = cov^-1 * posCentred = (L * LT)^-1 * posCentred = LT^-1 * L^-1 * posCentred
+            // llt.solveInPlace() will do this for us by solving the linear equation system cov * MODEL = posCentred
+            llt.solveInPlace(posCentred);
             if (this->m_verbose)
                 cerr << "Whitened feature vector in " << stop() << " ms." << endl;
-            whoCentroids = posVector.transpose();
+            whoCentroids = posCentred.transpose();
+            // We can obtain an estimated bias of the model as BIAS = (neg' * cov^-1 * neg - pos' * cov^-1 * pos) / 2
+            // (under the assumption, that the a-priori class-probability is 0.5)
+            float biasPos = posVector.dot(llt.solve(posVector));
+            biases = Eigen::VectorXf::Constant(1, (biasNeg - biasPos) / 2.0f);
             curClusterIndex++;
         }
         else
@@ -311,6 +339,7 @@ bool ModelLearner::learn(const unsigned int maxAspectClusters, const unsigned in
             // clustering. We can then use the centroids of the clusters as models.
             
             // Extract HOG features of each sample, centre, whiten and store them
+            Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> hogFeatures(samplesPerAspectCluster[c], posVector.size());
             Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> whoFeatures(samplesPerAspectCluster[c], posVector.size());
             for (sample = this->m_samples.begin(), s = 0, t = 0; sample != this->m_samples.end(); sample++)
                 for (bbox = sample->bboxes.begin(), whoStorage = sample->whoFeatures.begin(); bbox != sample->bboxes.end(); bbox++, whoStorage++, s++)
@@ -322,14 +351,14 @@ bool ModelLearner::learn(const unsigned int maxAspectClusters, const unsigned in
                         HOGPyramid::Level hog;
                         HOGPyramid::Hog(resizedSample, hog, 1, 1, this->m_bg.cellSize); // compute HOG features
                         positive = hog.block(1, 1, positive.rows(), positive.cols()); // cut off padding and add to feature accumulator
-                        // Centre
-                        for (i = 0; i < positive.size(); i++)
-                            positive(i) -= negMean;
                         // Flatten HOG feature matrix into vector
+                        hogFeatures.row(t).setConstant(0.0f);
                         for (i = 0, l = 0; i < positive.rows(); i++)
                             for (j = 0; j < positive.cols(); j++)
                                 for (k = 0; k < HOGPyramid::NbFeatures; k++, l++)
-                                    posVector(l) = positive(i, j)(k);
+                                    hogFeatures(t, l) = positive(i, j)(k);
+                        // Centre feature vector
+                        posVector = hogFeatures.row(t).transpose() - negVector;
                         // Whiten feature vector
                         llt.solveInPlace(posVector);
                         // Store
@@ -353,8 +382,9 @@ bool ModelLearner::learn(const unsigned int maxAspectClusters, const unsigned in
             // Cluster by WHO features
             Eigen::VectorXi whoClusterAssignment = Eigen::VectorXi::Zero(whoFeatures.rows());
             Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> tmpCentroids;
-            repeatedKMeansClustering(whoFeatures, maxWHOClusters, &whoClusterAssignment, &tmpCentroids, 30);
-            // Ignore clusters with too few samples
+            repeatedKMeansClustering(whoFeatures, min(maxWHOClusters, static_cast<unsigned int>(samplesPerAspectCluster[c])),
+                                     &whoClusterAssignment, &tmpCentroids, 30);
+            // Ignore clusters with too few samples and compute positive bias terms
             if (this->m_verbose)
             {
                 cerr << "Number of samples in WHO clusters:";
@@ -363,13 +393,22 @@ bool ModelLearner::learn(const unsigned int maxAspectClusters, const unsigned in
                 cerr << endl;
             }
             whoCentroids.resize(tmpCentroids.rows(), tmpCentroids.cols());
+            biases.resize(tmpCentroids.rows());
+            float biasPos;
             for (i = 0, t = 0; i < tmpCentroids.rows(); i++)
                 if (whoClusterAssignment.cwiseEqual(i).count() >= whoClusterAssignment.rows() / 10)
                 {
                     whoCentroids.row(t) = tmpCentroids.row(i);
+                    hogVector.setConstant(0.0f);
                     for (j = 0; j < whoClusterAssignment.size(); j++)
                         if (whoClusterAssignment(j) == i)
+                        {
                             whoClusterAssignment(j) = t;
+                            hogVector += hogFeatures.row(j);
+                        }
+                    hogVector /= static_cast<float>(whoClusterAssignment.cwiseEqual(t).count());
+                    biasPos = hogVector.dot(llt.solve(hogVector)); // positive bias term: pos' * cov^-1 * pos
+                    biases(t) = (biasNeg - biasPos) / 2.0f; // assumes an a-priori class-probability of 0.5, so that we don't need to add ln(phi/(1-phi))
                     t++;
                 }
                 else
@@ -377,6 +416,7 @@ bool ModelLearner::learn(const unsigned int maxAspectClusters, const unsigned in
                     if (this->m_verbose)
                         cerr << "Ignoring WHO cluster #" << i << " (too few samples)." << endl;
                     whoCentroids.conservativeResize(whoCentroids.rows() - 1, whoCentroids.cols());
+                    biases.conservativeResize(biases.size() - 1);
                     for (j = 0; j < whoClusterAssignment.size(); j++)
                         if (whoClusterAssignment(j) == i)
                             whoClusterAssignment(j) = -1;
@@ -409,6 +449,9 @@ bool ModelLearner::learn(const unsigned int maxAspectClusters, const unsigned in
                     for (k = 0; k < HOGPyramid::NbFeatures; k++, l++)
                         positive(i, j)(k) = centroid(l);
             this->m_models.push_back(positive);
+            this->m_thresholds.push_back(-1 * biases(s) / this->m_normFactors.back());
+            if (this->m_verbose)
+                cerr << "Estimated threshold for model #" << this->m_thresholds.size() - 1 << ": " << this->m_thresholds.back() << endl;
         }
         
         progressStep++;
@@ -416,7 +459,6 @@ bool ModelLearner::learn(const unsigned int maxAspectClusters, const unsigned in
             progressCB(progressStep, progressTotal, cbData);
     }
     
-    this->m_thresholds.resize(this->m_models.size(), 0);
     this->m_clusterSizes.assign(this->m_models.size(), 0);
     for (sample = this->m_samples.begin(); sample != this->m_samples.end(); sample++)
         for (i = 0; i < sample->modelAssoc.size(); i++)
@@ -433,7 +475,7 @@ const vector<float> & ModelLearner::optimizeThreshold(const unsigned int maxPosi
     if (this->m_models.size() > 0)
     {
         if (this->m_verbose)
-            cerr << "-- Calculating optimal thresholds by F-measure --" << endl;
+            cerr << "-- Calculating optimal thresholds by F-measure" << ((this->m_loocv) ? " using LOOCV" : "") << " --" << endl;
         this->m_thresholds.resize(this->m_models.size(), 0);
         
         // Build vector of pointers to positive samples
@@ -490,6 +532,75 @@ const vector<float> & ModelLearner::optimizeThreshold(const unsigned int maxPosi
         }
         if (this->m_verbose)
             cerr << "Found optimal thresholds in " << stop() << " ms." << endl;
+    }
+    return this->m_thresholds;
+}
+
+
+const vector<float> & ModelLearner::optimizeThresholdCombination(const unsigned int maxPositive, const vector<JPEGImage> * negative,
+                                                                 int mode, const float b, ProgressCallback progressCB, void * cbData)
+{
+    if (this->m_models.size() > 0)
+    {
+        if (this->m_verbose)
+        {
+            cerr << "-- Calculating optimal threshold combination by F-measure" << ((this->m_loocv) ? " using LOOCV" : "") << " --" << endl;
+            if (mode == 1)
+                cerr << "Mode: Best Combination" << endl;
+            else
+                cerr << "Mode: Harmony Search" << endl;
+            cerr << "Positive samples: ";
+            if (maxPositive > 0)
+                cerr << "~" << maxPositive * this->m_models.size();
+            else
+                cerr << this->getNumSamples();
+            cerr << endl;
+            if (negative != NULL)
+                cerr << "Negative samples: " << negative->size() << endl;
+        }
+        this->m_thresholds.resize(this->m_models.size(), 0);
+        
+        // Build vector of pointers to positive samples
+        vector<Sample*> positive;
+        positive.reserve(this->m_samples.size());
+        for (vector<WHOSample>::iterator sample = this->m_samples.begin(); sample != this->m_samples.end(); sample++)
+            positive.push_back(&(*sample));
+        
+        // Create an evaluator for the learned models
+        ModelEvaluator eval;
+        for (size_t i = 0; i < this->m_models.size(); i++)
+        {
+            Mixture mixture;
+            mixture.addModel(Model(this->m_models[i], 0));
+            stringstream classname;
+            classname << i;
+            eval.addModel(classname.str(), mixture, 0.0);
+        }
+        
+        // Test models against samples
+        if (this->m_verbose)
+            start();
+        ModelEvaluator::LOOFunc looFunc = NULL;
+        void * looData = NULL;
+        loo_data_t looDataStruct;
+        looDataStruct.clusterSizes = &this->m_clusterSizes;
+        looDataStruct.normFactors = &this->m_normFactors;
+        if (this->m_loocv)
+        {
+            looFunc = &loo_who;
+            looData = static_cast<void*>(&looDataStruct);
+        }
+        if (mode == 1)
+            this->m_thresholds = eval.computeOptimalBiasCombination(positive, maxPositive, negative, 1, b, progressCB, cbData, looFunc, looData);
+        else
+            this->m_thresholds = eval.searchOptimalBiasCombination(positive, maxPositive, negative, 100, b, progressCB, cbData, looFunc, looData);
+        
+        if (this->m_verbose)
+        {
+            for (size_t i = 0; i < this->m_thresholds.size(); i++)
+                cerr << "Threshold for model #" << i << ": " << this->m_thresholds[i] << endl;
+            cerr << "Found optimal thresholds in " << stop() << " ms." << endl;
+        }
     }
     return this->m_thresholds;
 }

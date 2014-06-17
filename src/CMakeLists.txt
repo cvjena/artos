@@ -29,9 +29,9 @@ ENDIF()
 
 # List files and set properties
 SET(HEADERS DPMDetection.h StationaryBackground.h ModelLearner.h ImageNetModelLearner.h ModelEvaluator.h
-sysutils.h strutils.h portable_endian.h libartos_def.h libartos.h)
+Random.h harmony_search.h sysutils.h strutils.h portable_endian.h libartos_def.h libartos.h)
 SET(SOURCES DPMDetection.cc StationaryBackground.cc ModelLearner.cc ImageNetModelLearner.cc ModelEvaluator.cc
-sysutils.cc strutils.cc)
+Random.cc harmony_search.cc sysutils.cc strutils.cc)
 ADD_LIBRARY(artos SHARED ${SOURCES} libartos.cc)
 SET_TARGET_PROPERTIES(artos PROPERTIES VERSION ${BUILD_VERSION} SOVERSION ${API_VERSION})
 

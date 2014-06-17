@@ -188,11 +188,14 @@ typedef void (*overall_progress_cb_t)(unsigned int, unsigned int, unsigned int, 
 *                                Set this to 0 to run the detector against all samples from the synset.
 * @param[in] th_opt_num_negative Maximum number of negative samples to test the model against for threshold optimization.
 *                                Negative samples will be taken from different synsets.
-* @param[in] th_opt_loocv If set to true, *Leave-one-out-cross-validation* will be performed for threshold optimization.
-*                         This will increase memory usage, since the WHO features of all samples have to be stored for this,
-*                         and will slow down threshold optimization as well as the model learning step if only one WHO cluster
-*                         is used. But it will guarantee that no model is tested against a sample it has been learned from
-*                         for threshold optimization.
+* @param[in] th_opt_mode Controls the mode of threshold optimization.
+*                        If set to ARTOS_THOPT_LOOCV, *Leave-one-out-cross-validation* will be performed for threshold optimization.
+*                        This will increase memory usage, since the WHO features of all samples have to be stored for this,
+*                        and will slow down threshold optimization as well as the model learning step if only one WHO cluster
+*                        is used. But it will guarantee that no model is tested against a sample it has been learned from
+*                        for threshold optimization, like it's done with ARTOS_THOPT_OVERLAPPING.
+*                        Setting this to ARTOS_THOPT_NONE will turn off threshold optimization. In that case, estimated thresholds
+*                        will be used.
 * @param[in] progress_cb Optionally, a callback which is called between the steps of the learning process to populate the progress.  
 *                        The first parameter to the callback will be the number of steps performed in the entire process,
 *                        the second one will be the total number of steps. To date, the entire process is divided into three steps:
@@ -211,7 +214,7 @@ typedef void (*overall_progress_cb_t)(unsigned int, unsigned int, unsigned int, 
 */
 int learn_imagenet(const char * repo_directory, const char * synset_id, const char * bg_file, const char * modelfile,
                             const bool add = true, const unsigned int max_aspect_clusters = 2, const unsigned int max_who_clusters = 3,
-                            const unsigned int th_opt_num_positive = 0, const unsigned int th_opt_num_negative = 0, const bool th_opt_loocv = true,
+                            const unsigned int th_opt_num_positive = 0, const unsigned int th_opt_num_negative = 0, const unsigned int th_opt_mode = ARTOS_THOPT_LOOCV,
                             overall_progress_cb_t progress_cb = 0, const bool debug = false);
 
 /**
@@ -230,11 +233,14 @@ int learn_imagenet(const char * repo_directory, const char * synset_id, const ch
 * @param[in] max_aspect_clusters Maximum number of clusters formed by considering the aspect ratio of the input samples.
 * @param[in] max_who_clusters Maximum number of clusters formed by considering the WHO vectors of samples in the same
 *                             aspect ratio cluster.
-* @param[in] th_opt_loocv If set to true, *Leave-one-out-cross-validation* will be performed for threshold optimization.
-*                         This will increase memory usage, since the WHO features of all samples have to be stored for this,
-*                         and will slow down threshold optimization as well as the model learning step if only one WHO cluster
-*                         is used. But it will guarantee that no model is tested against a sample it has been learned from
-*                         for threshold optimization.
+* @param[in] th_opt_mode Controls the mode of threshold optimization.
+*                        If set to ARTOS_THOPT_LOOCV, *Leave-one-out-cross-validation* will be performed for threshold optimization.
+*                        This will increase memory usage, since the WHO features of all samples have to be stored for this,
+*                        and will slow down threshold optimization as well as the model learning step if only one WHO cluster
+*                        is used. But it will guarantee that no model is tested against a sample it has been learned from
+*                        for threshold optimization, like it's done with ARTOS_THOPT_OVERLAPPING.
+*                        Setting this to ARTOS_THOPT_NONE will turn off threshold optimization. In that case, estimated thresholds
+*                        will be used.
 * @param[in] progress_cb Optionally, a callback which is called between the steps of the learning process to populate the progress.  
 *                        The first parameter to the callback will be the number of steps performed in the entire process,
 *                        the second one will be the total number of steps. To date, the entire process is divided into three steps:
@@ -252,7 +258,7 @@ int learn_imagenet(const char * repo_directory, const char * synset_id, const ch
 int learn_files_jpeg(const char ** imagefiles, const unsigned int num_imagefiles, const FlatBoundingBox * bounding_boxes,
                             const char * bg_file, const char * modelfile, const bool add = true,
                             const unsigned int max_aspect_clusters = 2, const unsigned int max_who_clusters = 3,
-                            const bool th_opt_loocv = true,
+                            const unsigned int th_opt_mode = ARTOS_THOPT_LOOCV,
                             overall_progress_cb_t progress_cb = 0, const bool debug = false);
 
 /**

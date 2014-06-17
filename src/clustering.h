@@ -2,8 +2,7 @@
 #define ARTOS_CLUSTERING_H
 
 #include <Eigen/Core>
-#include <cstdlib>
-#include <ctime>
+#include "Random.h"
 
 namespace ARTOS
 {
@@ -36,12 +35,7 @@ void kMeansClustering(const Eigen::MatrixBase<Derived> & dataPoints, const unsig
     Eigen::VectorXi assign(numDataPoints);
     
     // Choose k initial centroids at random
-    static bool seededRand = false;
-    if (!seededRand)
-    {
-        std::srand(std::time(NULL));
-        seededRand = true;
-    }
+    Random::seedOnce();
     {
         int r;
         Eigen::Matrix<bool, Eigen::Dynamic, 1> chosen(numDataPoints);
@@ -49,7 +43,7 @@ void kMeansClustering(const Eigen::MatrixBase<Derived> & dataPoints, const unsig
         for (unsigned int i = 0; i < k; i++)
         {
             do
-                r = std::rand() % numDataPoints;
+                r = Random::getInt(numDataPoints - 1);
             while (chosen(r));
             chosen(r) = true;
             centr.row(i) = dataPoints.row(r);

@@ -15,6 +15,11 @@ from .config import config
 import os.path
 
 
+# libartos parameter constants
+THOPT_NONE = 0
+THOPT_OVERLAPPING = 1
+THOPT_LOOCV = 2
+
 # libartos result codes
 RES_OK = 0
 RES_INVALID_HANDLE = -1
@@ -124,19 +129,19 @@ class _LibARTOS(object):
         self.detect_raw.errcheck = self._errcheck_common
         
         # learn_imagenet function
-        prototype = CFUNCTYPE(c_int, c_char_p, c_char_p, c_char_p, c_char_p, c_bool, c_uint, c_uint, c_uint, c_uint, c_bool, overall_progress_cb_t, c_bool)
+        prototype = CFUNCTYPE(c_int, c_char_p, c_char_p, c_char_p, c_char_p, c_bool, c_uint, c_uint, c_uint, c_uint, c_uint, overall_progress_cb_t, c_bool)
         paramflags = (1, 'repo_directory'), (1, 'synset_id'), (1, 'bg_file'), (1, 'modelfile'), \
                      (1, 'add', True), (1, 'max_aspect_clusters', 2), (1, 'max_who_clusters', 3), \
-                     (1, 'th_opt_num_positive', 0), (1, 'th_opt_num_negative', 0), (1, 'th_opt_loocv', True), \
+                     (1, 'th_opt_num_positive', 0), (1, 'th_opt_num_negative', 0), (1, 'th_opt_mode', THOPT_LOOCV), \
                      (1, 'progress_cb', None), (1, 'debug', False)
         self.learn_imagenet = prototype(('learn_imagenet', self._lib), paramflags)
         self.learn_imagenet.errcheck = self._errcheck_common
         
         # learn_files_jpeg function
-        prototype = CFUNCTYPE(c_int, POINTER(c_char_p), c_uint, FlatBoundingBox_p, c_char_p, c_char_p, c_bool, c_uint, c_uint, c_bool, \
+        prototype = CFUNCTYPE(c_int, POINTER(c_char_p), c_uint, FlatBoundingBox_p, c_char_p, c_char_p, c_bool, c_uint, c_uint, c_uint, \
                               overall_progress_cb_t, c_bool)
         paramflags = (1, 'imagefiles'), (1, 'num_imagefiles'), (1, 'bounding_boxes'), (1, 'bg_file'), (1, 'modelfile'), \
-                     (1, 'add', True), (1, 'max_aspect_clusters', 2), (1, 'max_who_clusters', 3), (1, 'th_opt_loocv', True), \
+                     (1, 'add', True), (1, 'max_aspect_clusters', 2), (1, 'max_who_clusters', 3), (1, 'th_opt_mode', THOPT_LOOCV), \
                      (1, 'progress_cb', None), (1, 'debug', False)
         self.learn_files_jpeg = prototype(('learn_files_jpeg', self._lib), paramflags)
         self.learn_files_jpeg.errcheck = self._errcheck_common

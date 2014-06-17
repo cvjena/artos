@@ -20,6 +20,7 @@ from glob import glob
 from threading import Thread, Lock, Event
 from PIL import Image, ImageTk
 
+from . import gui_utils
 from .. import utils, detecting
 from ..config import config
 from ..Camera.Capture import Capture
@@ -45,11 +46,6 @@ class DetectionFrame(ttk.Frame):
             self._frames.append(newFrame)
 
 
-    def _updateClassColors(self):
-        for color, frame in zip(self.classColors, self._frames):
-            frame._lblClassname['foreground'] = color
-
-
     def _updateDetections(self):
         """Updates the displayed data according to the detections attribute."""
     
@@ -57,6 +53,7 @@ class DetectionFrame(ttk.Frame):
         for i, d in enumerate(self.detections):
             self._classnameVars[i].set(d.classname)
             self._scoreVars[i].set('Score: {:.4f}'.format(d.score))
+            self._frames[i]._lblClassname['foreground'] = gui_utils.rgb2hex(self.colorMap[d.classname]) if d.classname in self.colorMap else '#000000'
             if not self._frames[i]._showing:
                 self._frames[i].pack(side = 'top', fill = 'x', pady = (0, 6))
                 self._frames[i]._showing = True
@@ -69,22 +66,22 @@ class DetectionFrame(ttk.Frame):
                 break
 
 
-    def __init__(self, master, maxDetections = 3, detections = (), classColors = ()):
+    def __init__(self, master, maxDetections = 3, detections = (), colorMap = {}):
         """Creates a new DetectionFrame instance.
         
         maxDetections - Maximum number of detections to display (can't be changed later).
         detections - Detections as detecting.Detection objects (can be changed at any time
                      by setting the detections attribute).
-        classColors - Tuple with maxDetections hexadecimal color specifiers which are used as
-                      colors for the name of each class. If the length of this tuple is less
-                      than maxDetections, it will be filled up with the "#000000" (i. e. black).
+        colorMap - A dictionary that maps class names to colors which they should be displayed in.
+                   If a class name can not be found in this dictionary, it will be shown in black.
+                   Colors are expected to be given as (R, G, B) triples.
         """
         
         ttk.Frame.__init__(self, master)
         self.__dict__['maxDetections'] = maxDetections
         self._createWidgets()
         self.bind('<Destroy>', self.onDestroy)
-        self.classColors = classColors
+        self.__dict__['colorMap'] = colorMap
         self.detections = detections
 
 
@@ -96,12 +93,8 @@ class DetectionFrame(ttk.Frame):
 
 
     def __getattr__(self, name):
-        if (name == 'maxDetections'):
-            return self.maxDetections
-        elif (name == 'detections'):
-            return self.detections
-        elif (name == 'classColors'):
-            return self.classColors
+        if (name in self.__dict__):
+            return self.__dict__[name]
         else:
             raise AttributeError('Attribute {} is not defined.'.format(name))
 
@@ -110,21 +103,14 @@ class DetectionFrame(ttk.Frame):
         if (name == 'maxDetections'):
             raise AttributeError('{0} is a read-only property'.format(name))
         else:
-            if (name == 'classColors'):
-                value = tuple(value[i] if i < len(value) else '#000000' for i in range(self.maxDetections))
             self.__dict__[name] = value
-            if (name == 'detections'):
+            if (name in ('detections', 'colorMap')):
                 self._updateDetections()
-            elif (name == 'classColors'):
-                self._updateClassColors()
 
 
 
 class CameraWindow(Tkinter.Toplevel):
     """A toplevel window that is used to detect objects in a video stream from a camera."""
-
-
-    MAX_VIDEO_SIZE = (640, 480)
 
 
     def selectModelDir(self):
@@ -211,11 +197,11 @@ class CameraWindow(Tkinter.Toplevel):
             frame = self.currentDevice.grabFrame()
             if not (frame is None):
                 # Scale down if camera input is high-resolution
-                if (frame.size[0] > self.__class__.MAX_VIDEO_SIZE[0]) or (frame.size[1] > self.__class__.MAX_VIDEO_SIZE[1]):
-                    frame.thumbnail(self.__class__.MAX_VIDEO_SIZE, Image.BILINEAR)
+                if (frame.size[0] > self.maxVideoSize[0]) or (frame.size[1] > self.maxVideoSize[1]):
+                    frame.thumbnail(self.maxVideoSize, Image.BILINEAR)
                 # Draw bounding boxes
-                for color, d in zip(self.frmDetection.classColors, self.detections):
-                    frame = d.drawToImage(frame, color)
+                for d in self.detections:
+                    frame = d.drawToImage(frame, self.colorMap[d.classname] if d.classname in self.colorMap else (0, 0, 0))
                 # Update image on video label
                 self.lblVideo._img = ImageTk.PhotoImage(frame)
                 self.lblVideo["image"] = self.lblVideo._img
@@ -227,6 +213,10 @@ class CameraWindow(Tkinter.Toplevel):
                     self.fpsTimer.start()
                 # Check for new detection results
                 if self.detectionsAvailable.is_set():
+                    for d in self.detections:
+                        if not d.classname in self.colorMap:
+                            self.colorMap[d.classname] = gui_utils.getAnnotationColor(self.nextColorIndex)
+                            self.nextColorIndex += 1
                     self.frmDetection.detections = self.detections
                     self.detectionsAvailable.clear()
                     self.detectionTimer.stop()
@@ -278,7 +268,7 @@ class CameraWindow(Tkinter.Toplevel):
         self.frmCtrl.pack(side = 'left', fill = 'y', expand = True, padx = 20, pady = 20)
         
         # Frame to display the detection results on:
-        self.frmDetection = DetectionFrame(self.frmCtrl, classColors = ('#ff0000', '#0000ff', '#00c800'))
+        self.frmDetection = DetectionFrame(self.frmCtrl, colorMap = self.colorMap)
         self.frmDetection.pack(side = 'top', fill = 'both', expand = True, pady = (0, 20))
         
         # Buttons for device selection:
@@ -319,6 +309,9 @@ class CameraWindow(Tkinter.Toplevel):
         # Initialize video and detection related member variables
         self.devices = Capture.enumerateDevices()
         self.numModels = 0
+        self.colorMap = {}
+        self.nextColorIndex = 0
+        self.maxVideoSize = tuple(config.getInt('GUI', x, min = 64) for x in ('max_video_width', 'max_video_height'))
         self.detector = None # Detector instance created by initializeDetector()
         self.detections = ()
         self.detectionFrame = None # copy of a video frame for the detecting thread to work on

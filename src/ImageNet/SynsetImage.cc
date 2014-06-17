@@ -107,7 +107,7 @@ bool SynsetImage::loadBoundingBoxes(const char * xmlBuffer, const uint64_t bufsi
                 bbox.setY(round(bbox.y() * scale));
                 bbox.setWidth(round(bbox.width() * scale));
                 bbox.setHeight(round(bbox.height() * scale));
-                if (bbox.width() > 0 && bbox.height() > 0)
+                if (bbox.x() > 0 && bbox.y() > 0 && bbox.x() < img.width() && bbox.y() < img.height() && bbox.width() > 0 && bbox.height() > 0)
                     this->bboxes.push_back(bbox);
             }
         }

@@ -70,3 +70,23 @@ const vector<float> & ImageNetModelLearner::optimizeThreshold(const unsigned int
         delete negative;
     return th;
 }
+
+const vector<float> & ImageNetModelLearner::optimizeThresholdCombination(const unsigned int maxPositive, const unsigned int numNegative,
+                                                                         int mode, const float b, ProgressCallback progressCB, void * cbData)
+{
+    vector<JPEGImage> * negative = NULL;
+    if (numNegative > 0)
+    {
+        negative = new vector<JPEGImage>();
+        for (MixedImageIterator imgIt = this->m_repo.getMixedIterator(); imgIt.ready() && negative->size() < numNegative; ++imgIt)
+        {
+            SynsetImage img = *imgIt;
+            if (this->m_addedSynsets.find(img.getSynsetId()) == this->m_addedSynsets.end())
+                negative->push_back(img.getImage());
+        }
+    }
+    const vector<float> & th = ModelLearner::optimizeThresholdCombination(maxPositive, negative, mode, b, progressCB, cbData);
+    if (negative != NULL)
+        delete negative;
+    return th;
+}

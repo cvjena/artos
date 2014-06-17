@@ -138,18 +138,19 @@ bool is_valid_detector_handle(const unsigned int detector)
 typedef struct {
     overall_progress_cb_t cb;
     unsigned int overall_step;
+    unsigned int overall_steps_total;
 } progress_params;
 
 void populate_progress(unsigned int cur, unsigned int total, void * data)
 {
     progress_params * params = reinterpret_cast<progress_params*>(data);
-    params->cb(params->overall_step, 3, cur, total);
+    params->cb(params->overall_step, params->overall_steps_total, cur, total);
 }
 
 
 int learn_imagenet(const char * repo_directory, const char * synset_id, const char * bg_file, const char * modelfile,
                             const bool add, const unsigned int max_aspect_clusters, const unsigned int max_who_clusters,
-                            const unsigned int th_opt_num_positive, const unsigned int th_opt_num_negative, const bool th_opt_loocv,
+                            const unsigned int th_opt_num_positive, const unsigned int th_opt_num_negative, const unsigned int th_opt_mode,
                             overall_progress_cb_t progress_cb, const bool debug)
 {
     // Check repository
@@ -169,32 +170,36 @@ int learn_imagenet(const char * repo_directory, const char * synset_id, const ch
     progress_params progParams;
     progParams.cb = progress_cb;
     progParams.overall_step = 0;
+    progParams.overall_steps_total = (th_opt_mode == ARTOS_THOPT_NONE) ? 2 : 3;
     if (progress_cb != NULL)
-        progress_cb(0, 3, 0, 0);
+        progress_cb(0, progParams.overall_steps_total, 0, 0);
     
     // Learn model
-    ImageNetModelLearner learner(bg, repo, th_opt_loocv, debug);
+    ImageNetModelLearner learner(bg, repo, (th_opt_mode == ARTOS_THOPT_LOOCV), debug);
     learner.addPositiveSamplesFromSynset(synset);
     progParams.overall_step++;
     if (!learner.learn(max_aspect_clusters, max_who_clusters, (progress_cb != NULL) ? &populate_progress : NULL, reinterpret_cast<void*>(&progParams)))
         return ARTOS_LEARN_RES_FAILED;
-    progParams.overall_step++;
-    learner.optimizeThreshold(th_opt_num_positive, th_opt_num_negative, 1.0f,
-                              (progress_cb != NULL) ? &populate_progress : NULL, reinterpret_cast<void*>(&progParams));
+    if (th_opt_mode != ARTOS_THOPT_NONE)
+    {
+        progParams.overall_step++;
+        learner.optimizeThreshold(th_opt_num_positive, th_opt_num_negative, 1.0f,
+                                (progress_cb != NULL) ? &populate_progress : NULL, reinterpret_cast<void*>(&progParams));
+    }
     
     // Save model
     if (!learner.save(modelfile, add))
         return ARTOS_RES_FILE_ACCESS_DENIED;
     
     if (progress_cb != NULL)
-        progress_cb(3, 3, 0, 0);
+        progress_cb(progParams.overall_steps_total, progParams.overall_steps_total, 0, 0);
     return ARTOS_RES_OK;
 }
 
 int learn_files_jpeg(const char ** imagefiles, const unsigned int num_imagefiles, const FlatBoundingBox * bounding_boxes,
                             const char * bg_file, const char * modelfile, const bool add,
                             const unsigned int max_aspect_clusters, const unsigned int max_who_clusters,
-                            const bool th_opt_loocv,
+                            const unsigned int th_opt_mode,
                             overall_progress_cb_t progress_cb, const bool debug)
 {
     // Load background statistics
@@ -206,11 +211,12 @@ int learn_files_jpeg(const char ** imagefiles, const unsigned int num_imagefiles
     progress_params progParams;
     progParams.cb = progress_cb;
     progParams.overall_step = 0;
+    progParams.overall_steps_total = (th_opt_mode == ARTOS_THOPT_NONE) ? 2 : 3;
     if (progress_cb != NULL)
-        progress_cb(0, 3, 0, 0);
+        progress_cb(0, progParams.overall_steps_total, 0, 0);
     
     // Add samples
-    ModelLearner learner(bg, th_opt_loocv, debug);
+    ModelLearner learner(bg, (th_opt_mode == ARTOS_THOPT_LOOCV), debug);
     FFLD::Rectangle bbox; // empty bounding box
     const FlatBoundingBox * flat_bbox;
     for (unsigned int i = 0; i < num_imagefiles; i++)
@@ -231,18 +237,21 @@ int learn_files_jpeg(const char ** imagefiles, const unsigned int num_imagefiles
     // Learn model
     if (!learner.learn(max_aspect_clusters, max_who_clusters, (progress_cb != NULL) ? &populate_progress : NULL, reinterpret_cast<void*>(&progParams)))
         return ARTOS_LEARN_RES_FAILED;
-    progParams.overall_step++;
-    if (progress_cb == NULL)
-        learner.optimizeThreshold();
-    else
-        learner.optimizeThreshold(0, NULL, 1.0f, &populate_progress, reinterpret_cast<void*>(&progParams));
+    if (th_opt_mode != ARTOS_THOPT_NONE)
+    {
+        progParams.overall_step++;
+        if (progress_cb == NULL)
+            learner.optimizeThreshold();
+        else
+            learner.optimizeThreshold(0, NULL, 1.0f, &populate_progress, reinterpret_cast<void*>(&progParams));
+    }
     
     // Save model
     if (!learner.save(modelfile, add))
         return ARTOS_RES_FILE_ACCESS_DENIED;
     
     if (progress_cb != NULL)
-        progress_cb(3, 3, 0, 0);
+        progress_cb(progParams.overall_steps_total, progParams.overall_steps_total, 0, 0);
     return ARTOS_RES_OK;
 }
 

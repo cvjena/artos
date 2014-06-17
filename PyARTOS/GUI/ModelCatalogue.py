@@ -23,6 +23,7 @@ from PIL import Image, ImageTk
 
 from . import gui_utils
 from .. import utils, learning
+from .AnnotationDialog import AnnotationDialog
 from ..imagenet import ImageRepository
 from ..config import config
 
@@ -486,6 +487,7 @@ class LearnDialog(gui_utils.Dialog):
             self.thOptMaxPosVar = Tkinter.IntVar(self, value = 20)
             self.thOptMaxNegVar = Tkinter.IntVar(self, value = 40)
             self.thOptFullPosVar = Tkinter.BooleanVar(self, value = False if self.mode == self.__class__.MODE_IMAGENET else True)
+            self.thOptSkipVar = Tkinter.BooleanVar(self, value = False)
             self.synsetSearchVar = Tkinter.StringVar(self)
             self.imageSourceModeVar = Tkinter.StringVar(self, value = 'camera')
             self.imgDirVar = Tkinter.StringVar(self)
@@ -506,6 +508,7 @@ class LearnDialog(gui_utils.Dialog):
                 del self.thOptMaxPosVar
                 del self.thOptMaxNegVar
                 del self.thOptFullPosVar
+                del self.thOptSkipVar
                 del self.synsetSearchVar
                 del self.imageSourceModeVar
                 del self.imgDirVar
@@ -603,13 +606,16 @@ class LearnDialog(gui_utils.Dialog):
                                        from_ = 0, to = 500, variable = self.thOptMaxNegVar, command = self._updateScaleValues)
         self.cbxThOptFullPos = ttk.Checkbutton(self.frmThOptSettings, text = 'Use all positive samples',
                                                variable = self.thOptFullPosVar, command = self._updateScaleValues)
+        self.cbxThOptSkip = ttk.Checkbutton(self.frmThOptSettings, text = 'Skip threshold optimization',
+                                               variable = self.thOptSkipVar, command = self._updateScaleValues)
         self.lblThOptMaxPos.grid(column = 0, row = 0, sticky = W, padx = (0, padding))
         self.lblThOptMaxPosValue.grid(column = 1, row = 0, sticky = E)
         self.lblThOptMaxNeg.grid(column = 2, row = 0, sticky = W, padx = padding)
         self.lblThOptMaxNegValue.grid(column = 3, row = 0, sticky = E)
         self.sclThOptMaxPos.grid(column = 0, row = 1, columnspan = 2, sticky = (W,E))
         self.sclThOptMaxNeg.grid(column = 2, row = 1, columnspan = 2, sticky = (W,E), padx = (padding, 0))
-        self.cbxThOptFullPos.grid(column = 0, row = 2, columnspan = 4, sticky = W)
+        self.cbxThOptFullPos.grid(column = 0, row = 2, columnspan = 2, sticky = W)
+        self.cbxThOptSkip.grid(column = 2, row = 2, columnspan = 2, sticky = W)
         self.frmThOptSettings.columnconfigure((0,2), weight = 1, uniform = 1)
         self.frmThOptSettings.columnconfigure((1,3), minsize = 20, uniform = 2)
         
@@ -632,6 +638,7 @@ class LearnDialog(gui_utils.Dialog):
         else:
             self.lblThOptMaxPosValue['text'] = str(self.thOptMaxPosVar.get())
         self.lblThOptMaxNegValue['text'] = str(self.thOptMaxNegVar.get())
+        
     
     
     def _onSynsetSearchChange(self, *args):
@@ -732,6 +739,7 @@ class LearnDialog(gui_utils.Dialog):
                                 'maxWHOClusters' : self.maxWHOClustersVar.get(),
                                 'thOptNumPositive' : self.thOptMaxPosVar.get() if not self.thOptFullPosVar.get() else 0,
                                 'thOptNumNegative' : self.thOptMaxNegVar.get(),
+                                'thOptMode' : learning.ModelLearner.THOPT_LOOCV if not self.thOptSkipVar.get() else learning.ModelLearner.THOPT_NONE,
                                 'progressCallback' : progressDialog.changeProgress
                             }
                     )
@@ -760,6 +768,14 @@ class LearnDialog(gui_utils.Dialog):
                                       | set(glob(os.path.join(self.imgDirVar.get(), '*.JPEG'))))
                         if len(samples) == 0:
                             tkMessageBox.showerror(title = 'No images found', message = 'The specified directory does not contain any JPEG image.')
+                        elif tkMessageBox.askyesno(title = 'Annotation', message = 'Do you want to draw bounding boxes around the objects on'\
+                                ' those {} images now?\nOtherwise, the entire images will be used for learning.'.format(len(samples))):
+                            annotationDialog = AnnotationDialog(self, samples, parent = self)
+                            self.wait_window(annotationDialog)
+                            if len(annotationDialog.annotations) > 0:
+                                bboxes = tuple(annotationDialog.annotations)
+                            else:
+                                samples = ()
                     else:
                         tkMessageBox.showerror(title = 'Directory not found', message = 'The specified image directory could not be found.')
                 else:
@@ -808,6 +824,7 @@ class LearnDialog(gui_utils.Dialog):
                                 'maxWHOClusters' : self.maxWHOClustersVar.get(),
                                 'thOptNumPositive' : self.thOptMaxPosVar.get() if not self.thOptFullPosVar.get() else 0,
                                 'thOptNumNegative' : self.thOptMaxNegVar.get(),
+                                'thOptMode' : learning.ModelLearner.THOPT_LOOCV if not self.thOptSkipVar.get() else learning.ModelLearner.THOPT_NONE,
                                 'progressCallback' : progressDialog.changeProgress,
                                 'subProgressCallback' : progressDialog.changeSubProgress
                             }
@@ -852,7 +869,7 @@ class LearnDialog(gui_utils.Dialog):
     
     
     def _learnThreadedInSitu(self, repoDirectory, bgFile, modelfile, samples, bboxes, \
-                             maxAspectClusters, maxWHOClusters, thOptNumPositive, thOptNumNegative, \
+                             maxAspectClusters, maxWHOClusters, thOptNumPositive, thOptNumNegative, thOptMode, \
                              progressCallback, subProgressCallback):
         """Learns a model from in-situ images using learning.ModelLearner in a separate thread.
         
@@ -862,15 +879,16 @@ class LearnDialog(gui_utils.Dialog):
         
         self._error = None
         try:
-            learner = learning.ModelLearner(bgFile, repoDirectory)
-            progressCallback(0, 3)
+            learner = learning.ModelLearner(bgFile, repoDirectory, (thOptMode == learning.ModelLearner.THOPT_LOOCV))
+            progressCallback(0, 2 if thOptMode == learning.ModelLearner.THOPT_NONE else 3)
             for i, sample in enumerate(samples):
                 learner.addPositiveSample(sample, bboxes[i] if i < len(bboxes) else ())
             progressCallback(1)
             learner.learn(maxAspectClusters, maxWHOClusters, subProgressCallback)
             progressCallback(2)
-            learner.optimizeThreshold(thOptNumPositive, thOptNumNegative, subProgressCallback)
-            progressCallback(3)
+            if thOptMode != learning.ModelLearner.THOPT_NONE:
+                learner.optimizeThreshold(thOptNumPositive, thOptNumNegative, subProgressCallback)
+                progressCallback(3)
             learner.save(modelfile)
         except Exception as e:
             self._error = e

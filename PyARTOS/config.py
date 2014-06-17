@@ -25,7 +25,7 @@ class _Config(SafeConfigParser):
 
 
     def __init__(self, iniFile):
-        """Initializes a new configuration instance and set's appropriate default values."""
+        """Initializes a new configuration instance and sets appropriate default values."""
         
         SafeConfigParser.__init__(self, allow_no_value = True)
         self.iniFileName = iniFile
@@ -38,6 +38,10 @@ class _Config(SafeConfigParser):
             },
             'ImageNet' : {
                 'repository_directory'  : None
+            },
+            'GUI' : {
+                'max_video_width'       : 640,
+                'max_video_height'      : 480
             }
         });
 
@@ -45,8 +49,7 @@ class _Config(SafeConfigParser):
     def applyDefaults(self, defaultDict):
         """Applies default values from a dictionary.
         
-        defaultDict - Dictionary wh
-        ose keys are section names and whose values are dictionaries
+        defaultDict - Dictionary whose keys are section names and whose values are dictionaries
                       with the default configuration options for that section.
         """
         
@@ -78,8 +81,32 @@ class _Config(SafeConfigParser):
         return value
     
     
+    def getInt(self, section, option, useDefaults = True, min = None, max = None):
+        """Get an option value for the named section as integer.
+        
+        If useDefaults is set to true, this function falls back to default values if the
+        given option hasn't been specified in the configuration file or isn't an integral value.
+        The range of allowable values can be specified using the min and max parameters. The value
+        from the configuration file will be clipped to that range.
+        """
+        
+        try:
+            value = int(SafeConfigParser.get(self, section, option))
+        except:
+            value = None
+        if useDefaults and ((value is None) or (value == '')) \
+                and (section in self.defaults) and (option in self.defaults[section]):
+            value = self.defaults[section][option]
+        if not value is None:
+            if (not min is None) and (value < min):
+                value = min
+            elif (not max is None) and (value > max):
+                value = max
+        return value
+    
+    
     def is_set(self, section, option):
-        """Determines if a given option has been set in the configuration file (regardless of default values."""
+        """Determines if a given option has been set in the configuration file (regardless of default values)."""
         
         try:
             value = SafeConfigParser.get(self, section, option)

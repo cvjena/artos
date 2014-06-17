@@ -9,6 +9,47 @@ except:
 
 
 
+ANNOTATION_COLORS = ((255, 0, 0), (0, 0, 255), (0, 200, 0), (160, 0, 255), (255, 150, 0))
+
+
+def getAnnotationColor(index = 0):
+    """Returns an RGB color for displaying annotations.
+    
+    index - The index of the color. The same color will always be returned for the same index.
+    Returns: An RGB color as 3-tuple.
+    """
+    
+    numColors = len(ANNOTATION_COLORS)
+    maxIndex = numColors + (numColors * (numColors - 1)) // 2
+    if index >= maxIndex:
+        index = index % maxIndex
+    if index < numColors:
+        return ANNOTATION_COLORS[index]
+    elif index < maxIndex:
+        index -= numColors
+        c1, c2 = 0, 1
+        for i in range(index):
+            c2 += 1
+            if c2 == c1:
+                c2 += 1
+            if c2 >= numColors:
+                c1 += 1
+                c2 = 0
+        color1, color2 = ANNOTATION_COLORS[c1], ANNOTATION_COLORS[c2]
+        return tuple(int(round((a + b) / 2.0)) for a, b in zip(color1, color2))
+
+
+def rgb2hex(rgb):
+    """Converts an RGB-triple to a hexadecimal string (for instance, (255, 128, 0) becomes '#ff8000').
+    
+    rgb - The color as (R, G, B) triple.
+    Returns: The hexadecimal string representation of the given color.
+    """
+    
+    return '#{:02x}{:02x}{:02x}'.format(*rgb)
+
+
+
 class Dialog(Tkinter.Toplevel):
     """Base class for dialogs which supports modal windows and automatic alignment on the screen."""
     

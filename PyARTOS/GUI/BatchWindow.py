@@ -20,6 +20,7 @@ import os, gc
 from glob import glob
 from PIL import Image, ImageTk
 
+from . import gui_utils
 from .. import utils, detecting
 from ..config import config
 
@@ -50,10 +51,9 @@ class DetectionFrame(ttk.Frame):
         
         # Three + three labels for the class names of the first detection results and details:
         self.classLabels, self.detailsLabels = [], []
-        classColors = ('#ff0000', '#0000ff', '#00c800')
         for i in range(3):
-            self.classLabels.append(ttk.Label(self, foreground = classColors[i], background = '#ffffff', \
-                                              font = 'TkDefaultFont 10 bold', justify = 'left'))
+            self.classLabels.append(ttk.Label(self, foreground = gui_utils.rgb2hex(gui_utils.getAnnotationColor(i)), \
+                                              background = '#ffffff', font = 'TkDefaultFont 10 bold', justify = 'left'))
             self.classLabels[-1].grid(column = 1, row = i * 2, sticky = W)
             self.detailsLabels.append(ttk.Label(self, background = '#ffffff', justify = 'left'))
             self.detailsLabels[-1].grid(column = 1, row = i * 2 + 1, sticky = W)
@@ -117,9 +117,8 @@ class DetectionFrame(ttk.Frame):
         
         img = self.thumb.copy()
         # Draw bounding boxes of the detected objects
-        classColors = ((255, 0, 0), (0, 0, 255), (0, 200, 0))
-        for color, det in zip(classColors, self.detections):
-            img = det.scale(float(img.size[0]) / self.thumb.orig_size[0]).drawToImage(img, color, 2)
+        for i, det in enumerate(self.detections):
+            img = det.scale(float(img.size[0]) / self.thumb.orig_size[0]).drawToImage(img, gui_utils.getAnnotationColor(i), 2)
         # Display image in the label
         self.lblImage._img = ImageTk.PhotoImage(img)
         self.lblImage["image"] = self.lblImage._img
@@ -197,9 +196,8 @@ class DetectionPopupMenu(Tkinter.Menu):
             else:
                 img = self._detectionFrame.thumb.copy()
             # Draw bounding boxes of the detected objects
-            classColors = ((255, 0, 0), (0, 0, 255), (0, 200, 0))
-            for color, det in zip(classColors, self._detectionFrame.detections):
-                img = det.scale(float(img.size[0]) / self._detectionFrame.thumb.orig_size[0]).drawToImage(img, color, 2)
+            for i, det in enumerate(self._detectionFrame.detections):
+                img = det.scale(float(img.size[0]) / self._detectionFrame.thumb.orig_size[0]).drawToImage(img, gui_utils.getAnnotationColor(i), 2)
             # Save file
             try:
                 options = {}
