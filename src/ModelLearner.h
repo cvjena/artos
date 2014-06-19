@@ -198,8 +198,9 @@ public:
                        ProgressCallback progressCB = NULL, void * cbData = NULL);
     
     /**
-    * Finds the optimal thresholds for the models learned previously with learn() by testing them against the
-    * positive samples and, optionally, some additional negative samples to maximize the F-measure of each model:
+    * Finds the optimal combination of thresholds for the models learned previously with learn() by testing them
+    * against the positive samples and, optionally, some additional negative samples to maximize the F-measure
+    * of the combined model mixture:
     * \f[\frac{(1 + b^2) \cdot \mbox{precision} \cdot \mbox{recall}}{b^2 \cdot \mbox{precision} + \mbox{recall}}\f]
     *
     * @param[in] maxPositive Maximum number of positive samples to test the models against. Set this to 0
@@ -226,11 +227,6 @@ public:
     virtual const std::vector<float> & optimizeThreshold(const unsigned int maxPositive = 0,
                                                          const std::vector<FFLD::JPEGImage> * negative = NULL,
                                                          const float b = 1.0f,
-                                                         ProgressCallback progressCB = NULL, void * cbData = NULL);
-    
-    virtual const std::vector<float> & optimizeThresholdCombination(const unsigned int maxPositive = 0,
-                                                         const std::vector<FFLD::JPEGImage> * negative = NULL,
-                                                         int mode = 1, const float b = 1.0f,
                                                          ProgressCallback progressCB = NULL, void * cbData = NULL);
     
     /**

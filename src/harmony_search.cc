@@ -96,3 +96,33 @@ vector<float> ARTOS::harmony_search(hs_objective_function ofunc, const vector< v
         *bestFitness = fitness[iBest];
     return ofuncParams;
 }
+
+
+vector<float> ARTOS::repeated_harmony_search(hs_objective_function ofunc, const vector< vector<float> > & params, void * ofuncData,
+                                    const bool maximize, float * bestFitness,
+                                    const unsigned int hms, const unsigned int iterations,
+                                    const double hmcr, const double par)
+{
+#ifdef _OPENMP
+    vector<float> bestSolution;
+    float bestValue;
+    #pragma omp parallel
+    {
+        float fitness;
+        vector<float> solution = harmony_search(ofunc, params, ofuncData, maximize, &fitness, hms, iterations, hmcr, par);
+        #pragma omp critical
+        {
+            if (bestSolution.empty() || (!maximize && fitness < bestValue) || (maximize && fitness > bestValue))
+            {
+                bestSolution = solution;
+                bestValue = fitness;
+            }
+        }
+    }
+    if (bestFitness != 0)
+        *bestFitness = bestValue;
+    return bestSolution;
+#else
+    return harmony_search(ofunc, params, ofuncData, maximize, bestFitness, hms, iterations, hmcr, par);
+#endif
+}

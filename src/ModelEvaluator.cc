@@ -1,6 +1,5 @@
 #include "ModelEvaluator.h"
 
-#include <iostream>
 #include <set>
 #include <algorithm>
 #include <numeric>
@@ -174,131 +173,11 @@ void ModelEvaluator::testModels(const vector<Sample*> & positive, unsigned int m
 }
 
 
-vector<float> ModelEvaluator::computeOptimalBiasCombination(const vector<Sample*> & positive, unsigned int maxSamples,
-                                                            const vector<FFLD::JPEGImage> * negative,
-                                                            const unsigned int granularity, const float b,
-                                                            ProgressCallback progressCB, void * cbData, LOOFunc looFunc, void * looData)
-{
-    vector<float> bestBiasCombo(this->getNumModels(), 0.0f);
-    if (this->getNumModels() == 0)
-        return bestBiasCombo;
-    
-    // Test model against samples
-    SampleDetectionsVector * detections = new SampleDetectionsVector();
-    vector<unsigned int> numPositive = this->runDetector(*detections, positive, maxSamples, negative, progressCB, cbData, looFunc, looData);
-    unsigned int numPositiveTotal = accumulate(numPositive.begin(), numPositive.end(), static_cast<unsigned int>(0));
-    if (!detections->empty())
-    {
-        SampleDetectionsVector::const_iterator detIt;
-        int i, sampleIndex, bboxIndex, modelIndex;
-        bool isPositive;
-        Sample * sample;
-        
-        // Build a list of all possible biases
-        vector< vector<float> > biases;
-        biases.reserve(this->getNumModels());
-        {
-            vector< set<float> > biasSets(this->getNumModels());
-            for (detIt = detections->begin(); detIt != detections->end(); detIt++)
-                biasSets[detIt->second.modelIndex].insert(static_cast<int>(detIt->second.score * granularity) / static_cast<float>(granularity));
-            for (vector< set<float> >::const_iterator it = biasSets.begin(); it != biasSets.end(); it++)
-                biases.push_back(vector<float>(it->begin(), it->end()));
-        }
-        
-        // Associate detections with samples
-        vector< vector<const Detection*> > objectDetections;
-        vector< vector<unsigned int> > fpPerBias;
-        fpPerBias.reserve(biases.size());
-        for (vector< vector<float> >::const_iterator it = biases.begin(); it != biases.end(); it++)
-            fpPerBias.push_back(vector<unsigned int>(it->size(), 0));
-        int objectBaseIndex;
-        for (sampleIndex = 0, objectBaseIndex = 0; sampleIndex < positive.size(); sampleIndex++)
-        {
-            sample = positive[sampleIndex];
-            for (i = 0; i < sample->bboxes.size(); i++)
-                objectDetections.push_back(vector<const Detection*>());
-            for (detIt = detections->begin(); detIt != detections->end(); detIt++)
-                if (detIt->first == sampleIndex)
-                {
-                    isPositive = false;
-                    // Treat as true positive if detection area overlaps with bounding box
-                    // by at least 50%
-                    Intersector intersect(detIt->second);
-                    for (bboxIndex = 0; bboxIndex < sample->bboxes.size(); bboxIndex++)
-                        if (intersect(sample->bboxes[bboxIndex]))
-                        {
-                            isPositive = true;
-                            objectDetections[objectBaseIndex + bboxIndex].push_back(&detIt->second);
-                            break;
-                        }
-                    if (!isPositive)
-                        for (i = 0; i < fpPerBias[detIt->second.modelIndex].size() && biases[detIt->second.modelIndex][i] <= detIt->second.score; i++)
-                            fpPerBias[detIt->second.modelIndex][i]++;
-                }
-            objectBaseIndex += sample->bboxes.size();
-        }
-        // Count false positives per model and bias
-        for (detIt = detections->begin(); detIt != detections->end(); detIt++)
-            if (detIt->first < 0)
-                for (i = 0; i < fpPerBias[detIt->second.modelIndex].size() && biases[detIt->second.modelIndex][i] <= detIt->second.score; i++)
-                    fpPerBias[detIt->second.modelIndex][i]++;
-        
-        // Calculate F-measure for every possible bias combination and choose the best
-        vector<int> curBiases(this->getNumModels(), 0);
-        vector<float> curBiasCombo(this->getNumModels());
-        float bestFMeasure = 0.0f, fMeasure;
-        int biasIndex;
-        unsigned int tp, fp;
-        float b2 = b * b;
-        float b21 = 1.0f + b2;
-        vector< vector<const Detection*> >::const_iterator objIt;
-        vector<const Detection*>::const_iterator detPIt;
-        while (true)
-        {
-            for (modelIndex = 0; modelIndex < curBiases.size(); modelIndex++)
-                curBiasCombo[modelIndex] = biases[modelIndex][curBiases[modelIndex]];
-            // Count true and false positives
-            tp = fp = 0;
-            for (objIt = objectDetections.begin(); objIt != objectDetections.end(); objIt++)
-                for (detPIt = objIt->begin(); detPIt != objIt->end(); detPIt++)
-                    if ((*detPIt)->score >= curBiasCombo[(*detPIt)->modelIndex])
-                    {
-                        tp++;
-                        break;
-                    }
-            for (i = 0; i < curBiases.size(); i++)
-                fp += fpPerBias[i][curBiases[i]];
-            
-            // Calculate F-measure by evaluating ((1 + b²) * TP) / (b² * NP + TP + FP),
-            // where TP is the number of true positives, FP is the number of false positives
-            // and NP is the total number of positive samples.
-            fMeasure = (b21 * tp) / (b2 * numPositiveTotal + tp + fp);
-            if (fMeasure >= bestFMeasure)
-            {
-                bestFMeasure = fMeasure;
-                bestBiasCombo = curBiasCombo;
-            }
-        
-            // Proceed with next bias combination
-            for (biasIndex = curBiases.size() - 1; biasIndex >= 0 && curBiases[biasIndex] >= biases[biasIndex].size() - 1; biasIndex--)
-                curBiases[biasIndex] = 0;
-            if (biasIndex == 0)
-                cerr << curBiases[0] + 1 << "/" << biases[0].size() << endl;
-            if (biasIndex < 0)
-                break;
-            curBiases[biasIndex]++;
-        }
-        cerr << "F-Measure: " << bestFMeasure << endl;
-    }
-    delete detections;
-    return bestBiasCombo;
-}
-
-
-vector<float> ModelEvaluator::searchOptimalBiasCombination(const vector<Sample*> & positive, unsigned int maxSamples,
-                                                           const vector<FFLD::JPEGImage> * negative,
-                                                           const unsigned int granularity, const float b,
-                                                           ProgressCallback progressCB, void * cbData, LOOFunc looFunc, void * looData)
+vector<float> ModelEvaluator::searchOptimalThresholdCombination(
+                                const vector<Sample*> & positive, unsigned int maxSamples,
+                                const vector<FFLD::JPEGImage> * negative,
+                                const unsigned int granularity, const float b,
+                                ProgressCallback progressCB, void * cbData, LOOFunc looFunc, void * looData)
 {
     vector<float> bestBiasCombo(this->getNumModels(), 0.0f);
     if (this->getNumModels() == 0)
@@ -371,9 +250,7 @@ vector<float> ModelEvaluator::searchOptimalBiasCombination(const vector<Sample*>
         cb_data.b = b;
         cb_data.b2 = b * b;
         cb_data.b21 = 1 + cb_data.b2;
-        float fitness;
-        bestBiasCombo = harmony_search(hs_fmeasure_cb, biases, reinterpret_cast<void*>(&cb_data), true, &fitness);
-        cerr << "F-Measure: " << fitness << endl;
+        bestBiasCombo = repeated_harmony_search(hs_fmeasure_cb, biases, reinterpret_cast<void*>(&cb_data), true);
     }
     delete detections;
     return bestBiasCombo;

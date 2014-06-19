@@ -44,4 +44,17 @@ std::vector<float> harmony_search(hs_objective_function ofunc, const std::vector
                                   const unsigned int hms = 30, const unsigned int iterations = 100000,
                                   const double hmcr = 0.9, const double par = 0.3);
 
+
+/**
+* Runs the harmony_search() function multiple times at once in parallel threads and returns the best result of all runs.
+*
+* If OpenMP is not enabled, this function is equivalent to harmony_search().
+*
+* @see harmony_search()
+*/
+std::vector<float> repeated_harmony_search(hs_objective_function ofunc, const std::vector< std::vector<float> > & params, void * ofuncData = 0,
+                                  const bool maximize = false, float * bestFitness = 0,
+                                  const unsigned int hms = 30, const unsigned int iterations = 100000,
+                                  const double hmcr = 0.9, const double par = 0.3);
+
 }

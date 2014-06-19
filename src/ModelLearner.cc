@@ -151,7 +151,7 @@ bool ModelLearner::learn(const unsigned int maxAspectClusters, const unsigned in
     if (this->m_bg.empty() || this->m_samples.empty() || this->m_bg.getNumFeatures() > HOGPyramid::NbFeatures)
         return false;
 
-    unsigned int c, i, j, k, l, s, t;  // yes, we do need that much iteration variables
+    unsigned int c, i, j, k, l, s, t; // yes, we do need that much iteration variables
     vector<WHOSample>::iterator sample;
     vector<FFLD::Rectangle>::iterator bbox;
     vector<HOGPyramid::Level>::iterator whoStorage;
@@ -475,80 +475,8 @@ const vector<float> & ModelLearner::optimizeThreshold(const unsigned int maxPosi
     if (this->m_models.size() > 0)
     {
         if (this->m_verbose)
-            cerr << "-- Calculating optimal thresholds by F-measure" << ((this->m_loocv) ? " using LOOCV" : "") << " --" << endl;
-        this->m_thresholds.resize(this->m_models.size(), 0);
-        
-        // Build vector of pointers to positive samples
-        vector<Sample*> positive;
-        positive.reserve(this->m_samples.size());
-        for (vector<WHOSample>::iterator sample = this->m_samples.begin(); sample != this->m_samples.end(); sample++)
-            positive.push_back(&(*sample));
-        
-        // Create an evaluator for the learned models
-        ModelEvaluator eval;
-        for (size_t i = 0; i < this->m_models.size(); i++)
-        {
-            Mixture mixture;
-            mixture.addModel(Model(this->m_models[i], 0));
-            stringstream classname;
-            classname << i;
-            eval.addModel(classname.str(), mixture, 0.0);
-        }
-        
-        // Test models against samples
-        if (this->m_verbose)
-            start();
-        ModelEvaluator::LOOFunc looFunc = NULL;
-        void * looData = NULL;
-        loo_data_t looDataStruct;
-        looDataStruct.clusterSizes = &this->m_clusterSizes;
-        looDataStruct.normFactors = &this->m_normFactors;
-        if (this->m_loocv)
-        {
-            looFunc = &loo_who;
-            looData = static_cast<void*>(&looDataStruct);
-        }
-        eval.testModels(positive, maxPositive, negative, 100, progressCB, cbData, looFunc, looData);
-        if (this->m_verbose)
-        {
-            cerr << "Tested models against ";
-            if (maxPositive > 0)
-                cerr << "~" << maxPositive * this->m_models.size();
-            else
-                cerr << this->getNumSamples();
-            cerr << " positive";
-            if (negative != NULL)
-                cerr << " and " << negative->size() << " negative";
-            cerr << " samples in " << stop() << " ms." << endl;
-            start();
-        }
-        
-        // Get threshold with maximum F-measure for each model
-        for (size_t i = 0; i < this->m_models.size(); i++)
-        {
-            this->m_thresholds[i] = eval.getMaxFMeasure(i, b).first;
-            if (this->m_verbose)
-                cerr << "Threshold for model #" << i << ": " << this->m_thresholds[i] << endl;
-        }
-        if (this->m_verbose)
-            cerr << "Found optimal thresholds in " << stop() << " ms." << endl;
-    }
-    return this->m_thresholds;
-}
-
-
-const vector<float> & ModelLearner::optimizeThresholdCombination(const unsigned int maxPositive, const vector<JPEGImage> * negative,
-                                                                 int mode, const float b, ProgressCallback progressCB, void * cbData)
-{
-    if (this->m_models.size() > 0)
-    {
-        if (this->m_verbose)
         {
             cerr << "-- Calculating optimal threshold combination by F-measure" << ((this->m_loocv) ? " using LOOCV" : "") << " --" << endl;
-            if (mode == 1)
-                cerr << "Mode: Best Combination" << endl;
-            else
-                cerr << "Mode: Harmony Search" << endl;
             cerr << "Positive samples: ";
             if (maxPositive > 0)
                 cerr << "~" << maxPositive * this->m_models.size();
@@ -558,7 +486,6 @@ const vector<float> & ModelLearner::optimizeThresholdCombination(const unsigned 
             if (negative != NULL)
                 cerr << "Negative samples: " << negative->size() << endl;
         }
-        this->m_thresholds.resize(this->m_models.size(), 0);
         
         // Build vector of pointers to positive samples
         vector<Sample*> positive;
@@ -590,10 +517,15 @@ const vector<float> & ModelLearner::optimizeThresholdCombination(const unsigned 
             looFunc = &loo_who;
             looData = static_cast<void*>(&looDataStruct);
         }
-        if (mode == 1)
-            this->m_thresholds = eval.computeOptimalBiasCombination(positive, maxPositive, negative, 1, b, progressCB, cbData, looFunc, looData);
+        if (this->m_models.size() == 1)
+        {
+            eval.testModels(positive, maxPositive, negative, 100, progressCB, cbData, looFunc, looData);
+            this->m_thresholds.resize(this->m_models.size(), 0);
+            for (size_t i = 0; i < this->m_models.size(); i++)
+                this->m_thresholds[i] = eval.getMaxFMeasure(i, b).first;
+        }
         else
-            this->m_thresholds = eval.searchOptimalBiasCombination(positive, maxPositive, negative, 100, b, progressCB, cbData, looFunc, looData);
+            this->m_thresholds = eval.searchOptimalThresholdCombination(positive, maxPositive, negative, 100, b, progressCB, cbData, looFunc, looData);
         
         if (this->m_verbose)
         {

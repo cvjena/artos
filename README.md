@@ -1,8 +1,6 @@
 ARTOS – README
 ==============
 
-***This documentation still is work-in-progress and, therefore, incomplete.***
-
 **Outline:**
 
 1. What is ARTOS?
@@ -10,12 +8,30 @@ ARTOS – README
 3. Building the library
 4. Setting up the environment
 5. Launching the ARTOS GUI
+6. License and credits
 
 
 1. What is ARTOS?
 -----------------
 
-...
+ARTOS is the **A**daptive **R**eal-**T**ime **O**bject Detection **S**ystem, created at the University of Jena (Germany).
+It can be used to quickly learn models for visual object detection without having to collect a set of samples manually.
+To make this possible, it uses *[ImageNet][3]*, a large image database with more than 20,000 categories.
+It provides an average of 300-500 images with bounding box annotations for more than 3,000 of those categories and, thus,
+is suitable for object detection.
+
+The purpose of ARTOS is not limited to using those images in combination with clustering and a technique called
+*Whitened Histograms of Orientations* (WHO, Hariharan et al.) to quickly learn new models, but also includes adapting those
+models to other domains using in-situ images and applying them to detect objects in images and video streams.
+
+ARTOS consists of two parts: A library (*libartos*) which provides all the functionality mentioned above. It is implemented
+in C++, but exports the important functions with a C-style procedural interface in addition to allow usage of the library
+with a wide range of programming languages and environments.  
+The other part is a Graphical User Interface (*PyARTOS*), written in Python, which allows performing the operations of ARTOS
+in a comfortable way.
+
+**Please note:** ARTOS is still work-in-progress. This is a first release, which still lacks some functionality we will add
+later. Also, there is a chance to face some bugs.
 
 
 2. Dependencies
@@ -130,6 +146,23 @@ On the first run, it will show up a setup dialog which asks for the directory to
 Note that the first time you run the detector or learn a new model, it will be very slow, since the *FFTW* library will collect information about your system and store it in a file called `wisdom.fftw` to speed up fourier transformations.
 
 ***Have fun!***
+
+
+6. License and credits
+----------------------
+
+ARTOS is released under the GNU General Public License (version 3).
+You should have received a copy of the license text along with ARTOS.
+
+The icons used in the PyARTOS GUI were created by different authors listed below.
+None of them is connected to ARTOS or the University of Jena in any way.
+
+- Model Catalogue: PICOL - http://www.picol.org [Creative Commons (Attribution-Share Alike 3.0 Unported)]
+- Camera: Visual Pharm - http://icons8.com/ [Creative Commons Attribution-No Derivative Works 3.0 Unported]
+- Images (Batch Detections): Ionicons - http://ionicons.com/ [MIT License]
+- Settings: Webalys - http://www.webalys.com/minicons
+- Quit: Danilo Demarco - http://www.danilodemarco.com/
+- Camera Shutter: Marc Whitbread - http://www.25icons.com [Creative Commons Attribution 3.0 - United States (+ Attribution)]
 
 
   [1]: https://github.com/python-imaging/Pillow
