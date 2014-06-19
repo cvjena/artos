@@ -17,6 +17,7 @@ var class_py_a_r_t_o_s_1_1_g_u_i_1_1_camera_sampler_1_1_camera_sample_dialog =
     [ "drawingEdges", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_camera_sampler_1_1_camera_sample_dialog.html#a3a9a56713a4378db55a93f71db372a78", null ],
     [ "drawingMode", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_camera_sampler_1_1_camera_sample_dialog.html#ad07834a4cba73bfcb82661471b2832b0", null ],
     [ "frame", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_camera_sampler_1_1_camera_sample_dialog.html#a36de06c799552a0607489dd2c7452441", null ],
+    [ "frameThumb", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_camera_sampler_1_1_camera_sample_dialog.html#aa0e371b7f4e68bb8fed77d3eac96c3b4", null ],
     [ "frmStatus", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_camera_sampler_1_1_camera_sample_dialog.html#aefb72aec922596bb0ea08c9115b1ac29", null ],
     [ "instructions", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_camera_sampler_1_1_camera_sample_dialog.html#a404274be75cef72f053c2316a080668f", null ],
     [ "lblInstructions", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_camera_sampler_1_1_camera_sample_dialog.html#afe9c6a7fecbcbeddd0353c84f689874e", null ],

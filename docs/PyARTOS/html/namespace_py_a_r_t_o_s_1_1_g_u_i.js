@@ -1,5 +1,6 @@
 var namespace_py_a_r_t_o_s_1_1_g_u_i =
 [
+    [ "AnnotationDialog", "namespace_py_a_r_t_o_s_1_1_g_u_i_1_1_annotation_dialog.html", "namespace_py_a_r_t_o_s_1_1_g_u_i_1_1_annotation_dialog" ],
     [ "BatchWindow", "namespace_py_a_r_t_o_s_1_1_g_u_i_1_1_batch_window.html", "namespace_py_a_r_t_o_s_1_1_g_u_i_1_1_batch_window" ],
     [ "CameraSampler", "namespace_py_a_r_t_o_s_1_1_g_u_i_1_1_camera_sampler.html", "namespace_py_a_r_t_o_s_1_1_g_u_i_1_1_camera_sampler" ],
     [ "CameraWindow", "namespace_py_a_r_t_o_s_1_1_g_u_i_1_1_camera_window.html", "namespace_py_a_r_t_o_s_1_1_g_u_i_1_1_camera_window" ],

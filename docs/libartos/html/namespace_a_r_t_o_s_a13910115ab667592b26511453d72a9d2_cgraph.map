@@ -1,3 +1,5 @@
 <map id="ARTOS::repeatedKMeansClustering" name="ARTOS::repeatedKMeansClustering">
-<area shape="rect" id="node3" href="$namespace_a_r_t_o_s.html#a9353cb7d44add44ac35800f4109cf929" title="ARTOS::kMeansClustering" alt="" coords="288,5,469,35"/>
+<area shape="rect" id="node2" href="$namespace_a_r_t_o_s.html#a9353cb7d44add44ac35800f4109cf929" title="ARTOS::kMeansClustering" alt="" coords="288,31,469,57"/>
+<area shape="rect" id="node3" href="$class_a_r_t_o_s_1_1_random.html#a55a61b6c2859deced8d0c5b690671abf" title="ARTOS::Random::seedOnce" alt="" coords="517,5,709,32"/>
+<area shape="rect" id="node4" href="$class_a_r_t_o_s_1_1_random.html#a0a5026c38579688e7ef13325a8676fe4" title="ARTOS::Random::getInt" alt="" coords="530,56,697,83"/>
 </map>

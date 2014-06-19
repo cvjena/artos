@@ -4,6 +4,7 @@ var class_py_a_r_t_o_s_1_1config_1_1___config =
     [ "applyDefaults", "class_py_a_r_t_o_s_1_1config_1_1___config.html#a1ef25dd962467944ccb6f28c2c984719", null ],
     [ "differentFromDefault", "class_py_a_r_t_o_s_1_1config_1_1___config.html#a65f55c97cc09b61e8438110a2950722a", null ],
     [ "get", "class_py_a_r_t_o_s_1_1config_1_1___config.html#afe2f8c6697f7259c7d087300ac17a8e4", null ],
+    [ "getInt", "class_py_a_r_t_o_s_1_1config_1_1___config.html#a759dc35185270f2a628129781d83da09", null ],
     [ "is_set", "class_py_a_r_t_o_s_1_1config_1_1___config.html#a385f5572465b387e4069217ad64a45a7", null ],
     [ "save", "class_py_a_r_t_o_s_1_1config_1_1___config.html#a09e28eb01df79c3a6ec59678cdc217cf", null ],
     [ "defaults", "class_py_a_r_t_o_s_1_1config_1_1___config.html#afde5ea36ebbe3dd4bc75ac42e9fbc09d", null ],

@@ -10,6 +10,7 @@ var class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_learn_dialog =
     [ "btnImgDir", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_learn_dialog.html#a43dece88a4d902865c1514a5bbe76b93", null ],
     [ "btnLearn", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_learn_dialog.html#a71903f9c97329ed934f3f2e433b99062", null ],
     [ "cbxThOptFullPos", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_learn_dialog.html#a81b15d7ac10828e3ef71648613286bf4", null ],
+    [ "cbxThOptSkip", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_learn_dialog.html#a9134180ba21fa0e14d35ce47245be12d", null ],
     [ "classname", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_learn_dialog.html#a28dc81008fb02826e46046375e8516d1", null ],
     [ "classnameVar", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_learn_dialog.html#a535ac6fcea855175a3bc980be8db682e", null ],
     [ "entrClassname", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_learn_dialog.html#a532b7268057d81fad02a0a589cb2784d", null ],
@@ -52,5 +53,6 @@ var class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_learn_dialog =
     [ "thOptFullPosVar", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_learn_dialog.html#a6a0036e7bfd7677f7bd9a57382844947", null ],
     [ "thOptMaxNegVar", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_learn_dialog.html#aaac950a19feb466b1b5bac0060b2be9d", null ],
     [ "thOptMaxPosVar", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_learn_dialog.html#a08d1551a25e104572e6b9ddd9354c7d5", null ],
+    [ "thOptSkipVar", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_learn_dialog.html#a4935267d2ef60559cf31dbc5a3aa0a5d", null ],
     [ "thread", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_learn_dialog.html#a1255c3cf4b1a3a4ec7d754a3c6743082", null ]
 ];

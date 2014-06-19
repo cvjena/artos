@@ -14,7 +14,7 @@ ARTOS – README
 1. What is ARTOS?
 -----------------
 
-ARTOS is the **A**daptive **R**eal-**T**ime **O**bject Detection **S**ystem, created at the University of Jena (Germany).
+ARTOS is the Adaptive Real-Time Object Detection System, created at the University of Jena (Germany).
 It can be used to quickly learn models for visual object detection without having to collect a set of samples manually.
 To make this possible, it uses *[ImageNet][3]*, a large image database with more than 20,000 categories.
 It provides an average of 300-500 images with bounding box annotations for more than 3,000 of those categories and, thus,
@@ -154,6 +154,11 @@ Note that the first time you run the detector or learn a new model, it will be v
 ARTOS is released under the GNU General Public License (version 3).
 You should have received a copy of the license text along with ARTOS.
 
+This work was originally inspired by the [raptor project][4] and the following paper:  
+Daniel Göhring, Judy Hoffman, Erik Rodner, Kate Saenko and Trevor Darrell.
+Interactive Adaptation of Real-Time Object Detectors.
+International Conference on Robotics and Automation (ICRA). 2014 
+
 The icons used in the PyARTOS GUI were created by different authors listed below.
 None of them is connected to ARTOS or the University of Jena in any way.
 
@@ -168,3 +173,4 @@ None of them is connected to ARTOS or the University of Jena in any way.
   [1]: https://github.com/python-imaging/Pillow
   [2]: http://www.cmake.org/
   [3]: http://www.image-net.org/
+  [4]: http://raptor.berkeleyvision.org/

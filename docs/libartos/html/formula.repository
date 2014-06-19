@@ -8,3 +8,6 @@
 \form#7:$\mathcal{O}(N \cdot num\_features^2)$
 \form#8:$\mathcal{O}(N^2 \cdot num\_features^2)$
 \form#9:\[\frac{(1 + b^2) \cdot \mbox{precision} \cdot \mbox{recall}}{b^2 \cdot \mbox{precision} + \mbox{recall}}\]
+\form#10:\[\frac{\mu_0^T \Sigma^-1 \mu_0 - \mu_1^T \Sigma^-1 \mu_1}{2}\]
+\form#11:$\ln \left ( \frac{\varphi}{\varphi - 1} \right )$
+\form#12:$\mathcal{N}(\mbox{mean},\,\mbox{sigma}^2)$

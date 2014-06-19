@@ -12,6 +12,7 @@ var class_a_r_t_o_s_1_1_model_evaluator =
     [ "getMaxFMeasure", "class_a_r_t_o_s_1_1_model_evaluator.html#a8979269a8d0f73a8e8d0a613cad76bf3", null ],
     [ "getResults", "class_a_r_t_o_s_1_1_model_evaluator.html#a6468d15900c10d8115bc63ed0f847f11", null ],
     [ "runDetector", "class_a_r_t_o_s_1_1_model_evaluator.html#a7853079bdd9b9daa5c44c19ab7e23026", null ],
+    [ "searchOptimalThresholdCombination", "class_a_r_t_o_s_1_1_model_evaluator.html#a0e0234beafc6185d8a907145c9a38806", null ],
     [ "testModels", "class_a_r_t_o_s_1_1_model_evaluator.html#a7430c554715656da96d4b70ce5efa2de", null ],
     [ "m_results", "class_a_r_t_o_s_1_1_model_evaluator.html#a6da9b2038d16b51140b86328edf968d4", null ]
 ];
