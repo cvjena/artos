@@ -32,5 +32,8 @@ var artos__wrapper_8py =
     [ "RES_INTERNAL_ERROR", "artos__wrapper_8py.html#a9cbaeee673c4dd4d640a4e8fe0351653", null ],
     [ "RES_INVALID_HANDLE", "artos__wrapper_8py.html#a30060106959ce49674c997183b87ea22", null ],
     [ "RES_OK", "artos__wrapper_8py.html#ae578b61271e357be4690eceacd65eeb8", null ],
-    [ "SynsetSearchResult_p", "artos__wrapper_8py.html#ad53a957a5f045e066776656363f08943", null ]
+    [ "SynsetSearchResult_p", "artos__wrapper_8py.html#ad53a957a5f045e066776656363f08943", null ],
+    [ "THOPT_LOOCV", "artos__wrapper_8py.html#afeeaef01b98d0943dadfafd7c1abb852", null ],
+    [ "THOPT_NONE", "artos__wrapper_8py.html#ae6340a4c6d2d54bfc788001a6417d93f", null ],
+    [ "THOPT_OVERLAPPING", "artos__wrapper_8py.html#aa805271beb24d2d4606a768ba3c71220", null ]
 ];

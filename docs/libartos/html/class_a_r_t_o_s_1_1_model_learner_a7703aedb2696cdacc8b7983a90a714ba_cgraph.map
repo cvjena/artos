@@ -1,5 +1,7 @@
 <map id="ARTOS::ModelLearner::learn" name="ARTOS::ModelLearner::learn">
-<area shape="rect" id="node3" href="$namespace_a_r_t_o_s.html#a13910115ab667592b26511453d72a9d2" title="ARTOS::repeatedKMeansClustering" alt="" coords="209,5,441,35"/>
-<area shape="rect" id="node7" href="$namespace_a_r_t_o_s.html#a04d256e698b1056a935847df6c69ac34" title="ARTOS::mergeNearbyClusters" alt="" coords="224,59,427,88"/>
-<area shape="rect" id="node5" href="$namespace_a_r_t_o_s.html#a9353cb7d44add44ac35800f4109cf929" title="ARTOS::kMeansClustering" alt="" coords="491,5,672,35"/>
+<area shape="rect" id="node2" href="$namespace_a_r_t_o_s.html#a13910115ab667592b26511453d72a9d2" title="ARTOS::repeatedKMeansClustering" alt="" coords="209,31,442,57"/>
+<area shape="rect" id="node6" href="$namespace_a_r_t_o_s.html#a04d256e698b1056a935847df6c69ac34" title="ARTOS::mergeNearbyClusters" alt="" coords="224,81,427,108"/>
+<area shape="rect" id="node3" href="$namespace_a_r_t_o_s.html#a9353cb7d44add44ac35800f4109cf929" title="ARTOS::kMeansClustering" alt="" coords="491,31,672,57"/>
+<area shape="rect" id="node4" href="$class_a_r_t_o_s_1_1_random.html#a55a61b6c2859deced8d0c5b690671abf" title="ARTOS::Random::seedOnce" alt="" coords="720,5,912,32"/>
+<area shape="rect" id="node5" href="$class_a_r_t_o_s_1_1_random.html#a0a5026c38579688e7ef13325a8676fe4" title="ARTOS::Random::getInt" alt="" coords="733,56,899,83"/>
 </map>

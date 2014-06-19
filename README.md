@@ -14,7 +14,7 @@ ARTOS – README
 1. What is ARTOS?
 -----------------
 
-ARTOS is the **A**daptive **R**eal-**T**ime **O**bject Detection **S**ystem, created at the University of Jena (Germany).
+ARTOS is the Adaptive Real-Time Object Detection System, created at the University of Jena (Germany).
 It can be used to quickly learn models for visual object detection without having to collect a set of samples manually.
 To make this possible, it uses *[ImageNet][3]*, a large image database with more than 20,000 categories.
 It provides an average of 300-500 images with bounding box annotations for more than 3,000 of those categories and, thus,

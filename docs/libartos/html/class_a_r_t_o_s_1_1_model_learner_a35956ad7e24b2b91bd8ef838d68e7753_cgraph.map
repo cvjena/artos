@@ -1,6 +1,9 @@
 <map id="ARTOS::ModelLearner::optimizeThreshold" name="ARTOS::ModelLearner::optimizeThreshold">
-<area shape="rect" id="node3" href="$class_a_r_t_o_s_1_1_d_p_m_detection.html#af0a95dcd6dc893401d68fa50a8929338" title="ARTOS::DPMDetection\l::addModel" alt="" coords="211,5,373,51"/>
-<area shape="rect" id="node5" href="$_model_learner_8cc.html#a91d69ccde8c4ff04cc3378e4afed9c31" title="loo_who" alt="" coords="257,75,327,104"/>
-<area shape="rect" id="node7" href="$class_a_r_t_o_s_1_1_model_evaluator.html#a7430c554715656da96d4b70ce5efa2de" title="ARTOS::ModelEvaluator\l::testModels" alt="" coords="209,127,375,174"/>
-<area shape="rect" id="node9" href="$class_a_r_t_o_s_1_1_model_evaluator.html#a8979269a8d0f73a8e8d0a613cad76bf3" title="ARTOS::ModelEvaluator\l::getMaxFMeasure" alt="" coords="209,197,375,243"/>
+<area shape="rect" id="node2" href="$class_a_r_t_o_s_1_1_d_p_m_detection.html#af0a95dcd6dc893401d68fa50a8929338" title="ARTOS::DPMDetection\l::addModel" alt="" coords="249,5,412,46"/>
+<area shape="rect" id="node3" href="$_model_learner_8cc.html#a91d69ccde8c4ff04cc3378e4afed9c31" title="loo_who" alt="" coords="295,71,366,97"/>
+<area shape="rect" id="node4" href="$class_a_r_t_o_s_1_1_model_evaluator.html#a7430c554715656da96d4b70ce5efa2de" title="ARTOS::ModelEvaluator\l::testModels" alt="" coords="247,122,414,163"/>
+<area shape="rect" id="node5" href="$class_a_r_t_o_s_1_1_model_evaluator.html#a8979269a8d0f73a8e8d0a613cad76bf3" title="ARTOS::ModelEvaluator\l::getMaxFMeasure" alt="" coords="247,187,414,229"/>
+<area shape="rect" id="node6" href="$class_a_r_t_o_s_1_1_model_evaluator.html#a0e0234beafc6185d8a907145c9a38806" title="ARTOS::ModelEvaluator\l::searchOptimalThresholdCombination" alt="" coords="209,253,453,294"/>
+<area shape="rect" id="node7" href="$namespace_a_r_t_o_s.html#abb19f751e8c4b1e73d44a8167a8a23c8" title="ARTOS::repeated_harmony\l_search" alt="" coords="502,223,685,265"/>
+<area shape="rect" id="node8" href="$_model_evaluator_8cc.html#a96889736e5f53a5d8d22efd6dd6fc5a0" title="hs_fmeasure_cb" alt="" coords="534,289,653,316"/>
 </map>

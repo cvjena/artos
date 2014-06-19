@@ -43,7 +43,7 @@ public:
     };
     
     /**
-    * @return Uniformly distributed random integral number between @min and @max (inclusively).
+    * @return Uniformly distributed random integral number between @p min and @p max (inclusively).
     */
     static int getInt(const int min, const int max)
     {

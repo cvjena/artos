@@ -1,0 +1,25 @@
+var class_py_a_r_t_o_s_1_1_g_u_i_1_1_annotation_dialog_1_1_annotation_dialog =
+[
+    [ "__init__", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_annotation_dialog_1_1_annotation_dialog.html#af7fb5fbb2771d7f01e13069635650504", null ],
+    [ "cancel", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_annotation_dialog_1_1_annotation_dialog.html#a4b85dc7b1bbb6805878a55a0dfb2fa95", null ],
+    [ "clearBoundingBoxes", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_annotation_dialog_1_1_annotation_dialog.html#aaba0fdce65a988aef5cb1954870c4eb2", null ],
+    [ "drawingBegin", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_annotation_dialog_1_1_annotation_dialog.html#a7056657650036ab4e708a53cedace220", null ],
+    [ "drawingEnd", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_annotation_dialog_1_1_annotation_dialog.html#ac610a43d42ee475b1b7736d0f08930b8", null ],
+    [ "drawingMotion", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_annotation_dialog_1_1_annotation_dialog.html#af2b068a9d5933c710d2ecbf25436a168", null ],
+    [ "nextImage", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_annotation_dialog_1_1_annotation_dialog.html#a95070173423755dc8a7a6e8a2b83a932", null ],
+    [ "onDestroy", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_annotation_dialog_1_1_annotation_dialog.html#aee4cd38e9e5e48b8b8da3aae4e12f995", null ],
+    [ "annotations", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_annotation_dialog_1_1_annotation_dialog.html#a7134fcef1267184ab8bb5ddefeee5680", null ],
+    [ "boundingBoxes", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_annotation_dialog_1_1_annotation_dialog.html#a82455900db95150f9f3f23fea569bbd4", null ],
+    [ "btnClear", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_annotation_dialog_1_1_annotation_dialog.html#a022829024eff75165640b7be9b2f780c", null ],
+    [ "btnNext", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_annotation_dialog_1_1_annotation_dialog.html#a44adc47879e83e3dd72853af7b18077f", null ],
+    [ "curImg", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_annotation_dialog_1_1_annotation_dialog.html#afc6e227c543a088b3b9e8c4809b636ae", null ],
+    [ "curImgIndex", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_annotation_dialog_1_1_annotation_dialog.html#a5bcadfe05b4780caf10b6967fafec85c", null ],
+    [ "curScale", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_annotation_dialog_1_1_annotation_dialog.html#a6adbca14a2d36a5b32547d0986b8caf3", null ],
+    [ "drawingEdges", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_annotation_dialog_1_1_annotation_dialog.html#ae3e0a0ad8bb35e0c8edc7ad829f58240", null ],
+    [ "editingBBox", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_annotation_dialog_1_1_annotation_dialog.html#a7453f1c6a5f68d576065cb70f62cf795", null ],
+    [ "filenameVar", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_annotation_dialog_1_1_annotation_dialog.html#a62e79b3f2012cc5e0f3e0232b856db84", null ],
+    [ "files", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_annotation_dialog_1_1_annotation_dialog.html#a7aee802d5db50c8304bb301aad388bcb", null ],
+    [ "lblFilename", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_annotation_dialog_1_1_annotation_dialog.html#abd3dc74a9cbc47d281380e5a4717edea", null ],
+    [ "lblImage", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_annotation_dialog_1_1_annotation_dialog.html#ae843fc898bca1eacd3884eb8bd8b59f7", null ],
+    [ "maxSize", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_annotation_dialog_1_1_annotation_dialog.html#ac94dc2767b7312f1aab22a607a5ac8b0", null ]
+];

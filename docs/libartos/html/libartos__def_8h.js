@@ -18,6 +18,9 @@ var libartos__def_8h =
     [ "ARTOS_RES_INTERNAL_ERROR", "libartos__def_8h.html#a721853a5d9cc62466350ea3c4a93d27e", null ],
     [ "ARTOS_RES_INVALID_HANDLE", "libartos__def_8h.html#abe766efb88b51423ef8cf84359633aa5", null ],
     [ "ARTOS_RES_OK", "libartos__def_8h.html#ac44dcc5fb94dbd379592eebba2df6d11", null ],
+    [ "ARTOS_THOPT_LOOCV", "libartos__def_8h.html#a0991280d79922150094c678d804622dd", null ],
+    [ "ARTOS_THOPT_NONE", "libartos__def_8h.html#ab6edb74929dbf6179a3ee11c64f94a99", null ],
+    [ "ARTOS_THOPT_OVERLAPPING", "libartos__def_8h.html#a4a4157d6703d912fb5ff9555b1235342", null ],
     [ "IMAGENET_ANNOTATION_DIR", "libartos__def_8h.html#a2b098ea5e03709fc402a2296f3b830a2", null ],
     [ "IMAGENET_IMAGE_DIR", "libartos__def_8h.html#ae07734a578b02ff7ef3072829bc209f9", null ]
 ];

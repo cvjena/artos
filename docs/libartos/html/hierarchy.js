@@ -5,6 +5,7 @@ var hierarchy =
     ] ],
     [ "FlatBoundingBox", "struct_flat_bounding_box.html", null ],
     [ "FlatDetection", "struct_flat_detection.html", null ],
+    [ "hs_fmeasure_data_t", "strucths__fmeasure__data__t.html", null ],
     [ "ARTOS::ImageRepository", "class_a_r_t_o_s_1_1_image_repository.html", null ],
     [ "iterator", null, [
       [ "ARTOS::ImageIterator", "class_a_r_t_o_s_1_1_image_iterator.html", [
@@ -18,6 +19,7 @@ var hierarchy =
       [ "ARTOS::ImageNetModelLearner", "class_a_r_t_o_s_1_1_image_net_model_learner.html", null ]
     ] ],
     [ "progress_params", "structprogress__params.html", null ],
+    [ "ARTOS::Random", "class_a_r_t_o_s_1_1_random.html", null ],
     [ "Rectangle", null, [
       [ "ARTOS::Detection", "struct_a_r_t_o_s_1_1_detection.html", null ]
     ] ],

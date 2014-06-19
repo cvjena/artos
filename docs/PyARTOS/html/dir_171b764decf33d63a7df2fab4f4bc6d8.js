@@ -1,6 +1,9 @@
 var dir_171b764decf33d63a7df2fab4f4bc6d8 =
 [
-    [ "__init__.py", "_g_u_i_2____init_____8py.html", "_g_u_i_2____init_____8py" ],
+    [ "__init__.py", "_g_u_i_2____init_____8py.html", null ],
+    [ "AnnotationDialog.py", "_annotation_dialog_8py.html", [
+      [ "AnnotationDialog", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_annotation_dialog_1_1_annotation_dialog.html", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_annotation_dialog_1_1_annotation_dialog" ]
+    ] ],
     [ "BatchWindow.py", "_batch_window_8py.html", [
       [ "DetectionFrame", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_batch_window_1_1_detection_frame.html", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_batch_window_1_1_detection_frame" ],
       [ "DetectionPopupMenu", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_batch_window_1_1_detection_popup_menu.html", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_batch_window_1_1_detection_popup_menu" ],
@@ -14,9 +17,7 @@ var dir_171b764decf33d63a7df2fab4f4bc6d8 =
       [ "DetectionFrame", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_camera_window_1_1_detection_frame.html", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_camera_window_1_1_detection_frame" ],
       [ "CameraWindow", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_camera_window_1_1_camera_window.html", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_camera_window_1_1_camera_window" ]
     ] ],
-    [ "gui_utils.py", "gui__utils_8py.html", [
-      [ "Dialog", "class_py_a_r_t_o_s_1_1_g_u_i_1_1gui__utils_1_1_dialog.html", "class_py_a_r_t_o_s_1_1_g_u_i_1_1gui__utils_1_1_dialog" ]
-    ] ],
+    [ "gui_utils.py", "gui__utils_8py.html", "gui__utils_8py" ],
     [ "MainFrame.py", "_main_frame_8py.html", [
       [ "MainFrame", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_main_frame_1_1_main_frame.html", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_main_frame_1_1_main_frame" ]
     ] ],

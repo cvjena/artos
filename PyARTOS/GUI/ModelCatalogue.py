@@ -485,7 +485,7 @@ class LearnDialog(gui_utils.Dialog):
             self.maxAspectClustersVar = Tkinter.IntVar(self, value = 2 if self.mode == self.__class__.MODE_IMAGENET else 1)
             self.maxWHOClustersVar = Tkinter.IntVar(self, value = 3 if self.mode == self.__class__.MODE_IMAGENET else 1)
             self.thOptMaxPosVar = Tkinter.IntVar(self, value = 20)
-            self.thOptMaxNegVar = Tkinter.IntVar(self, value = 40)
+            self.thOptMaxNegVar = Tkinter.IntVar(self, value = 20)
             self.thOptFullPosVar = Tkinter.BooleanVar(self, value = False if self.mode == self.__class__.MODE_IMAGENET else True)
             self.thOptSkipVar = Tkinter.BooleanVar(self, value = False)
             self.synsetSearchVar = Tkinter.StringVar(self)

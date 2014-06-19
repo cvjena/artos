@@ -10,6 +10,7 @@ var class_a_r_t_o_s_1_1_model_learner =
     [ "getBackground", "class_a_r_t_o_s_1_1_model_learner.html#a4ac62fe852ad4f0c574224014ad2d9ee", null ],
     [ "getClusterSizes", "class_a_r_t_o_s_1_1_model_learner.html#a5d9d57bcea45a51ec5adfaf54749d8a1", null ],
     [ "getModels", "class_a_r_t_o_s_1_1_model_learner.html#a60f1fc571f974c73b716ea41b4709476", null ],
+    [ "getNormFactors", "class_a_r_t_o_s_1_1_model_learner.html#abb4cc026621ce2105f3a5369270bee72", null ],
     [ "getNumSamples", "class_a_r_t_o_s_1_1_model_learner.html#a7266ff6d5ffca37f6b18ca8690c1a8bc", null ],
     [ "getSamples", "class_a_r_t_o_s_1_1_model_learner.html#ab192a6c77ffef0321dd8df74345757c8", null ],
     [ "getThresholds", "class_a_r_t_o_s_1_1_model_learner.html#a643c81d8abb5508666f02ffa6a1b4256", null ],
