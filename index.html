@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <title>Artos by cvjena</title>
+  </head>
+
+  <body>
+    <header>
+      <div class="inner">
+        <h1>Artos</h1>
+        <h2>Adaptive Real-Time Object Detection System</h2>
+        <a href="https://github.com/cvjena/artos" class="button"><small>View project on</small>GitHub</a>
+      </div>
+    </header>
+
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <h1>
+<a name="artos--readme" class="anchor" href="#artos--readme"><span class="octicon octicon-link"></span></a>ARTOS – README</h1>
+
+<p><strong>Outline:</strong></p>
+
+<ol>
+<li>What is ARTOS?</li>
+<li>Dependencies</li>
+<li>Building the library</li>
+<li>Setting up the environment</li>
+<li>Launching the ARTOS GUI</li>
+<li><p>License and credits</p></li>
+</ol><h2>
+<a name="1-what-is-artos" class="anchor" href="#1-what-is-artos"><span class="octicon octicon-link"></span></a>1. What is ARTOS?</h2>
+
+<p>ARTOS is the Adaptive Real-Time Object Detection System, created at the University of Jena (Germany).
+It can be used to quickly learn models for visual object detection without having to collect a set of samples manually.
+To make this possible, it uses <em><a href="http://www.image-net.org/">ImageNet</a></em>, a large image database with more than 20,000 categories.
+It provides an average of 300-500 images with bounding box annotations for more than 3,000 of those categories and, thus,
+is suitable for object detection.</p>
+
+<p>The purpose of ARTOS is not limited to using those images in combination with clustering and a technique called
+<em>Whitened Histograms of Orientations</em> (WHO, Hariharan et al.) to quickly learn new models, but also includes adapting those
+models to other domains using in-situ images and applying them to detect objects in images and video streams.</p>
+
+<p>ARTOS consists of two parts: A library (<em>libartos</em>) which provides all the functionality mentioned above. It is implemented
+in C++, but exports the important functions with a C-style procedural interface in addition to allow usage of the library
+with a wide range of programming languages and environments.<br>
+The other part is a Graphical User Interface (<em>PyARTOS</em>), written in Python, which allows performing the operations of ARTOS
+in a comfortable way.</p>
+
+<p><strong>Please note:</strong> ARTOS is still work-in-progress. This is a first release, which still lacks some functionality we will add
+later. Also, there is a chance to face some bugs.</p>
+
+<h2>
+<a name="2-dependencies" class="anchor" href="#2-dependencies"><span class="octicon octicon-link"></span></a>2. Dependencies</h2>
+
+<h3>
+<a name="libartos" class="anchor" href="#libartos"><span class="octicon octicon-link"></span></a>libartos</h3>
+
+<p>The ARTOS C++ library incorporates a modified version of the <em>Fast Fourier Linear Detector</em> (FFLD) [v1] for DPM detection and the <em>Eigen</em> Library [v3.1] for the linear algebra stuff. Both are already bundled with ARTOS.</p>
+
+<p>In addition, the following 3-rd party libraries are required by <em>libartos</em>:</p>
+
+<ul>
+<li><strong>libfftw3f</strong></li>
+<li><strong>libjpeg</strong></li>
+<li><strong>libxml2</strong></li>
+<li>
+<strong>OpenMP</strong> (optional, but strongly recommended)</li>
+</ul><h3>
+<a name="pyartos" class="anchor" href="#pyartos"><span class="octicon octicon-link"></span></a>PyARTOS</h3>
+
+<p>The Python graphical user interface to ARTOS requires <strong>Python version 2.7 or higher</strong>. It has been designed to work with Python 2.7 as well with Python 3.2 or later.<br>
+PyARTOS has been tested successfully with Python 2.7.6, Python 3.3.4 and Python 3.4.0.</p>
+
+<p>The following Python modules are required:</p>
+
+<ul>
+<li>
+<p><strong>Tkinter</strong>:</p>
+
+<p>The Python interface to Tk.<br>
+It is bundled with Python on Windows.<br>
+On Unix, search for a package named <em>python-tk</em> or <em>python3-tk</em>.</p>
+</li>
+<li>
+<p><strong>PIL</strong> (&gt;= 1.1.6):</p>
+
+<p>The <em>Python Imaging Library</em>.</p>
+
+<pre><code>- Python 2:
+    - Packages: *python-imaging* and *python-imaging-tk*
+    - Binaries for Win32: http://www.pythonware.com/products/pil/index.htm
+
+- Python 3 and Python 2 64-bit:  
+  Since *PIL* isn't being developed anymore and, thus, not available for Python 3, the *[Pillow][1]* fork can be used as a drop-in replacement.
+
+    - Packages: *python3-imaging* and *python3-imaging-tk*
+    - Inofficial Pillow binaries: http://www.lfd.uci.edu/~gohlke/pythonlibs/#pillow
+</code></pre>
+</li>
+<li>
+<p>At least one of the following modules used for accessing video devices:</p>
+
+<ul>
+<li>Unix:
+
+<ul>
+<li><strong>python-opencv</strong></li>
+<li>
+<strong>pygame</strong>: <a href="http://www.pygame.org/download.shtml">http://www.pygame.org/download.shtml</a>
+</li>
+</ul>
+</li>
+<li>Windows: <strong>VideoCapture</strong> (&gt;= 0.9-5): <a href="http://videocapture.sourceforge.net/">http://videocapture.sourceforge.net/</a>
+</li>
+</ul>
+</li>
+</ul><p>Note that neither <em>python-opencv</em> nor <em>VideoCapture</em> are available for Python 3 until now (May 2014).<br>
+Anyway, adding support for a new or another video capturing module can be done easily by adding a new camera abstraction class to the <code>PyARTOS.Camera</code> sub-package.</p>
+
+<h2>
+<a name="3-building-the-library" class="anchor" href="#3-building-the-library"><span class="octicon octicon-link"></span></a>3. Building the library</h2>
+
+<p>Building <em>libartos</em> requires <strong><a href="http://www.cmake.org/">CMake</a></strong> and a <strong>C++ compiler</strong>. It has been successfully built using the <strong>GNU C++ Compiler</strong>. Other compilers may be supported too, but have not been tested.</p>
+
+<p>To build <em>libartos</em> on <strong>Unix</strong>, run the following from the ARTOS root directory:</p>
+
+<pre><code>mkdir bin
+cd bin
+cmake ../src/
+make
+</code></pre>
+
+<p>This will create a new binary directory, search for the required 3-rd party libraries, generate a makefile and execute it.</p>
+
+<p>To build <em>libartos</em> on <strong>Windows</strong>, use the <em>CMake GUI</em> to create a <em>MinGW Makefile</em> and to set up the paths to the 3-rd party libraries appropriately.</p>
+
+<h2>
+<a name="4-setting-up-the-environment" class="anchor" href="#4-setting-up-the-environment"><span class="octicon octicon-link"></span></a>4. Setting up the environment</h2>
+
+<p>The use of the <strong><a href="http://www.image-net.org/">ImageNet</a></strong> image repository is an essential part of the ARTOS-workflow.<br>
+Hence, before the first use of <em>ARTOS</em>, you need to download:</p>
+
+<ol>
+<li>
+<p><strong>a (full) copy of the ImageNet image data for all synsets</strong></p>
+
+<p>This requires an account on ImageNet. Registration can be done here: <a href="http://www.image-net.org/signup">http://www.image-net.org/signup</a><br>
+After that, there should be a Tar archive with all full-resolution images available for download (&gt; 1 TB).</p>
+</li>
+<li>
+<p><strong>the bounding box annotation data for those synsets</strong></p>
+
+<p>Can be downloaded as Tar archive from the following URL (no account required): <a href="http://image-net.org/Annotation/Annotation.tar.gz">http://image-net.org/Annotation/Annotation.tar.gz</a></p>
+</li>
+<li>
+<p><strong>a synset list file, listing all available synsets and their descriptions</strong></p>
+
+<p>There is a Python script available in the ARTOS root directory, which does this for you. It will download the list of synsets which bounding box annotations are available for and will convert it to the appropriate format. Just run:</p>
+
+<pre><code>python fetch_synset_wordlist.py
+</code></pre>
+
+<p>That will create <code>synset_wordlist.txt</code>.</p>
+</li>
+</ol><p>Having those three components (images, annotations and the synset listfile), structure them like follows:</p>
+
+<ol>
+<li>Create a new directory, where your local copy of ImageNet will reside.</li>
+<li>Put the <code>synset_wordlist.txt</code> just inside of that directory.</li>
+<li>Create 2 sub-directories: <code>Images</code> and <code>Annotation</code>
+</li>
+<li>Unpack the images Tar file to the <code>Images</code> directory, so that it contains one tar file for each synset.</li>
+<li><p>Unpack the annotations Tar file to the <code>Annotation</code> directory, so that it contains one tar file for each synset. If those archives are compressed (gzipped), decompress them by running <code>gzip -d -r .</code></p></li>
+</ol><h2>
+<a name="5-launching-the-artos-gui" class="anchor" href="#5-launching-the-artos-gui"><span class="octicon octicon-link"></span></a>5. Launching the ARTOS GUI</h2>
+
+<p>After you've built <em>libartos</em> as described in (3), installed all required Python modules mentioned in (2) and made up your local copy of ImageNet as described in (4), you're ready to go! From the ARTOS root directory run:</p>
+
+<pre><code>python launch-gui.py
+</code></pre>
+
+<p>On the first run, it will show up a setup dialog which asks for the directory to store the learned models in and for the path to your local copy of ImageNet. It may also ask for the path to <em>libartos</em>, but usually that will be detected automatically.</p>
+
+<p>Note that the first time you run the detector or learn a new model, it will be very slow, since the <em>FFTW</em> library will collect information about your system and store it in a file called <code>wisdom.fftw</code> to speed up fourier transformations.</p>
+
+<p><strong><em>Have fun!</em></strong></p>
+
+<h2>
+<a name="6-license-and-credits" class="anchor" href="#6-license-and-credits"><span class="octicon octicon-link"></span></a>6. License and credits</h2>
+
+<p>ARTOS is released under the GNU General Public License (version 3).
+You should have received a copy of the license text along with ARTOS.</p>
+
+<p>The icons used in the PyARTOS GUI were created by different authors listed below.
+None of them is connected to ARTOS or the University of Jena in any way.</p>
+
+<ul>
+<li>Model Catalogue: PICOL - <a href="http://www.picol.org">http://www.picol.org</a> [Creative Commons (Attribution-Share Alike 3.0 Unported)]</li>
+<li>Camera: Visual Pharm - <a href="http://icons8.com/">http://icons8.com/</a> [Creative Commons Attribution-No Derivative Works 3.0 Unported]</li>
+<li>Images (Batch Detections): Ionicons - <a href="http://ionicons.com/">http://ionicons.com/</a> [MIT License]</li>
+<li>Settings: Webalys - <a href="http://www.webalys.com/minicons">http://www.webalys.com/minicons</a>
+</li>
+<li>Quit: Danilo Demarco - <a href="http://www.danilodemarco.com/">http://www.danilodemarco.com/</a>
+</li>
+<li>Camera Shutter: Marc Whitbread - <a href="http://www.25icons.com">http://www.25icons.com</a> [Creative Commons Attribution 3.0 - United States (+ Attribution)]</li>
+</ul>
+        </section>
+
+        <aside id="sidebar">
+          <a href="https://github.com/cvjena/artos/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/cvjena/artos/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
+
+          <p class="repo-owner"><a href="https://github.com/cvjena/artos"></a> is maintained by <a href="https://github.com/cvjena">cvjena</a>.</p>
+
+          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
+      </div>
+    </div>
+
+  
+  </body>
+</html>
