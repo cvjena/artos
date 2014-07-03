@@ -186,7 +186,8 @@ public:
     *
     * @param[in] progressCB Optionally, a callback that is called to populate the progress of the procedure.
     * The first parameter to the callback will be the current step and the second parameter will be the total number
-    * of steps. For example, the argument list (5, 10) means that the learning is half way done.
+    * of steps. For example, the argument list (5, 10) means that the learning is half way done.  
+    * The value returned by the callback will be ignored.
     *
     * @param[in] cbData Will be passed to the `progressCB` callback as third parameter.
     *
@@ -217,7 +218,8 @@ public:
     * @param[in] progressCB Optionally, a callback that is called after each run of the detector against a sample.
     * The first parameter to the callback will be the number of samples processed and the second parameter will be
     * the total number of samples to be processed. For example, the argument list (5, 10) means that the optimization
-    * is half way done.
+    * is half way done.  
+    * The callback may return false to abort the operation. To continue, it must return true.
     *
     * @param[in] cbData Will be passed to the `progressCB` callback as third parameter.
     *

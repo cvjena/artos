@@ -306,8 +306,67 @@ class CatalogueWindow(Tkinter.Toplevel):
     
     
     def openLearnBGDialog(self):
-        """Shows a LearnBGDialog for learning stationary background statistics."""
-        tkMessageBox.showinfo(title = 'Not implemented', message = 'Sorry, this function has not been implemented yet.')
+        """Shows a dialog for learning stationary background statistics."""
+        
+        from .. import artos_wrapper
+        # Check library
+        if artos_wrapper.libartos is None:
+            tkMessageBox.showerror(title = 'Library not found', message = 'libartos could not be found and loaded.')
+            return False
+        # Check model directory
+        modelDir = config.get('libartos', 'model_dir')
+        if not os.path.isdir(modelDir):
+            tkMessageBox.showerror(title = 'Model directory not found', message = 'The specified model directory does not exist.')
+            return False
+        # Check image repository
+        repoDir = config.get('ImageNet', 'repository_directory')
+        if (not repoDir) or (not ImageRepository.hasRepositoryStructure(repoDir)):
+            tkMessageBox.showerror(title = 'No image repository', message = 'The path of the image repository has not been specified or is invalid.\n' \
+                                   'Please go to the settings and specify the correct path to your local ImageNet copy, which has to be structured as' \
+                                   'described in the README file.')
+        
+        # Ask for number of images to learn from
+        numImages = tkSimpleDialog.askinteger('Learn background statistics',
+                        'Background statistics are the heart of Linear Discriminant Analysis (LDA) which ARTOS uses ' \
+                        'for model creation.\nComputing such statistics takes a really long time (more than a minute per image), ' \
+                        'but, fortunately, it has to be done just once.\n\n' \
+                        'For most purposes, the background statistics shipped with ARTOS should be sufficient. Anyway, if you ' \
+                        'wish to learn your own\nstatistics from ImageNet images, please enter the number of images to extract ' \
+                        'features from below.\n' \
+                        'Your existing bg.dat file in your model directory will be replaced with the new one, but you may restore it '\
+                        'by copying the original\nbg.dat file from the ARTOS root directory to your model directory.\n\n' \
+                        'Number of images to learn from:',
+                        initialvalue = 100, minvalue = 1)
+        if not numImages is None:
+            # Learn
+            thread_var = { 'error' : None }
+        
+            def _learnThreaded(*args, **kwargs):
+                try:
+                    learning.learnBGStatistics(*args, **kwargs)
+                except Exception as e:
+                    thread_var['error'] = e
+            
+            progressDialog = gui_utils.ProgressWindow(master = self, parent = self, threadedCallbacks = True, abortable = True,
+                    windowTitle = 'Learning background statistics',
+                    overallProcessDescription = 'Learning background statistics from ImageNet images',
+                    subProcessDescriptions = ('Computing negative mean feature vector...', 'Computing stationary autocorrelation function...')
+            )
+            progressDialog.wait_visibility()
+            thread = threading.Thread(
+                    target = _learnThreaded,
+                    args = (repoDir, os.path.join(modelDir, 'bg.dat'), numImages),
+                    kwargs = { 'progressCallback' : progressDialog.changeProgress }
+            )
+            thread.start()
+            while thread.is_alive():
+                self.update()
+                time.sleep(0.1)
+            progressDialog.destroy()
+            if thread_var['error'] is None:
+                tkMessageBox.showinfo('Success', 'Background statistics have been learned and saved to your model directory.')
+            elif not (isinstance(thread_var['error'], artos_wrapper.LibARTOSException) and thread_var['error'].errcode == artos_wrapper.RES_ABORTED):
+                tkMessageBox.showerror(title = 'Exception', message = 'An error occurred:\n{!s}'.format(thread_var['error']))
     
     
     def refreshModels(self):
@@ -725,7 +784,7 @@ class LearnDialog(gui_utils.Dialog):
                             modelfileAppendix += 1
                             modelfile = os.path.join(self.modelDir, '{}_{}.txt'.format(synsetId, modelfileAppendix))
                     
-                    progressDialog = ProgressWindow(master = self, parent = self, threadedCallbacks = True,
+                    progressDialog = gui_utils.ProgressWindow(master = self, parent = self, threadedCallbacks = True,
                             windowTitle = 'Learning model',
                             overallProcessDescription = 'Learning model from synset {}'.format(synsetId),
                             subProcessDescriptions = ('Extracting images...', 'Computing WHO models...', 'Calculating optimal thresholds...')
@@ -806,7 +865,7 @@ class LearnDialog(gui_utils.Dialog):
                             modelfile = os.path.join(self.modelDir, '{}_{}.txt'.format(modelfileBasename, modelfileAppendix))
                 
                     # Learn in a separate thread
-                    progressDialog = ProgressWindow(master = self, parent = self,
+                    progressDialog = gui_utils.ProgressWindow(master = self, parent = self,
                             windowTitle = 'Learning model',
                             overallProcessDescription = progressDescription,
                             subProcessDescriptions = ('Reading images...', 'Computing WHO models...', 'Calculating optimal thresholds...')
@@ -941,153 +1000,6 @@ class LearnDialog(gui_utils.Dialog):
                                    'described in the README file.')
             return False
         return True
-
-
-
-class ProgressWindow(gui_utils.Dialog):
-    """Window that displays the progress of an operation with two progress bars.
-    
-    One progress bar is for the overall progress and one for the current sub-processes progress.
-    """
-    
-    
-    def __init__(self, master, overallProcessDescription, subProcessDescriptions = (), windowTitle = 'Progress', \
-                 threadedCallbacks = False, parent = None):
-        """Creates a new progress window.
-        
-        master - The parent widget.
-        overallProcessDescription - Text to display above the overall progress bar.
-        subProcessDescriptions - Sequence with descriptions of each sub-process to display above the sub-progress bar.
-        windowTitle - The title of the window.
-        threadedCallbacks - Setting this to True implies that the changeProgress() and/or changeSubProgress() functions
-                            if this instance will be called from a separate thread. In that case, the new values will
-                            be stored and the progress window will be updated periodically in the main thread.
-        parent - If set to a widget, this window will turn into a modal dialog and `parent` will
-                 be it's parent window.
-        """
-        
-        gui_utils.Dialog.__init__(self, master, parent, gui_utils.Dialog.CENTER_ON_SCREEN)
-        self.title(windowTitle)
-        self.minsize(300, 0)
-        self.resizable(False, False)
-        self.protocol('WM_DELETE_WINDOW', self.onCloseQuery)
-        
-        self.overallProcessDescription = overallProcessDescription
-        self.subProcessDescriptions = subProcessDescriptions
-        self.overallProgress = Tkinter.IntVar(self, value = 0)
-        self.subProgress = Tkinter.IntVar(self, value = 0)
-        self.subDescriptionVar = Tkinter.StringVar(self, value = 'Initializing...')
-        self.threadedCallbacks = threadedCallbacks
-        self.current, self.total, self.subCurrent, self.subTotal = 0, 0, 0, 0
-        self.lock = threading.Lock()
-        if self.threadedCallbacks:
-            self.afterId = self.after(500, self._updateValues)
-        
-        self.bind('<Destroy>', self.onDestroy, True)
-        self._createWidgets()
-    
-    
-    def _createWidgets(self):
-        self.lblOverallProgress = ttk.Label(self, text = self.overallProcessDescription)
-        self.lblSubProgress     = ttk.Label(self, textvariable = self.subDescriptionVar)
-        self.overallProgressBar = ttk.Progressbar(self, orient = Tkinter.HORIZONTAL, mode = 'indeterminate', variable = self.overallProgress, maximum = 40)
-        self.subProgressBar     = ttk.Progressbar(self, orient = Tkinter.HORIZONTAL, mode = 'indeterminate', variable = self.subProgress, maximum = 40)
-        self.lblOverallProgress.pack(side = 'top', padx = 12, pady = (12, 0), fill = 'x', expand = True)
-        self.overallProgressBar.pack(side = 'top', padx = 12, pady = (0, 12), fill = 'x', expand = True)
-        if len(self.subProcessDescriptions) > 0:
-            self.lblSubProgress.pack(side = 'top', padx = 12, pady = 0, fill = 'x', expand = True)
-        self.subProgressBar.pack(side = 'top', padx = 12, pady = (0, 12), fill = 'x', expand = True)
-        self.overallProgressBar.start()
-        self.subProgressBar.start()
-    
-    
-    def onCloseQuery(self):
-        pass
-    
-    
-    def onDestroy(self, evt):
-        if (evt.widget is self):
-            try:
-                if self.threadedCallbacks:
-                    self.after_cancel(self.afterId)
-                # Break reference cycles of TCL variables, because their
-                # __del__ method prevents the garbage collector from freeing them:
-                del self.overallProgress
-                del self.subProgress
-                del self.subDescriptionVar
-            except:
-                pass
-    
-    
-    def changeSubProgress(self, current, total = None):
-        """Changes the state of the sub-progress bar.
-        
-        current - Current position of the progress bar.
-        total - Maximum position of the progress bar. Set to None to leave it unchanged.
-        """
-        
-        with self.lock:
-            if not total is None:
-                self.subTotal = total
-            self.subCurrent = current
-        
-        if not self.threadedCallbacks:
-            self._updateValues()
-    
-    
-    def changeProgress(self, current, total = None, subCurrent = 0, subTotal = 0):
-        """Changes the state of the overall progress.
-        
-        current - Current position of the overall progress bar.
-        total - Maximum position of the overall progress bar. Set to None to leave it unchanged.
-        subCurrent - Current position of the sub-progress bar.
-        subTotal - Maximum position of the sub-progress bar.
-        """
-        
-        with self.lock:
-            if not total is None:
-                self.total = total
-            self.current = current
-            if not subTotal is None:
-                self.subTotal = subTotal
-            self.subCurrent = subCurrent
-        
-        if not self.threadedCallbacks:
-            self._updateValues()
-    
-    
-    def _updateValues(self):
-        """Updates the widget with the values received by the callbacks."""
-        
-        with self.lock:
-            
-            if (not self.total is None) and (self.total != self.overallProgressBar['maximum']):
-                if self.total > 0:
-                    self.overallProgressBar.stop()
-                    self.overallProgressBar['mode'] = 'determinate'
-                    self.overallProgressBar['maximum'] = self.total
-                else:
-                    self.overallProgressBar['mode'] = 'indeterminate'
-                    self.overallProgressBar['maximum'] = 40
-                    self.overallProgressBar.start()
-            if (self.total is None) or (self.total > 0):
-                self.overallProgress.set(self.current)
-                self.subDescriptionVar.set(self.subProcessDescriptions[self.current] if self.current < len(self.subProcessDescriptions) else '')
-            
-            if (not self.subTotal is None) and (self.subTotal != self.subProgressBar['maximum']):
-                if self.subTotal > 0:
-                    self.subProgressBar.stop()
-                    self.subProgressBar['mode'] = 'determinate'
-                    self.subProgressBar['maximum'] = self.subTotal
-                else:
-                    self.subProgressBar['mode'] = 'indeterminate'
-                    self.subProgressBar['maximum'] = 40
-                    self.subProgressBar.start()
-            if (self.subTotal is None) or (self.subTotal > 0):
-                self.subProgress.set(self.subCurrent)
-        
-        if self.threadedCallbacks:
-            self.afterId = self.after(500, self._updateValues)
 
 
 

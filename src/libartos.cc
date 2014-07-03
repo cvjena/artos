@@ -6,6 +6,7 @@
 #include "DPMDetection.h"
 #include "ImageNetModelLearner.h"
 #include "ImageRepository.h"
+#include "StationaryBackground.h"
 #include "sysutils.h"
 using namespace std;
 using namespace FFLD;
@@ -139,12 +140,15 @@ typedef struct {
     overall_progress_cb_t cb;
     unsigned int overall_step;
     unsigned int overall_steps_total;
+    bool aborted;
 } progress_params;
 
-void populate_progress(unsigned int cur, unsigned int total, void * data)
+bool populate_progress(unsigned int cur, unsigned int total, void * data)
 {
     progress_params * params = reinterpret_cast<progress_params*>(data);
-    params->cb(params->overall_step, params->overall_steps_total, cur, total);
+    if (!params->aborted)
+        params->aborted = !params->cb(params->overall_step, params->overall_steps_total, cur, total);
+    return !params->aborted;
 }
 
 
@@ -171,6 +175,7 @@ int learn_imagenet(const char * repo_directory, const char * synset_id, const ch
     progParams.cb = progress_cb;
     progParams.overall_step = 0;
     progParams.overall_steps_total = (th_opt_mode == ARTOS_THOPT_NONE) ? 2 : 3;
+    progParams.aborted = false;
     if (progress_cb != NULL)
         progress_cb(0, progParams.overall_steps_total, 0, 0);
     
@@ -212,6 +217,7 @@ int learn_files_jpeg(const char ** imagefiles, const unsigned int num_imagefiles
     progParams.cb = progress_cb;
     progParams.overall_step = 0;
     progParams.overall_steps_total = (th_opt_mode == ARTOS_THOPT_NONE) ? 2 : 3;
+    progParams.aborted = false;
     if (progress_cb != NULL)
         progress_cb(0, progParams.overall_steps_total, 0, 0);
     
@@ -260,7 +266,7 @@ vector<ImageNetModelLearner*> learners;
 
 bool is_valid_learner_handle(const unsigned int learner);
 int learner_add_jpeg(const unsigned int learner, const JPEGImage & img, const FlatBoundingBox * bboxes, const unsigned int num_bboxes);
-void progress_proxy(unsigned int current, unsigned int total, void * data);
+bool progress_proxy(unsigned int current, unsigned int total, void * data);
 
 unsigned int create_learner(const char * bg_file, const char * repo_directory, const bool th_opt_loocv, const bool debug)
 {
@@ -339,7 +345,7 @@ int learner_optimize_th(const unsigned int learner, const unsigned int max_posit
     ProgressCallback progressCB = (progress_cb != NULL) ? &progress_proxy : NULL;
     void * cbData = (progress_cb != NULL) ? reinterpret_cast<void*>(progress_cb) : NULL;
     l->optimizeThreshold(max_positive, num_negative, 1.0f, progressCB, cbData);
-    return ARTOS_RES_OK;
+    return (progressCB != NULL && cbData == NULL) ? ARTOS_RES_ABORTED : ARTOS_RES_OK;
 }
 
 int learner_save(const unsigned int learner, const char * modelfile, const bool add)
@@ -380,10 +386,45 @@ int learner_add_jpeg(const unsigned int learner, const JPEGImage & img, const Fl
     return ARTOS_RES_OK;
 }
 
-void progress_proxy(unsigned int current, unsigned int total, void * data)
+bool progress_proxy(unsigned int current, unsigned int total, void * data)
 {
     progress_cb_t cb = reinterpret_cast<progress_cb_t>(data);
-    cb(current, total);
+    return cb(current, total);
+}
+
+
+
+//------------------------------------------------------------------
+//---------------------- Background Statistics ---------------------
+//------------------------------------------------------------------
+
+int learn_bg(const char * repo_directory, const char * bg_file,
+             const unsigned int num_images, const unsigned int max_offset, overall_progress_cb_t progress_cb)
+{
+    // Check repository
+    if (!ImageRepository::hasRepositoryStructure(repo_directory))
+        return ARTOS_IMGREPO_RES_INVALID_REPOSITORY;
+    MixedImageIterator imgIt(repo_directory, 1);
+    
+    // Setup some stuff for progress callback
+    progress_params progParams;
+    progParams.cb = progress_cb;
+    progParams.overall_step = 0;
+    progParams.overall_steps_total = 2;
+    progParams.aborted = false;
+    
+    // Learn background statistics
+    StationaryBackground bg;
+    bg.learnMean(imgIt, num_images, (progress_cb != NULL) ? &populate_progress : NULL, reinterpret_cast<void*>(&progParams));
+    if (progParams.aborted)
+        return ARTOS_RES_ABORTED;
+    progParams.overall_step++;
+    bg.learnCovariance(imgIt, num_images, max_offset, (progress_cb != NULL) ? &populate_progress : NULL, reinterpret_cast<void*>(&progParams));
+    if (progParams.aborted)
+        return ARTOS_RES_ABORTED;
+    if (progress_cb != NULL)
+        progress_cb(progParams.overall_steps_total, progParams.overall_steps_total, 0, 0);
+    return (bg.writeToFile(bg_file)) ? ARTOS_RES_OK : ARTOS_RES_FILE_ACCESS_DENIED;
 }
 
 

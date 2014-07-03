@@ -168,8 +168,8 @@ typedef struct {
     unsigned int height;
 } FlatBoundingBox;
 
-typedef void (*progress_cb_t)(unsigned int, unsigned int);
-typedef void (*overall_progress_cb_t)(unsigned int, unsigned int, unsigned int, unsigned int);
+typedef bool (*progress_cb_t)(unsigned int, unsigned int);
+typedef bool (*overall_progress_cb_t)(unsigned int, unsigned int, unsigned int, unsigned int);
 
 
 /**
@@ -201,7 +201,8 @@ typedef void (*overall_progress_cb_t)(unsigned int, unsigned int, unsigned int, 
 *                        the second one will be the total number of steps. To date, the entire process is divided into three steps:
 *                        image extraction, model creation and threshold optimization.  
 *                        The third and fourth parameters will be the number of performed steps and the total number of steps of
-*                        the current sub-procedure.
+*                        the current sub-procedure.  
+*                        The value returned by the callback will be ignored.
 * @param[in] debug If this is set to true, debug and performance information will be printed to stderr.
 * @return Returns `ARTOS_RES_OK` on success or one of the following error codes on failure:
 *                   - `ARTOS_IMGREPO_RES_INVALID_REPOSITORY`
@@ -246,7 +247,8 @@ int learn_imagenet(const char * repo_directory, const char * synset_id, const ch
 *                        the second one will be the total number of steps. To date, the entire process is divided into three steps:
 *                        image reading & decoding, model creation and threshold optimization.  
 *                        The third and fourth parameters will be the number of performed steps and the total number of steps of
-*                        the current sub-procedure.
+*                        the current sub-procedure.  
+*                        The value returned by the callback will be ignored.
 * @param[in] debug If this is set to true, debug and performance information will be printed to stderr.
 * @return Returns `ARTOS_RES_OK` on success or one of the following error codes on failure:
 *                   - `ARTOS_LEARN_RES_FAILED`
@@ -348,7 +350,8 @@ int learner_add_raw(const unsigned int learner,
 * @param[in] progress_cb Optionally, a callback that is called to populate the progress of the procedure.
 *                        The first parameter to the callback will be the current step and the second parameter will
 *                        be the total number of steps. For example, the argument list (5, 10) means that the learning
-*                        is half way done.
+*                        is half way done.  
+*                        The value returned by the callback will be ignored.
 * @return Returns `ARTOS_RES_OK` on success or one of the following error codes on failure:
 *                   - `ARTOS_RES_INVALID_HANDLE`
 *                   - `ARTOS_LEARN_RES_NO_SAMPLES`
@@ -367,8 +370,9 @@ int learner_run(const unsigned int learner, const unsigned int max_aspect_cluste
 * @param[in] progress_cb Optionally, a callback that is called after each run of the detector against a sample.
 *                        The first parameter to the callback will be the number of samples processed and the second
 *                        parameter will be the total number of samples to be processed. For example, the argument list
-*                        (5, 10) means that the optimization is half way done.
-* @return Returns `ARTOS_RES_OK` on success or one of the following error codes on failure:
+*                        (5, 10) means that the optimization is half way done.  
+*                        The callback may return false to abort the operation. To continue, it must return true.
+* @return Returns `ARTOS_RES_OK` on success (even on user abort) or one of the following error codes on failure:
 *                   - `ARTOS_RES_INVALID_HANDLE`
 *                   - `ARTOS_LEARN_RES_MODEL_NOT_LEARNED`
 *                   - `ARTOS_IMGREPO_RES_INVALID_REPOSITORY`
@@ -398,6 +402,35 @@ int learner_save(const unsigned int learner, const char * modelfile, const bool 
 *                   - `ARTOS_RES_INVALID_HANDLE`
 */
 int learner_reset(const unsigned int learner);
+
+
+//-------------------------------
+//     Background Statistics
+//-------------------------------
+
+/**
+* Learns a negative mean and a stationary covariance matrix as autocorrelation function from ImageNet samples.
+* Both are required for learning WHO models. This expensive computation has only to be done once and the default
+* background statistics shipped with ARTOS should be sufficient for most purposes.
+* @param[in] repo_directory The path to the image repository directory.
+* @param[in] bg_file Path to save the learned background statistics to.
+* @param[in] num_images Number of ImageNet samples to extract features from for learning background statistics.
+* @param[in] max_offset Maximum available offset in x or y direction of the autocorrelation function to be learned.
+*                       Determines the maximum size of the reconstructible covariance matrix, which will be `maxOffset + 1`.
+* @param[in] progress_cb Optionally, a callback which is called between the steps of the learning process to populate the progress.  
+*                        The first parameter to the callback will be the number of steps performed in the entire process,
+*                        the second one will be the total number of steps. To date, the entire process is divided into just two steps:
+*                        Learning a negative mean and learning an autocorrelation function.  
+*                        The third and fourth parameters will be the number of processed images and the total number of images (equal
+*                        to `numImages`) of the current sub-procedure.  
+*                        The callback may return false to abort the operation. To continue, it must return true.
+* @return Returns `ARTOS_RES_OK` on success or one of the following error codes on failure:
+*                   - `ARTOS_IMGREPO_RES_INVALID_REPOSITORY` (if the given directory doesn't point to a valid image repository)
+*                   - `ARTOS_RES_FILE_ACCESS_DENIED` (if could not bg file)
+*                   - `ARTOS_RES_ABORT` (if aborted by callback)
+*/
+int learn_bg(const char * repo_directory, const char * bg_file,
+             const unsigned int num_images, const unsigned int max_offset = 19, overall_progress_cb_t progress_cb = 0);
 
 
 //------------------

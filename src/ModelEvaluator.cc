@@ -357,8 +357,12 @@ vector<unsigned int> ModelEvaluator::runDetector(SampleDetectionsVector & detect
         }
         // Update progress
         numSamplesProcessed++;
-        if (progressCB != NULL)
-            progressCB(numSamplesProcessed, totalNumSamples, cbData);
+        if (progressCB != NULL && !progressCB(numSamplesProcessed, totalNumSamples, cbData))
+        {
+            detections.clear();
+            numPositive.assign(numPositive.size(), 0);
+            return numPositive;
+        }
     }
     
     // Run detector against negative samples
@@ -378,12 +382,20 @@ vector<unsigned int> ModelEvaluator::runDetector(SampleDetectionsVector & detect
                 for (detection = sampleDetections.begin(); detection != sampleDetections.end(); detection++)
                     detections.push_back(pair<int, Detection>(-1 * (i + 1), *detection));
                 sampleDetections.clear();
-                if (progressCB != NULL)
-                    progressCB(++numSamplesProcessed, totalNumSamples, cbData);
+                if (progressCB != NULL && !progressCB(++numSamplesProcessed, totalNumSamples, cbData))
+                {
+                    detections.clear();
+                    numPositive.assign(numPositive.size(), 0);
+                    return numPositive;
+                }
             }
     }
-    if (progressCB != NULL)
-        progressCB(totalNumSamples, totalNumSamples, cbData);
+    if (progressCB != NULL && !progressCB(totalNumSamples, totalNumSamples, cbData))
+    {
+        detections.clear();
+        numPositive.assign(numPositive.size(), 0);
+        return numPositive;
+    }
     return numPositive;
 }
 

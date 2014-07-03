@@ -26,6 +26,7 @@ RES_INVALID_HANDLE = -1
 RES_DIRECTORY_NOT_FOUND = -2
 RES_FILE_NOT_FOUND = -3
 RES_FILE_ACCESS_DENIED = -4
+RES_ABORTED = -5
 RES_INTERNAL_ERROR = -999
 DETECT_RES_INVALID_IMG_DATA = -101
 DETECT_RES_INVALID_MODEL_FILE = -102
@@ -70,8 +71,8 @@ class SynsetSearchResult(Structure):
 
 
 # Callback types
-progress_cb_t = CFUNCTYPE(None, c_uint, c_uint)
-overall_progress_cb_t = CFUNCTYPE(None, c_uint, c_uint, c_uint, c_uint)
+progress_cb_t = CFUNCTYPE(c_bool, c_uint, c_uint)
+overall_progress_cb_t = CFUNCTYPE(c_bool, c_uint, c_uint, c_uint, c_uint)
 
 
 
@@ -200,6 +201,12 @@ class _LibARTOS(object):
         self.learner_reset = prototype(('learner_reset', self._lib), paramflags)
         self.learner_reset.errcheck = self._errcheck_common
         
+        # learn_bg function
+        prototype = CFUNCTYPE(c_int, c_char_p, c_char_p, c_uint, c_uint, overall_progress_cb_t)
+        paramflags = (1, 'repo_directory'), (1, 'bg_file'), (1, 'num_images'), (1, 'max_offset', 19), (1, 'progress_cb', None)
+        self.learn_bg = prototype(('learn_bg', self._lib), paramflags)
+        self.learn_bg.errcheck = self._errcheck_common
+        
         # list_synsets function
         prototype = CFUNCTYPE(c_int, c_char_p, SynsetSearchResult_p, c_uint_p)
         paramflags = (1, 'repo_directory'), (1, 'synset_buf'), (1, 'synset_buf_size')
@@ -256,6 +263,7 @@ class LibARTOSException(Exception):
         RES_DIRECTORY_NOT_FOUND             : 'Could not find the given directory',
         RES_FILE_NOT_FOUND                  : 'File not found',
         RES_FILE_ACCESS_DENIED              : 'Access to file denied',
+        RES_ABORTED                         : 'Operation aborted by user',
         RES_INTERNAL_ERROR                  : 'Internal error',
         DETECT_RES_INVALID_IMG_DATA         : 'Invalid image',
         DETECT_RES_INVALID_MODEL_FILE       : 'Model file could not be read or parsed',

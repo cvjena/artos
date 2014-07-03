@@ -8,7 +8,7 @@
 namespace ARTOS
 {
 
-typedef void (*ProgressCallback)(unsigned int, unsigned int, void*);
+typedef bool (*ProgressCallback)(unsigned int, unsigned int, void*);
 
 /**
 * Capsules information about a sample used for model learning and evaluation.

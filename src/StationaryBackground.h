@@ -3,6 +3,8 @@
 
 #include <string>
 #include <Eigen/Core>
+#include "defs.h"
+#include "SynsetIterators.h"
 
 namespace ARTOS
 {
@@ -17,6 +19,9 @@ namespace ARTOS
 * \f$\mathcal{O}(N \cdot num\_features^2)\f$ instead of \f$\mathcal{O}(N^2 \cdot num\_features^2)\f$, which the full covariance matrix needs.  
 * Therefore, N, i. e. the number of spatial offsets used for learning the statistics, is the upper bound for the number
 * of rows and columns of reconstructed covariance matrices.
+*
+* This class may also be used to learn such statistics from ImageNet images using learnMean() and learnCovariance(),
+* though especially the latter will require a long time.
 *
 * @author Bjoern Barz <bjoern.barz@uni-jena.de>
 */
@@ -153,6 +158,57 @@ public:
     * yields to the index `(x * cols + y) * numFeatures + k` in the resulting matrix.
     */
     Matrix computeFlattenedCovariance(const int rows, const int cols, unsigned int features = 0);
+    
+    /**
+    * Learns a mean feature vector from features extracted from different positions at various scales of a set of images.
+    * After that, learnCovariance() may be used to learn a spatial autocorrelation function too.
+    * Use writeToFile() to save the learned statistics afterwards.
+    *
+    * @param[in] imgIt An ImageIterator providing images to learn background statistics from.
+    * The iterator will be rewound at the beginning of the process.
+    *
+    * @param[in] numImages Maximum number of images to learn from. If set to 0, all images provided by the
+    * iterator will be used (may take really, really long!).
+    *
+    * @param[in] progressCB Optionally, a callback that is called to populate the progress of the procedure.
+    * The first parameter to the callback will be the number of processed images and the second parameter will be equal to `numImages`.
+    * For example, the argument list (5, 10) means that the learning is half way done.  
+    * The callback may return false to abort the operation. To continue, it must return true.  
+    * Note, that the callback will be used only if `numImages` is different from 0.
+    *
+    * @param[in] cbData Will be passed to the `progressCB` callback as third parameter.
+    */
+    void learnMean(ImageIterator & imgIt, const unsigned int numImages = 0,
+                   ProgressCallback progressCB = NULL, void * cbData = NULL);
+    
+    /**
+    * Learns a spatial autocorrelation function from features extracted from different positions at various scales
+    * of a set of images. Use writeToFile() to save the learned statistics afterwards.
+    *
+    * @note Computing the covariance matrices requires a mean feature vector, which has to be loaded from file
+    * or learned using learnMean() in advance.
+    *
+    * @param[in] imgIt An ImageIterator providing images to learn background statistics from.
+    * The iterator will be rewound at the beginning of the process.
+    *
+    * @param[in] numImages Maximum number of images to learn from. If set to 0, all images provided by the
+    * iterator will be used (may take really, really long!).
+    *
+    * @param[in] maxOffset Maximum available offset in x or y direction of the autocorrelation function to be learned.
+    * Determines the maximum size of the reconstructible covariance matrix, which will be `maxOffset + 1`.
+    *
+    * @param[in] progressCB Optionally, a callback that is called to populate the progress of the procedure.
+    * The first parameter to the callback will be the number of processed images and the second parameter will be equal to `numImages`.
+    * For example, the argument list (5, 10) means that the learning is half way done.  
+    * The callback may return false to abort the operation. To continue, it must return true.  
+    * Note, that the callback will be used only if `numImages` is different from 0.
+    *
+    * @param[in] cbData Will be passed to the `progressCB` callback as third parameter.
+    *
+    * @note Learning of a background covariance matrix involves a lot of expensive computations and will take a long time.
+    */
+    void learnCovariance(ImageIterator & imgIt, const unsigned int numImages = 0, const unsigned int maxOffset = 19,
+                         ProgressCallback progressCB = NULL, void * cbData = NULL);
     
     
     MeanVector mean; /**< Stationary negative mean of features. */

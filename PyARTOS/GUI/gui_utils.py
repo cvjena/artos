@@ -3,9 +3,13 @@
 try:
     # Python 3
     import tkinter as Tkinter
+    from tkinter import ttk
 except:
     # Python 2
     import Tkinter
+    import ttk
+
+import threading
 
 
 
@@ -115,3 +119,181 @@ class Dialog(Tkinter.Toplevel):
             self.deiconify() # activate window
             if self.focusWidget:
                 self.focusWidget.focus_set()
+
+
+
+class ProgressWindow(Dialog):
+    """Window that displays the progress of an operation with two progress bars.
+    
+    One progress bar is for the overall progress and one for the current sub-processes progress.
+    """
+    
+    
+    def __init__(self, master, overallProcessDescription, subProcessDescriptions = (), windowTitle = 'Progress', \
+                 abortable = False, threadedCallbacks = False, parent = None):
+        """Creates a new progress window.
+        
+        master - The parent widget.
+        overallProcessDescription - Text to display above the overall progress bar.
+        subProcessDescriptions - Sequence with descriptions of each sub-process to display above the sub-progress bar.
+        windowTitle - The title of the window.
+        abortable - Specifies if the user may cancel the operation. If he does so, the progress callbacks of this
+                    ProgressWindow instance will return false and the `aborted` property of the instance will be set to True.
+        threadedCallbacks - Setting this to True implies that the changeProgress() and/or changeSubProgress() functions
+                            of this instance will be called from a separate thread. In that case, the new values will
+                            be stored and the progress window will be updated periodically in the main thread.
+        parent - If set to a widget, this window will turn into a modal dialog and `parent` will
+                 be it's parent window.
+        """
+        
+        Dialog.__init__(self, master, parent, Dialog.CENTER_ON_SCREEN)
+        self.title(windowTitle)
+        self.minsize(300, 0)
+        self.resizable(False, False)
+        self.protocol('WM_DELETE_WINDOW', self.onCloseQuery)
+        
+        self.overallProcessDescription = overallProcessDescription
+        self.subProcessDescriptions = subProcessDescriptions
+        self.overallProgress = Tkinter.IntVar(self, value = 0)
+        self.subProgress = Tkinter.IntVar(self, value = 0)
+        self.subDescriptionVar = Tkinter.StringVar(self, value = 'Initializing...')
+        self.abortable = abortable
+        self.aborted = False
+        self.threadedCallbacks = threadedCallbacks
+        self.current, self.total, self.subCurrent, self.subTotal = 0, 0, 0, 0
+        self.lock = threading.Lock()
+        if self.threadedCallbacks:
+            self.afterId = self.after(500, self._updateValues)
+        
+        self.bind('<Destroy>', self.onDestroy, True)
+        self._createWidgets()
+    
+    
+    def _createWidgets(self):
+        self.lblOverallProgress = ttk.Label(self, text = self.overallProcessDescription)
+        self.lblSubProgress     = ttk.Label(self, textvariable = self.subDescriptionVar)
+        self.overallProgressBar = ttk.Progressbar(self, orient = Tkinter.HORIZONTAL, mode = 'indeterminate', variable = self.overallProgress, maximum = 40)
+        self.subProgressBar     = ttk.Progressbar(self, orient = Tkinter.HORIZONTAL, mode = 'indeterminate', variable = self.subProgress, maximum = 40)
+        self.lblOverallProgress.pack(side = 'top', padx = 12, pady = (12, 0), fill = 'x', expand = True)
+        self.overallProgressBar.pack(side = 'top', padx = 12, pady = (0, 12), fill = 'x', expand = True)
+        if len(self.subProcessDescriptions) > 0:
+            self.lblSubProgress.pack(side = 'top', padx = 12, pady = 0, fill = 'x', expand = True)
+        self.subProgressBar.pack(side = 'top', padx = 12, pady = (0, 12), fill = 'x', expand = True)
+        if self.abortable:
+            self.btnAbort = ttk.Button(self, text = 'Abort', command = self.abort)
+            self.btnAbort.pack(side = 'top', pady = (0, 12))
+        else:
+            self.btnAbort = None
+        self.overallProgressBar.start()
+        self.subProgressBar.start()
+    
+    
+    def onCloseQuery(self):
+        if self.abortable:
+            self.abort();
+    
+    
+    def onDestroy(self, evt):
+        if (evt.widget is self):
+            try:
+                if self.threadedCallbacks:
+                    self.after_cancel(self.afterId)
+                # Break reference cycles of TCL variables, because their
+                # __del__ method prevents the garbage collector from freeing them:
+                del self.overallProgress
+                del self.subProgress
+                del self.subDescriptionVar
+            except:
+                pass
+    
+    
+    def abort(self):
+        """Aborts the operation.
+        
+        This function will set the `aborted` property of this instance to True and will make
+        the progress callbacks return False.
+        This could be done even if the ProgressWindows hasn't been constructed to be abortable by
+        the user.
+        """
+        
+        self.aborted = True
+        self.lblOverallProgress['text'] = 'Aborting...'
+        if not self.btnAbort is None:
+            self.btnAbort['state'] = 'disabled'
+    
+    
+    def changeSubProgress(self, current, total = None):
+        """Changes the state of the sub-progress bar.
+        
+        current - Current position of the progress bar.
+        total - Maximum position of the progress bar. Set to None to leave it unchanged.
+        Returns: False if the operation should be aborted, otherwise True.
+        """
+        
+        with self.lock:
+            if not total is None:
+                self.subTotal = total
+            self.subCurrent = current
+        
+        if not self.threadedCallbacks:
+            self._updateValues()
+        
+        return not self.aborted
+    
+    
+    def changeProgress(self, current, total = None, subCurrent = 0, subTotal = 0):
+        """Changes the state of the overall progress.
+        
+        current - Current position of the overall progress bar.
+        total - Maximum position of the overall progress bar. Set to None to leave it unchanged.
+        subCurrent - Current position of the sub-progress bar.
+        subTotal - Maximum position of the sub-progress bar.
+        Returns: False if the operation should be aborted, otherwise True.
+        """
+        
+        with self.lock:
+            if not total is None:
+                self.total = total
+            self.current = current
+            if not subTotal is None:
+                self.subTotal = subTotal
+            self.subCurrent = subCurrent
+        
+        if not self.threadedCallbacks:
+            self._updateValues()
+        
+        return not self.aborted
+    
+    
+    def _updateValues(self):
+        """Updates the widget with the values received by the callbacks."""
+        
+        with self.lock:
+            
+            if (not self.total is None) and (self.total != self.overallProgressBar['maximum']):
+                if self.total > 0:
+                    self.overallProgressBar.stop()
+                    self.overallProgressBar['mode'] = 'determinate'
+                    self.overallProgressBar['maximum'] = self.total
+                else:
+                    self.overallProgressBar['mode'] = 'indeterminate'
+                    self.overallProgressBar['maximum'] = 40
+                    self.overallProgressBar.start()
+            if (self.total is None) or (self.total > 0):
+                self.overallProgress.set(self.current)
+                self.subDescriptionVar.set(self.subProcessDescriptions[self.current] if self.current < len(self.subProcessDescriptions) else '')
+            
+            if (not self.subTotal is None) and (self.subTotal != self.subProgressBar['maximum']):
+                if self.subTotal > 0:
+                    self.subProgressBar.stop()
+                    self.subProgressBar['mode'] = 'determinate'
+                    self.subProgressBar['maximum'] = self.subTotal
+                else:
+                    self.subProgressBar['mode'] = 'indeterminate'
+                    self.subProgressBar['maximum'] = 40
+                    self.subProgressBar.start()
+            if (self.subTotal is None) or (self.subTotal > 0):
+                self.subProgress.set(self.subCurrent)
+        
+        if self.threadedCallbacks:
+            self.afterId = self.after(500, self._updateValues)

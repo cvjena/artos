@@ -167,7 +167,8 @@ public:
     *
     * @param[in] progressCB Optionally, a callback that is called after each run of the detector against a sample.
     * The first parameter to the callback will be the number of samples processed and the second parameter will be
-    * the total number of samples to be processed.
+    * the total number of samples to be processed.  
+    * The callback may return false to abort the operation. To continue, it must return true.
     *
     * @param[in] cbData Will be passed to the `progressCB` callback as third parameter.
     *
@@ -187,6 +188,49 @@ public:
                             ProgressCallback progressCB = NULL, void * cbData = NULL,
                             LOOFunc looFunc = NULL, void * looData = NULL);
     
+    /**
+    * Determines a combination of the thresholds of the models which approximately maximizes the F-Measure.
+    *
+    * For that, the detector is run against a set of given given images containing the positive samples and,
+    * optionally, some negative images containing no instance of the object class to be detected. Then, the
+    * heuristic Harmony Search algorithm is used to find a good threshold combination.
+    *
+    * @see calculateFMeasures()
+    *
+    * @param[in] positive Vector with pointers to positive samples, given as Sample structures, which the
+    * detector will be run against. The `modelAssoc` vector of those structures indicates, which one of the
+    * models added to this evaluator (identified by it's index) is expected to detect that object.
+    *
+    * @param[in] maxSamples Maximum number of positive samples to test _each_ model against. Set this to 0 to run the
+    * detector against all samples belonging to the respective model.
+    *
+    * @param[in] negative Pointer to a vector of JPEGImages which are negative samples and, thus, must not
+    * contain any object of the class to be detected by the models. This parameter is optional and may be `NULL`.
+    *
+    * @param[in] granularity Specifies the "resolution" or "precision" of the threshold scale.
+    * The distance from one threshold to the next one will be 1/granularity.
+    *
+    * @param[in] b The b parameter for F-measure calculation. This is used to weight precision against recall.
+    * A value of 2 will rate recall twice as much as precision and a value of 0.5 will put more emphasis on
+    * precision than on recall, for example. b must be greater than 0.
+    *
+    * @param[in] progressCB Optionally, a callback that is called after each run of the detector against a sample.
+    * The first parameter to the callback will be the number of samples processed and the second parameter will be
+    * the total number of samples to be processed.  
+    * The callback may return false to abort the operation. To continue, it must return true.
+    *
+    * @param[in] cbData Will be passed to the `progressCB` callback as third parameter.
+    *
+    * @param[in] looFunc A callback for *Leave-one-out-cross-validation* (LOOCV). Before the detector will be run
+    * on each sample, that sample and the model belonging to it as well as the index of the object to "leave out"
+    * in the `modelAssoc` vector of the sample and, finally, the number of already left out samples will be passed
+    * to this function, which has to return a pointer to another model to be used instead. That way, you can remove
+    * just that sample from your model.
+    * The returned pointer is assumed to be newly allocated by the callback function and will be deleted after use.
+    * The callback function may return NULL to leave the original model unchanged.
+    *
+    * @param[in] looData Will be passed to the `looFunc` callback as last parameter.
+    */
     virtual std::vector<float> searchOptimalThresholdCombination(
                             const std::vector<Sample*> & positive, unsigned int maxSamples = 0,
                             const std::vector<FFLD::JPEGImage> * negative = NULL,
@@ -215,7 +259,8 @@ public:
     *
     * @param[in] progressCB Optionally, a callback that is called after each run of the detector against a sample.
     * The first parameter to the callback will be the number of samples processed and the second parameter will be
-    * the total number of samples to be processed.
+    * the total number of samples to be processed.  
+    * The callback may return false to abort the operation. To continue, it must return true.
     *
     * @param[in] cbData Will be passed to the `progressCB` callback as third parameter.
     *

@@ -16,6 +16,39 @@ import math, re, os, ctypes
 
 
 
+def learnBGStatistics(imageRepository, bgFile, numImages, maxOffset = 19, progressCallback = None):
+    """Learns a negative mean and a stationary covariance matrix as autocorrelation function from ImageNet samples.
+    
+    Both are required for learning WHO models. This expensive computation has only to be done once and the default
+    background statistics shipped with ARTOS should be sufficient for most purposes.
+    
+    imageRepository - Either the path to the image repository or an imagenet.ImageRepository instance.
+    bgFile - Path to save the learned background statistics to.
+    numImages - Number of ImageNet samples to extract features from for learning background statistics.
+    maxOffset - Maximum available offset in x or y direction of the autocorrelation function to be learned.
+                Determines the maximum size of the reconstructible covariance matrix, which will be `maxOffset + 1`.
+    progressCallback - Optionally, a callback which is called between the steps of the learning process to populate the progress.  
+                       The first parameter to the callback will be the number of steps performed in the entire process,
+                       the second one will be the total number of steps. To date, the entire process is divided into just two steps:
+                       Learning a negative mean and learning an autocorrelation function.  
+                       The third and fourth parameters will be the number of processed images and the total number of images (equal
+                       to `numImages`) of the current sub-procedure.
+                       The callback may return False to abort the operation. To continue, it must return True.
+    """
+    
+    if (libartos is None):
+        raise RuntimeError('Can not find libartos')
+    if isinstance(imageRepository, imagenet.ImageRepository):
+        repoDirectory = imageRepository.repoDirectory
+    else:
+        repoDirectory = imageRepository
+    cb = artos_wrapper.overall_progress_cb_t(progressCallback) if not progressCallback is None \
+         else ctypes.cast(None, artos_wrapper.overall_progress_cb_t)
+    libartos.learn_bg(utils.str2bytes(repoDirectory), utils.str2bytes(bgFile), \
+                            numImages, maxOffset, cb)
+
+
+
 class ModelLearner(object):
     """Handles learning of WHO (Whitened Histogram of Orientations) models."""
     
@@ -218,7 +251,7 @@ class ModelLearner(object):
              else ctypes.cast(None, artos_wrapper.overall_progress_cb_t)
         libartos.learn_imagenet(utils.str2bytes(repoDirectory), utils.str2bytes(synsetId), utils.str2bytes(bgFile), \
                                 utils.str2bytes(modelfile), add, maxAspectClusters, maxWHOClusters, \
-                                thOptNumPositive, thOptNumNegative, thOptMode, cb)
+                                thOptNumPositive, thOptNumNegative, thOptMode, cb, True)
 
 
     @staticmethod
