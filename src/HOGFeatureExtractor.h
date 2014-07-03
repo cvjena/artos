@@ -1,5 +1,5 @@
-#ifndef ARTOS_FEATUREEXTRACTOR_H
-#define ARTOS_FEATUREEXTRACTOR_H
+#ifndef ARTOS_HOGFEATUREEXTRACTOR_H
+#define ARTOS_HOGFEATUREEXTRACTOR_H
 
 #include "ffld/JPEGImage.h"
 #include "ffld/HOGPyramid.h"
@@ -23,11 +23,14 @@ namespace ARTOS
 class HOGFeatureExtractor
 {
 
+public:
+
     typedef FFLD::HOGPyramid::Scalar Scalar; /**< Scalar type of the components of a cell's feature vector. */
     typedef FFLD::HOGPyramid::Cell Cell; /**< Feature vector type of a single cell. */
     typedef FFLD::HOGPyramid::Level FeatureMatrix; /**< Array of cells which forms the feature vector of the entire image. */
     
-    static const int numFeatures = HOGPyramid::NbFeatures; /**< Number of features per cell. */
+    static const int numFeatures = FFLD::HOGPyramid::NbFeatures; /**< Number of features per cell. */
+    static const int numRelevantFeatures = 31; /**< Number of relevant features per cell (for instance, the last dimension may be a truncation dimension and always set to 0). */
     static const int cellSize = 8; /**< Number of pixels of each cell in both x and y direction. */
     
     /**

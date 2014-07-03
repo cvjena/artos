@@ -6,8 +6,8 @@
 #include <utility>
 #include "defs.h"
 #include "StationaryBackground.h"
+#include "FeatureExtractor.h"
 #include "ffld/JPEGImage.h"
-#include "ffld/HOGPyramid.h"
 #include "ffld/Rectangle.h"
 
 namespace ARTOS
@@ -16,7 +16,7 @@ namespace ARTOS
 
 struct WHOSample : public Sample
 {
-    std::vector<FFLD::HOGPyramid::Level> whoFeatures; /**< WHO features of each object in this sample. */
+    std::vector<FeatureExtractor::FeatureMatrix> whoFeatures; /**< WHO features of each object in this sample. */
     virtual ~WHOSample() { };
 };
 
@@ -122,7 +122,7 @@ public:
     * @return The models learned by learn(), which will be an empty vector if learn() hasn't been called yet
     * or has failed.
     */
-    const std::vector<FFLD::HOGPyramid::Level> & getModels() { return this->m_models; };
+    const std::vector<FeatureExtractor::FeatureMatrix> & getModels() { return this->m_models; };
     
     /**
     * @return The thresholds for the learned models determined by optimizeThreshold(), which will be 0 if
@@ -140,7 +140,7 @@ public:
     * @return The factors `f` which have been used to normalize each model by `w = w/f`.
     * An empty vector will be returned if no model has been learned yet.
     */
-    const std::vector<FFLD::HOGPyramid::Scalar> & getNormFactors() const { return this->m_normFactors; };
+    const std::vector<FeatureExtractor::Scalar> & getNormFactors() const { return this->m_normFactors; };
     
     /**
     * Resets this learner to it's initial state and makes it forget all learned models, thresholds and added samples.
@@ -255,13 +255,13 @@ protected:
 
     unsigned int m_numSamples; /**< Number of positive samples added (i. e. the number of bounding boxes summed over m_samples). */
     
-    std::vector<FFLD::HOGPyramid::Level> m_models; /**< The models learned by `learn`. */
+    std::vector<FeatureExtractor::FeatureMatrix> m_models; /**< The models learned by `learn`. */
     
     std::vector<float> m_thresholds; /**< Optimal thresholds for the learned models computed by `optimizeThreshold`. */
     
     std::vector<unsigned int> m_clusterSizes; /**< Number of samples belonging to each model computed by `learn`. */
     
-    std::vector<FFLD::HOGPyramid::Scalar> m_normFactors; /**< Vector with factors, each model has been divided by for normalization. */
+    std::vector<FeatureExtractor::Scalar> m_normFactors; /**< Vector with factors, each model has been divided by for normalization. */
     
     
     /**

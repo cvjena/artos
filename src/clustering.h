@@ -172,7 +172,7 @@ void mergeNearbyClusters(Eigen::VectorXi & assignments, Eigen::MatrixBase<Derive
     Eigen::Matrix<bool, Eigen::Dynamic, 1> eliminated = Eigen::Matrix<bool, Eigen::Dynamic, 1>::Constant(numCentroids, false);
     bool merged = true;
     Scalar distance, minDist;
-    int i, j, minDistIndex, numCentr1, numCentr2;
+    int i, j, c, minDistIndex, numCentr1, numCentr2;
     while (merged)
     {
         merged = false;
@@ -214,12 +214,15 @@ void mergeNearbyClusters(Eigen::VectorXi & assignments, Eigen::MatrixBase<Derive
     if (eliminated.any())
     {
         Derived newCentroids(numCentroids - eliminated.count(), centroids.cols());
-        for (i = 0, j = 0; i < numCentroids; i++)
+        for (i = 0, c = 0; i < numCentroids; i++)
             if (!eliminated(i))
-                newCentroids.row(j++) = centroids.row(i);
+            {
+                for (j = 0; j < assignments.size(); j++)
+                    if (mapping(assignments(j)) == i)
+                        assignments(j) = c;
+                newCentroids.row(c++) = centroids.row(i);
+            }
         centroids = newCentroids;
-        for (i = 0; i < assignments.size(); i++)
-            assignments(i) = mapping(assignments(i));
     }
 }
 

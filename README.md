@@ -157,7 +157,7 @@ You should have received a copy of the license text along with ARTOS.
 This work was originally inspired by the [raptor project][4] and the following paper:  
 Daniel Göhring, Judy Hoffman, Erik Rodner, Kate Saenko and Trevor Darrell.
 Interactive Adaptation of Real-Time Object Detectors.
-International Conference on Robotics and Automation (ICRA). 2014 
+International Conference on Robotics and Automation (ICRA). 2014
 
 The icons used in the PyARTOS GUI were created by different authors listed below.
 None of them is connected to ARTOS or the University of Jena in any way.

@@ -23,7 +23,7 @@ Mixture * loo_who(const Mixture *, const Sample *, const unsigned int, const uns
 
 typedef struct {
     vector<unsigned int> * clusterSizes;
-    vector<HOGPyramid::Scalar> * normFactors;
+    vector<FeatureExtractor::Scalar> * normFactors;
 } loo_data_t;
 
 
@@ -108,7 +108,7 @@ void ModelLearner::addPositiveSample(const JPEGImage & sample, const FFLD::Recta
     s.img = sample;
     s.bboxes.push_back((boundingBox.empty()) ? FFLD::Rectangle(0, 0, s.img.width(), s.img.height()) : boundingBox);
     s.modelAssoc.push_back(0);
-    s.whoFeatures.push_back(HOGPyramid::Level());
+    s.whoFeatures.push_back(FeatureExtractor::FeatureMatrix());
     this->m_samples.push_back(s);
     this->m_numSamples++;
 }
@@ -137,7 +137,7 @@ void ModelLearner::addPositiveSample(const JPEGImage & sample, const vector<FFLD
     s.img = sample;
     s.bboxes = boundingBoxes;
     s.modelAssoc.assign(s.bboxes.size(), 0);
-    s.whoFeatures.assign(s.bboxes.size(), HOGPyramid::Level());
+    s.whoFeatures.assign(s.bboxes.size(), FeatureExtractor::FeatureMatrix());
     this->m_samples.push_back(s);
     this->m_numSamples += boundingBoxes.size();
 }
@@ -148,13 +148,13 @@ bool ModelLearner::learn(const unsigned int maxAspectClusters, const unsigned in
     this->m_models.clear();
     this->m_normFactors.clear();
     this->m_thresholds.clear();
-    if (this->m_bg.empty() || this->m_samples.empty() || this->m_bg.getNumFeatures() > HOGPyramid::NbFeatures)
+    if (this->m_bg.empty() || this->m_samples.empty() || this->m_bg.getNumFeatures() > FeatureExtractor::numFeatures)
         return false;
 
     unsigned int c, i, j, k, l, s, t; // yes, we do need that much iteration variables
     vector<WHOSample>::iterator sample;
     vector<FFLD::Rectangle>::iterator bbox;
-    vector<HOGPyramid::Level>::iterator whoStorage;
+    vector<FeatureExtractor::FeatureMatrix>::iterator whoStorage;
     
     // Cluster by aspect ratio
     Eigen::VectorXi aspectClusterAssignment = Eigen::VectorXi::Zero(this->getNumSamples());
@@ -199,7 +199,7 @@ bool ModelLearner::learn(const unsigned int maxAspectClusters, const unsigned in
         cerr << "Computed optimal cell numbers in " << stop() << " ms." << endl;
     
     // Learn models for each aspect ratio cluster
-    HOGPyramid::Cell negMean = HOGPyramid::Cell::Zero();
+    FeatureExtractor::Cell negMean = FeatureExtractor::Cell::Zero();
     negMean.head(this->m_bg.getNumFeatures()) = this->m_bg.mean;
     unsigned int curClusterIndex = 0;
     unsigned int progressStep = 0, progressTotal = numAspectClusters * 2;
@@ -218,7 +218,7 @@ bool ModelLearner::learn(const unsigned int maxAspectClusters, const unsigned in
             start();
         Eigen::LLT<StationaryBackground::Matrix> llt;
         {
-            StationaryBackground::Matrix cov = this->m_bg.computeFlattenedCovariance(modelSize.height, modelSize.width, HOGPyramid::NbFeatures);
+            StationaryBackground::Matrix cov = this->m_bg.computeFlattenedCovariance(modelSize.height, modelSize.width, FeatureExtractor::numFeatures);
             if (cov.size() == 0)
             {
                 if (this->m_verbose)
@@ -262,13 +262,13 @@ bool ModelLearner::learn(const unsigned int maxAspectClusters, const unsigned in
             progressCB(progressStep, progressTotal, cbData);
         
         // Compute negative bias term in advance: mu_0'*S^-1*mu_0
-        Eigen::VectorXf hogVector(modelSize.height * modelSize.width * HOGPyramid::NbFeatures);
+        Eigen::VectorXf hogVector(modelSize.height * modelSize.width * FeatureExtractor::numFeatures);
         Eigen::VectorXf negVector(hogVector.size());
         negVector.setConstant(0.0f);
         // Replicate negative mean over all cells
         for (i = 0, l = 0; i < modelSize.height; i++)
             for (j = 0; j < modelSize.width; j++)
-                for (k = 0; k < HOGPyramid::NbFeatures; k++, l++)
+                for (k = 0; k < FeatureExtractor::numFeatures; k++, l++)
                     negVector(l) = negMean(k);
         float biasNeg = negVector.dot(llt.solve(negVector));
         if (this->m_verbose)
@@ -278,10 +278,10 @@ bool ModelLearner::learn(const unsigned int maxAspectClusters, const unsigned in
         }
         
         // Extract HOG features from samples, optionally cluster and whiten them 
-        HOGPyramid::Level positive = HOGPyramid::Level::Constant( // accumulator for positive features
-            modelSize.height, modelSize.width, HOGPyramid::Cell::Zero()
+        FeatureExtractor::FeatureMatrix positive = FeatureExtractor::FeatureMatrix::Constant( // accumulator for positive features
+            modelSize.height, modelSize.width, FeatureExtractor::Cell::Zero()
         );
-        Eigen::VectorXf posVector(positive.rows() * positive.cols() * HOGPyramid::NbFeatures); // flattened version of `positive`
+        Eigen::VectorXf posVector(positive.rows() * positive.cols() * FeatureExtractor::numFeatures); // flattened version of `positive`
         Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> whoCentroids;
         Eigen::VectorXf biases;
         if ((maxWHOClusters <= 1 || samplesPerAspectCluster[c] == 1) && !this->m_loocv)
@@ -295,9 +295,9 @@ bool ModelLearner::learn(const unsigned int maxAspectClusters, const unsigned in
                     {
                         JPEGImage resizedSample = sample->img.crop(bbox->x(), bbox->y(), bbox->width(), bbox->height())
                                                              .resize(modelSize.width * this->m_bg.cellSize, modelSize.height * this->m_bg.cellSize);
-                        HOGPyramid::Level hog;
-                        HOGPyramid::Hog(resizedSample, hog, 1, 1, this->m_bg.cellSize); // compute HOG features
-                        positive += hog.block(1, 1, positive.rows(), positive.cols()); // cut off padding and add to feature accumulator
+                        FeatureExtractor::FeatureMatrix hog;
+                        FeatureExtractor::extract(resizedSample, hog); // compute HOG features
+                        positive += hog; // add to feature accumulator
                         sample->modelAssoc[j] = curClusterIndex;
                     }
             if (this->m_verbose)
@@ -309,7 +309,7 @@ bool ModelLearner::learn(const unsigned int maxAspectClusters, const unsigned in
             // Average positive features and flatten the matrix into a vector
             for (i = 0, l = 0; i < positive.rows(); i++)
                 for (j = 0; j < positive.cols(); j++)
-                    for (k = 0; k < HOGPyramid::NbFeatures; k++, l++)
+                    for (k = 0; k < FeatureExtractor::numFeatures; k++, l++)
                         posVector(l) = positive(i, j)(k) / static_cast<float>(this->getNumSamples());
             
             // Centre positive features
@@ -348,14 +348,12 @@ bool ModelLearner::learn(const unsigned int maxAspectClusters, const unsigned in
                         // Extract HOG features
                         JPEGImage resizedSample = sample->img.crop(bbox->x(), bbox->y(), bbox->width(), bbox->height())
                                                              .resize(modelSize.width * this->m_bg.cellSize, modelSize.height * this->m_bg.cellSize);
-                        HOGPyramid::Level hog;
-                        HOGPyramid::Hog(resizedSample, hog, 1, 1, this->m_bg.cellSize); // compute HOG features
-                        positive = hog.block(1, 1, positive.rows(), positive.cols()); // cut off padding and add to feature accumulator
+                        FeatureExtractor::extract(resizedSample, positive); // compute HOG features
                         // Flatten HOG feature matrix into vector
                         hogFeatures.row(t).setConstant(0.0f);
                         for (i = 0, l = 0; i < positive.rows(); i++)
                             for (j = 0; j < positive.cols(); j++)
-                                for (k = 0; k < HOGPyramid::NbFeatures; k++, l++)
+                                for (k = 0; k < FeatureExtractor::numFeatures; k++, l++)
                                     hogFeatures(t, l) = positive(i, j)(k);
                         // Centre feature vector
                         posVector = hogFeatures.row(t).transpose() - negVector;
@@ -369,7 +367,7 @@ bool ModelLearner::learn(const unsigned int maxAspectClusters, const unsigned in
                             whoStorage->resize(positive.rows(), positive.cols());
                             for (i = 0, l = 0; i < positive.rows(); i++)
                                 for (j = 0; j < positive.cols(); j++)
-                                    for (k = 0; k < HOGPyramid::NbFeatures; k++, l++)
+                                    for (k = 0; k < FeatureExtractor::numFeatures; k++, l++)
                                         (*whoStorage)(i, j)(k) = posVector(l);
                         }
                     }
@@ -446,7 +444,7 @@ bool ModelLearner::learn(const unsigned int maxAspectClusters, const unsigned in
             centroid /= this->m_normFactors.back();
             for (i = 0, l = 0; i < positive.rows(); i++)
                 for (j = 0; j < positive.cols(); j++)
-                    for (k = 0; k < HOGPyramid::NbFeatures; k++, l++)
+                    for (k = 0; k < FeatureExtractor::numFeatures; k++, l++)
                         positive(i, j)(k) = centroid(l);
             this->m_models.push_back(positive);
             this->m_thresholds.push_back(-1 * biases(s) / this->m_normFactors.back());
@@ -579,14 +577,14 @@ Mixture * loo_who(const Mixture * orig, const Sample * sample, const unsigned in
             && (*(looData->clusterSizes))[whoSample->modelAssoc[objectIndex]] > numLeftOut + 1)
     {
         unsigned int clusterSize = (*(looData->clusterSizes))[whoSample->modelAssoc[objectIndex]];
-        HOGPyramid::Scalar normFactor = (*(looData->normFactors))[whoSample->modelAssoc[objectIndex]];
+        FeatureExtractor::Scalar normFactor = (*(looData->normFactors))[whoSample->modelAssoc[objectIndex]];
         unsigned int n = clusterSize - numLeftOut;
-        const HOGPyramid::Level * origModel = &(orig->models()[0].filters(0));
-        const HOGPyramid::Level * sampleFeatures = &(whoSample->whoFeatures[objectIndex]);
-        HOGPyramid::Level newModel(origModel->rows(), origModel->cols());
-        for (HOGPyramid::Level::Index i = 0; i < newModel.size(); i++)
-            newModel(i) = ((*origModel)(i) * (static_cast<HOGPyramid::Scalar>(n) * normFactor)
-                           - (*sampleFeatures)(i)) / (static_cast<HOGPyramid::Scalar>(n - 1) * normFactor);
+        const FeatureExtractor::FeatureMatrix * origModel = &(orig->models()[0].filters(0));
+        const FeatureExtractor::FeatureMatrix * sampleFeatures = &(whoSample->whoFeatures[objectIndex]);
+        FeatureExtractor::FeatureMatrix newModel(origModel->rows(), origModel->cols());
+        for (FeatureExtractor::FeatureMatrix::Index i = 0; i < newModel.size(); i++)
+            newModel(i) = ((*origModel)(i) * (static_cast<FeatureExtractor::Scalar>(n) * normFactor)
+                           - (*sampleFeatures)(i)) / (static_cast<FeatureExtractor::Scalar>(n - 1) * normFactor);
         Mixture * replacement = new Mixture();
         replacement->addModel(Model(newModel, orig->models()[0].bias()));
         return replacement;

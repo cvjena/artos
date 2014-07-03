@@ -5,7 +5,6 @@
 #include <vector>
 #include "defs.h"
 #include "DPMDetection.h"
-#include "ffld/HOGPyramid.h"
 
 namespace ARTOS
 {
