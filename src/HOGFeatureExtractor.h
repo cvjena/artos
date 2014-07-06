@@ -40,12 +40,19 @@ public:
     *
     * @param[out] feat Destination matrix to store the extracted features in.
     * It will be resized to fit the number of cells in the given image.
+    *
+    * @param[in] cs Optionally, the size of the feature cells if different from the default cellSize.
     */
-    static void extract(const FFLD::JPEGImage & img, FeatureMatrix & feat)
+    static void extract(const FFLD::JPEGImage & img, FeatureMatrix & feat, int cs = cellSize)
     {
-        FFLD::HOGPyramid::Hog(img, feat, 1, 1, cellSize);
-        if (feat.rows() > 2 && feat.cols() > 2)
-            feat = feat.block(1, 1, feat.rows() - 2, feat.cols() - 2); // cut off padding
+        if (cs <= 0)
+            cs = cellSize;
+        FFLD::HOGPyramid::Level hog;
+        FFLD::HOGPyramid::Hog(img, hog, 1, 1, cs);
+        if (hog.rows() > 2 && hog.cols() > 2)
+            feat = hog.block(1, 1, hog.rows() - 2, hog.cols() - 2); // cut off padding
+        else
+            feat = hog;
     };
 
 };

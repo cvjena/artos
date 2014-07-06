@@ -22,6 +22,7 @@
 #define FFLD_MODEL_H
 
 #include "HOGPyramid.h"
+#include <Eigen/StdVector>
 
 namespace FFLD
 {	
@@ -102,6 +103,7 @@ private:
 		HOGPyramid::Level filter; ///< Part filter.
 		Position offset; ///< Part offset (x, y) relative to the root.
 		Deformation deformation; ///< Deformation cost (<tt>ax^2 + bx + cy^2 + dy</tt>).
+		EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 	};
 	
 	/// Helper for the first convolution method. Computes the scores of the model given the
@@ -151,7 +153,7 @@ private:
 	static void DT2D(HOGPyramid::Matrix & matrix, const Model::Part & part, Scalar * tmp,
 					 Positions * positions = 0);
 	
-	std::vector<Part> parts_; ///< The parts making up the model (the first one is the root).
+	std::vector< Part, Eigen::aligned_allocator<Part> > parts_; ///< The parts making up the model (the first one is the root).
 	Scalar bias_; ///< The model bias.
 };
 

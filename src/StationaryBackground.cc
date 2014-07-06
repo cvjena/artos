@@ -3,10 +3,10 @@
 #include <algorithm>
 #include <vector>
 #include <cassert>
+#include <stdint.h>
 #include "portable_endian.h"
 #include "FeatureExtractor.h"
 #include "ffld/JPEGImage.h"
-#include "ffld/HOGPyramid.h"
 using namespace ARTOS;
 using namespace std;
 
@@ -23,10 +23,10 @@ bool StationaryBackground::readFromFile(const string & filename)
         return false;
     
     // Read parameters (cell size, number of features, number of offsets) from file
-    unsigned int cs, nf, no;
-    file.read(reinterpret_cast<char*>(&cs), 4);
-    file.read(reinterpret_cast<char*>(&nf), 4);
-    file.read(reinterpret_cast<char*>(&no), 4);
+    uint32_t cs, nf, no;
+    file.read(reinterpret_cast<char*>(&cs), sizeof(uint32_t));
+    file.read(reinterpret_cast<char*>(&nf), sizeof(uint32_t));
+    file.read(reinterpret_cast<char*>(&no), sizeof(uint32_t));
     cs = le32toh(cs);
     nf = le32toh(nf);
     no = le32toh(no);
@@ -41,11 +41,11 @@ bool StationaryBackground::readFromFile(const string & filename)
     
     float buf;
     char * buf_p = reinterpret_cast<char*>(&buf);
-    unsigned int i, j, k;
+    uint32_t i, j, k;
     // Read mean
     for (i = 0; i < nf; i++)
     {
-        file.read(buf_p, 4);
+        file.read(buf_p, sizeof(float));
         if (!file.good())
         {
             this->clear();
@@ -61,7 +61,7 @@ bool StationaryBackground::readFromFile(const string & filename)
         for (j = 0; j < nf; j++)
             for (k = 0; k < nf; k++)
             {
-                file.read(buf_p, 4);
+                file.read(buf_p, sizeof(float));
                 if (!file.good())
                 {
                     this->clear();
@@ -73,18 +73,18 @@ bool StationaryBackground::readFromFile(const string & filename)
     }
     
     // Read offsets
-    int ibuf;
+    int32_t ibuf;
     buf_p = reinterpret_cast<char*>(&ibuf);
     for (i = 0; i < no; i++)
     {
-        file.read(buf_p, 4);
+        file.read(buf_p, sizeof(int32_t));
         if (!file.good())
         {
             this->clear();
             return false;
         }
         this->offsets(i,0) = le32toh(ibuf);
-        file.read(buf_p, 4);
+        file.read(buf_p, sizeof(int32_t));
         if (!file.good())
         {
             this->clear();
@@ -105,42 +105,42 @@ bool StationaryBackground::writeToFile(const string & filename)
         return false;
     
     // Write parameters (cell size, number of features, number of offsets)
-    unsigned int cs, nf, no;
+    uint32_t cs, nf, no;
     cs = htole32(this->cellSize);
-    no = htole32(this->getNumFeatures());
-    nf = htole32(this->getNumOffsets());
-    file.write(reinterpret_cast<char*>(&cs), 4);
-    file.write(reinterpret_cast<char*>(&nf), 4);
-    file.write(reinterpret_cast<char*>(&no), 4);
+    nf = htole32(this->getNumFeatures());
+    no = htole32(this->getNumOffsets());
+    file.write(reinterpret_cast<char*>(&cs), sizeof(uint32_t));
+    file.write(reinterpret_cast<char*>(&nf), sizeof(uint32_t));
+    file.write(reinterpret_cast<char*>(&no), sizeof(uint32_t));
     
     float buf;
     char * buf_p = reinterpret_cast<char*>(&buf);
-    unsigned int i, j, k;
+    uint32_t i, j, k;
     // Write mean
     for (i = 0; i < this->getNumFeatures(); i++)
     {
         buf = htole32(this->mean(i));
-        file.write(buf_p, 4);
+        file.write(buf_p, sizeof(float));
     }
     
     // Write covariance
     for (i = 0; i < this->getNumOffsets(); i++)
-        for (j = 0; i < this->getNumFeatures(); j++)
-            for (k = 0; i < this->getNumFeatures(); k++)
+        for (j = 0; j < this->getNumFeatures(); j++)
+            for (k = 0; k < this->getNumFeatures(); k++)
             {
                 buf = htole32(this->cov(i)(j,k));
-                file.write(buf_p, 4);
+                file.write(buf_p, sizeof(float));
             }
     
     // Write offsets
-    int ibuf;
+    int32_t ibuf;
     buf_p = reinterpret_cast<char*>(&ibuf);
     for (i = 0; i < this->getNumOffsets(); i++)
     {
         ibuf = htole32(this->offsets(i,0));
-        file.write(buf_p, 4);
+        file.write(buf_p, sizeof(int32_t));
         ibuf = htole32(this->offsets(i,1));
-        file.write(buf_p, 4);
+        file.write(buf_p, sizeof(int32_t));
     }
     
     return file.good();
@@ -217,8 +217,7 @@ StationaryBackground::Matrix StationaryBackground::computeFlattenedCovariance(co
                     flat(p, q) = (j < ourFeatures && l < ourFeatures) ? cov(i, k)(j, l) : 0.0f;
     
     // Make sure the returned matrix is close to symmetric
-    assert((flat - flat.transpose()).cwiseAbs().sum() > 1e-5);
-    
+    assert((flat - flat.transpose()).cwiseAbs().sum() < 1e-5);
     return (flat + flat.transpose()) / 2;
 }
 
@@ -229,8 +228,8 @@ void StationaryBackground::learnMean(ImageIterator & imgIt, const unsigned int n
     
     // Iterate over the images and compute the mean feature vector
     Eigen::VectorXd mean = Eigen::VectorXd(FeatureExtractor::numRelevantFeatures);
-    int i, j;
-    vector<FFLD::HOGPyramid::Level>::const_iterator levelIt;
+    int i;
+    vector<FeatureExtractor::FeatureMatrix>::const_iterator levelIt;
     unsigned int numSamples = 0;
     for (imgIt.rewind(); imgIt.ready() && (numImages == 0 || (unsigned int) imgIt < numImages); ++imgIt)
     {
@@ -239,14 +238,13 @@ void StationaryBackground::learnMean(ImageIterator & imgIt, const unsigned int n
         FFLD::JPEGImage img = (*imgIt).getImage();
         if (!img.empty())
         {
-            FFLD::HOGPyramid pyra(img, 1, 1);
+            FeaturePyramid pyra(img);
             // Loop over various scales
             for (levelIt = pyra.levels().begin(); levelIt != pyra.levels().end(); levelIt++)
             {
-                for (i = 1; i < levelIt->rows() - 1; i++)
-                    for (j = 1; j < levelIt->cols() - 1; j++)
-                        mean += Eigen::VectorXd((*levelIt)(i, j).head(mean.size()).cast<double>());
-                numSamples += (levelIt->rows() - 2) * (levelIt->cols() - 2);
+                for (i = 0; i < levelIt->size(); i++)
+                    mean += Eigen::VectorXd((*levelIt)(i).head(mean.size()).cast<double>());
+                numSamples += levelIt->size();
             }
         }
     }
@@ -269,7 +267,7 @@ void StationaryBackground::learnCovariance(ImageIterator & imgIt, const unsigned
     typedef Eigen::Matrix<double, FeatureExtractor::numRelevantFeatures, 1> DoubleFeatureVector;
     typedef Eigen::Matrix<DoubleFeatureVector, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> DoubleLevel;
     int i, j, l, dx, dy, o, t, x1, x2, y1, y2;
-    vector<FFLD::HOGPyramid::Level>::const_iterator levelIt;
+    vector<FeatureExtractor::FeatureMatrix>::const_iterator levelIt;
     vector<DoubleLevel> levels;
     vector<DoubleLevel>::const_iterator dLevelIt;
     
@@ -296,7 +294,8 @@ void StationaryBackground::learnCovariance(ImageIterator & imgIt, const unsigned
     // Iterate over the images and compute the autocorrelation function
     Eigen::Array< DoubleCovMatrix, Eigen::Dynamic, 1 > cov(numOffsets);
     cov.setConstant(DoubleCovMatrix::Zero(FeatureExtractor::numRelevantFeatures, FeatureExtractor::numRelevantFeatures));
-    Eigen::Matrix<unsigned int, Eigen::Dynamic, 1> numSamples(numOffsets);
+    Eigen::Matrix<unsigned long long, Eigen::Dynamic, 1> numSamples(numOffsets);
+    numSamples.setZero();
     for (imgIt.rewind(); imgIt.ready() && (numImages == 0 || (unsigned int) imgIt < numImages); ++imgIt)
     {
         if (progressCB != NULL && numImages > 0 && !progressCB((unsigned int) imgIt, numImages, cbData))
@@ -304,21 +303,20 @@ void StationaryBackground::learnCovariance(ImageIterator & imgIt, const unsigned
         FFLD::JPEGImage img = (*imgIt).getImage();
         if (!img.empty())
         {
-            FFLD::HOGPyramid pyra(img, 1, 1);
-            levels.clear();
-            levels.reserve(pyra.levels().size());
+            FeaturePyramid pyra(img);
+            levels.resize(pyra.levels().size(), DoubleLevel());
             // Subtract mean from all features
-            for (levelIt = pyra.levels().begin(); levelIt != pyra.levels().end(); levelIt++)
+            #pragma omp parallel for private(l, i, j)
+            for (l = 0; l < pyra.levels().size(); l++)
             {
-                levels.push_back(DoubleLevel(levelIt->rows() - 2, levelIt->cols() - 2));
-                for (i = 0; i < levels.back().rows(); i++)
-                    for (j = 0; j < levels.back().cols(); j++)
-                        levels.back()(i, j) = ((*levelIt)(i+1, j+1).head(FeatureExtractor::numRelevantFeatures) - this->mean).cast<double>();
+                levels[l].resize(pyra.levels()[l].rows(), pyra.levels()[l].cols());
+                for (i = 0; i < levels[l].size(); i++)
+                    levels[l](i) = (pyra.levels()[l](i).head(FeatureExtractor::numRelevantFeatures) - this->mean).cast<double>();
             }
             // Loop over various scales and compute covariances
             for (dLevelIt = levels.begin(); dLevelIt != levels.end(); dLevelIt++)
             {
-                #pragma omp parallel for private(dx, dy, y1, y2, x1, x2, i, j, l, t)
+                #pragma omp parallel for private(o, dx, dy, y1, y2, x1, x2, i, j, l, t)
                 for (o = 0; o < numOffsets; o++)
                 {
                     dx = this->offsets(o, 0);
