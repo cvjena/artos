@@ -799,7 +799,8 @@ class LearnDialog(gui_utils.Dialog):
                                 'thOptNumPositive' : self.thOptMaxPosVar.get() if not self.thOptFullPosVar.get() else 0,
                                 'thOptNumNegative' : self.thOptMaxNegVar.get(),
                                 'thOptMode' : learning.ModelLearner.THOPT_LOOCV if not self.thOptSkipVar.get() else learning.ModelLearner.THOPT_NONE,
-                                'progressCallback' : progressDialog.changeProgress
+                                'progressCallback' : progressDialog.changeProgress,
+                                'debug' : config.getBool('libartos', 'debug')
                             }
                     )
                     self.thread.start()
@@ -885,7 +886,8 @@ class LearnDialog(gui_utils.Dialog):
                                 'thOptNumNegative' : self.thOptMaxNegVar.get(),
                                 'thOptMode' : learning.ModelLearner.THOPT_LOOCV if not self.thOptSkipVar.get() else learning.ModelLearner.THOPT_NONE,
                                 'progressCallback' : progressDialog.changeProgress,
-                                'subProgressCallback' : progressDialog.changeSubProgress
+                                'subProgressCallback' : progressDialog.changeSubProgress,
+                                'debug' : config.getBool('libartos', 'debug')
                             }
                     )
                     self.thread.start()
@@ -929,7 +931,7 @@ class LearnDialog(gui_utils.Dialog):
     
     def _learnThreadedInSitu(self, repoDirectory, bgFile, modelfile, samples, bboxes, \
                              maxAspectClusters, maxWHOClusters, thOptNumPositive, thOptNumNegative, thOptMode, \
-                             progressCallback, subProgressCallback):
+                             progressCallback, subProgressCallback, debug = False):
         """Learns a model from in-situ images using learning.ModelLearner in a separate thread.
         
         If an exception is thrown by the learner, it will be stored in the _error attribute
@@ -938,7 +940,7 @@ class LearnDialog(gui_utils.Dialog):
         
         self._error = None
         try:
-            learner = learning.ModelLearner(bgFile, repoDirectory, (thOptMode == learning.ModelLearner.THOPT_LOOCV))
+            learner = learning.ModelLearner(bgFile, repoDirectory, (thOptMode == learning.ModelLearner.THOPT_LOOCV), debug)
             progressCallback(0, 2 if thOptMode == learning.ModelLearner.THOPT_NONE else 3)
             for i, sample in enumerate(samples):
                 learner.addPositiveSample(sample, bboxes[i] if i < len(bboxes) else ())

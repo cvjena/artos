@@ -34,7 +34,8 @@ class _Config(SafeConfigParser):
         self.applyDefaults({
             'libartos' : {
                 'model_dir'             : _Config.findModelDir(),
-                'library_path'          : None
+                'library_path'          : None,
+                'debug'                 : 0,
             },
             'ImageNet' : {
                 'repository_directory'  : None
@@ -102,6 +103,37 @@ class _Config(SafeConfigParser):
                 value = min
             elif (not max is None) and (value > max):
                 value = max
+        return value
+    
+    
+    def getBool(self, section, option, useDefaults = True):
+        """Get an option value for the named section as boolean value.
+        
+        If useDefaults is set to true, this function falls back to default values if the
+        given option hasn't been specified in the configuration file or can't be interpreted as a boolean value.
+        Empty strings, the strings 'no', 'off' and 'false' as well as the number 0 will be interpreted as False.
+        Every number different from 0 as well as the strings 'yes', 'on' and 'true' will be interpreted as True.
+        """
+        
+        def toBool(str):
+            try:
+                intval = int(str)
+                return (intval != 0)
+            except:
+                pass
+            try:
+                if str.lower() in ('', 'no', 'off', 'false'):
+                    return False
+                elif str.lower() in ('yes', 'on', 'true'):
+                    return True
+            except:
+                pass
+            return None
+        
+        value = toBool(SafeConfigParser.get(self, section, option))
+        if useDefaults and ((value is None) or (value == '')) \
+                and (section in self.defaults) and (option in self.defaults[section]):
+            value = toBool(self.defaults[section][option])
         return value
     
     

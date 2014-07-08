@@ -58,17 +58,18 @@ class ModelLearner(object):
     THOPT_LOOCV = artos_wrapper.THOPT_LOOCV
     
 
-    def __init__(self, bgFile, imageRepository = None, thOptLOOCV = True):
+    def __init__(self, bgFile, imageRepository = None, thOptLOOCV = True, debug = False):
         """Constructs and initializes a new model learner using given stationary background statistics and a given image repository.
         
         bgFile - Path to a file containing the stationary background statistics for whitening (negative mean and covariance).
         imageRepository - Optionally, a path to an image repository or an imagenet.ImageRepository instance.
                           Required if you want to use ImageNet functions with this learner.
-        thOptLOOCV - If set to true, Leave-one-out-cross-validation will be performed for threshold optimization.
+        thOptLOOCV - If set to True, Leave-one-out-cross-validation will be performed for threshold optimization.
                      This will increase memory usage, since the WHO features of all samples have to be stored for this,
                      and will slow down threshold optimization as well as the model learning step if only one WHO cluster
                      is used. But it will guarantee that no model is tested against a sample it has been learned from
                      for threshold optimization.
+        debug - If set to True, timing and debugging information will be printed to stdout.
         """
         
         object.__init__(self)
@@ -80,7 +81,7 @@ class ModelLearner(object):
             repoDirectory = ""
         else:
             repoDirectory = imageRepository
-        self.handle = libartos.create_learner(utils.str2bytes(bgFile), utils.str2bytes(repoDirectory), thOptLOOCV)
+        self.handle = libartos.create_learner(utils.str2bytes(bgFile), utils.str2bytes(repoDirectory), thOptLOOCV, debug)
 
 
     def __del__(self):
@@ -210,7 +211,8 @@ class ModelLearner(object):
     @staticmethod
     def learnModelFromSynset(imageRepository, synsetId, bgFile, modelfile, add = True, \
                              maxAspectClusters = 2, maxWHOClusters = 3, \
-                             thOptNumPositive = 0, thOptNumNegative = 0, thOptMode = THOPT_LOOCV, progressCallback = None):
+                             thOptNumPositive = 0, thOptNumNegative = 0, thOptMode = THOPT_LOOCV, progressCallback = None, \
+                             debug = False):
         """All-in-one short-cut method for learning a new WHO model from positive samples extracted from an ImageNet synset.
         
         imageRepository - Either the path to the image repository or an imagenet.ImageRepository instance.
@@ -239,6 +241,7 @@ class ModelLearner(object):
                            image extraction, model creation and threshold optimization.  
                            The third and fourth parameters will be the number of performed steps and the total number of steps of
                            the current sub-procedure.
+        debug - If set to True, timing and debugging information will be printed to stdout.
         """
         
         if (libartos is None):
@@ -251,13 +254,14 @@ class ModelLearner(object):
              else ctypes.cast(None, artos_wrapper.overall_progress_cb_t)
         libartos.learn_imagenet(utils.str2bytes(repoDirectory), utils.str2bytes(synsetId), utils.str2bytes(bgFile), \
                                 utils.str2bytes(modelfile), add, maxAspectClusters, maxWHOClusters, \
-                                thOptNumPositive, thOptNumNegative, thOptMode, cb)
+                                thOptNumPositive, thOptNumNegative, thOptMode, cb, debug)
 
 
     @staticmethod
     def learnModelFromFiles(imageFiles, boundingBoxes, bgFile, modelfile, add = True, \
                             maxAspectClusters = 2, maxWHOClusters = 3, \
-                            thOptNumPositive = 0, thOptNumNegative = 0, thOptMode = THOPT_LOOCV, progressCallback = None):
+                            thOptNumPositive = 0, thOptNumNegative = 0, thOptMode = THOPT_LOOCV, progressCallback = None, \
+                            debug = False):
         """All-in-one short-cut method for learning a new WHO model from JPEG files.
         
         imageFiles - Sequence with paths of JPEG files to use as positive samples.
@@ -290,6 +294,7 @@ class ModelLearner(object):
                            image reading & decoding, model creation and threshold optimization.  
                            The third and fourth parameters will be the number of performed steps and the total number of steps of
                            the current sub-procedure.
+        debug - If set to True, timing and debugging information will be printed to stdout.
         """
         
         # Check parameters
@@ -318,7 +323,7 @@ class ModelLearner(object):
         cb = artos_wrapper.overall_progress_cb_t(progressCallback) if not progressCallback is None \
              else ctypes.cast(None, artos_wrapper.overall_progress_cb_t)
         libartos.learn_files_jpeg(filenames, len(filenames), bboxes, utils.str2bytes(bgFile), utils.str2bytes(modelfile), \
-                                  add, maxAspectClusters, maxWHOClusters, thOptNumPositive, thOptNumNegative, thOptMode, cb)
+                                  add, maxAspectClusters, maxWHOClusters, thOptNumPositive, thOptNumNegative, thOptMode, cb, True)
 
 
 
