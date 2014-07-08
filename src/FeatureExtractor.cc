@@ -37,7 +37,10 @@ FeaturePyramid::FeaturePyramid(const JPEGImage & image, int interval) : m_interv
         JPEGImage scaled = image.resize(image.width() * scale + 0.5, image.height() * scale + 0.5);
         
         // First octave at twice the image resolution
-        FeatureExtractor::extract(scaled, m_levels[i], FeatureExtractor::cellSize / 2);
+        if (FeatureExtractor::cellSize > 1)
+            FeatureExtractor::extract(scaled, m_levels[i], FeatureExtractor::cellSize / 2);
+        else
+            FeatureExtractor::extract(image.resize(image.width() * scale * 2 + 0.5, image.height() * scale * 2 + 0.5), m_levels[i]);
         
         // Second octave at the original resolution
         if (i + interval <= maxScale)
