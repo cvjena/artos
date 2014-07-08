@@ -28,14 +28,11 @@
     <div id="content-wrapper">
       <div class="inner clearfix">
         <section id="main-content">
-          <h1>
-<!--
-<a name="artos--readme" class="anchor" href="#artos--readme"><span class="octicon octicon-link"></span></a>ARTOS – README</h1>
--->
-
-<img width=32% src="images/Learn-Dialog.png">
-<img width=32% src="images/Model-Catalogue.png">
-<img width=32% src="images/Adapt-InSitu.png">
+<div style="font-size: 2.4em;">
+  <img width=32% src="images/Learn-Dialog.png">
+  <img width=32% src="images/Model-Catalogue.png">
+  <img width=32% src="images/Adapt-InSitu.png">
+</div>
 
 
 <!--
@@ -100,30 +97,37 @@ PyARTOS has been tested successfully with Python 2.7.6, Python 3.3.4 and Python 
 
 <ul>
 <li>
-<p><strong>Tkinter</strong>:</p>
+<strong>Tkinter</strong>:<br>
 
-<p>The Python interface to Tk.<br>
+The Python interface to Tk.<br>
 It is bundled with Python on Windows.<br>
-On Unix, search for a package named <em>python-tk</em> or <em>python3-tk</em>.</p>
+On Unix, search for a package named <em>python-tk</em> or <em>python3-tk</em>.
 </li>
 <li>
-<p><strong>PIL</strong> (&gt;= 1.1.6):</p>
+<strong>PIL</strong> (&gt;= 1.1.6):<br>
 
-<p>The <em>Python Imaging Library</em>.</p>
+The <em>Python Imaging Library</em>.
 
-<pre><code>- Python 2:
-    - Packages: *python-imaging* and *python-imaging-tk*
-    - Binaries for Win32: http://www.pythonware.com/products/pil/index.htm
-
-- Python 3 and Python 2 64-bit:  
-  Since *PIL* isn't being developed anymore and, thus, not available for Python 3, the *[Pillow][1]* fork can be used as a drop-in replacement.
-
-    - Packages: *python3-imaging* and *python3-imaging-tk*
-    - Inofficial Pillow binaries: http://www.lfd.uci.edu/~gohlke/pythonlibs/#pillow
-</code></pre>
+<ul>
+  <li>
+    Python 2:
+    <ul>
+      <li>Packages: <em>python-imaging</em> and <em>python-imaging-tk</em></li>
+      <li>Binaries for Win32: <a href="http://www.pythonware.com/products/pil/index.htm">http://www.pythonware.com/products/pil/index.htm</a></li>
+    </ul>
+  </li>
+  <li>
+    Python 3 and Python 2 64-bit:<br>
+    Since <em>PIL</em> isn't being developed anymore and, thus, not available for Python 3, the <a href="https://github.com/python-imaging/Pillow"><em>Pillow</em></a> fork can be used as a drop-in replacement.
+    <ul>
+      <li>Packages: <em>python3-imaging</em> and <em>python3-imaging-tk</em></li>
+      <li>Inofficial Pillow binaries: <a href="http://www.lfd.uci.edu/~gohlke/pythonlibs/#pillow">http://www.lfd.uci.edu/~gohlke/pythonlibs/#pillow</a></li>
+    </ul>
+  </li>
+</ul>
 </li>
 <li>
-<p>At least one of the following modules used for accessing video devices:</p>
+At least one of the following modules used for accessing video devices:
 
 <ul>
 <li>Unix:
@@ -166,36 +170,31 @@ make
 Hence, before the first use of <em>ARTOS</em>, you need to download:</p>
 
 <ol>
-<li>
-<p><strong>a (full) copy of the ImageNet image data for all synsets</strong></p>
-
-<p>This requires an account on ImageNet. Registration can be done here: <a href="http://www.image-net.org/signup">http://www.image-net.org/signup</a><br>
-After that, there should be a Tar archive with all full-resolution images available for download (&gt; 1 TB).</p>
+<li><strong>a (full) copy of the ImageNet image data for all synsets</strong><br>
+This requires an account on ImageNet. Registration can be done here: <a href="http://www.image-net.org/signup">http://www.image-net.org/signup</a><br>
+After that, there should be a Tar archive with all full-resolution images available for download (&gt; 1 TB).
 </li>
 <li>
-<p><strong>the bounding box annotation data for those synsets</strong></p>
-
-<p>Can be downloaded as Tar archive from the following URL (no account required): <a href="http://image-net.org/Annotation/Annotation.tar.gz">http://image-net.org/Annotation/Annotation.tar.gz</a></p>
+<strong>the bounding box annotation data for those synsets</strong><br>
+Can be downloaded as Tar archive from the following URL (no account required): <a href="http://image-net.org/Annotation/Annotation.tar.gz">http://image-net.org/Annotation/Annotation.tar.gz</a>
 </li>
 <li>
-<p><strong>a synset list file, listing all available synsets and their descriptions</strong></p>
-
-<p>There is a Python script available in the ARTOS root directory, which does this for you. It will download the list of synsets which bounding box annotations are available for and will convert it to the appropriate format. Just run:</p>
+<strong>a synset list file, listing all available synsets and their descriptions</strong><br>
+There is a Python script available in the ARTOS root directory, which does this for you. It will download the list of synsets which bounding box annotations are available for and will convert it to the appropriate format. Just run:
 
 <pre><code>python fetch_synset_wordlist.py
 </code></pre>
 
-<p>That will create <code>synset_wordlist.txt</code>.</p>
+That will create <code>synset_wordlist.txt</code>.
 </li>
-</ol><p>Having those three components (images, annotations and the synset listfile), structure them like follows:</p>
+</ol>Having those three components (images, annotations and the synset listfile), structure them like follows:
 
 <ol>
 <li>Create a new directory, where your local copy of ImageNet will reside.</li>
 <li>Put the <code>synset_wordlist.txt</code> just inside of that directory.</li>
-<li>Create 2 sub-directories: <code>Images</code> and <code>Annotation</code>
-</li>
+<li>Create 2 sub-directories: <code>Images</code> and <code>Annotation</code></li>
 <li>Unpack the images Tar file to the <code>Images</code> directory, so that it contains one tar file for each synset.</li>
-<li><p>Unpack the annotations Tar file to the <code>Annotation</code> directory, so that it contains one tar file for each synset. If those archives are compressed (gzipped), decompress them by running <code>gzip -d -r .</code></p></li>
+<li>Unpack the annotations Tar file to the <code>Annotation</code> directory, so that it contains one tar file for each synset. If those archives are compressed (gzipped), decompress them by running <code>gzip -d -r .</code></li>
 </ol><h2>
 <a name="5-launching-the-artos-gui" class="anchor" href="#5-launching-the-artos-gui"><span class="octicon octicon-link"></span></a>5. Launching the ARTOS GUI</h2>
 
