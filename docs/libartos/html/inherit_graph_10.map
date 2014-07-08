@@ -1,3 +1,4 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$struct_a_r_t_o_s_1_1_synset.html" title="ARTOS::Synset" alt="" coords="5,5,123,32"/>
+<area shape="rect" id="node1" href="$struct_a_r_t_o_s_1_1_sample.html" title="ARTOS::Sample" alt="" coords="5,5,125,32"/>
+<area shape="rect" id="node2" href="$struct_a_r_t_o_s_1_1_w_h_o_sample.html" title="ARTOS::WHOSample" alt="" coords="174,5,327,32"/>
 </map>

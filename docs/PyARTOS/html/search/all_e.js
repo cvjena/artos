@@ -23,7 +23,7 @@ var searchData=
   ['processimages',['processImages',['../class_py_a_r_t_o_s_1_1_g_u_i_1_1_batch_window_1_1_batch_window.html#ac3f924bc236479e770d157de24fc8ce7',1,'PyARTOS::GUI::BatchWindow::BatchWindow']]],
   ['progress_5fcb_5ft',['progress_cb_t',['../namespace_py_a_r_t_o_s_1_1artos__wrapper.html#a3e83bf4a090df470ffecdc72550ba4fa',1,'PyARTOS::artos_wrapper']]],
   ['progressbar',['progressBar',['../class_py_a_r_t_o_s_1_1_g_u_i_1_1_batch_window_1_1_batch_window.html#a14783e39e63c07e74b3c0d06a26297bb',1,'PyARTOS::GUI::BatchWindow::BatchWindow']]],
-  ['progresswindow',['ProgressWindow',['../class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_progress_window.html',1,'PyARTOS::GUI::ModelCatalogue']]],
+  ['progresswindow',['ProgressWindow',['../class_py_a_r_t_o_s_1_1_g_u_i_1_1gui__utils_1_1_progress_window.html',1,'PyARTOS::GUI::gui_utils']]],
   ['pyartos',['PyARTOS',['../namespace_py_a_r_t_o_s.html',1,'']]],
   ['pygamecapture',['PygameCapture',['../namespace_py_a_r_t_o_s_1_1_camera_1_1_pygame_capture.html',1,'PyARTOS::Camera']]],
   ['pygamecapture_2epy',['PygameCapture.py',['../_pygame_capture_8py.html',1,'']]],

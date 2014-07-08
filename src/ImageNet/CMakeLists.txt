@@ -4,22 +4,5 @@ PROJECT(ImageNet)
 
 INCLUDE_DIRECTORIES("${ARTOS_SOURCE_DIR}")
 
-SET(SOURCES ImageRepository.cc SynsetImage.cc SynsetIterators.cc TarExtractor.cc ../strutils.cc ../sysutils.cc)
-ADD_LIBRARY(imagenet SHARED ${SOURCES})
-TARGET_LINK_LIBRARIES(imagenet ffld)
-
-
-# Libraries required by FFLD
-
-FIND_PACKAGE(JPEG REQUIRED)
-IF(JPEG_FOUND)
-  INCLUDE_DIRECTORIES(${JPEG_INCLUDE_DIR})
-  TARGET_LINK_LIBRARIES(imagenet ${JPEG_LIBRARIES})
-ENDIF()
-
-FIND_PACKAGE(LibXml2 REQUIRED)
-IF(LIBXML2_FOUND)
-  INCLUDE_DIRECTORIES(${LIBXML2_INCLUDE_DIR})
-  TARGET_LINK_LIBRARIES(imagenet ${LIBXML2_LIBRARIES})
-  ADD_DEFINITIONS(${LIBXML2_DEFINITIONS})
-ENDIF()
+SET(SOURCES ImageRepository.cc SynsetImage.cc SynsetIterators.cc TarExtractor.cc)
+ADD_LIBRARY(imagenet ${SOURCES})

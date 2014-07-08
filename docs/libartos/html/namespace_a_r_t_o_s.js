@@ -3,6 +3,8 @@ var namespace_a_r_t_o_s =
     [ "Sample", "struct_a_r_t_o_s_1_1_sample.html", "struct_a_r_t_o_s_1_1_sample" ],
     [ "Detection", "struct_a_r_t_o_s_1_1_detection.html", "struct_a_r_t_o_s_1_1_detection" ],
     [ "DPMDetection", "class_a_r_t_o_s_1_1_d_p_m_detection.html", "class_a_r_t_o_s_1_1_d_p_m_detection" ],
+    [ "FeaturePyramid", "class_a_r_t_o_s_1_1_feature_pyramid.html", "class_a_r_t_o_s_1_1_feature_pyramid" ],
+    [ "HOGFeatureExtractor", "class_a_r_t_o_s_1_1_h_o_g_feature_extractor.html", "class_a_r_t_o_s_1_1_h_o_g_feature_extractor" ],
     [ "ImageRepository", "class_a_r_t_o_s_1_1_image_repository.html", "class_a_r_t_o_s_1_1_image_repository" ],
     [ "Synset", "struct_a_r_t_o_s_1_1_synset.html", "struct_a_r_t_o_s_1_1_synset" ],
     [ "SynsetImage", "class_a_r_t_o_s_1_1_synset_image.html", "class_a_r_t_o_s_1_1_synset_image" ],

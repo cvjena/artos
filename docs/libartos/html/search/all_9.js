@@ -18,7 +18,7 @@ var searchData=
   ['index',['index',['../struct_a_r_t_o_s_1_1_tar_file_info.html#a99de878fd3f6af53409829714ae6e837',1,'ARTOS::TarFileInfo']]],
   ['inith',['inith',['../class_a_r_t_o_s_1_1_d_p_m_detection.html#aca8b9e1d71671a6325c71c17b909406e',1,'ARTOS::DPMDetection']]],
   ['initw',['initw',['../class_a_r_t_o_s_1_1_d_p_m_detection.html#a60d0cc7b412d04a25e0b70a41fee9e17',1,'ARTOS::DPMDetection']]],
-  ['interval',['interval',['../class_a_r_t_o_s_1_1_d_p_m_detection.html#a6ebe57f9d07353177fc76e83933602c9',1,'ARTOS::DPMDetection']]],
+  ['interval',['interval',['../class_a_r_t_o_s_1_1_d_p_m_detection.html#a6ebe57f9d07353177fc76e83933602c9',1,'ARTOS::DPMDetection::interval()'],['../class_a_r_t_o_s_1_1_feature_pyramid.html#ab3c9064626fd35cece4369e074a97d65',1,'ARTOS::FeaturePyramid::interval()']]],
   ['is_5fdir',['is_dir',['../sysutils_8cc.html#a673ec6a3fa94cbc71c56abc7c767c37e',1,'is_dir(const string &amp;path):&#160;sysutils.cc'],['../sysutils_8h.html#ad5849662d9826d4f6ac56a07c6088432',1,'is_dir(const std::string &amp;path):&#160;sysutils.h']]],
   ['is_5ffile',['is_file',['../sysutils_8cc.html#a3b20134fe3370eb84f95a12e7dc72bbb',1,'is_file(const string &amp;path):&#160;sysutils.cc'],['../sysutils_8h.html#a30a27fc5392e67f42f348e3ac4e38add',1,'is_file(const std::string &amp;path):&#160;sysutils.h']]],
   ['is_5fvalid_5fdetector_5fhandle',['is_valid_detector_handle',['../libartos_8cc.html#a9410497cc2ce4aa85415e175502a025b',1,'libartos.cc']]],

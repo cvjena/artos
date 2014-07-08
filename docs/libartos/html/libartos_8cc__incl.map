@@ -1,15 +1,17 @@
 <map id="libartos.cc" name="libartos.cc">
-<area shape="rect" id="node3" href="$libartos_8h.html" title="libartos.h" alt="" coords="205,83,280,112"/>
-<area shape="rect" id="node15" href="$_d_p_m_detection_8h.html" title="DPMDetection.h" alt="" coords="444,83,561,112"/>
-<area shape="rect" id="node28" href="$_image_net_model_learner_8h.html" title="ImageNetModelLearner.h" alt="" coords="759,83,927,112"/>
-<area shape="rect" id="node59" href="$_image_repository_8h.html" title="ImageRepository.h" alt="" coords="924,160,1055,189"/>
-<area shape="rect" id="node90" href="$sysutils_8h.html" title="sysutils.h" alt="" coords="440,237,517,267"/>
-<area shape="rect" id="node5" href="$libartos__def_8h.html" title="libartos_def.h" alt="" coords="100,160,199,189"/>
-<area shape="rect" id="node32" href="$_model_learner_8h.html" title="ModelLearner.h" alt="" coords="717,315,827,344"/>
-<area shape="rect" id="node63" href="$_synset_8h.html" title="Synset.h" alt="" coords="809,237,884,267"/>
-<area shape="rect" id="node38" href="$defs_8h.html" title="defs.h" alt="" coords="816,392,875,421"/>
-<area shape="rect" id="node51" href="$_stationary_background_8h.html" title="StationaryBackground.h" alt="" coords="504,392,664,421"/>
-<area shape="rect" id="node66" href="$_synset_iterators_8h.html" title="SynsetIterators.h" alt="" coords="1019,315,1141,344"/>
-<area shape="rect" id="node72" href="$_synset_image_8h.html" title="SynsetImage.h" alt="" coords="1000,392,1109,421"/>
-<area shape="rect" id="node80" href="$_tar_extractor_8h.html" title="TarExtractor.h" alt="" coords="1133,392,1237,421"/>
+<area shape="rect" id="node2" href="$libartos_8h.html" title="libartos.h" alt="" coords="1347,80,1420,107"/>
+<area shape="rect" id="node8" href="$_d_p_m_detection_8h.html" title="DPMDetection.h" alt="" coords="1478,80,1596,107"/>
+<area shape="rect" id="node13" href="$_image_net_model_learner_8h.html" title="ImageNetModelLearner.h" alt="" coords="433,80,601,107"/>
+<area shape="rect" id="node22" href="$_stationary_background_8h.html" title="StationaryBackground.h" alt="" coords="170,229,331,256"/>
+<area shape="rect" id="node32" href="$_image_repository_8h.html" title="ImageRepository.h" alt="" coords="451,155,583,181"/>
+<area shape="rect" id="node34" href="$sysutils_8h.html" title="sysutils.h" alt="" coords="55,229,133,256"/>
+<area shape="rect" id="node3" href="$libartos__def_8h.html" title="libartos_def.h" alt="" coords="1341,155,1440,181"/>
+<area shape="rect" id="node15" href="$_model_learner_8h.html" title="ModelLearner.h" alt="" coords="742,155,852,181"/>
+<area shape="rect" id="node33" href="$_synset_8h.html" title="Synset.h" alt="" coords="355,229,428,256"/>
+<area shape="rect" id="node17" href="$defs_8h.html" title="defs.h" alt="" coords="767,379,824,405"/>
+<area shape="rect" id="node30" href="$_feature_extractor_8h.html" title="FeatureExtractor.h" alt="" coords="1340,304,1469,331"/>
+<area shape="rect" id="node24" href="$_synset_iterators_8h.html" title="SynsetIterators.h" alt="" coords="357,304,480,331"/>
+<area shape="rect" id="node27" href="$_synset_image_8h.html" title="SynsetImage.h" alt="" coords="901,379,1011,405"/>
+<area shape="rect" id="node29" href="$_tar_extractor_8h.html" title="TarExtractor.h" alt="" coords="638,379,743,405"/>
+<area shape="rect" id="node31" href="$_h_o_g_feature_extractor_8h.html" title="HOGFeatureExtractor.h" alt="" coords="1391,379,1549,405"/>
 </map>

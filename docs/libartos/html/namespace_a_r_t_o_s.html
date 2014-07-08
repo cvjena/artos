@@ -122,6 +122,10 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_a_r_t_o_s_1_1_d_p_m_detection.html">DPMDetection</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_a_r_t_o_s_1_1_feature_pyramid.html">FeaturePyramid</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_a_r_t_o_s_1_1_h_o_g_feature_extractor.html">HOGFeatureExtractor</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_a_r_t_o_s_1_1_image_repository.html">ImageRepository</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_a_r_t_o_s_1_1_synset.html">Synset</a></td></tr>
@@ -155,8 +159,10 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:abd37b5ade3218ab1d45852bc71bb0e52"><td class="memItemLeft" align="right" valign="top">typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_a_r_t_o_s.html#abd37b5ade3218ab1d45852bc71bb0e52">ProgressCallback</a> )(unsigned int, unsigned int, void *)</td></tr>
-<tr class="separator:abd37b5ade3218ab1d45852bc71bb0e52"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a12ce7e01b0c5b3408cc61c9a49cfd999"><td class="memItemLeft" align="right" valign="top">typedef bool(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_a_r_t_o_s.html#a12ce7e01b0c5b3408cc61c9a49cfd999">ProgressCallback</a> )(unsigned int, unsigned int, void *)</td></tr>
+<tr class="separator:a12ce7e01b0c5b3408cc61c9a49cfd999"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aad3350581a4dae56d870e1b25e1e48fb"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="class_a_r_t_o_s_1_1_h_o_g_feature_extractor.html">HOGFeatureExtractor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_a_r_t_o_s.html#aad3350581a4dae56d870e1b25e1e48fb">FeatureExtractor</a></td></tr>
+<tr class="separator:aad3350581a4dae56d870e1b25e1e48fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a032c14b83f7ca9c93807337a5b9250e5"><td class="memItemLeft" align="right" valign="top">typedef float(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_a_r_t_o_s.html#a032c14b83f7ca9c93807337a5b9250e5">hs_objective_function</a> )(const std::vector&lt; float &gt; &amp;, const std::vector&lt; int &gt; &amp;, void *)</td></tr>
 <tr class="separator:a032c14b83f7ca9c93807337a5b9250e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -202,6 +208,18 @@ Variables</h2></td></tr>
 <tr class="separator:a55bf06c86afd8ca2262c6f2d34af10dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Typedef Documentation</h2>
+<a class="anchor" id="aad3350581a4dae56d870e1b25e1e48fb"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef <a class="el" href="class_a_r_t_o_s_1_1_h_o_g_feature_extractor.html">HOGFeatureExtractor</a> <a class="el" href="namespace_a_r_t_o_s.html#aad3350581a4dae56d870e1b25e1e48fb">ARTOS::FeatureExtractor</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="a032c14b83f7ca9c93807337a5b9250e5"></a>
 <div class="memitem">
 <div class="memproto">
@@ -214,12 +232,12 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="abd37b5ade3218ab1d45852bc71bb0e52"></a>
+<a class="anchor" id="a12ce7e01b0c5b3408cc61c9a49cfd999"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef void(* ARTOS::ProgressCallback)(unsigned int, unsigned int, void *)</td>
+          <td class="memname">typedef bool(* ARTOS::ProgressCallback)(unsigned int, unsigned int, void *)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -633,7 +651,7 @@ Here is the call graph for this function:</div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespace_a_r_t_o_s.html">ARTOS</a></li>
-    <li class="footer">Generated on Sun Jun 22 2014 18:57:09 for ARTOS by
+    <li class="footer">Generated on Mon Jul 7 2014 23:41:52 for ARTOS by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>

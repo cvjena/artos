@@ -25,7 +25,6 @@ var dir_171b764decf33d63a7df2fab4f4bc6d8 =
       [ "ModelWidget", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_model_widget.html", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_model_widget" ],
       [ "CatalogueWindow", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_catalogue_window.html", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_catalogue_window" ],
       [ "LearnDialog", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_learn_dialog.html", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_learn_dialog" ],
-      [ "ProgressWindow", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_progress_window.html", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_progress_window" ],
       [ "HOGInspector", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_h_o_g_inspector.html", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_h_o_g_inspector" ]
     ] ],
     [ "SetupDialog.py", "_setup_dialog_8py.html", "_setup_dialog_8py" ]

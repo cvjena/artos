@@ -8,7 +8,7 @@ namespace ARTOS
 /**
 * A simple helper class for generating random numbers of different kind.
 *
-* @author Björn Barz
+* @author Bjoern Barz <bjoern.barz@uni-jena.de>
 */
 class Random
 {

@@ -1,9 +1,9 @@
 var searchData=
 [
-  ['objectdetections',['objectDetections',['../strucths__fmeasure__data__t.html#aa57f68e9a3bc248447598543d88c23aa',1,'hs_fmeasure_data_t']]],
-  ['offset',['offset',['../struct_a_r_t_o_s_1_1_tar_file_info.html#afe095f08e1a9979fa85cbc05f236bd33',1,'ARTOS::TarFileInfo']]],
-  ['offsets',['offsets',['../class_a_r_t_o_s_1_1_stationary_background.html#a444ecbce533275aede63154b14976ba7',1,'ARTOS::StationaryBackground']]],
-  ['overall_5fstep',['overall_step',['../structprogress__params.html#ab1367c0057928eef1bcbfee38dbc7c68',1,'progress_params']]],
-  ['overall_5fsteps_5ftotal',['overall_steps_total',['../structprogress__params.html#a9a993befed4baad4b50dd4c163f82c3e',1,'progress_params']]],
-  ['overlap',['overlap',['../class_a_r_t_o_s_1_1_d_p_m_detection.html#aeb6999e4f44c710b8019238714a622ac',1,'ARTOS::DPMDetection']]]
+  ['nextmodelindex',['nextModelIndex',['../class_a_r_t_o_s_1_1_d_p_m_detection.html#a4972acd5b8c8c43125183c519ecf3d33',1,'ARTOS::DPMDetection']]],
+  ['normfactors',['normFactors',['../structloo__data__t.html#adb51b78ab3035b4c3cb7fceb24becb2c',1,'loo_data_t']]],
+  ['np',['np',['../struct_a_r_t_o_s_1_1_model_evaluator_1_1_test_result.html#a92fe1ec5656f838b9f10819bf7039acc',1,'ARTOS::ModelEvaluator::TestResult']]],
+  ['numfeatures',['numFeatures',['../class_a_r_t_o_s_1_1_h_o_g_feature_extractor.html#a683c4772e0112c40a1c1f9f025ca37ff',1,'ARTOS::HOGFeatureExtractor']]],
+  ['numpositive',['numPositive',['../strucths__fmeasure__data__t.html#a48cf5a2d5019470b69fe60a8780b7b14',1,'hs_fmeasure_data_t']]],
+  ['numrelevantfeatures',['numRelevantFeatures',['../class_a_r_t_o_s_1_1_h_o_g_feature_extractor.html#a929aae88e6456977eba13a2b58a4fc6e',1,'ARTOS::HOGFeatureExtractor']]]
 ];

@@ -36,7 +36,13 @@ ADD_LIBRARY(artos SHARED ${SOURCES} libartos.cc)
 SET_TARGET_PROPERTIES(artos PROPERTIES VERSION ${BUILD_VERSION} SOVERSION ${API_VERSION})
 
 # Link sub-libraries
-TARGET_LINK_LIBRARIES(artos ffld imagenet)
+IF(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_GNUCC)
+    TARGET_LINK_LIBRARIES(artos -Wl,-whole-archive ffld imagenet -Wl,-no-whole-archive)
+ELSEIF("${CMAKE_SYSTEM}" MATCHES IRIX)
+    TARGET_LINK_LIBRARIES(artos -Wl,-all ffld imagenet -Wl,-notall)
+ELSE()
+    TARGET_LINK_LIBRARIES(artos ffld imagenet)
+ENDIF()
 
 
 #### Find and link libraries used by FFLD ####

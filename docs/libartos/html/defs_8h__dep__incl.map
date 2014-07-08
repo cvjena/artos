@@ -1,9 +1,11 @@
 <map id="defs.h" name="defs.h">
-<area shape="rect" id="node3" href="$_model_learner_8h.html" title="ModelLearner.h" alt="" coords="209,83,319,112"/>
-<area shape="rect" id="node13" href="$_model_evaluator_8h.html" title="ModelEvaluator.h" alt="" coords="343,83,465,112"/>
-<area shape="rect" id="node5" href="$_image_net_model_learner_8h.html" title="ImageNetModelLearner.h" alt="" coords="84,160,252,189"/>
-<area shape="rect" id="node11" href="$_model_learner_8cc.html" title="ModelLearner.cc" alt="" coords="276,160,393,189"/>
-<area shape="rect" id="node7" href="$_image_net_model_learner_8cc.html" title="ImageNetModelLearner.cc" alt="" coords="5,237,179,267"/>
-<area shape="rect" id="node9" href="$libartos_8cc.html" title="libartos.cc" alt="" coords="203,237,285,267"/>
-<area shape="rect" id="node15" href="$_model_evaluator_8cc.html" title="ModelEvaluator.cc" alt="" coords="417,160,548,189"/>
+<area shape="rect" id="node2" href="$_model_learner_8h.html" title="ModelLearner.h" alt="" coords="223,155,333,181"/>
+<area shape="rect" id="node7" href="$_stationary_background_8h.html" title="StationaryBackground.h" alt="" coords="57,80,217,107"/>
+<area shape="rect" id="node9" href="$_model_evaluator_8h.html" title="ModelEvaluator.h" alt="" coords="363,80,485,107"/>
+<area shape="rect" id="node3" href="$_image_net_model_learner_8h.html" title="ImageNetModelLearner.h" alt="" coords="143,229,311,256"/>
+<area shape="rect" id="node6" href="$_model_learner_8cc.html" title="ModelLearner.cc" alt="" coords="441,229,559,256"/>
+<area shape="rect" id="node4" href="$_image_net_model_learner_8cc.html" title="ImageNetModelLearner.cc" alt="" coords="139,304,313,331"/>
+<area shape="rect" id="node5" href="$libartos_8cc.html" title="libartos.cc" alt="" coords="5,304,87,331"/>
+<area shape="rect" id="node8" href="$_stationary_background_8cc.html" title="StationaryBackground.cc" alt="" coords="31,155,199,181"/>
+<area shape="rect" id="node10" href="$_model_evaluator_8cc.html" title="ModelEvaluator.cc" alt="" coords="359,155,488,181"/>
 </map>

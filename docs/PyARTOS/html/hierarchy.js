@@ -41,8 +41,8 @@ var hierarchy =
         [ "PyARTOS.GUI.AnnotationDialog.AnnotationDialog", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_annotation_dialog_1_1_annotation_dialog.html", null ],
         [ "PyARTOS.GUI.CameraSampler.CameraSampleDialog", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_camera_sampler_1_1_camera_sample_dialog.html", null ],
         [ "PyARTOS.GUI.CameraSampler.DeviceSelectionDialog", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_camera_sampler_1_1_device_selection_dialog.html", null ],
-        [ "PyARTOS.GUI.ModelCatalogue.LearnDialog", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_learn_dialog.html", null ],
-        [ "PyARTOS.GUI.ModelCatalogue.ProgressWindow", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_progress_window.html", null ]
+        [ "PyARTOS.GUI.gui_utils.ProgressWindow", "class_py_a_r_t_o_s_1_1_g_u_i_1_1gui__utils_1_1_progress_window.html", null ],
+        [ "PyARTOS.GUI.ModelCatalogue.LearnDialog", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_learn_dialog.html", null ]
       ] ],
       [ "PyARTOS.GUI.ModelCatalogue.CatalogueWindow", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_catalogue_window.html", null ],
       [ "PyARTOS.GUI.ModelCatalogue.HOGInspector", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_h_o_g_inspector.html", null ],

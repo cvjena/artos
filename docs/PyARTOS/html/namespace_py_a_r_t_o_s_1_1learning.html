@@ -104,7 +104,8 @@ $(document).ready(function(){initNavTree('namespace_py_a_r_t_o_s_1_1learning.htm
 
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a>  </div>
+<a href="#nested-classes">Classes</a> &#124;
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">PyARTOS.learning Namespace Reference</div>  </div>
 </div><!--header-->
@@ -118,6 +119,11 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_py_a_r_t_o_s_1_1learning_1_1_model_manager.html">ModelManager</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:a5ae215be30efbffc6b99dde49b2ca5c4"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_py_a_r_t_o_s_1_1learning.html#a5ae215be30efbffc6b99dde49b2ca5c4">learnBGStatistics</a></td></tr>
+<tr class="separator:a5ae215be30efbffc6b99dde49b2ca5c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><pre class="fragment">Interface to the model learning part of LibARTOS.
@@ -126,13 +132,75 @@ Provides the ModelLearner class on the one hand, which can be used to learn WHO 
 from ImageNet, from file or from PIL.Image.Image objects.
 On the other hand, this module contains the ModelManager and Model classes, which can be used to list,
 modify and visualize the learned models.
-</pre> </div></div><!-- contents -->
+</pre> </div><h2 class="groupheader">Function Documentation</h2>
+<a class="anchor" id="a5ae215be30efbffc6b99dde49b2ca5c4"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def PyARTOS.learning.learnBGStatistics </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>imageRepository</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>bgFile</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>numImages</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>maxOffset</em> = <code>19</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>progressCallback</em> = <code>None</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">Learns a negative mean and a stationary covariance matrix as autocorrelation function from ImageNet samples.
+
+Both are required for learning WHO models. This expensive computation has only to be done once and the default
+background statistics shipped with ARTOS should be sufficient for most purposes.
+
+imageRepository - Either the path to the image repository or an imagenet.ImageRepository instance.
+bgFile - Path to save the learned background statistics to.
+numImages - Number of ImageNet samples to extract features from for learning background statistics.
+maxOffset - Maximum available offset in x or y direction of the autocorrelation function to be learned.
+            Determines the maximum size of the reconstructible covariance matrix, which will be `maxOffset + 1`.
+progressCallback - Optionally, a callback which is called between the steps of the learning process to populate the progress.  
+                   The first parameter to the callback will be the number of steps performed in the entire process,
+                   the second one will be the total number of steps. To date, the entire process is divided into just two steps:
+                   Learning a negative mean and learning an autocorrelation function.  
+                   The third and fourth parameters will be the number of processed images and the total number of images (equal
+                   to `numImages`) of the current sub-procedure.
+                   The callback may return False to abort the operation. To continue, it must return True.
+</pre> 
+</div>
+</div>
+</div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespace_py_a_r_t_o_s.html">PyARTOS</a></li><li class="navelem"><a class="el" href="namespace_py_a_r_t_o_s_1_1learning.html">learning</a></li>
-    <li class="footer">Generated on Sun Jun 22 2014 18:46:17 for PyARTOS by
+    <li class="footer">Generated on Mon Jul 7 2014 23:42:57 for PyARTOS by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>

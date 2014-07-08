@@ -26,6 +26,7 @@ var artos__wrapper_8py =
     [ "libartos", "artos__wrapper_8py.html#a77bcff49c97097e23acdcec4383de6ae", null ],
     [ "overall_progress_cb_t", "artos__wrapper_8py.html#a567d40015b2ccf390c7dc5c1549bc96a", null ],
     [ "progress_cb_t", "artos__wrapper_8py.html#a3e83bf4a090df470ffecdc72550ba4fa", null ],
+    [ "RES_ABORTED", "artos__wrapper_8py.html#ab9b6b229cccb082c504f343825974780", null ],
     [ "RES_DIRECTORY_NOT_FOUND", "artos__wrapper_8py.html#ae213a1bc36406d792047455179670df0", null ],
     [ "RES_FILE_ACCESS_DENIED", "artos__wrapper_8py.html#a7971d82f8ab2e8b4a5098f1e9c45b36a", null ],
     [ "RES_FILE_NOT_FOUND", "artos__wrapper_8py.html#a83237b091ef4ae4f984ae18c1ccf754d", null ],

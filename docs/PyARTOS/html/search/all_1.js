@@ -1,5 +1,8 @@
 var searchData=
 [
+  ['abort',['abort',['../class_py_a_r_t_o_s_1_1_g_u_i_1_1gui__utils_1_1_progress_window.html#a2c01bdf26916844e4657b00891fa21ea',1,'PyARTOS::GUI::gui_utils::ProgressWindow']]],
+  ['abortable',['abortable',['../class_py_a_r_t_o_s_1_1_g_u_i_1_1gui__utils_1_1_progress_window.html#abb0375c7359d7ad25d1724b0b156459e',1,'PyARTOS::GUI::gui_utils::ProgressWindow']]],
+  ['aborted',['aborted',['../class_py_a_r_t_o_s_1_1_g_u_i_1_1gui__utils_1_1_progress_window.html#aca5902fd91ddbf6707056a86156cb79d',1,'PyARTOS::GUI::gui_utils::ProgressWindow']]],
   ['adapt',['adapt',['../class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_learn_dialog.html#a421469a79b58692990c54a1a19a9e537',1,'PyARTOS::GUI::ModelCatalogue::LearnDialog']]],
   ['adaptmodel',['adaptModel',['../class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_model_widget.html#a3f950d6c2ff9e1d3be4da1a7e80d2f66',1,'PyARTOS::GUI::ModelCatalogue::ModelWidget']]],
   ['add_5fmodel',['add_model',['../class_py_a_r_t_o_s_1_1artos__wrapper_1_1___lib_a_r_t_o_s.html#a97948b13a2bdf4962d82b1b651fae8b8',1,'PyARTOS::artos_wrapper::_LibARTOS']]],
@@ -8,7 +11,7 @@ var searchData=
   ['addmodels',['addModels',['../class_py_a_r_t_o_s_1_1detecting_1_1_detector.html#a79def644b7ee624b5823dbb72babf5b1',1,'PyARTOS::detecting::Detector']]],
   ['addpositivesample',['addPositiveSample',['../class_py_a_r_t_o_s_1_1learning_1_1_model_learner.html#a3230568ef7042a04ef5f1adb709f1b76',1,'PyARTOS::learning::ModelLearner']]],
   ['addpositivesamplesfromsynset',['addPositiveSamplesFromSynset',['../class_py_a_r_t_o_s_1_1learning_1_1_model_learner.html#a13fc3fb9af62d096ab48939cc297c10b',1,'PyARTOS::learning::ModelLearner']]],
-  ['afterid',['afterId',['../class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_progress_window.html#a0dce9cf23d67d0134f04990f198cf5d6',1,'PyARTOS::GUI::ModelCatalogue::ProgressWindow']]],
+  ['afterid',['afterId',['../class_py_a_r_t_o_s_1_1_g_u_i_1_1gui__utils_1_1_progress_window.html#af76f480ce68db1b662ebe1f89aabbe4e',1,'PyARTOS::GUI::gui_utils::ProgressWindow']]],
   ['annotation_5fcolors',['ANNOTATION_COLORS',['../namespace_py_a_r_t_o_s_1_1_g_u_i_1_1gui__utils.html#a75cf983bf3d4c3717034bbed1e7a21cb',1,'PyARTOS::GUI::gui_utils']]],
   ['annotationdialog',['AnnotationDialog',['../class_py_a_r_t_o_s_1_1_g_u_i_1_1_annotation_dialog_1_1_annotation_dialog.html',1,'PyARTOS::GUI::AnnotationDialog']]],
   ['annotationdialog_2epy',['AnnotationDialog.py',['../_annotation_dialog_8py.html',1,'']]],

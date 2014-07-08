@@ -12,6 +12,7 @@ var searchData=
   ['artos_5flearn_5fres_5finvalid_5fimg_5fdata',['ARTOS_LEARN_RES_INVALID_IMG_DATA',['../libartos__def_8h.html#a47f28724348574a8b6ef7a82ba27d0ed',1,'libartos_def.h']]],
   ['artos_5flearn_5fres_5fmodel_5fnot_5flearned',['ARTOS_LEARN_RES_MODEL_NOT_LEARNED',['../libartos__def_8h.html#a9ae510fb92c5a5d1a1f08afe67183ecf',1,'libartos_def.h']]],
   ['artos_5flearn_5fres_5fno_5fsamples',['ARTOS_LEARN_RES_NO_SAMPLES',['../libartos__def_8h.html#a7a4be0624e552f71c31d39c58ce46c62',1,'libartos_def.h']]],
+  ['artos_5fres_5faborted',['ARTOS_RES_ABORTED',['../libartos__def_8h.html#af105b91477a034c346c041a680d346e2',1,'libartos_def.h']]],
   ['artos_5fres_5fdirectory_5fnot_5ffound',['ARTOS_RES_DIRECTORY_NOT_FOUND',['../libartos__def_8h.html#a8f9602d3bb20e093b626ec5fbcd2d730',1,'libartos_def.h']]],
   ['artos_5fres_5ffile_5faccess_5fdenied',['ARTOS_RES_FILE_ACCESS_DENIED',['../libartos__def_8h.html#af5dbd4b22c1a98e8149bc3c0e8e2d7b3',1,'libartos_def.h']]],
   ['artos_5fres_5ffile_5fnot_5ffound',['ARTOS_RES_FILE_NOT_FOUND',['../libartos__def_8h.html#a2cf9a8e7ceb757c3e6f4fb99da67dbfb',1,'libartos_def.h']]],

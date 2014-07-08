@@ -39,8 +39,8 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "_d_p_m_detection_8cc.html",
-"class_a_r_t_o_s_1_1_tar_extractor.html#a00d145a6f05556ed6492c54295fa124d",
-"strutils_8h.html#a86b5b329053ee07dd6a5982836626b1c"
+"class_a_r_t_o_s_1_1_synset_image_iterator.html#a97305b44d8078c462f6922dfe07d2273",
+"struct_synset_search_result.html#a341cf75d9632432847fe7ac9346f4e7e"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

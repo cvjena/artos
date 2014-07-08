@@ -8,8 +8,13 @@ var files =
       [ "Detection", "struct_a_r_t_o_s_1_1_detection.html", "struct_a_r_t_o_s_1_1_detection" ],
       [ "DPMDetection", "class_a_r_t_o_s_1_1_d_p_m_detection.html", "class_a_r_t_o_s_1_1_d_p_m_detection" ]
     ] ],
+    [ "FeatureExtractor.cc", "_feature_extractor_8cc.html", null ],
+    [ "FeatureExtractor.h", "_feature_extractor_8h.html", "_feature_extractor_8h" ],
     [ "harmony_search.cc", "harmony__search_8cc.html", null ],
     [ "harmony_search.h", "harmony__search_8h.html", "harmony__search_8h" ],
+    [ "HOGFeatureExtractor.h", "_h_o_g_feature_extractor_8h.html", [
+      [ "HOGFeatureExtractor", "class_a_r_t_o_s_1_1_h_o_g_feature_extractor.html", "class_a_r_t_o_s_1_1_h_o_g_feature_extractor" ]
+    ] ],
     [ "ImageNetModelLearner.cc", "_image_net_model_learner_8cc.html", null ],
     [ "ImageNetModelLearner.h", "_image_net_model_learner_8h.html", [
       [ "ImageNetModelLearner", "class_a_r_t_o_s_1_1_image_net_model_learner.html", "class_a_r_t_o_s_1_1_image_net_model_learner" ]

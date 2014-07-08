@@ -15,10 +15,6 @@ var files =
     [ "imagenet.py", "imagenet_8py.html", [
       [ "ImageRepository", "class_py_a_r_t_o_s_1_1imagenet_1_1_image_repository.html", "class_py_a_r_t_o_s_1_1imagenet_1_1_image_repository" ]
     ] ],
-    [ "learning.py", "learning_8py.html", [
-      [ "ModelLearner", "class_py_a_r_t_o_s_1_1learning_1_1_model_learner.html", "class_py_a_r_t_o_s_1_1learning_1_1_model_learner" ],
-      [ "Model", "class_py_a_r_t_o_s_1_1learning_1_1_model.html", "class_py_a_r_t_o_s_1_1learning_1_1_model" ],
-      [ "ModelManager", "class_py_a_r_t_o_s_1_1learning_1_1_model_manager.html", "class_py_a_r_t_o_s_1_1learning_1_1_model_manager" ]
-    ] ],
+    [ "learning.py", "learning_8py.html", "learning_8py" ],
     [ "utils.py", "utils_8py.html", "utils_8py" ]
 ];

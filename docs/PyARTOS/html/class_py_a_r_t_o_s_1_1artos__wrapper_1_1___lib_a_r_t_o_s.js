@@ -12,6 +12,7 @@ var class_py_a_r_t_o_s_1_1artos__wrapper_1_1___lib_a_r_t_o_s =
     [ "extract_images_from_synset", "class_py_a_r_t_o_s_1_1artos__wrapper_1_1___lib_a_r_t_o_s.html#a74921b2338da3407b0f7362387ae0f2f", null ],
     [ "extract_mixed_images", "class_py_a_r_t_o_s_1_1artos__wrapper_1_1___lib_a_r_t_o_s.html#a16385a184039c144b90f7dd7c0269465", null ],
     [ "extract_samples_from_synset", "class_py_a_r_t_o_s_1_1artos__wrapper_1_1___lib_a_r_t_o_s.html#aa8ba57eac30538b3ca943ddba67e3767", null ],
+    [ "learn_bg", "class_py_a_r_t_o_s_1_1artos__wrapper_1_1___lib_a_r_t_o_s.html#ab18f587886131a448f636ee688b484c9", null ],
     [ "learn_files_jpeg", "class_py_a_r_t_o_s_1_1artos__wrapper_1_1___lib_a_r_t_o_s.html#ab006cda2e38b39d6f015bec1176efa0e", null ],
     [ "learn_imagenet", "class_py_a_r_t_o_s_1_1artos__wrapper_1_1___lib_a_r_t_o_s.html#a5d69e67e3857d37236b5bb20bce15df0", null ],
     [ "learner_add_file_jpeg", "class_py_a_r_t_o_s_1_1artos__wrapper_1_1___lib_a_r_t_o_s.html#addd47142b1ffff3754084942ca54fcec", null ],

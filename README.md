@@ -55,23 +55,18 @@ PyARTOS has been tested successfully with Python 2.7.6, Python 3.3.4 and Python 
 
 The following Python modules are required:
 
-- **Tkinter**:
-
+- **Tkinter**:  
   The Python interface to Tk.  
   It is bundled with Python on Windows.  
   On Unix, search for a package named *python-tk* or *python3-tk*.
 
-- **PIL** (>= 1.1.6):
-
+- **PIL** (>= 1.1.6):  
   The *Python Imaging Library*.
-
       - Python 2:
           - Packages: *python-imaging* and *python-imaging-tk*
           - Binaries for Win32: http://www.pythonware.com/products/pil/index.htm
-
       - Python 3 and Python 2 64-bit:  
         Since *PIL* isn't being developed anymore and, thus, not available for Python 3, the *[Pillow][1]* fork can be used as a drop-in replacement.
-
           - Packages: *python3-imaging* and *python3-imaging-tk*
           - Inofficial Pillow binaries: http://www.lfd.uci.edu/~gohlke/pythonlibs/#pillow
 

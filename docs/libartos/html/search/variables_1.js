@@ -1,8 +1,8 @@
 var searchData=
 [
-  ['cb',['cb',['../structprogress__params.html#a1ef080c3298d246399b7199b8e741280',1,'progress_params']]],
-  ['cellsize',['cellSize',['../class_a_r_t_o_s_1_1_stationary_background.html#a5460c0129bfe811594f3b88f7fc06be5',1,'ARTOS::StationaryBackground']]],
-  ['classname',['classname',['../struct_a_r_t_o_s_1_1_detection.html#a562774a949a8f947f2636631c7b87a4d',1,'ARTOS::Detection::classname()'],['../struct_flat_detection.html#a8f5180a1f60e2cf3d7778d7556ba53de',1,'FlatDetection::classname()']]],
-  ['clustersizes',['clusterSizes',['../structloo__data__t.html#abb06c3a04125fa5412e10fe01a34423f',1,'loo_data_t']]],
-  ['cov',['cov',['../class_a_r_t_o_s_1_1_stationary_background.html#ac245fc9b8d97396d0d3e3deccb74169e',1,'ARTOS::StationaryBackground']]]
+  ['b',['b',['../strucths__fmeasure__data__t.html#a63ce9f7a6ebf718b88cc18534b7eb620',1,'hs_fmeasure_data_t']]],
+  ['b2',['b2',['../strucths__fmeasure__data__t.html#aa8d9223e7d0520edccf2283c1d99223b',1,'hs_fmeasure_data_t']]],
+  ['b21',['b21',['../strucths__fmeasure__data__t.html#acb658d6697730332fad6d5ba71026476',1,'hs_fmeasure_data_t']]],
+  ['bboxes',['bboxes',['../struct_a_r_t_o_s_1_1_sample.html#acea70e868e3ed97dba669e3cbc3f70f1',1,'ARTOS::Sample::bboxes()'],['../class_a_r_t_o_s_1_1_synset_image.html#aa80ba34e4104b9403cc2b88ab6078a73',1,'ARTOS::SynsetImage::bboxes()']]],
+  ['bottom',['bottom',['../struct_flat_detection.html#a88d5fddf79b7c8c16eb6565585049e65',1,'FlatDetection']]]
 ];

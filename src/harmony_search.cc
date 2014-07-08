@@ -104,9 +104,10 @@ vector<float> ARTOS::repeated_harmony_search(hs_objective_function ofunc, const 
                                     const double hmcr, const double par)
 {
 #ifdef _OPENMP
+    Random::seedOnce();
     vector<float> bestSolution;
     float bestValue;
-    #pragma omp parallel
+    #pragma omp parallel num_threads(16)
     {
         float fitness;
         vector<float> solution = harmony_search(ofunc, params, ofuncData, maximize, &fitness, hms, iterations, hmcr, par);

@@ -85,6 +85,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   </div>
   <div id="navrow4" class="tabs3">
     <ul class="tablist">
+      <li><a href="#index_a"><span>a</span></a></li>
       <li><a href="#index_b"><span>b</span></a></li>
       <li><a href="#index_c"><span>c</span></a></li>
       <li><a href="#index_d"><span>d</span></a></li>
@@ -137,6 +138,13 @@ $(document).ready(function(){initNavTree('functions_vars.html','');});
 <div class="contents">
 &#160;
 
+<h3><a class="anchor" id="index_a"></a>- a -</h3><ul>
+<li>aborted
+: <a class="el" href="structprogress__params.html#a15bb96afd0247fc41fc9d6f6bdb7a10d">progress_params</a>
+</li>
+</ul>
+
+
 <h3><a class="anchor" id="index_b"></a>- b -</h3><ul>
 <li>b
 : <a class="el" href="strucths__fmeasure__data__t.html#a63ce9f7a6ebf718b88cc18534b7eb620">hs_fmeasure_data_t</a>
@@ -162,7 +170,8 @@ $(document).ready(function(){initNavTree('functions_vars.html','');});
 : <a class="el" href="structprogress__params.html#a1ef080c3298d246399b7199b8e741280">progress_params</a>
 </li>
 <li>cellSize
-: <a class="el" href="class_a_r_t_o_s_1_1_stationary_background.html#a5460c0129bfe811594f3b88f7fc06be5">ARTOS::StationaryBackground</a>
+: <a class="el" href="class_a_r_t_o_s_1_1_h_o_g_feature_extractor.html#a441978bf2f27f91c94c0018de62e63c7">ARTOS::HOGFeatureExtractor</a>
+, <a class="el" href="class_a_r_t_o_s_1_1_stationary_background.html#a5460c0129bfe811594f3b88f7fc06be5">ARTOS::StationaryBackground</a>
 </li>
 <li>classname
 : <a class="el" href="struct_a_r_t_o_s_1_1_detection.html#a562774a949a8f947f2636631c7b87a4d">ARTOS::Detection</a>
@@ -291,6 +300,9 @@ $(document).ready(function(){initNavTree('functions_vars.html','');});
 <li>m_imgLoaded
 : <a class="el" href="class_a_r_t_o_s_1_1_synset_image.html#a4b41c8fb0072c6d3f762020032d928b6">ARTOS::SynsetImage</a>
 </li>
+<li>m_interval
+: <a class="el" href="class_a_r_t_o_s_1_1_feature_pyramid.html#a61e32b3296ebe518811f381322993def">ARTOS::FeaturePyramid</a>
+</li>
 <li>m_lastFileIndex
 : <a class="el" href="class_a_r_t_o_s_1_1_mixed_image_iterator.html#a71be08f2ef4b23490f5cca3584213c6d">ARTOS::MixedImageIterator</a>
 , <a class="el" href="class_a_r_t_o_s_1_1_synset_image_iterator.html#a90bac046d665913d945d4c30558c80ab">ARTOS::SynsetImageIterator</a>
@@ -309,6 +321,9 @@ $(document).ready(function(){initNavTree('functions_vars.html','');});
 <li>m_lastSynset
 : <a class="el" href="class_a_r_t_o_s_1_1_mixed_image_iterator.html#a620e853ec9b23e0f857a571af2f95161">ARTOS::MixedImageIterator</a>
 </li>
+<li>m_levels
+: <a class="el" href="class_a_r_t_o_s_1_1_feature_pyramid.html#a5f43059fdee3d24fd6114db29065db8d">ARTOS::FeaturePyramid</a>
+</li>
 <li>m_listFile
 : <a class="el" href="class_a_r_t_o_s_1_1_synset_iterator.html#a1dd6df981412dea40f687f153feeb324">ARTOS::SynsetIterator</a>
 </li>
@@ -316,10 +331,10 @@ $(document).ready(function(){initNavTree('functions_vars.html','');});
 : <a class="el" href="class_a_r_t_o_s_1_1_model_learner.html#abf4a1b494a2ffba183a276a6727332ca">ARTOS::ModelLearner</a>
 </li>
 <li>m_models
-: <a class="el" href="class_a_r_t_o_s_1_1_model_learner.html#a2344a46529c829b91a0c8544427eb7f5">ARTOS::ModelLearner</a>
+: <a class="el" href="class_a_r_t_o_s_1_1_model_learner.html#af522c9ced245502333387707c493f3da">ARTOS::ModelLearner</a>
 </li>
 <li>m_normFactors
-: <a class="el" href="class_a_r_t_o_s_1_1_model_learner.html#adc6ec1806eded71a92f3e40088d6299f">ARTOS::ModelLearner</a>
+: <a class="el" href="class_a_r_t_o_s_1_1_model_learner.html#add9afe0e0a4c7dee619891a001b385b3">ARTOS::ModelLearner</a>
 </li>
 <li>m_numSamples
 : <a class="el" href="class_a_r_t_o_s_1_1_model_learner.html#a662557bfc706c205808eb85fd4fc794c">ARTOS::ModelLearner</a>
@@ -403,13 +418,19 @@ $(document).ready(function(){initNavTree('functions_vars.html','');});
 : <a class="el" href="class_a_r_t_o_s_1_1_d_p_m_detection.html#a4972acd5b8c8c43125183c519ecf3d33">ARTOS::DPMDetection</a>
 </li>
 <li>normFactors
-: <a class="el" href="structloo__data__t.html#a0adc051e4082bfd810b664377bbb5d17">loo_data_t</a>
+: <a class="el" href="structloo__data__t.html#adb51b78ab3035b4c3cb7fceb24becb2c">loo_data_t</a>
 </li>
 <li>np
 : <a class="el" href="struct_a_r_t_o_s_1_1_model_evaluator_1_1_test_result.html#a92fe1ec5656f838b9f10819bf7039acc">ARTOS::ModelEvaluator::TestResult</a>
 </li>
+<li>numFeatures
+: <a class="el" href="class_a_r_t_o_s_1_1_h_o_g_feature_extractor.html#a683c4772e0112c40a1c1f9f025ca37ff">ARTOS::HOGFeatureExtractor</a>
+</li>
 <li>numPositive
 : <a class="el" href="strucths__fmeasure__data__t.html#a48cf5a2d5019470b69fe60a8780b7b14">hs_fmeasure_data_t</a>
+</li>
+<li>numRelevantFeatures
+: <a class="el" href="class_a_r_t_o_s_1_1_h_o_g_feature_extractor.html#a929aae88e6456977eba13a2b58a4fc6e">ARTOS::HOGFeatureExtractor</a>
 </li>
 </ul>
 
@@ -510,7 +531,7 @@ $(document).ready(function(){initNavTree('functions_vars.html','');});
 
 <h3><a class="anchor" id="index_w"></a>- w -</h3><ul>
 <li>whoFeatures
-: <a class="el" href="struct_a_r_t_o_s_1_1_w_h_o_sample.html#a5fdbdc964784dd92482413efdac8b078">ARTOS::WHOSample</a>
+: <a class="el" href="struct_a_r_t_o_s_1_1_w_h_o_sample.html#ad2ea2209ac379d19fc609915f86d09aa">ARTOS::WHOSample</a>
 </li>
 <li>width
 : <a class="el" href="struct_a_r_t_o_s_1_1_model_learner_1_1_size.html#ad65d110e66518f79b7a56ed073393681">ARTOS::ModelLearner::Size</a>
@@ -536,7 +557,7 @@ $(document).ready(function(){initNavTree('functions_vars.html','');});
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sun Jun 22 2014 18:57:09 for ARTOS by
+    <li class="footer">Generated on Mon Jul 7 2014 23:41:56 for ARTOS by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>

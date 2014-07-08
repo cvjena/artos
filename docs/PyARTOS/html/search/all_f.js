@@ -9,6 +9,7 @@ var searchData=
   ['renamemodel',['renameModel',['../class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_model_widget.html#a3ac1e6b60ce4dad15c41f72591546d8a',1,'PyARTOS::GUI::ModelCatalogue::ModelWidget']]],
   ['repo',['repo',['../class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_learn_dialog.html#addac85c14f1bb07af2f5d787f3ebd88f',1,'PyARTOS::GUI::ModelCatalogue::LearnDialog']]],
   ['repodirectory',['repoDirectory',['../class_py_a_r_t_o_s_1_1imagenet_1_1_image_repository.html#a97c73f0e631a40ca6909a072d33fc6ca',1,'PyARTOS::imagenet::ImageRepository']]],
+  ['res_5faborted',['RES_ABORTED',['../namespace_py_a_r_t_o_s_1_1artos__wrapper.html#ab9b6b229cccb082c504f343825974780',1,'PyARTOS::artos_wrapper']]],
   ['res_5fdirectory_5fnot_5ffound',['RES_DIRECTORY_NOT_FOUND',['../namespace_py_a_r_t_o_s_1_1artos__wrapper.html#ae213a1bc36406d792047455179670df0',1,'PyARTOS::artos_wrapper']]],
   ['res_5ffile_5faccess_5fdenied',['RES_FILE_ACCESS_DENIED',['../namespace_py_a_r_t_o_s_1_1artos__wrapper.html#a7971d82f8ab2e8b4a5098f1e9c45b36a',1,'PyARTOS::artos_wrapper']]],
   ['res_5ffile_5fnot_5ffound',['RES_FILE_NOT_FOUND',['../namespace_py_a_r_t_o_s_1_1artos__wrapper.html#a83237b091ef4ae4f984ae18c1ccf754d',1,'PyARTOS::artos_wrapper']]],

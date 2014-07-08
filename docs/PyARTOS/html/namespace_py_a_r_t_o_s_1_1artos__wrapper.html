@@ -142,6 +142,8 @@ Variables</h2></td></tr>
 <tr class="separator:a83237b091ef4ae4f984ae18c1ccf754d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7971d82f8ab2e8b4a5098f1e9c45b36a"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_py_a_r_t_o_s_1_1artos__wrapper.html#a7971d82f8ab2e8b4a5098f1e9c45b36a">RES_FILE_ACCESS_DENIED</a> = -4</td></tr>
 <tr class="separator:a7971d82f8ab2e8b4a5098f1e9c45b36a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab9b6b229cccb082c504f343825974780"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_py_a_r_t_o_s_1_1artos__wrapper.html#ab9b6b229cccb082c504f343825974780">RES_ABORTED</a> = -5</td></tr>
+<tr class="separator:ab9b6b229cccb082c504f343825974780"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9cbaeee673c4dd4d640a4e8fe0351653"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_py_a_r_t_o_s_1_1artos__wrapper.html#a9cbaeee673c4dd4d640a4e8fe0351653">RES_INTERNAL_ERROR</a> = -999</td></tr>
 <tr class="separator:a9cbaeee673c4dd4d640a4e8fe0351653"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6d2f298afaea8f4e7348f51847f187a2"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_py_a_r_t_o_s_1_1artos__wrapper.html#a6d2f298afaea8f4e7348f51847f187a2">DETECT_RES_INVALID_IMG_DATA</a> = -101</td></tr>
@@ -168,9 +170,9 @@ Variables</h2></td></tr>
 <tr class="separator:af036d1d968725e3800eb0aa9a965d37b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a20d8978a7c73bbc66ea9b4fd869c2d03"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_py_a_r_t_o_s_1_1artos__wrapper.html#a20d8978a7c73bbc66ea9b4fd869c2d03">IMGREPO_RES_SYNSET_NOT_FOUND</a> = -302</td></tr>
 <tr class="separator:a20d8978a7c73bbc66ea9b4fd869c2d03"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3e83bf4a090df470ffecdc72550ba4fa"><td class="memItemLeft" align="right" valign="top">tuple&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_py_a_r_t_o_s_1_1artos__wrapper.html#a3e83bf4a090df470ffecdc72550ba4fa">progress_cb_t</a> = CFUNCTYPE(None, c_uint, c_uint)</td></tr>
+<tr class="memitem:a3e83bf4a090df470ffecdc72550ba4fa"><td class="memItemLeft" align="right" valign="top">tuple&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_py_a_r_t_o_s_1_1artos__wrapper.html#a3e83bf4a090df470ffecdc72550ba4fa">progress_cb_t</a> = CFUNCTYPE(c_bool, c_uint, c_uint)</td></tr>
 <tr class="separator:a3e83bf4a090df470ffecdc72550ba4fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a567d40015b2ccf390c7dc5c1549bc96a"><td class="memItemLeft" align="right" valign="top">tuple&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_py_a_r_t_o_s_1_1artos__wrapper.html#a567d40015b2ccf390c7dc5c1549bc96a">overall_progress_cb_t</a> = CFUNCTYPE(None, c_uint, c_uint, c_uint, c_uint)</td></tr>
+<tr class="memitem:a567d40015b2ccf390c7dc5c1549bc96a"><td class="memItemLeft" align="right" valign="top">tuple&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_py_a_r_t_o_s_1_1artos__wrapper.html#a567d40015b2ccf390c7dc5c1549bc96a">overall_progress_cb_t</a> = CFUNCTYPE(c_bool, c_uint, c_uint, c_uint, c_uint)</td></tr>
 <tr class="separator:a567d40015b2ccf390c7dc5c1549bc96a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5215a0e1980d83b430084a9b95e589bb"><td class="memItemLeft" align="right" valign="top">tuple&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_py_a_r_t_o_s_1_1artos__wrapper.html#a5215a0e1980d83b430084a9b95e589bb">c_ubyte_p</a> = POINTER(c_ubyte)</td></tr>
 <tr class="separator:a5215a0e1980d83b430084a9b95e589bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -418,7 +420,7 @@ an object-oriented high-level API to libartos.
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">tuple PyARTOS.artos_wrapper.overall_progress_cb_t = CFUNCTYPE(None, c_uint, c_uint, c_uint, c_uint)</td>
+          <td class="memname">tuple PyARTOS.artos_wrapper.overall_progress_cb_t = CFUNCTYPE(c_bool, c_uint, c_uint, c_uint, c_uint)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -430,7 +432,19 @@ an object-oriented high-level API to libartos.
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">tuple PyARTOS.artos_wrapper.progress_cb_t = CFUNCTYPE(None, c_uint, c_uint)</td>
+          <td class="memname">tuple PyARTOS.artos_wrapper.progress_cb_t = CFUNCTYPE(c_bool, c_uint, c_uint)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="ab9b6b229cccb082c504f343825974780"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int PyARTOS.artos_wrapper.RES_ABORTED = -5</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -563,7 +577,7 @@ an object-oriented high-level API to libartos.
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespace_py_a_r_t_o_s.html">PyARTOS</a></li><li class="navelem"><a class="el" href="namespace_py_a_r_t_o_s_1_1artos__wrapper.html">artos_wrapper</a></li>
-    <li class="footer">Generated on Sun Jun 22 2014 18:46:17 for PyARTOS by
+    <li class="footer">Generated on Mon Jul 7 2014 23:42:54 for PyARTOS by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>

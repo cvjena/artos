@@ -3,8 +3,10 @@ var hierarchy =
     [ "ARTOS::DPMDetection", "class_a_r_t_o_s_1_1_d_p_m_detection.html", [
       [ "ARTOS::ModelEvaluator", "class_a_r_t_o_s_1_1_model_evaluator.html", null ]
     ] ],
+    [ "ARTOS::FeaturePyramid", "class_a_r_t_o_s_1_1_feature_pyramid.html", null ],
     [ "FlatBoundingBox", "struct_flat_bounding_box.html", null ],
     [ "FlatDetection", "struct_flat_detection.html", null ],
+    [ "ARTOS::HOGFeatureExtractor", "class_a_r_t_o_s_1_1_h_o_g_feature_extractor.html", null ],
     [ "hs_fmeasure_data_t", "strucths__fmeasure__data__t.html", null ],
     [ "ARTOS::ImageRepository", "class_a_r_t_o_s_1_1_image_repository.html", null ],
     [ "iterator", null, [
