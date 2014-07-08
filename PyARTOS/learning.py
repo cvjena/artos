@@ -251,7 +251,7 @@ class ModelLearner(object):
              else ctypes.cast(None, artos_wrapper.overall_progress_cb_t)
         libartos.learn_imagenet(utils.str2bytes(repoDirectory), utils.str2bytes(synsetId), utils.str2bytes(bgFile), \
                                 utils.str2bytes(modelfile), add, maxAspectClusters, maxWHOClusters, \
-                                thOptNumPositive, thOptNumNegative, thOptMode, cb, True)
+                                thOptNumPositive, thOptNumNegative, thOptMode, cb)
 
 
     @staticmethod
