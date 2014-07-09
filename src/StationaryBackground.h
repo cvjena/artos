@@ -20,8 +20,7 @@ namespace ARTOS
 * Therefore, N, i. e. the number of spatial offsets used for learning the statistics, is the upper bound for the number
 * of rows and columns of reconstructed covariance matrices.
 *
-* This class may also be used to learn such statistics from ImageNet images using learnMean() and learnCovariance(),
-* though especially the latter will require a long time.
+* This class may also be used to learn such statistics from ImageNet images using learnMean() and learnCovariance().
 *
 * @author Bjoern Barz <bjoern.barz@uni-jena.de>
 */
@@ -185,6 +184,15 @@ public:
     * Learns a spatial autocorrelation function from features extracted from different positions at various scales
     * of a set of images. Use writeToFile() to save the learned statistics afterwards.
     *
+    * To compute the autocorrelation function of two feature planes \$fI\$f and \$fJ\$f, this function leverages the
+    * Fourier transform and computes:
+    *
+    * \f[ \mathcal{F}^{-1} \left ( \overline{\mathcal{F} \left(I \right) } \circ \mathcal{F} \left(J \right) \right ) \f]
+    *
+    * This is some orders of magnitudes faster than the method originally used by Hariharan et al., which is provided by
+    * learnCovariance_ineff() for comparison purposes, even though results won't be exactly equal, since the Fourier transform
+    * implies a cyclic model at the borders of the image.
+    *
     * @note Computing the covariance matrices requires a mean feature vector, which has to be loaded from file
     * or learned using learnMean() in advance.
     *
@@ -192,7 +200,39 @@ public:
     * The iterator will be rewound at the beginning of the process.
     *
     * @param[in] numImages Maximum number of images to learn from. If set to 0, all images provided by the
-    * iterator will be used (may take really, really long!).
+    * iterator will be used (potentially dangerous when used with infinite iterators like MixedImageIterator!).
+    *
+    * @param[in] maxOffset Maximum available offset in x or y direction of the autocorrelation function to be learned.
+    * Determines the maximum size of the reconstructible covariance matrix, which will be `maxOffset + 1`.
+    * In contrast to learnCovariance_ineff(), this parameter has nearly no impact on the required time.
+    *
+    * @param[in] progressCB Optionally, a callback that is called to populate the progress of the procedure.
+    * The first parameter to the callback will be the number of processed images and the second parameter will be equal to `numImages`.
+    * For example, the argument list (5, 10) means that the learning is half way done.  
+    * The callback may return false to abort the operation. To continue, it must return true.  
+    * Note, that the callback will be used only if `numImages` is different from 0.
+    *
+    * @param[in] cbData Will be passed to the `progressCB` callback as third parameter.
+    */
+    void learnCovariance(ImageIterator & imgIt, const unsigned int numImages = 0, const unsigned int maxOffset = 19,
+                         ProgressCallback progressCB = NULL, void * cbData = NULL);
+    
+    /**
+    * Learns a spatial autocorrelation function from features extracted from different positions at various scales
+    * of a set of images. Use writeToFile() to save the learned statistics afterwards.
+    *
+    * @note This is the inefficient variant of computing such an autocorrelation function, adapted from the original
+    * code of Hariharan et al. It will take very, very long and, though it is provided here for comparison purposes,
+    * one should rather use the efficient learnCovariance() variant, which leverages the Fourier transform.
+    *
+    * @note Computing the covariance matrices requires a mean feature vector, which has to be loaded from file
+    * or learned using learnMean() in advance.
+    *
+    * @param[in] imgIt An ImageIterator providing images to learn background statistics from.
+    * The iterator will be rewound at the beginning of the process.
+    *
+    * @param[in] numImages Maximum number of images to learn from. If set to 0, all images provided by the
+    * iterator will be used (potentially dangerous when used with infinite iterators like MixedImageIterator!).
     *
     * @param[in] maxOffset Maximum available offset in x or y direction of the autocorrelation function to be learned.
     * Determines the maximum size of the reconstructible covariance matrix, which will be `maxOffset + 1`.
@@ -204,11 +244,9 @@ public:
     * Note, that the callback will be used only if `numImages` is different from 0.
     *
     * @param[in] cbData Will be passed to the `progressCB` callback as third parameter.
-    *
-    * @note Learning of a background covariance matrix involves a lot of expensive computations and will take a long time.
     */
-    void learnCovariance(ImageIterator & imgIt, const unsigned int numImages = 0, const unsigned int maxOffset = 19,
-                         ProgressCallback progressCB = NULL, void * cbData = NULL);
+    void learnCovariance_ineff(ImageIterator & imgIt, const unsigned int numImages = 0, const unsigned int maxOffset = 19,
+                               ProgressCallback progressCB = NULL, void * cbData = NULL);
     
     
     MeanVector mean; /**< Stationary negative mean of features. */
@@ -218,6 +256,17 @@ public:
     OffsetArray offsets; /**< Array of (dx, dy) spatial offsets corresponding to the elements of `cov`. */
     
     unsigned int cellSize; /**< Number of pixels per cell in both dimensions used for training this background statistics. */
+
+
+protected:
+
+    /**
+    * Initializes the `offsets` array.
+    *
+    * @param[in] maxOffset Maximum available offset in x or y direction of the corresponding autocorrelation function.
+    * Determines the maximum size of the reconstructible covariance matrix, which will be `maxOffset + 1`.
+    */
+    void makeOffsetArray(const unsigned int maxOffset);
 
 };
 

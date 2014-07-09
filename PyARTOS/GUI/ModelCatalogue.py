@@ -328,7 +328,7 @@ class CatalogueWindow(Tkinter.Toplevel):
         # Ask for number of images to learn from
         numImages = tkSimpleDialog.askinteger('Learn background statistics',
                         'Background statistics are the heart of Linear Discriminant Analysis (LDA) which ARTOS uses ' \
-                        'for model creation.\nComputing such statistics takes a really long time (more than a minute per image), ' \
+                        'for model creation.\nComputing such statistics takes some time (a few seconds per image), ' \
                         'but, fortunately, it has to be done just once.\n\n' \
                         'For most purposes, the background statistics shipped with ARTOS should be sufficient. Anyway, if you ' \
                         'wish to learn your own\nstatistics from ImageNet images, please enter the number of images to extract ' \

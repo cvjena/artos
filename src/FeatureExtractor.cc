@@ -14,13 +14,13 @@ FeaturePyramid::FeaturePyramid(int interval, const vector<FeatureExtractor::Feat
     m_levels = levels;
 }
 
-FeaturePyramid::FeaturePyramid(const JPEGImage & image, int interval) : m_interval(0)
+FeaturePyramid::FeaturePyramid(const JPEGImage & image, int interval, unsigned int minSize) : m_interval(0)
 {
     if (image.empty() || (interval < 1))
         return;
     
     // Compute the number of scales such that the smallest size of the last level is 5
-    const int maxScale = ceil(log(min(image.width(), image.height()) / 40.0) / log(2.0)) * interval;
+    const int maxScale = ceil(log(min(image.width(), image.height()) / static_cast<double>(FeatureExtractor::cellSize * minSize)) / log(2.0)) * interval;
     
     // Cannot compute the pyramid on images too small
     if (maxScale < interval)

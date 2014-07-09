@@ -49,8 +49,9 @@ public:
     * Constructs a pyramid from a JPEGImage.
     * @param[in] image The JPEGImage.
     * @param[in] interval Number of levels per octave in the pyramid (at least 1).
+    * @param[in] minSize Minimum number of cells in x or y direction in the smallest scale in the pyramid.
     */
-    FeaturePyramid(const FFLD::JPEGImage & image, int interval = 10);
+    FeaturePyramid(const FFLD::JPEGImage & image, int interval = 10, unsigned int minSize = 5);
     
     /**
     * @return True if the pyramid is empty. An empty pyramid has no level.
