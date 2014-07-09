@@ -227,7 +227,7 @@ void StationaryBackground::learnMean(ImageIterator & imgIt, const unsigned int n
     this->cellSize = FeatureExtractor::cellSize;
     
     // Iterate over the images and compute the mean feature vector
-    Eigen::VectorXd mean = Eigen::VectorXd(FeatureExtractor::numRelevantFeatures);
+    Eigen::VectorXd mean = Eigen::VectorXd::Zero(FeatureExtractor::numRelevantFeatures);
     int i;
     vector<FeatureExtractor::FeatureMatrix>::const_iterator levelIt;
     unsigned int numSamples = 0;
