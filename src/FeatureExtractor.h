@@ -1,8 +1,11 @@
 /**
 * @file
 * Defines the default feature extractor (usually HOGFeatureExtractor) and a feature pyramid class based on that extractor.
+
 * If you want to use your own feature extractor by default, provide a class with at least the
 * same interface as HOGFeatureExtractor, include it here and re-define `FeatureExtractor` in this file.
+* Such a custom feature extractor will then be used for model learning and estimation of background statistics,
+* but not for the FFLD-based object detection, which always uses HOG features.
 */
 
 #ifndef ARTOS_FEATUREEXTRACTOR_H
