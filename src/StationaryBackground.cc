@@ -354,7 +354,8 @@ void StationaryBackground::learnCovariance(ImageIterator & imgIt, const unsigned
                             {
                                 cov(o)(p1, p2) += static_cast<double>(corr(i, j))
                                                   / levelIt->size(); // division necessary, since FFTW computes an unnormalized DFT
-                                numSamples(o) += levelIt->size();
+                                if (p1 == 0 && p2 == 0)
+                                    numSamples(o) += levelIt->size();
                             }
                         }
                     }
