@@ -130,7 +130,7 @@ void Scene::parseXmlDoc(void * xmldoc)
 				if (!xmlStrcmp(cur2->name, reinterpret_cast<const xmlChar *>("name"))) {
 					const string * iter =
 						find(Names, Names + 20, detail::content<string>(cur2));
-					
+					objects_.back().setStrName(detail::content<string>(cur2));
 					if (iter != Names + 20)
 						objects_.back().setName(static_cast<Object::Name>(iter - Names));
 				}

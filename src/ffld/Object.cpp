@@ -25,12 +25,12 @@
 using namespace FFLD;
 using namespace std;
 
-Object::Object() : name_(UNKNOWN), pose_(UNSPECIFIED), truncated_(false), difficult_(false)
+Object::Object() : name_(UNKNOWN), str_name_(""), pose_(UNSPECIFIED), truncated_(false), difficult_(false)
 {
 }
 
 Object::Object(Name name, Pose pose, bool truncated, bool difficult, Rectangle bndbox) :
-name_(name), pose_(pose), truncated_(truncated), difficult_(difficult), bndbox_(bndbox)
+name_(name), str_name_(), pose_(pose), truncated_(truncated), difficult_(difficult), bndbox_(bndbox)
 {
 }
 
@@ -42,6 +42,16 @@ Object::Name Object::name() const
 void Object::setName(Name name)
 {
 	name_ = name;
+}
+
+const string & Object::str_name() const
+{
+	return str_name_;
+}
+
+void Object::setStrName(const string & name)
+{
+	str_name_ = name;
 }
 
 Object::Pose Object::pose() const

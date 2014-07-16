@@ -23,6 +23,7 @@
 
 #include "Rectangle.h"
 
+#include <string>
 #include <iosfwd>
 
 namespace FFLD
@@ -64,6 +65,12 @@ public:
 	/// Sets the name (label) of the object.
 	void setName(Name name);
 	
+	/// Returns the string representation of the name (label) of the object.
+	const std::string & str_name() const;
+	
+	/// Sets the string representation of the name (label) of the object.
+	void setStrName(const std::string & name);
+	
 	/// Returns the pose (view) of the object.
 	Pose pose() const;
 	
@@ -95,6 +102,7 @@ public:
 	
 private:
 	Name name_;
+	std::string str_name_;
 	Pose pose_;
 	bool truncated_;
 	bool difficult_;
