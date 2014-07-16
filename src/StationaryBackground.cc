@@ -291,7 +291,8 @@ void StationaryBackground::learnCovariance(ImageIterator & imgIt, const unsigned
     // Iterate over the images and compute the autocorrelation function
     Eigen::Array< DoubleCovMatrix, Eigen::Dynamic, 1 > cov(this->offsets.rows());
     cov.setConstant(DoubleCovMatrix::Zero(FeatureExtractor::numRelevantFeatures, FeatureExtractor::numRelevantFeatures));
-    unsigned long long numSamples = 0;
+    Eigen::Matrix<unsigned long long, Eigen::Dynamic, 1> numSamples(cov.size());
+    numSamples.setZero();
     for (imgIt.rewind(); imgIt.ready() && (numImages == 0 || (unsigned int) imgIt < numImages); ++imgIt)
     {
         if (progressCB != NULL && numImages > 0 && !progressCB((unsigned int) imgIt, numImages, cbData))
@@ -299,7 +300,7 @@ void StationaryBackground::learnCovariance(ImageIterator & imgIt, const unsigned
         FFLD::JPEGImage img = (*imgIt).getImage();
         if (!img.empty())
         {
-            FeaturePyramid pyra(img, 10, maxOffset * 2 + 1);
+            FeaturePyramid pyra(img);
             // Subtract mean from all features
             #pragma omp parallel for private(l, i)
             for (l = 0; l < pyra.levels().size(); l++)
@@ -346,11 +347,18 @@ void StationaryBackground::learnCovariance(ImageIterator & imgIt, const unsigned
                         corr = fftshift(corr);
                         // Read out the correlations that belong to the offsets we need
                         for (o = 0; o < cov.size(); o++)
-                            cov(o)(p1, p2) += static_cast<double>(corr(cy + this->offsets(o, 1), cx + this->offsets(o, 0)))
-                                              / levelIt->size(); // division necessary, since FFTW computes an unnormalized DFT
+                        {
+                            i = cy + this->offsets(o, 1);
+                            j = cx + this->offsets(o, 0);
+                            if (i >= 0 && j >= 0 && i < corr.rows() && j < corr.cols())
+                            {
+                                cov(o)(p1, p2) += static_cast<double>(corr(i, j))
+                                                  / levelIt->size(); // division necessary, since FFTW computes an unnormalized DFT
+                                numSamples(o) += levelIt->size();
+                            }
+                        }
                     }
                 }
-                numSamples += levelIt->size();
                 fftwf_destroy_plan(ft_forwards);
                 fftwf_destroy_plan(ft_inverse);
             }
@@ -362,8 +370,8 @@ void StationaryBackground::learnCovariance(ImageIterator & imgIt, const unsigned
     // Normalize and store computed autocorrelation function
     this->cov.resize(cov.size());
     for (o = 0; o < cov.size(); o++)
-        if (numSamples > 0)
-            this->cov(o) = (cov(o) / static_cast<double>(numSamples)).cast<float>();
+        if (numSamples(o) > 0)
+            this->cov(o) = (cov(o) / static_cast<double>(numSamples(o))).cast<float>();
         else
             this->cov(o).setZero();
     
