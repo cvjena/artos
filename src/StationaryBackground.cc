@@ -334,7 +334,7 @@ void StationaryBackground::learnCovariance(ImageIterator & imgIt, const unsigned
                 fftwf_execute(ft_forwards);
                 cy = correlations.rows() / 2;
                 cx = correlations.cols() / 2;
-                #pragma omp parallel for private(p1, p2, o)
+                #pragma omp parallel for private(p1, p2, o, i, j)
                 for (p1 = 0; p1 < FeatureExtractor::numRelevantFeatures; p1++)
                 {
                     MatrixXcf conjLevel = freq.block(p1 * levelIt->rows(), 0, levelIt->rows(), freq.cols()).conjugate();
