@@ -189,9 +189,11 @@ public:
     *
     * \f[ \mathcal{F}^{-1} \left ( \overline{\mathcal{F} \left(I \right) } \circ \mathcal{F} \left(J \right) \right ) \f]
     *
-    * This is some orders of magnitudes faster than the method originally used by Hariharan et al., which is provided by
-    * learnCovariance_ineff() for comparison purposes, even though results won't be exactly equal, since the Fourier transform
-    * implies a cyclic model at the borders of the image.
+    * This is an order of magnitude faster than the method originally used by Hariharan et al., which is provided by
+    * learnCovariance_ineff(). Since the Fourier transform implies a cyclic model at the borders of the image, the
+    * autocorrelation function computed with this efficient method won't exactly equal the one computed by `learnCovariance_ineff()`.
+    * This inaccuracy results in a slight decrease of the performance of models learnt with the efficiently computed statistics
+    * (the deviation will be around 5% of the average precision of the other model, e. g. from 20% to 19%). 
     *
     * @note Computing the covariance matrices requires a mean feature vector, which has to be loaded from file
     * or learned using learnMean() in advance.
@@ -222,7 +224,7 @@ public:
     * of a set of images. Use writeToFile() to save the learned statistics afterwards.
     *
     * @note This is the inefficient variant of computing such an autocorrelation function, adapted from the original
-    * code of Hariharan et al. It will take very, very long and, though it is provided here for comparison purposes,
+    * code of Hariharan et al. It will take very, very long and, though it is provided here for computations with maximum accuracy,
     * one should rather use the efficient learnCovariance() variant, which leverages the Fourier transform.
     *
     * @note Computing the covariance matrices requires a mean feature vector, which has to be loaded from file

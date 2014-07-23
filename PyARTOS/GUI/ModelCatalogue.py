@@ -336,7 +336,7 @@ class CatalogueWindow(Tkinter.Toplevel):
                         'Your existing bg.dat file in your model directory will be replaced with the new one, but you may restore it '\
                         'by copying the original\nbg.dat file from the ARTOS root directory to your model directory.\n\n' \
                         'Number of images to learn from:',
-                        initialvalue = 100, minvalue = 1)
+                        initialvalue = 1000, minvalue = 1)
         if not numImages is None:
             # Learn
             thread_var = { 'error' : None }
