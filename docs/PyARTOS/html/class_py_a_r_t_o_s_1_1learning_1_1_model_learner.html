@@ -194,7 +194,13 @@ Static Public Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>thOptLOOCV</em> = <code>True</code>&#160;</td>
+          <td class="paramname"><em>thOptLOOCV</em> = <code>True</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>debug</em> = <code>False</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -208,11 +214,12 @@ Static Public Attributes</h2></td></tr>
 bgFile - Path to a file containing the stationary background statistics for whitening (negative mean and covariance).
 imageRepository - Optionally, a path to an image repository or an imagenet.ImageRepository instance.
           Required if you want to use ImageNet functions with this learner.
-thOptLOOCV - If set to true, Leave-one-out-cross-validation will be performed for threshold optimization.
+thOptLOOCV - If set to True, Leave-one-out-cross-validation will be performed for threshold optimization.
      This will increase memory usage, since the WHO features of all samples have to be stored for this,
      and will slow down threshold optimization as well as the model learning step if only one WHO cluster
      is used. But it will guarantee that no model is tested against a sample it has been learned from
      for threshold optimization.
+debug - If set to True, timing and debugging information will be printed to stdout.
 </pre> 
 </div>
 </div>
@@ -432,7 +439,13 @@ maxWHOClusters - Maximum number of clusters to form by the WHO feature vectors o
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>progressCallback</em> = <code>None</code>&#160;</td>
+          <td class="paramname"><em>progressCallback</em> = <code>None</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>debug</em> = <code>False</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -478,6 +491,7 @@ progressCallback - Optionally, a callback which is called between the steps of t
            image reading &amp; decoding, model creation and threshold optimization.  
            The third and fourth parameters will be the number of performed steps and the total number of steps of
            the current sub-procedure.
+debug - If set to True, timing and debugging information will be printed to stdout.
 </pre> 
 </div>
 </div>
@@ -552,7 +566,13 @@ progressCallback - Optionally, a callback which is called between the steps of t
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>progressCallback</em> = <code>None</code>&#160;</td>
+          <td class="paramname"><em>progressCallback</em> = <code>None</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>debug</em> = <code>False</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -594,6 +614,7 @@ progressCallback - Optionally, a callback which is called between the steps of t
            image extraction, model creation and threshold optimization.  
            The third and fourth parameters will be the number of performed steps and the total number of steps of
            the current sub-procedure.
+debug - If set to True, timing and debugging information will be printed to stdout.
 </pre> 
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
@@ -797,7 +818,7 @@ add - If set to true, the new models will be added as additional mixture compone
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespace_py_a_r_t_o_s.html">PyARTOS</a></li><li class="navelem"><a class="el" href="namespace_py_a_r_t_o_s_1_1learning.html">learning</a></li><li class="navelem"><a class="el" href="class_py_a_r_t_o_s_1_1learning_1_1_model_learner.html">ModelLearner</a></li>
-    <li class="footer">Generated on Mon Jul 7 2014 23:42:57 for PyARTOS by
+    <li class="footer">Generated on Wed Jul 23 2014 09:32:51 for PyARTOS by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>

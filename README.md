@@ -106,7 +106,9 @@ Hence, before the first use of *ARTOS*, you need to download:
 1. **a (full) copy of the ImageNet image data for all synsets**
 
    This requires an account on ImageNet. Registration can be done here: http://www.image-net.org/signup  
-   After that, there should be a Tar archive with all full-resolution images available for download (> 1 TB).
+   After that, there should be a Tar archive with all full-resolution images available for download (> 1 TB).  
+   It is also possible to download just the archives for the single synsets that you need if you don't have enough disk space
+   or time to download the full database.
 
 2. **the bounding box annotation data for those synsets**
 

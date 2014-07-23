@@ -135,6 +135,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:afe2f8c6697f7259c7d087300ac17a8e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a759dc35185270f2a628129781d83da09"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_py_a_r_t_o_s_1_1config_1_1___config.html#a759dc35185270f2a628129781d83da09">getInt</a></td></tr>
 <tr class="separator:a759dc35185270f2a628129781d83da09"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a34d0943893e6c858f4e69e3050b66ed5"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_py_a_r_t_o_s_1_1config_1_1___config.html#a34d0943893e6c858f4e69e3050b66ed5">getBool</a></td></tr>
+<tr class="separator:a34d0943893e6c858f4e69e3050b66ed5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a385f5572465b387e4069217ad64a45a7"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_py_a_r_t_o_s_1_1config_1_1___config.html#a385f5572465b387e4069217ad64a45a7">is_set</a></td></tr>
 <tr class="separator:a385f5572465b387e4069217ad64a45a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a65f55c97cc09b61e8438110a2950722a"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_py_a_r_t_o_s_1_1config_1_1___config.html#a65f55c97cc09b61e8438110a2950722a">differentFromDefault</a></td></tr>
@@ -328,6 +330,50 @@ if the given option hasn't been specified in the configuration file or is empty.
 </pre> 
 </div>
 </div>
+<a class="anchor" id="a34d0943893e6c858f4e69e3050b66ed5"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def PyARTOS.config._Config.getBool </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>section</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>option</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>useDefaults</em> = <code>True</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">Get an option value for the named section as boolean value.
+
+If useDefaults is set to true, this function falls back to default values if the
+given option hasn't been specified in the configuration file or can't be interpreted as a boolean value.
+Empty strings, the strings 'no', 'off' and 'false' as well as the number 0 will be interpreted as False.
+Every number different from 0 as well as the strings 'yes', 'on' and 'true' will be interpreted as True.
+</pre> 
+</div>
+</div>
 <a class="anchor" id="a759dc35185270f2a628129781d83da09"></a>
 <div class="memitem">
 <div class="memproto">
@@ -466,7 +512,7 @@ from the configuration file will be clipped to that range.
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespace_py_a_r_t_o_s.html">PyARTOS</a></li><li class="navelem"><a class="el" href="namespace_py_a_r_t_o_s_1_1config.html">config</a></li><li class="navelem"><a class="el" href="class_py_a_r_t_o_s_1_1config_1_1___config.html">_Config</a></li>
-    <li class="footer">Generated on Mon Jul 7 2014 23:42:55 for PyARTOS by
+    <li class="footer">Generated on Wed Jul 23 2014 09:32:44 for PyARTOS by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>

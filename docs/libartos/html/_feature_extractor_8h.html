@@ -147,14 +147,15 @@ Typedefs</h2></td></tr>
 <tr class="separator:aad3350581a4dae56d870e1b25e1e48fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Defines the default feature extractor (usually HOGFeatureExtractor) and a feature pyramid class based on that extractor. If you want to use your own feature extractor by default, provide a class with at least the same interface as HOGFeatureExtractor, include it here and re-define <code>FeatureExtractor</code> in this file. </p>
+<div class="textblock"><p>Defines the default feature extractor (usually HOGFeatureExtractor) and a feature pyramid class based on that extractor.</p>
+<p>If you want to use your own feature extractor by default, provide a class with at least the same interface as HOGFeatureExtractor, include it here and re-define <code>FeatureExtractor</code> in this file. Such a custom feature extractor will then be used for model learning and estimation of background statistics, but not for the FFLD-based object detection, which always uses HOG features. </p>
 </div></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="_feature_extractor_8h.html">FeatureExtractor.h</a></li>
-    <li class="footer">Generated on Mon Jul 7 2014 23:41:48 for ARTOS by
+    <li class="footer">Generated on Wed Jul 23 2014 09:32:08 for ARTOS by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>
