@@ -181,7 +181,8 @@ int learn_imagenet(const char * repo_directory, const char * synset_id, const ch
     
     // Learn model
     ImageNetModelLearner learner(bg, repo, (th_opt_mode == ARTOS_THOPT_LOOCV), debug);
-    learner.addPositiveSamplesFromSynset(synset);
+    if (learner.addPositiveSamplesFromSynset(synset) == 0)
+        return ARTOS_IMGREPO_RES_EXTRACTION_FAILED;
     progParams.overall_step++;
     if (!learner.learn(max_aspect_clusters, max_who_clusters, (progress_cb != NULL) ? &populate_progress : NULL, reinterpret_cast<void*>(&progParams)))
         return ARTOS_LEARN_RES_FAILED;
@@ -304,7 +305,8 @@ int learner_add_synset(const unsigned int learner, const char * synset_id, const
     Synset synset = repo.getSynset(synset_id);
     if (synset.id.empty())
         return ARTOS_IMGREPO_RES_SYNSET_NOT_FOUND;
-    learners[learner - 1]->addPositiveSamplesFromSynset(synset, max_samples);
+    if (learners[learner - 1]->addPositiveSamplesFromSynset(synset, max_samples) == 0)
+        return ARTOS_IMGREPO_RES_EXTRACTION_FAILED;
     return ARTOS_RES_OK;
 }
 

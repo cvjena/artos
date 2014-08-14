@@ -1,3 +1,6 @@
+#ifndef ARTOS_RANDOM_H
+#define ARTOS_RANDOM_H
+
 #include <cstdlib>
 #include <cmath>
 #include <vector>
@@ -181,3 +184,5 @@ public:
 };
 
 }
+
+#endif

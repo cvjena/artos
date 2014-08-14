@@ -207,6 +207,7 @@ typedef bool (*overall_progress_cb_t)(unsigned int, unsigned int, unsigned int, 
 * @return Returns `ARTOS_RES_OK` on success or one of the following error codes on failure:
 *                   - `ARTOS_IMGREPO_RES_INVALID_REPOSITORY`
 *                   - `ARTOS_IMGREPO_RES_SYNSET_NOT_FOUND`
+*                   - `ARTOS_IMGREPO_RES_EXTRACTION_FAILED`
 *                   - `ARTOS_LEARN_RES_FAILED`
 *                   - `ARTOS_LEARN_RES_INVALID_BG_FILE`
 *                   - `ARTOS_RES_FILE_ACCESS_DENIED` (if could not write model file)
@@ -300,6 +301,7 @@ void destroy_learner(const unsigned int learner);
 *                   - `ARTOS_RES_INVALID_HANDLE`
 *                   - `ARTOS_IMGREPO_RES_INVALID_REPOSITORY`
 *                   - `ARTOS_IMGREPO_RES_SYNSET_NOT_FOUND`
+*                   - `ARTOS_IMGREPO_RES_EXTRACTION_FAILED`
 */
 int learner_add_synset(const unsigned int learner, const char * synset_id, const unsigned int max_samples = 0);
 

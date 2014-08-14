@@ -43,7 +43,12 @@ void kMeansClustering(const Eigen::MatrixBase<Derived> & dataPoints, const unsig
         for (unsigned int i = 0; i < k; i++)
         {
             do
+            {
                 r = Random::getInt(numDataPoints - 1);
+                for (unsigned int j = 0; j < i && !chosen(r); j++)
+                    if (centr.row(j).isApprox(dataPoints.row(r), 1e-4))
+                        chosen(r) = true;
+            }
             while (chosen(r));
             chosen(r) = true;
             centr.row(i) = dataPoints.row(r);

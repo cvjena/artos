@@ -40,6 +40,7 @@ LEARN_RES_NO_SAMPLES = -204
 LEARN_RES_MODEL_NOT_LEARNED = -205
 IMGREPO_RES_INVALID_REPOSITORY = -301
 IMGREPO_RES_SYNSET_NOT_FOUND = -302
+IMGREPO_RES_EXTRACTION_FAILED = -303
 
 
 
@@ -276,7 +277,9 @@ class LibARTOSException(Exception):
         LEARN_RES_NO_SAMPLES                : 'No positive sample has been added yet',
         LEARN_RES_MODEL_NOT_LEARNED         : 'No model has been learned yet',
         IMGREPO_RES_INVALID_REPOSITORY      : 'Given path doesn\'t point to a valid image repository',
-        IMGREPO_RES_SYNSET_NOT_FOUND        : 'Synset not found'
+        IMGREPO_RES_SYNSET_NOT_FOUND        : 'Synset not found',
+        IMGREPO_RES_EXTRACTION_FAILED       : 'Could not extract images from synset. Please check your image repository and make sure, ' \
+                                              'that both the image and the annotation archive are there.'
     }
 
 
