@@ -27,6 +27,16 @@ template<typename Derived, typename DerivedCent>
 void kMeansClustering(const Eigen::MatrixBase<Derived> & dataPoints, const unsigned int k,
                       Eigen::VectorXi * assignments, Eigen::MatrixBase<DerivedCent> * centroids = NULL)
 {
+    // Check if there is enough data for k clusters
+    if (k >= dataPoints.rows())
+    {
+        if (centroids != NULL)
+            *centroids = dataPoints;
+        if (assignments != NULL)
+            *assignments = Eigen::VectorXi::LinSpaced(dataPoints.rows(), 0, dataPoints.rows() - 1);
+        return;
+    }
+
     // Initialize centroids matrices and assignment vector
     typedef typename Derived::Scalar Scalar;
     typedef Eigen::Matrix<Scalar, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> Mat;

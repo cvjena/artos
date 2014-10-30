@@ -55,7 +55,7 @@ const vector<float> & ImageNetModelLearner::optimizeThreshold(const unsigned int
                                                               const float b, ProgressCallback progressCB, void * cbData)
 {
     vector<JPEGImage> * negative = NULL;
-    if (numNegative > 0)
+    if (numNegative > 0 && this->m_repo.getNumSynsets() > this->m_addedSynsets.size())
     {
         negative = new vector<JPEGImage>();
         for (MixedImageIterator imgIt = this->m_repo.getMixedIterator(); imgIt.ready() && negative->size() < numNegative; ++imgIt)

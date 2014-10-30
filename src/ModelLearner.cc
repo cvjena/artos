@@ -458,6 +458,8 @@ bool ModelLearner::learn(const unsigned int maxAspectClusters, const unsigned in
     }
     
     this->m_clusterSizes.assign(this->m_models.size(), 0);
+    if (this->m_models.size() == 0)
+        return false;
     for (sample = this->m_samples.begin(); sample != this->m_samples.end(); sample++)
         for (i = 0; i < sample->modelAssoc.size(); i++)
             if (sample->modelAssoc[i] < this->m_clusterSizes.size())
