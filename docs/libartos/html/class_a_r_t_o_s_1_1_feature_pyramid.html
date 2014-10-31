@@ -30,7 +30,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">ARTOS
-   &#160;<span id="projectnumber">1.0</span>
+   &#160;<span id="projectnumber">1.1</span>
    </div>
    <div id="projectbrief">Adaptive Real-Time Object Detection System</div>
   </td>
@@ -122,8 +122,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a1ee2501162acf0c982086e7a0cb28d2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3349a2ebe319f21889c26e4d87f4fde7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_a_r_t_o_s_1_1_feature_pyramid.html#a3349a2ebe319f21889c26e4d87f4fde7">FeaturePyramid</a> (int <a class="el" href="class_a_r_t_o_s_1_1_feature_pyramid.html#ab3c9064626fd35cece4369e074a97d65">interval</a>, const std::vector&lt; <a class="el" href="class_a_r_t_o_s_1_1_h_o_g_feature_extractor.html#a62bb66b5720a7370e47015fa932aaf2a">FeatureExtractor::FeatureMatrix</a> &gt; &amp;<a class="el" href="class_a_r_t_o_s_1_1_feature_pyramid.html#a8bcecf74ca6d204b491a9d63cf3e5a35">levels</a>)</td></tr>
 <tr class="separator:a3349a2ebe319f21889c26e4d87f4fde7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af2db24a184eaa5f8e40e500fb9f65afe"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_a_r_t_o_s_1_1_feature_pyramid.html#af2db24a184eaa5f8e40e500fb9f65afe">FeaturePyramid</a> (const FFLD::JPEGImage &amp;image, int <a class="el" href="class_a_r_t_o_s_1_1_feature_pyramid.html#ab3c9064626fd35cece4369e074a97d65">interval</a>=10)</td></tr>
-<tr class="separator:af2db24a184eaa5f8e40e500fb9f65afe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9991355974d2a2cd427ef960a11f7943"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_a_r_t_o_s_1_1_feature_pyramid.html#a9991355974d2a2cd427ef960a11f7943">FeaturePyramid</a> (const FFLD::JPEGImage &amp;image, int <a class="el" href="class_a_r_t_o_s_1_1_feature_pyramid.html#ab3c9064626fd35cece4369e074a97d65">interval</a>=10, unsigned int minSize=5)</td></tr>
+<tr class="separator:a9991355974d2a2cd427ef960a11f7943"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3d31be2092f0e84e5663bb48c059c313"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_a_r_t_o_s_1_1_feature_pyramid.html#a3d31be2092f0e84e5663bb48c059c313">empty</a> () const </td></tr>
 <tr class="separator:a3d31be2092f0e84e5663bb48c059c313"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab3c9064626fd35cece4369e074a97d65"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_a_r_t_o_s_1_1_feature_pyramid.html#ab3c9064626fd35cece4369e074a97d65">interval</a> () const </td></tr>
@@ -207,7 +207,7 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="af2db24a184eaa5f8e40e500fb9f65afe"></a>
+<a class="anchor" id="a9991355974d2a2cd427ef960a11f7943"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -221,7 +221,13 @@ Protected Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>interval</em> = <code>10</code>&#160;</td>
+          <td class="paramname"><em>interval</em> = <code>10</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>minSize</em> = <code>5</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -235,6 +241,7 @@ Protected Attributes</h2></td></tr>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">image</td><td>The JPEGImage. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">interval</td><td>Number of levels per octave in the pyramid (at least 1). </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">minSize</td><td>Minimum number of cells in x or y direction in the smallest scale in the pyramid. </td></tr>
   </table>
   </dd>
 </dl>
@@ -390,7 +397,7 @@ Protected Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespace_a_r_t_o_s.html">ARTOS</a></li><li class="navelem"><a class="el" href="class_a_r_t_o_s_1_1_feature_pyramid.html">FeaturePyramid</a></li>
-    <li class="footer">Generated on Wed Jul 23 2014 09:32:19 for ARTOS by
+    <li class="footer">Generated on Fri Oct 31 2014 10:21:07 for ARTOS by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>

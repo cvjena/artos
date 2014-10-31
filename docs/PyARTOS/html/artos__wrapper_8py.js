@@ -16,6 +16,7 @@ var artos__wrapper_8py =
     [ "DETECT_RES_NO_MODELS", "artos__wrapper_8py.html#a3872c4a8da777835c328eb5a02c16b75", null ],
     [ "FlatBoundingBox_p", "artos__wrapper_8py.html#abd75f63e90fef25d2b2aa05be6f345de", null ],
     [ "FlatDetection_p", "artos__wrapper_8py.html#aca0feaa209cc6ad1271f6d0c06df5fa2", null ],
+    [ "IMGREPO_RES_EXTRACTION_FAILED", "artos__wrapper_8py.html#a1fd9c83d5c4eea80a9c8e8a9cbcd44ba", null ],
     [ "IMGREPO_RES_INVALID_REPOSITORY", "artos__wrapper_8py.html#af036d1d968725e3800eb0aa9a965d37b", null ],
     [ "IMGREPO_RES_SYNSET_NOT_FOUND", "artos__wrapper_8py.html#a20d8978a7c73bbc66ea9b4fd869c2d03", null ],
     [ "LEARN_RES_FAILED", "artos__wrapper_8py.html#a5a751732cfef65d5747da7356299981f", null ],

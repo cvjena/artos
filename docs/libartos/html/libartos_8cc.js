@@ -15,7 +15,7 @@ var libartos_8cc =
     [ "extract_samples_from_synset", "libartos_8cc.html#a61064bd58f86deb1754e9e63783ad912", null ],
     [ "is_valid_detector_handle", "libartos_8cc.html#a9410497cc2ce4aa85415e175502a025b", null ],
     [ "is_valid_learner_handle", "libartos_8cc.html#a7f0b115c2293574072fc57cc5e5b6137", null ],
-    [ "learn_bg", "libartos_8cc.html#a8f4e2ab4ead1cf84dc7e22d643abbb79", null ],
+    [ "learn_bg", "libartos_8cc.html#a6c385aa105e32cf7953013cb8a94c356", null ],
     [ "learn_files_jpeg", "libartos_8cc.html#a020bbe4bc6037cac2561cb94081a081b", null ],
     [ "learn_imagenet", "libartos_8cc.html#a4794d444739e8673009b0a5fa1c7ac34", null ],
     [ "learner_add_file_jpeg", "libartos_8cc.html#ad66c8ae433f8f88af1267a4540dfabe5", null ],

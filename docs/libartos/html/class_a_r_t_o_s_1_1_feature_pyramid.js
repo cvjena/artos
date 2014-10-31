@@ -2,7 +2,7 @@ var class_a_r_t_o_s_1_1_feature_pyramid =
 [
     [ "FeaturePyramid", "class_a_r_t_o_s_1_1_feature_pyramid.html#a1ee2501162acf0c982086e7a0cb28d2c", null ],
     [ "FeaturePyramid", "class_a_r_t_o_s_1_1_feature_pyramid.html#a3349a2ebe319f21889c26e4d87f4fde7", null ],
-    [ "FeaturePyramid", "class_a_r_t_o_s_1_1_feature_pyramid.html#af2db24a184eaa5f8e40e500fb9f65afe", null ],
+    [ "FeaturePyramid", "class_a_r_t_o_s_1_1_feature_pyramid.html#a9991355974d2a2cd427ef960a11f7943", null ],
     [ "empty", "class_a_r_t_o_s_1_1_feature_pyramid.html#a3d31be2092f0e84e5663bb48c059c313", null ],
     [ "interval", "class_a_r_t_o_s_1_1_feature_pyramid.html#ab3c9064626fd35cece4369e074a97d65", null ],
     [ "levels", "class_a_r_t_o_s_1_1_feature_pyramid.html#a8bcecf74ca6d204b491a9d63cf3e5a35", null ],

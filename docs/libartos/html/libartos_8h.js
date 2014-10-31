@@ -16,7 +16,7 @@ var libartos_8h =
     [ "extract_images_from_synset", "libartos_8h.html#af095952dda511e6e170473ecce3df9e0", null ],
     [ "extract_mixed_images", "libartos_8h.html#af07331ddce7bbb8bed2e8b398137b796", null ],
     [ "extract_samples_from_synset", "libartos_8h.html#a61064bd58f86deb1754e9e63783ad912", null ],
-    [ "learn_bg", "libartos_8h.html#a07835cb366b2564075267cd368248f7e", null ],
+    [ "learn_bg", "libartos_8h.html#ab82b8ae96dd40b445b4fc76b02d8ac2e", null ],
     [ "learn_files_jpeg", "libartos_8h.html#a53493535e7d74294d4e5b7b7c255be76", null ],
     [ "learn_imagenet", "libartos_8h.html#ad8f81cc257148fd9d5b4c7fd6d203b8f", null ],
     [ "learner_add_file_jpeg", "libartos_8h.html#a191c2262acee8410d6db5128ac7b6bb6", null ],

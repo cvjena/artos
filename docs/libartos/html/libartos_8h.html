@@ -30,7 +30,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">ARTOS
-   &#160;<span id="projectnumber">1.0</span>
+   &#160;<span id="projectnumber">1.1</span>
    </div>
    <div id="projectbrief">Adaptive Real-Time Object Detection System</div>
   </td>
@@ -181,8 +181,8 @@ Functions</h2></td></tr>
 <tr class="separator:a461e7d2154fa18e701ff3cbf54c603e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a36f68ed33327772113123c0c822576bd"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="libartos_8h.html#a36f68ed33327772113123c0c822576bd">learner_reset</a> (const unsigned int learner)</td></tr>
 <tr class="separator:a36f68ed33327772113123c0c822576bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a07835cb366b2564075267cd368248f7e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="libartos_8h.html#a07835cb366b2564075267cd368248f7e">learn_bg</a> (const char *repo_directory, const char *bg_file, const unsigned int num_images, const unsigned int max_offset=19, <a class="el" href="libartos_8h.html#aec94473ababc09374c59c2cb1f8704cf">overall_progress_cb_t</a> progress_cb=0)</td></tr>
-<tr class="separator:a07835cb366b2564075267cd368248f7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab82b8ae96dd40b445b4fc76b02d8ac2e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="libartos_8h.html#ab82b8ae96dd40b445b4fc76b02d8ac2e">learn_bg</a> (const char *repo_directory, const char *bg_file, const unsigned int num_images, const unsigned int max_offset=19, <a class="el" href="libartos_8h.html#aec94473ababc09374c59c2cb1f8704cf">overall_progress_cb_t</a> progress_cb=0, const bool accurate_autocorrelation=false)</td></tr>
+<tr class="separator:ab82b8ae96dd40b445b4fc76b02d8ac2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a99ed0391aa723309dffaa36e026f4650"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="libartos_8h.html#a99ed0391aa723309dffaa36e026f4650">list_synsets</a> (const char *repo_directory, <a class="el" href="struct_synset_search_result.html">SynsetSearchResult</a> *synset_buf, unsigned int *synset_buf_size)</td></tr>
 <tr class="separator:a99ed0391aa723309dffaa36e026f4650"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa5f9fa191364a3227ccb670379774f6e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="libartos_8h.html#aa5f9fa191364a3227ccb670379774f6e">search_synsets</a> (const char *repo_directory, const char *phrase, <a class="el" href="struct_synset_search_result.html">SynsetSearchResult</a> *result_buf, unsigned int *result_buf_size)</td></tr>
@@ -863,7 +863,7 @@ Here is the call graph for this function:</div>
 
 </div>
 </div>
-<a class="anchor" id="a07835cb366b2564075267cd368248f7e"></a>
+<a class="anchor" id="ab82b8ae96dd40b445b4fc76b02d8ac2e"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -895,7 +895,13 @@ Here is the call graph for this function:</div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="libartos_8h.html#aec94473ababc09374c59c2cb1f8704cf">overall_progress_cb_t</a>&#160;</td>
-          <td class="paramname"><em>progress_cb</em> = <code>0</code>&#160;</td>
+          <td class="paramname"><em>progress_cb</em> = <code>0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const bool&#160;</td>
+          <td class="paramname"><em>accurate_autocorrelation</em> = <code>false</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -912,6 +918,7 @@ Here is the call graph for this function:</div>
     <tr><td class="paramdir">[in]</td><td class="paramname">num_images</td><td>Number of ImageNet samples to extract features from for learning background statistics. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">max_offset</td><td>Maximum available offset in x or y direction of the autocorrelation function to be learned. Determines the maximum size of the reconstructible covariance matrix, which will be <code>maxOffset + 1</code>. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">progress_cb</td><td>Optionally, a callback which is called between the steps of the learning process to populate the progress. The first parameter to the callback will be the number of steps performed in the entire process, the second one will be the total number of steps. To date, the entire process is divided into just two steps: Learning a negative mean and learning an autocorrelation function. The third and fourth parameters will be the number of processed images and the total number of images (equal to <code>numImages</code>) of the current sub-procedure. The callback may return false to abort the operation. To continue, it must return true. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">accurate_autocorrelation</td><td>By default, this function uses an efficient method of computing an autocorrelation function, which leverages the Fourier transform. By setting this parameter to true, the original, inefficient method, adapted from the original code of Hariharan et al., will be used. It is orders of magnitude slower and will take very, very long, but gives results with higher accuracy. That inaccuracy of the fast method results in a slight decrease of the performance of models learnt with the efficiently computed statistics (the deviation will be around 5% of the average precision of the other model, e. g. from 20% to 19%). </td></tr>
   </table>
   </dd>
 </dl>
@@ -925,9 +932,9 @@ Here is the call graph for this function:</div>
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="libartos_8h_a07835cb366b2564075267cd368248f7e_cgraph.png" border="0" usemap="#libartos_8h_a07835cb366b2564075267cd368248f7e_cgraph" alt=""/></div>
-<map name="libartos_8h_a07835cb366b2564075267cd368248f7e_cgraph" id="libartos_8h_a07835cb366b2564075267cd368248f7e_cgraph">
-<area shape="rect" id="node2" href="class_a_r_t_o_s_1_1_stationary_background.html#a26dcb6a8a83e48a2f445f9d47595d5b9" title="ARTOS::StationaryBackground\l::learnMean" alt="" coords="126,70,330,111"/><area shape="rect" id="node6" href="libartos_8cc.html#a5aa6bd5a255b5daa34f84f6acfb1326d" title="populate_progress" alt="" coords="164,201,292,228"/><area shape="rect" id="node7" href="class_a_r_t_o_s_1_1_stationary_background.html#a050a5eda90bce9216943abd9f7915c33" title="ARTOS::StationaryBackground\l::learnCovariance" alt="" coords="126,135,330,177"/><area shape="rect" id="node8" href="class_a_r_t_o_s_1_1_stationary_background.html#a42c08daea150963119aea4b1a1167cae" title="ARTOS::StationaryBackground\l::writeToFile" alt="" coords="126,259,330,301"/><area shape="rect" id="node3" href="class_a_r_t_o_s_1_1_image_iterator.html#aeb39d7d0f888c059d95429dfb4ec1661" title="ARTOS::ImageIterator\l::rewind" alt="" coords="405,5,558,46"/><area shape="rect" id="node4" href="class_a_r_t_o_s_1_1_image_iterator.html#a3d3fcd5e58acf7e226fc45f7bef0f231" title="ARTOS::ImageIterator\l::ready" alt="" coords="405,70,558,111"/><area shape="rect" id="node5" href="class_a_r_t_o_s_1_1_feature_pyramid.html#a8bcecf74ca6d204b491a9d63cf3e5a35" title="ARTOS::FeaturePyramid\l::levels" alt="" coords="397,135,565,177"/><area shape="rect" id="node9" href="class_a_r_t_o_s_1_1_stationary_background.html#a1f0385ffbb6ce834fa20a0ad9fb141d2" title="ARTOS::StationaryBackground\l::empty" alt="" coords="379,201,583,242"/><area shape="rect" id="node10" href="class_a_r_t_o_s_1_1_stationary_background.html#aad9a7a50f4e57211c7cae821327df1e4" title="ARTOS::StationaryBackground\l::getNumFeatures" alt="" coords="379,266,583,307"/><area shape="rect" id="node11" href="class_a_r_t_o_s_1_1_stationary_background.html#ab46d4c5ac3ec2490380beb06ae821c4f" title="ARTOS::StationaryBackground\l::getNumOffsets" alt="" coords="379,331,583,373"/></map>
+<div class="center"><img src="libartos_8h_ab82b8ae96dd40b445b4fc76b02d8ac2e_cgraph.png" border="0" usemap="#libartos_8h_ab82b8ae96dd40b445b4fc76b02d8ac2e_cgraph" alt=""/></div>
+<map name="libartos_8h_ab82b8ae96dd40b445b4fc76b02d8ac2e_cgraph" id="libartos_8h_ab82b8ae96dd40b445b4fc76b02d8ac2e_cgraph">
+<area shape="rect" id="node2" href="class_a_r_t_o_s_1_1_stationary_background.html#a26dcb6a8a83e48a2f445f9d47595d5b9" title="ARTOS::StationaryBackground\l::learnMean" alt="" coords="126,41,330,82"/><area shape="rect" id="node6" href="libartos_8cc.html#a5aa6bd5a255b5daa34f84f6acfb1326d" title="populate_progress" alt="" coords="164,237,292,264"/><area shape="rect" id="node7" href="class_a_r_t_o_s_1_1_stationary_background.html#a17d4e5b03529ea326a88328bbbff379a" title="ARTOS::StationaryBackground\l::learnCovariance_accurate" alt="" coords="126,171,330,213"/><area shape="rect" id="node9" href="class_a_r_t_o_s_1_1_stationary_background.html#a050a5eda90bce9216943abd9f7915c33" title="ARTOS::StationaryBackground\l::learnCovariance" alt="" coords="126,106,330,147"/><area shape="rect" id="node10" href="class_a_r_t_o_s_1_1_stationary_background.html#a42c08daea150963119aea4b1a1167cae" title="ARTOS::StationaryBackground\l::writeToFile" alt="" coords="126,295,330,337"/><area shape="rect" id="node3" href="class_a_r_t_o_s_1_1_image_iterator.html#aeb39d7d0f888c059d95429dfb4ec1661" title="ARTOS::ImageIterator\l::rewind" alt="" coords="405,5,558,46"/><area shape="rect" id="node4" href="class_a_r_t_o_s_1_1_image_iterator.html#a3d3fcd5e58acf7e226fc45f7bef0f231" title="ARTOS::ImageIterator\l::ready" alt="" coords="405,70,558,111"/><area shape="rect" id="node5" href="class_a_r_t_o_s_1_1_feature_pyramid.html#a8bcecf74ca6d204b491a9d63cf3e5a35" title="ARTOS::FeaturePyramid\l::levels" alt="" coords="397,135,565,177"/><area shape="rect" id="node8" href="class_a_r_t_o_s_1_1_stationary_background.html#a6f78ef0362e953f1dd19f131d57d5b04" title="ARTOS::StationaryBackground\l::makeOffsetArray" alt="" coords="379,201,583,242"/><area shape="rect" id="node11" href="class_a_r_t_o_s_1_1_stationary_background.html#a1f0385ffbb6ce834fa20a0ad9fb141d2" title="ARTOS::StationaryBackground\l::empty" alt="" coords="379,266,583,307"/><area shape="rect" id="node12" href="class_a_r_t_o_s_1_1_stationary_background.html#aad9a7a50f4e57211c7cae821327df1e4" title="ARTOS::StationaryBackground\l::getNumFeatures" alt="" coords="379,331,583,373"/><area shape="rect" id="node13" href="class_a_r_t_o_s_1_1_stationary_background.html#ab46d4c5ac3ec2490380beb06ae821c4f" title="ARTOS::StationaryBackground\l::getNumOffsets" alt="" coords="379,397,583,438"/></map>
 </div>
 </p>
 
@@ -1150,6 +1157,7 @@ Here is the call graph for this function:</div>
 <dl class="section return"><dt>Returns</dt><dd>Returns <code>ARTOS_RES_OK</code> on success or one of the following error codes on failure:<ul>
 <li><code>ARTOS_IMGREPO_RES_INVALID_REPOSITORY</code></li>
 <li><code>ARTOS_IMGREPO_RES_SYNSET_NOT_FOUND</code></li>
+<li><code>ARTOS_IMGREPO_RES_EXTRACTION_FAILED</code></li>
 <li><code>ARTOS_LEARN_RES_FAILED</code></li>
 <li><code>ARTOS_LEARN_RES_INVALID_BG_FILE</code></li>
 <li><code>ARTOS_RES_FILE_ACCESS_DENIED</code> (if could not write model file) </li>
@@ -1354,7 +1362,8 @@ Here is the call graph for this function:</div>
 <dl class="section return"><dt>Returns</dt><dd>Returns <code>ARTOS_RES_OK</code> on success or one of the following error codes on failure:<ul>
 <li><code>ARTOS_RES_INVALID_HANDLE</code></li>
 <li><code>ARTOS_IMGREPO_RES_INVALID_REPOSITORY</code></li>
-<li><code>ARTOS_IMGREPO_RES_SYNSET_NOT_FOUND</code> </li>
+<li><code>ARTOS_IMGREPO_RES_SYNSET_NOT_FOUND</code></li>
+<li><code>ARTOS_IMGREPO_RES_EXTRACTION_FAILED</code> </li>
 </ul>
 </dd></dl>
 
@@ -1703,7 +1712,7 @@ Here is the call graph for this function:</div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="libartos_8h.html">libartos.h</a></li>
-    <li class="footer">Generated on Wed Jul 23 2014 09:32:16 for ARTOS by
+    <li class="footer">Generated on Fri Oct 31 2014 10:21:07 for ARTOS by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>

@@ -1,5 +1,6 @@
 var NAVTREEINDEX1 =
 {
+"class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_catalogue_window.html#a5dfb0170abe84c094a8b3cc54ab68fb0":[1,0,0,4,6,1,24],
 "class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_catalogue_window.html#a6f832ef0f472ade97c807774019fd54f":[1,0,0,4,6,1,21],
 "class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_catalogue_window.html#a7600365b28d87ef4d53c04239082b8bb":[1,0,0,4,6,1,16],
 "class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_catalogue_window.html#a8a49990a62ee43d280855505f7ea0194":[1,0,0,4,6,1,22],
@@ -248,6 +249,5 @@ var NAVTREEINDEX1 =
 "class_py_a_r_t_o_s_1_1learning_1_1_model_learner.html#a3230568ef7042a04ef5f1adb709f1b76":[1,0,0,6,0,2],
 "class_py_a_r_t_o_s_1_1learning_1_1_model_learner.html#a498d076536ef797ae706cd1701831fde":[1,0,0,6,0,0],
 "class_py_a_r_t_o_s_1_1learning_1_1_model_learner.html#a58cd8c48429673dfc7dbb7f2ea69a198":[1,0,0,6,0,8],
-"class_py_a_r_t_o_s_1_1learning_1_1_model_learner.html#a7d648ba50ff67b2d589ec9a82e4aa2f0":[1,0,0,6,0,1],
-"class_py_a_r_t_o_s_1_1learning_1_1_model_learner.html#ab0176b47e3e07b0e57b4533d170a454d":[1,0,0,6,0,6]
+"class_py_a_r_t_o_s_1_1learning_1_1_model_learner.html#a7d648ba50ff67b2d589ec9a82e4aa2f0":[1,0,0,6,0,1]
 };

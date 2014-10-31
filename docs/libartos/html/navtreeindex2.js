@@ -1,5 +1,8 @@
 var NAVTREEINDEX2 =
 {
+"struct_flat_detection.html#ae86302fb7e2290558d000c2a6286c631":[1,0,2,2],
+"struct_synset_search_result.html":[1,0,6],
+"struct_synset_search_result.html#a0f179757b571401b8df0099764602171":[1,0,6,2],
 "struct_synset_search_result.html#a341cf75d9632432847fe7ac9346f4e7e":[1,0,6,5],
 "struct_synset_search_result.html#a3d03c970e7021f3f9af44f80af305385":[1,0,6,3],
 "struct_synset_search_result.html#a80793b91fa355c68a262b3429388cb4e":[1,0,6,1],

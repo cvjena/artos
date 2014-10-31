@@ -426,13 +426,21 @@ int learner_reset(const unsigned int learner);
 *                        The third and fourth parameters will be the number of processed images and the total number of images (equal
 *                        to `numImages`) of the current sub-procedure.  
 *                        The callback may return false to abort the operation. To continue, it must return true.
+* @param[in] accurate_autocorrelation By default, this function uses an efficient method of computing an autocorrelation function,
+*                                     which leverages the Fourier transform. By setting this parameter to true, the original, inefficient
+*                                     method, adapted from the original code of Hariharan et al., will be used. It is orders of magnitude slower
+*                                     and will take very, very long, but gives results with higher accuracy.
+*                                     That inaccuracy of the fast method results in a slight decrease of the performance of models learnt with
+*                                     the efficiently computed statistics (the deviation will be around 5% of the average precision of the other
+*                                     model, e. g. from 20% to 19%). 
 * @return Returns `ARTOS_RES_OK` on success or one of the following error codes on failure:
 *                   - `ARTOS_IMGREPO_RES_INVALID_REPOSITORY` (if the given directory doesn't point to a valid image repository)
 *                   - `ARTOS_RES_FILE_ACCESS_DENIED` (if could not bg file)
 *                   - `ARTOS_RES_ABORT` (if aborted by callback)
 */
 int learn_bg(const char * repo_directory, const char * bg_file,
-             const unsigned int num_images, const unsigned int max_offset = 19, overall_progress_cb_t progress_cb = 0);
+             const unsigned int num_images, const unsigned int max_offset = 19, overall_progress_cb_t progress_cb = 0,
+             const bool accurate_autocorrelation = false);
 
 
 //------------------

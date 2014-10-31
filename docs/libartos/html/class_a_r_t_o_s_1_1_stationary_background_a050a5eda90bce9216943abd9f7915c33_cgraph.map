@@ -1,5 +1,6 @@
 <map id="ARTOS::StationaryBackground::learnCovariance" name="ARTOS::StationaryBackground::learnCovariance">
-<area shape="rect" id="node2" href="$class_a_r_t_o_s_1_1_image_iterator.html#aeb39d7d0f888c059d95429dfb4ec1661" title="ARTOS::ImageIterator\l::rewind" alt="" coords="266,5,419,46"/>
-<area shape="rect" id="node3" href="$class_a_r_t_o_s_1_1_image_iterator.html#a3d3fcd5e58acf7e226fc45f7bef0f231" title="ARTOS::ImageIterator\l::ready" alt="" coords="266,70,419,111"/>
-<area shape="rect" id="node4" href="$class_a_r_t_o_s_1_1_feature_pyramid.html#a8bcecf74ca6d204b491a9d63cf3e5a35" title="ARTOS::FeaturePyramid\l::levels" alt="" coords="259,135,427,177"/>
+<area shape="rect" id="node2" href="$class_a_r_t_o_s_1_1_stationary_background.html#a6f78ef0362e953f1dd19f131d57d5b04" title="ARTOS::StationaryBackground\l::makeOffsetArray" alt="" coords="259,5,463,46"/>
+<area shape="rect" id="node3" href="$class_a_r_t_o_s_1_1_image_iterator.html#aeb39d7d0f888c059d95429dfb4ec1661" title="ARTOS::ImageIterator\l::rewind" alt="" coords="285,70,438,111"/>
+<area shape="rect" id="node4" href="$class_a_r_t_o_s_1_1_image_iterator.html#a3d3fcd5e58acf7e226fc45f7bef0f231" title="ARTOS::ImageIterator\l::ready" alt="" coords="285,135,438,177"/>
+<area shape="rect" id="node5" href="$class_a_r_t_o_s_1_1_feature_pyramid.html#a8bcecf74ca6d204b491a9d63cf3e5a35" title="ARTOS::FeaturePyramid\l::levels" alt="" coords="277,201,445,242"/>
 </map>

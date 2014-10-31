@@ -28,8 +28,8 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "____init_____8py.html",
-"class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_catalogue_window.html#a6f832ef0f472ade97c807774019fd54f",
-"class_py_a_r_t_o_s_1_1learning_1_1_model_learner.html#abdca533725868ede8ecd5b3a8876cab5"
+"class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_catalogue_window.html#a5dfb0170abe84c094a8b3cc54ab68fb0",
+"class_py_a_r_t_o_s_1_1learning_1_1_model_learner.html#ab0176b47e3e07b0e57b4533d170a454d"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

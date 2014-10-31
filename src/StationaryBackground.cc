@@ -385,8 +385,8 @@ void StationaryBackground::learnCovariance(ImageIterator & imgIt, const unsigned
     }
 }
 
-void StationaryBackground::learnCovariance_ineff(ImageIterator & imgIt, const unsigned int numImages, const unsigned int maxOffset,
-                                                 ProgressCallback progressCB, void * cbData)
+void StationaryBackground::learnCovariance_accurate(ImageIterator & imgIt, const unsigned int numImages, const unsigned int maxOffset,
+                                                    ProgressCallback progressCB, void * cbData)
 {
     if (this->mean.size() < FeatureExtractor::numRelevantFeatures)
         return;

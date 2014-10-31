@@ -5,6 +5,7 @@ var libartos__def_8h =
     [ "ARTOS_DETECT_RES_INVALID_MODEL_FILE", "libartos__def_8h.html#af15f0b0ce6fd7388017efe95d6557518", null ],
     [ "ARTOS_DETECT_RES_INVALID_MODEL_LIST_FILE", "libartos__def_8h.html#ad920b497c0fc92737518388339e2d698", null ],
     [ "ARTOS_DETECT_RES_NO_MODELS", "libartos__def_8h.html#af420e705e114ee3fbc5841bd097b1838", null ],
+    [ "ARTOS_IMGREPO_RES_EXTRACTION_FAILED", "libartos__def_8h.html#aaf8b3d084e1ccc27077536c6531fad42", null ],
     [ "ARTOS_IMGREPO_RES_INVALID_REPOSITORY", "libartos__def_8h.html#aa22b645671bf3aa572e90bbd512ea94d", null ],
     [ "ARTOS_IMGREPO_RES_SYNSET_NOT_FOUND", "libartos__def_8h.html#ab9c6b83225c29815e41be402792e7b1a", null ],
     [ "ARTOS_LEARN_RES_FAILED", "libartos__def_8h.html#aebfbf429c7f0187d35d978a36c8c101a", null ],

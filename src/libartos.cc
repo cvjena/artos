@@ -401,7 +401,8 @@ bool progress_proxy(unsigned int current, unsigned int total, void * data)
 //------------------------------------------------------------------
 
 int learn_bg(const char * repo_directory, const char * bg_file,
-             const unsigned int num_images, const unsigned int max_offset, overall_progress_cb_t progress_cb)
+             const unsigned int num_images, const unsigned int max_offset, overall_progress_cb_t progress_cb,
+             const bool accurate_autocorrelation)
 {
     // Check repository
     if (!ImageRepository::hasRepositoryStructure(repo_directory))
@@ -421,7 +422,10 @@ int learn_bg(const char * repo_directory, const char * bg_file,
     if (progParams.aborted)
         return ARTOS_RES_ABORTED;
     progParams.overall_step++;
-    bg.learnCovariance(imgIt, num_images, max_offset, (progress_cb != NULL) ? &populate_progress : NULL, reinterpret_cast<void*>(&progParams));
+    if (accurate_autocorrelation)
+        bg.learnCovariance_accurate(imgIt, num_images, max_offset, (progress_cb != NULL) ? &populate_progress : NULL, reinterpret_cast<void*>(&progParams));
+    else
+        bg.learnCovariance(imgIt, num_images, max_offset, (progress_cb != NULL) ? &populate_progress : NULL, reinterpret_cast<void*>(&progParams));
     if (progParams.aborted)
         return ARTOS_RES_ABORTED;
     if (progress_cb != NULL)

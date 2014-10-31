@@ -30,7 +30,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">ARTOS
-   &#160;<span id="projectnumber">1.0</span>
+   &#160;<span id="projectnumber">1.1</span>
    </div>
    <div id="projectbrief">Adaptive Real-Time Object Detection System</div>
   </td>
@@ -109,6 +109,7 @@ $(document).ready(function(){initNavTree('class_a_r_t_o_s_1_1_stationary_backgro
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="class_a_r_t_o_s_1_1_stationary_background-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">ARTOS::StationaryBackground Class Reference</div>  </div>
@@ -175,6 +176,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a26dcb6a8a83e48a2f445f9d47595d5b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a050a5eda90bce9216943abd9f7915c33"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_a_r_t_o_s_1_1_stationary_background.html#a050a5eda90bce9216943abd9f7915c33">learnCovariance</a> (<a class="el" href="class_a_r_t_o_s_1_1_image_iterator.html">ImageIterator</a> &amp;imgIt, const unsigned int numImages=0, const unsigned int maxOffset=19, <a class="el" href="namespace_a_r_t_o_s.html#a12ce7e01b0c5b3408cc61c9a49cfd999">ProgressCallback</a> progressCB=NULL, void *cbData=NULL)</td></tr>
 <tr class="separator:a050a5eda90bce9216943abd9f7915c33"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a17d4e5b03529ea326a88328bbbff379a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_a_r_t_o_s_1_1_stationary_background.html#a17d4e5b03529ea326a88328bbbff379a">learnCovariance_accurate</a> (<a class="el" href="class_a_r_t_o_s_1_1_image_iterator.html">ImageIterator</a> &amp;imgIt, const unsigned int numImages=0, const unsigned int maxOffset=19, <a class="el" href="namespace_a_r_t_o_s.html#a12ce7e01b0c5b3408cc61c9a49cfd999">ProgressCallback</a> progressCB=NULL, void *cbData=NULL)</td></tr>
+<tr class="separator:a17d4e5b03529ea326a88328bbbff379a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -186,11 +189,16 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a444ecbce533275aede63154b14976ba7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5460c0129bfe811594f3b88f7fc06be5"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_a_r_t_o_s_1_1_stationary_background.html#a5460c0129bfe811594f3b88f7fc06be5">cellSize</a></td></tr>
 <tr class="separator:a5460c0129bfe811594f3b88f7fc06be5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
+Protected Member Functions</h2></td></tr>
+<tr class="memitem:a6f78ef0362e953f1dd19f131d57d5b04"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_a_r_t_o_s_1_1_stationary_background.html#a6f78ef0362e953f1dd19f131d57d5b04">makeOffsetArray</a> (const unsigned int maxOffset)</td></tr>
+<tr class="separator:a6f78ef0362e953f1dd19f131d57d5b04"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Class for reading and writing stationary background statistics, i. e. general mean and covariance, from/to a binary file.</p>
 <p>Beyond that, this class is also capable of reconstructing a covariance matrix of a specific size from the stationary autocorrelation function read before. The great deal behind this: Each covariance between two cells <img class="formulaInl" alt="$x_{i,j}$" src="form_2.png"/> and <img class="formulaInl" alt="$x_{m,n}$" src="form_3.png"/> only depends on the offset <img class="formulaInl" alt="$(m-i, n-j)$" src="form_4.png"/>. Since there are only N offsets given a total of N cells, the autocorrelation function only has to come up with <img class="formulaInl" alt="$\mathcal{O}(N \cdot num\_features^2)$" src="form_7.png"/> instead of <img class="formulaInl" alt="$\mathcal{O}(N^2 \cdot num\_features^2)$" src="form_8.png"/>, which the full covariance matrix needs. Therefore, N, i. e. the number of spatial offsets used for learning the statistics, is the upper bound for the number of rows and columns of reconstructed covariance matrices.</p>
-<p>This class may also be used to learn such statistics from ImageNet images using <a class="el" href="class_a_r_t_o_s_1_1_stationary_background.html#a26dcb6a8a83e48a2f445f9d47595d5b9">learnMean()</a> and <a class="el" href="class_a_r_t_o_s_1_1_stationary_background.html#a050a5eda90bce9216943abd9f7915c33">learnCovariance()</a>, though especially the latter will require a long time.</p>
+<p>This class may also be used to learn such statistics from ImageNet images using <a class="el" href="class_a_r_t_o_s_1_1_stationary_background.html#a26dcb6a8a83e48a2f445f9d47595d5b9">learnMean()</a> and <a class="el" href="class_a_r_t_o_s_1_1_stationary_background.html#a050a5eda90bce9216943abd9f7915c33">learnCovariance()</a>.</p>
 <dl class="section author"><dt>Author</dt><dd>Bjoern Barz <a href="#" onclick="location.href='mai'+'lto:'+'bjo'+'er'+'n.b'+'ar'+'z@u'+'ni'+'-je'+'na'+'.de'; return false;">bjoer<span style="display: none;">.nosp@m.</span>n.ba<span style="display: none;">.nosp@m.</span>rz@un<span style="display: none;">.nosp@m.</span>i-je<span style="display: none;">.nosp@m.</span>na.de</a> </dd></dl>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a class="anchor" id="a475baa7536212a32863fc30873b77bc3"></a>
@@ -645,25 +653,96 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 <p>Learns a spatial autocorrelation function from features extracted from different positions at various scales of a set of images. Use <a class="el" href="class_a_r_t_o_s_1_1_stationary_background.html#a42c08daea150963119aea4b1a1167cae">writeToFile()</a> to save the learned statistics afterwards.</p>
+<p>To compute the autocorrelation function of two feature planes $fI$f and $fJ$f, this function leverages the Fourier transform and computes:</p>
+<p class="formulaDsp">
+<img class="formulaDsp" alt="\[ \mathcal{F}^{-1} \left ( \overline{\mathcal{F} \left(I \right) } \circ \mathcal{F} \left(J \right) \right ) \]" src="form_13.png"/>
+</p>
+<p>This is an order of magnitude faster than the method originally used by Hariharan et al., which is provided by <a class="el" href="class_a_r_t_o_s_1_1_stationary_background.html#a17d4e5b03529ea326a88328bbbff379a">learnCovariance_accurate()</a>. Since the Fourier transform implies a cyclic model at the borders of the image, the autocorrelation function computed with this efficient method won't exactly equal the one computed by <code><a class="el" href="class_a_r_t_o_s_1_1_stationary_background.html#a17d4e5b03529ea326a88328bbbff379a">learnCovariance_accurate()</a></code>. This inaccuracy results in a slight decrease of the performance of models learnt with the efficiently computed statistics (the deviation will be around 5% of the average precision of the other model, e. g. from 20% to 19%).</p>
 <dl class="section note"><dt>Note</dt><dd>Computing the covariance matrices requires a mean feature vector, which has to be loaded from file or learned using <a class="el" href="class_a_r_t_o_s_1_1_stationary_background.html#a26dcb6a8a83e48a2f445f9d47595d5b9">learnMean()</a> in advance.</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">imgIt</td><td>An <a class="el" href="class_a_r_t_o_s_1_1_image_iterator.html">ImageIterator</a> providing images to learn background statistics from. The iterator will be rewound at the beginning of the process.</td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">numImages</td><td>Maximum number of images to learn from. If set to 0, all images provided by the iterator will be used (may take really, really long!).</td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">maxOffset</td><td>Maximum available offset in x or y direction of the autocorrelation function to be learned. Determines the maximum size of the reconstructible covariance matrix, which will be <code>maxOffset + 1</code>.</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">numImages</td><td>Maximum number of images to learn from. If set to 0, all images provided by the iterator will be used (potentially dangerous when used with infinite iterators like MixedImageIterator!).</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">maxOffset</td><td>Maximum available offset in x or y direction of the autocorrelation function to be learned. Determines the maximum size of the reconstructible covariance matrix, which will be <code>maxOffset + 1</code>. In contrast to <a class="el" href="class_a_r_t_o_s_1_1_stationary_background.html#a17d4e5b03529ea326a88328bbbff379a">learnCovariance_accurate()</a>, this parameter has nearly no impact on the required time.</td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">progressCB</td><td>Optionally, a callback that is called to populate the progress of the procedure. The first parameter to the callback will be the number of processed images and the second parameter will be equal to <code>numImages</code>. For example, the argument list (5, 10) means that the learning is half way done. The callback may return false to abort the operation. To continue, it must return true. Note, that the callback will be used only if <code>numImages</code> is different from 0.</td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">cbData</td><td>Will be passed to the <code>progressCB</code> callback as third parameter.</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">cbData</td><td>Will be passed to the <code>progressCB</code> callback as third parameter. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section note"><dt>Note</dt><dd>Learning of a background covariance matrix involves a lot of expensive computations and will take a long time. </dd></dl>
 
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="class_a_r_t_o_s_1_1_stationary_background_a050a5eda90bce9216943abd9f7915c33_cgraph.png" border="0" usemap="#class_a_r_t_o_s_1_1_stationary_background_a050a5eda90bce9216943abd9f7915c33_cgraph" alt=""/></div>
 <map name="class_a_r_t_o_s_1_1_stationary_background_a050a5eda90bce9216943abd9f7915c33_cgraph" id="class_a_r_t_o_s_1_1_stationary_background_a050a5eda90bce9216943abd9f7915c33_cgraph">
-<area shape="rect" id="node2" href="class_a_r_t_o_s_1_1_image_iterator.html#aeb39d7d0f888c059d95429dfb4ec1661" title="ARTOS::ImageIterator\l::rewind" alt="" coords="266,5,419,46"/><area shape="rect" id="node3" href="class_a_r_t_o_s_1_1_image_iterator.html#a3d3fcd5e58acf7e226fc45f7bef0f231" title="ARTOS::ImageIterator\l::ready" alt="" coords="266,70,419,111"/><area shape="rect" id="node4" href="class_a_r_t_o_s_1_1_feature_pyramid.html#a8bcecf74ca6d204b491a9d63cf3e5a35" title="ARTOS::FeaturePyramid\l::levels" alt="" coords="259,135,427,177"/></map>
+<area shape="rect" id="node2" href="class_a_r_t_o_s_1_1_stationary_background.html#a6f78ef0362e953f1dd19f131d57d5b04" title="ARTOS::StationaryBackground\l::makeOffsetArray" alt="" coords="259,5,463,46"/><area shape="rect" id="node3" href="class_a_r_t_o_s_1_1_image_iterator.html#aeb39d7d0f888c059d95429dfb4ec1661" title="ARTOS::ImageIterator\l::rewind" alt="" coords="285,70,438,111"/><area shape="rect" id="node4" href="class_a_r_t_o_s_1_1_image_iterator.html#a3d3fcd5e58acf7e226fc45f7bef0f231" title="ARTOS::ImageIterator\l::ready" alt="" coords="285,135,438,177"/><area shape="rect" id="node5" href="class_a_r_t_o_s_1_1_feature_pyramid.html#a8bcecf74ca6d204b491a9d63cf3e5a35" title="ARTOS::FeaturePyramid\l::levels" alt="" coords="277,201,445,242"/></map>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="a17d4e5b03529ea326a88328bbbff379a"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void StationaryBackground::learnCovariance_accurate </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_a_r_t_o_s_1_1_image_iterator.html">ImageIterator</a> &amp;&#160;</td>
+          <td class="paramname"><em>imgIt</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const unsigned int&#160;</td>
+          <td class="paramname"><em>numImages</em> = <code>0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const unsigned int&#160;</td>
+          <td class="paramname"><em>maxOffset</em> = <code>19</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespace_a_r_t_o_s.html#a12ce7e01b0c5b3408cc61c9a49cfd999">ProgressCallback</a>&#160;</td>
+          <td class="paramname"><em>progressCB</em> = <code>NULL</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>cbData</em> = <code>NULL</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Learns a spatial autocorrelation function from features extracted from different positions at various scales of a set of images. Use <a class="el" href="class_a_r_t_o_s_1_1_stationary_background.html#a42c08daea150963119aea4b1a1167cae">writeToFile()</a> to save the learned statistics afterwards.</p>
+<dl class="section note"><dt>Note</dt><dd>This is the inefficient variant of computing such an autocorrelation function, adapted from the original code of Hariharan et al. It will take very, very long and, though it is provided here for computations with maximum accuracy, one may rather want to use the efficient <a class="el" href="class_a_r_t_o_s_1_1_stationary_background.html#a050a5eda90bce9216943abd9f7915c33">learnCovariance()</a> variant, which leverages the Fourier transform.</dd>
+<dd>
+Computing the covariance matrices requires a mean feature vector, which has to be loaded from file or learned using <a class="el" href="class_a_r_t_o_s_1_1_stationary_background.html#a26dcb6a8a83e48a2f445f9d47595d5b9">learnMean()</a> in advance.</dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">imgIt</td><td>An <a class="el" href="class_a_r_t_o_s_1_1_image_iterator.html">ImageIterator</a> providing images to learn background statistics from. The iterator will be rewound at the beginning of the process.</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">numImages</td><td>Maximum number of images to learn from. If set to 0, all images provided by the iterator will be used (potentially dangerous when used with infinite iterators like MixedImageIterator!).</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">maxOffset</td><td>Maximum available offset in x or y direction of the autocorrelation function to be learned. Determines the maximum size of the reconstructible covariance matrix, which will be <code>maxOffset + 1</code>.</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">progressCB</td><td>Optionally, a callback that is called to populate the progress of the procedure. The first parameter to the callback will be the number of processed images and the second parameter will be equal to <code>numImages</code>. For example, the argument list (5, 10) means that the learning is half way done. The callback may return false to abort the operation. To continue, it must return true. Note, that the callback will be used only if <code>numImages</code> is different from 0.</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">cbData</td><td>Will be passed to the <code>progressCB</code> callback as third parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="class_a_r_t_o_s_1_1_stationary_background_a17d4e5b03529ea326a88328bbbff379a_cgraph.png" border="0" usemap="#class_a_r_t_o_s_1_1_stationary_background_a17d4e5b03529ea326a88328bbbff379a_cgraph" alt=""/></div>
+<map name="class_a_r_t_o_s_1_1_stationary_background_a17d4e5b03529ea326a88328bbbff379a_cgraph" id="class_a_r_t_o_s_1_1_stationary_background_a17d4e5b03529ea326a88328bbbff379a_cgraph">
+<area shape="rect" id="node2" href="class_a_r_t_o_s_1_1_stationary_background.html#a6f78ef0362e953f1dd19f131d57d5b04" title="ARTOS::StationaryBackground\l::makeOffsetArray" alt="" coords="259,5,463,46"/><area shape="rect" id="node3" href="class_a_r_t_o_s_1_1_image_iterator.html#aeb39d7d0f888c059d95429dfb4ec1661" title="ARTOS::ImageIterator\l::rewind" alt="" coords="285,70,438,111"/><area shape="rect" id="node4" href="class_a_r_t_o_s_1_1_image_iterator.html#a3d3fcd5e58acf7e226fc45f7bef0f231" title="ARTOS::ImageIterator\l::ready" alt="" coords="285,135,438,177"/><area shape="rect" id="node5" href="class_a_r_t_o_s_1_1_feature_pyramid.html#a8bcecf74ca6d204b491a9d63cf3e5a35" title="ARTOS::FeaturePyramid\l::levels" alt="" coords="277,201,445,242"/></map>
 </div>
 </p>
 
@@ -723,6 +802,37 @@ Here is the call graph for this function:</div>
 <area shape="rect" id="node2" href="class_a_r_t_o_s_1_1_image_iterator.html#aeb39d7d0f888c059d95429dfb4ec1661" title="ARTOS::ImageIterator\l::rewind" alt="" coords="266,5,419,46"/><area shape="rect" id="node3" href="class_a_r_t_o_s_1_1_image_iterator.html#a3d3fcd5e58acf7e226fc45f7bef0f231" title="ARTOS::ImageIterator\l::ready" alt="" coords="266,70,419,111"/><area shape="rect" id="node4" href="class_a_r_t_o_s_1_1_feature_pyramid.html#a8bcecf74ca6d204b491a9d63cf3e5a35" title="ARTOS::FeaturePyramid\l::levels" alt="" coords="259,135,427,177"/></map>
 </div>
 </p>
+
+</div>
+</div>
+<a class="anchor" id="a6f78ef0362e953f1dd19f131d57d5b04"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void StationaryBackground::makeOffsetArray </td>
+          <td>(</td>
+          <td class="paramtype">const unsigned int&#160;</td>
+          <td class="paramname"><em>maxOffset</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Initializes the <code>offsets</code> array.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">maxOffset</td><td>Maximum available offset in x or y direction of the corresponding autocorrelation function. Determines the maximum size of the reconstructible covariance matrix, which will be <code>maxOffset + 1</code>. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -855,7 +965,7 @@ Here is the call graph for this function:</div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespace_a_r_t_o_s.html">ARTOS</a></li><li class="navelem"><a class="el" href="class_a_r_t_o_s_1_1_stationary_background.html">StationaryBackground</a></li>
-    <li class="footer">Generated on Wed Jul 23 2014 09:32:26 for ARTOS by
+    <li class="footer">Generated on Fri Oct 31 2014 10:21:08 for ARTOS by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>

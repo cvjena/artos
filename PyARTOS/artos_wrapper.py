@@ -203,8 +203,8 @@ class _LibARTOS(object):
         self.learner_reset.errcheck = self._errcheck_common
         
         # learn_bg function
-        prototype = CFUNCTYPE(c_int, c_char_p, c_char_p, c_uint, c_uint, overall_progress_cb_t)
-        paramflags = (1, 'repo_directory'), (1, 'bg_file'), (1, 'num_images'), (1, 'max_offset', 19), (1, 'progress_cb', None)
+        prototype = CFUNCTYPE(c_int, c_char_p, c_char_p, c_uint, c_uint, overall_progress_cb_t, c_bool)
+        paramflags = (1, 'repo_directory'), (1, 'bg_file'), (1, 'num_images'), (1, 'max_offset', 19), (1, 'progress_cb', None), (1, 'accurate_autocorrelation', False)
         self.learn_bg = prototype(('learn_bg', self._lib), paramflags)
         self.learn_bg.errcheck = self._errcheck_common
         

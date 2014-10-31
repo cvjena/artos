@@ -190,8 +190,8 @@ public:
     * \f[ \mathcal{F}^{-1} \left ( \overline{\mathcal{F} \left(I \right) } \circ \mathcal{F} \left(J \right) \right ) \f]
     *
     * This is an order of magnitude faster than the method originally used by Hariharan et al., which is provided by
-    * learnCovariance_ineff(). Since the Fourier transform implies a cyclic model at the borders of the image, the
-    * autocorrelation function computed with this efficient method won't exactly equal the one computed by `learnCovariance_ineff()`.
+    * learnCovariance_accurate(). Since the Fourier transform implies a cyclic model at the borders of the image, the
+    * autocorrelation function computed with this efficient method won't exactly equal the one computed by `learnCovariance_accurate()`.
     * This inaccuracy results in a slight decrease of the performance of models learnt with the efficiently computed statistics
     * (the deviation will be around 5% of the average precision of the other model, e. g. from 20% to 19%). 
     *
@@ -206,7 +206,7 @@ public:
     *
     * @param[in] maxOffset Maximum available offset in x or y direction of the autocorrelation function to be learned.
     * Determines the maximum size of the reconstructible covariance matrix, which will be `maxOffset + 1`.
-    * In contrast to learnCovariance_ineff(), this parameter has nearly no impact on the required time.
+    * In contrast to learnCovariance_accurate(), this parameter has nearly no impact on the required time.
     *
     * @param[in] progressCB Optionally, a callback that is called to populate the progress of the procedure.
     * The first parameter to the callback will be the number of processed images and the second parameter will be equal to `numImages`.
@@ -225,7 +225,7 @@ public:
     *
     * @note This is the inefficient variant of computing such an autocorrelation function, adapted from the original
     * code of Hariharan et al. It will take very, very long and, though it is provided here for computations with maximum accuracy,
-    * one should rather use the efficient learnCovariance() variant, which leverages the Fourier transform.
+    * one may rather want to use the efficient learnCovariance() variant, which leverages the Fourier transform.
     *
     * @note Computing the covariance matrices requires a mean feature vector, which has to be loaded from file
     * or learned using learnMean() in advance.
@@ -247,8 +247,8 @@ public:
     *
     * @param[in] cbData Will be passed to the `progressCB` callback as third parameter.
     */
-    void learnCovariance_ineff(ImageIterator & imgIt, const unsigned int numImages = 0, const unsigned int maxOffset = 19,
-                               ProgressCallback progressCB = NULL, void * cbData = NULL);
+    void learnCovariance_accurate(ImageIterator & imgIt, const unsigned int numImages = 0, const unsigned int maxOffset = 19,
+                                  ProgressCallback progressCB = NULL, void * cbData = NULL);
     
     
     MeanVector mean; /**< Stationary negative mean of features. */
