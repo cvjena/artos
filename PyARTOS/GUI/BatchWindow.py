@@ -326,7 +326,7 @@ class BatchWindow(Tkinter.Toplevel):
         for i in imgs:
             if timer:
                 timer.start()
-            imgDetections = d.detect(i)
+            imgDetections = d.detect(i, limit=100)
             if timer:
                 timer.stop()
             if cb:

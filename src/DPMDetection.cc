@@ -271,6 +271,9 @@ int DPMDetection::detect(int width, int height, const HOGPyramid & pyramid, vect
                     Intersector(single_detections[i - 1], this->overlap, true)) -
                     single_detections.begin());
 
+        if (this->verbose)
+            cerr << "Number of detections after non-maximum suppression: " << single_detections.size() << endl;
+
         detections.insert ( detections.begin(), single_detections.begin(), single_detections.end() );
     }
     return ARTOS_RES_OK;

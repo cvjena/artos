@@ -185,7 +185,7 @@ class Detection(BoundingBox):
 
 class Detector(object):
 
-    def __init__(self, overlap = 0.5, padding = 12, interval = 10):
+    def __init__(self, overlap = 0.5, padding = 12, interval = 10, debug=False):
         """Constructs and initializes a new detector with specific settings.
         
         overlap - Minimum overlap in non maxima suppression.
@@ -196,7 +196,7 @@ class Detector(object):
         object.__init__(self)
         if (libartos is None):
             raise RuntimeError('Can not find libartos')
-        self.handle = libartos.create_detector(overlap, padding, interval)
+        self.handle = libartos.create_detector(overlap, padding, interval, debug)
 
 
     def __del__(self):
@@ -284,6 +284,6 @@ class Detector(object):
         else:
             # Treat img as filename
             libartos.detect_file_jpeg(self.handle, utils.str2bytes(img), buf, buf_size)
-        
+       
         # Convert detection results (buf_size is set to the actual number of detection results by the library)
         return [Detection.fromFlatDetection(buf[i]) for i in range(buf_size.value)]
