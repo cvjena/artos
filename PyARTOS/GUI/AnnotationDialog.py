@@ -106,7 +106,7 @@ class AnnotationDialog(gui_utils.Dialog):
             if (self.curImg.size[0] > self.maxSize[0]) or (self.curImg.size[1] > self.maxSize[1]):
                 origWidth = self.curImg.size[0]
                 self.curImg.thumbnail(self.maxSize, Image.ANTIALIAS)
-                self.curScale = self.curImg.width[0] / origWidth
+                self.curScale = float(self.curImg.size[0]) / origWidth
             else:
                 self.curScale = 1.0
             self.boundingBoxes = []
