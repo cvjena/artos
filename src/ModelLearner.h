@@ -1,24 +1,11 @@
 #ifndef ARTOS_MODELLEARNER_H
 #define ARTOS_MODELLEARNER_H
 
-#include <string>
-#include <vector>
-#include <utility>
-#include "defs.h"
+#include "ModelLearnerBase.h"
 #include "StationaryBackground.h"
-#include "FeatureExtractor.h"
-#include "ffld/JPEGImage.h"
-#include "ffld/Rectangle.h"
 
 namespace ARTOS
 {
-
-
-struct WHOSample : public Sample
-{
-    std::vector<FeatureExtractor::FeatureMatrix> whoFeatures; /**< WHO features of each object in this sample. */
-    virtual ~WHOSample() { };
-};
 
 
 /**
@@ -40,13 +27,8 @@ struct WHOSample : public Sample
 *
 * @author Bjoern Barz <bjoern.barz@uni-jena.de>
 */
-class ModelLearner
+class ModelLearner : public ModelLearnerBase
 {
-
-protected:
-
-    typedef struct { int width; int height; } Size;
-
 
 public:
 
@@ -55,7 +37,7 @@ public:
     * using setBackground().
     */
     ModelLearner()
-    : m_verbose(false), m_loocv(true), m_bg(), m_samples(), m_numSamples(0), m_models(), m_thresholds(), m_clusterSizes(), m_normFactors() { };
+    : ModelLearnerBase(), m_loocv(true), m_bg(), m_normFactors() { };
     
     /**
     * Constructs a new ModelLearner with given background statistics.
@@ -70,7 +52,7 @@ public:
     * @param[in] verbose If set to true, debug and timing information will be printed to stderr.
     */
     ModelLearner(const StationaryBackground & bg, const bool loocv = true, const bool verbose = false)
-    : m_verbose(verbose), m_loocv(loocv), m_bg(bg), m_samples(), m_numSamples(0), m_models(), m_thresholds(), m_clusterSizes(), m_normFactors() { };
+    : ModelLearnerBase(verbose), m_loocv(loocv), m_bg(bg), m_normFactors() { };
     
     /**
     * Constructs a new ModelLearner with given background statistics.
@@ -85,56 +67,28 @@ public:
     * @param[in] verbose If set to true, debug and timing information will be printed to stderr.
     */
     ModelLearner(const std::string & bgFile, const bool loocv = true, const bool verbose = false)
-    : m_verbose(verbose), m_loocv(loocv), m_bg(bgFile), m_samples(), m_numSamples(0), m_models(), m_thresholds(), m_clusterSizes(), m_normFactors() { };
+    : ModelLearnerBase(verbose), m_loocv(loocv), m_bg(bgFile), m_normFactors() { };
+    
+    virtual ~ModelLearner() { this->reset(); };
     
     /**
-    * Changes the background statistics used by this ModelLearner for centring and whitening.
+    * Changes the background statistics used by this ModelLearner for centering and whitening.
     *
     * @param[in] bg The new stationary background statistics.
     */
     void setBackground(const StationaryBackground & bg) { this->m_bg = bg; };
     
     /**
-    * Changes the background statistics used by this ModelLearner for centring and whitening.
+    * Changes the background statistics used by this ModelLearner for centering and whitening.
     *
     * @param[in] bgFile Path to a file containing the new background statistics.
     */
     void setBackground(const std::string & bgFile) { this->m_bg.readFromFile(bgFile); };
     
     /**
-    * @return The StationaryBackground object used by this ModelLearner for centring and whitening.
+    * @return The StationaryBackground object used by this ModelLearner for centering and whitening.
     */
     StationaryBackground & getBackground() { return this->m_bg; };
-    
-    /**
-    * @return The number of positive samples added to this ModelLearner before using addPositiveSample()
-    * for example. Each bounding box on an image is counted as a single sample.
-    */
-    unsigned int getNumSamples() const { return this->m_numSamples; };
-    
-    /**
-    * @return A reference to a vector with WHOSample structures representing the positive samples
-    * added to this learner with addPositiveSample().
-    */
-    const std::vector<WHOSample> & getSamples() const { return this->m_samples; };
-    
-    /**
-    * @return The models learned by learn(), which will be an empty vector if learn() hasn't been called yet
-    * or has failed.
-    */
-    const std::vector<FeatureExtractor::FeatureMatrix> & getModels() { return this->m_models; };
-    
-    /**
-    * @return The thresholds for the learned models determined by optimizeThreshold(), which will be 0 if
-    * optimizeThreshold() hasn't been called yet or has failed.
-    */
-    const std::vector<float> & getThresholds() const { return this->m_thresholds; };
-    
-    /**
-    * @return Reference to a vector with the number of samples, each model computed by learn() has been learned from.
-    * An empty vector will be returned if no model has been learned yet.
-    */
-    const std::vector<unsigned int> & getClusterSizes() const { return this->m_clusterSizes; };
     
     /**
     * @return The factors `f` which have been used to normalize each model by `w = w/f`.
@@ -155,8 +109,10 @@ public:
     *
     * @param[in] boundingBox The bounding box around the object on the given image.
     * If the bounding box is empty (a rectangle with zero area), the entire image will be used as positive sample.
+    *
+    * @return True if the sample has been added, otherwise false.
     */
-    virtual void addPositiveSample(const FFLD::JPEGImage & sample, const FFLD::Rectangle & boundingBox);
+    virtual bool addPositiveSample(const FFLD::JPEGImage & sample, const FFLD::Rectangle & boundingBox);
     
     /**
     * Adds multiple positive samples to learn from on the same image given by bounding boxes around the objects.
@@ -165,38 +121,10 @@ public:
     *
     * @param[in] boundingBoxes Vector of bounding boxes around each object on the given image. If just one of the
     * bounding boxes is empty (a rectangle with zero area) only one sample will be added, which is the entire image.
+    *
+    * @return True if the sample has been added, otherwise false.
     */
-    virtual void addPositiveSample(const FFLD::JPEGImage & sample, const std::vector<FFLD::Rectangle> & boundingBoxes);
-    
-    /**
-    * Performs the actual learning step and stores the resulting models, so that they can be retrieved later on by getModels().
-    *
-    * Optionally, clustering can be performed before learning, first by aspect ratio, then by WHO features. A separate model
-    * will be learned for each cluster. Thus, the maximum number of learned models will be `maxAspectClusters * maxWHOClusters`.
-    *
-    * The learned models will be provided with estimated thresholds, according to the following formula:
-    * \f[\frac{\mu_0^T \Sigma^-1 \mu_0 - \mu_1^T \Sigma^-1 \mu_1}{2}\f]
-    * That formula lacks an additive term of \f$\ln \left ( \frac{\varphi}{\varphi - 1} \right )\f$ involving a-priori probabilities
-    * and, thus, is not optimal. Hence, you'll probably want to call optimizeThreshold() after learning the models.
-    *
-    * @param[in] maxAspectClusters Maximum number of clusters to form by the aspect ratio of the samples.
-    *
-    * @param[in] maxWHOClusters Maximum number of clusters to form by the WHO feature vectors of the samples
-    * of a single aspect ratio cluster.
-    *
-    * @param[in] progressCB Optionally, a callback that is called to populate the progress of the procedure.
-    * The first parameter to the callback will be the current step and the second parameter will be the total number
-    * of steps. For example, the argument list (5, 10) means that the learning is half way done.  
-    * The value returned by the callback will be ignored.
-    *
-    * @param[in] cbData Will be passed to the `progressCB` callback as third parameter.
-    *
-    * @return True if some models could be learned, false if learning failed completely.
-    *
-    * @note Background statistics must have been set and some samples must have been added before calling learn().
-    */
-    virtual bool learn(const unsigned int maxAspectClusters = 1, const unsigned int maxWHOClusters = 1,
-                       ProgressCallback progressCB = NULL, void * cbData = NULL);
+    virtual bool addPositiveSample(const FFLD::JPEGImage & sample, const std::vector<FFLD::Rectangle> & boundingBoxes);
     
     /**
     * Finds the optimal combination of thresholds for the models learned previously with learn() by testing them
@@ -230,54 +158,55 @@ public:
                                                          const std::vector<FFLD::JPEGImage> * negative = NULL,
                                                          const float b = 1.0f,
                                                          ProgressCallback progressCB = NULL, void * cbData = NULL);
-    
-    /**
-    * Writes the models learned by learn() to a file.
-    *
-    * @param[in] filename The path of the file to be written.
-    *
-    * @param[in] addToMixture If set to true and `filename` does already exist and is a valid mixture, the new models
-    * will be appended to that mixture. If set to false, an existing file will be truncated and a new mixture will be created.
-    *
-    * @return True if the model file could be written successfully, false if no model has been learned yet or the specified file
-    * is not accessible for writing.
-    */
-    virtual bool save(const std::string & filename, const bool addToMixture = true) const;
 
 
 protected:
 
-    bool m_verbose; /**< Specifies if debugging and timing information will be output to stderr. */
-
     bool m_loocv; /**< Specifies if *Leave-one-out-cross-validation* shall be used for threshold optimization. */
 
     StationaryBackground m_bg; /**< Stationary background statistics (to obtain negative mean and covariance). */
-
-    std::vector<WHOSample> m_samples; /**< Positive samples consisting of images with given bounding boxes. */
-
-    unsigned int m_numSamples; /**< Number of positive samples added (i. e. the number of bounding boxes summed over m_samples). */
-    
-    std::vector<FeatureExtractor::FeatureMatrix> m_models; /**< The models learned by `learn`. */
-    
-    std::vector<float> m_thresholds; /**< Optimal thresholds for the learned models computed by `optimizeThreshold`. */
-    
-    std::vector<unsigned int> m_clusterSizes; /**< Number of samples belonging to each model computed by `learn`. */
     
     std::vector<FeatureExtractor::Scalar> m_normFactors; /**< Vector with factors, each model has been divided by for normalization. */
+
+
+    /**
+    * Performs the actual learning step and stores the resulting models, so that they can be retrieved later on by getModels().
+    *
+    * The learned models will be provided with estimated thresholds, according to the following formula:
+    * \f[\frac{\mu_0^T \Sigma^-1 \mu_0 - \mu_1^T \Sigma^-1 \mu_1}{2}\f]
+    * That formula lacks an additive term of \f$\ln \left ( \frac{\varphi}{\varphi - 1} \right )\f$ involving a-priori probabilities
+    * and, thus, is not optimal. Hence, you'll probably want to call optimizeThreshold() after learning the models.
+    *
+    * @param[in] aspectClusterAssignment Vector which associates indexes of samples with aspect ratio cluster numbers.
+    *
+    * @param[in] samplesPerAspectCluster Vector with the number of samples in each aspect ratio cluster.
+    *
+    * @param[in] cellNumbers Vector with the preferred model dimensions for each aspect ratio cluster.
+    *
+    * @param[in] maxWHOClusters Maximum number of clusters to form by the WHO feature vectors of the samples
+    * of a single aspect ratio cluster.
+    *
+    * @param[in] progressCB Optionally, a callback that is called to populate the progress of the procedure.
+    * The first parameter to the callback will be the current step and the second parameter will be the total number
+    * of steps. For example, the argument list (5, 10) means that the learning is half way done.  
+    * The value returned by the callback will be ignored.
+    *
+    * @param[in] cbData Will be passed to the `progressCB` callback as third parameter.
+    *
+    * @return True if some models could be learned, false if learning failed completely.
+    *
+    * @note Background statistics must have been set and some samples must have been added before calling learn().
+    */
+    virtual void m_learn(Eigen::VectorXi & aspectClusterAssignment, std::vector<int> & samplesPerAspectCluster, std::vector<Size> & cellNumbers,
+                         const unsigned int maxWHOClusters, ProgressCallback progressCB, void * cbData);
     
     
     /**
-    * Computes an optimal common number of cells in x and y direction for given widths and heights of samples.
+    * Called by learn() before anything is done to initialize the model learner.
     *
-    * @param[in] widths Vector with the widths of the samples.
-    *
-    * @param[in] heights Vector with the heights of the samples, corresponding to `width`.
-    *
-    * @return Returns the optimal cell number in x and y direction as a struct with `width` and `height` fields.
-    *
-    * @note Background statistics must have been set for this function to work.
+    * @return Returns true if learning may be performed or false if the model learner is not ready.
     */
-    virtual Size computeOptimalCellNumber(const std::vector<int> & widths, const std::vector<int> & heights);
+    virtual bool learn_init();
 
 };
 

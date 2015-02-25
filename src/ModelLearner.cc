@@ -8,7 +8,6 @@
 #include <Eigen/Cholesky>
 
 #include "ffld/Mixture.h"
-#include "ffld/Intersector.h"
 #include "ffld/timingtools.h"
 
 #include "clustering.h"
@@ -29,174 +28,54 @@ typedef struct {
 
 void ModelLearner::reset()
 {
-    this->m_models.clear();
-    this->m_thresholds.clear();
-    this->m_clusterSizes.clear();
+    for (vector<Sample>::iterator sample = this->m_samples.begin(); sample != this->m_samples.end(); sample++)
+        if (sample->data != NULL)
+            delete reinterpret_cast< vector<FeatureExtractor::FeatureMatrix> *>(sample->data);
+    ModelLearnerBase::reset();
     this->m_normFactors.clear();
-    this->m_samples.clear();
-    this->m_numSamples = 0;
 }
 
 
-ModelLearner::Size ModelLearner::computeOptimalCellNumber(const std::vector<int> & widths, const std::vector<int> & heights)
+bool ModelLearner::addPositiveSample(const JPEGImage & sample, const FFLD::Rectangle & boundingBox)
 {
-    if (this->m_bg.empty())
+    if (ModelLearnerBase::addPositiveSample(sample, boundingBox))
     {
-        Size s;
-        s.width = 0;
-        s.height = 0;
-        return s;
+        this->m_samples.back().data = reinterpret_cast<void*>(new vector<FeatureExtractor::FeatureMatrix>(1, FeatureExtractor::FeatureMatrix()));
+        return true;
     }
-    
-    int i, j, w, h;
-    
-    // Fill histogram and area vector
-    Eigen::Array<float, 1, 201> hist; // histogram of logarithmic aspect ratios with bins from -2 to +2 in steps of 0.02
-    hist.setConstant(0.0f);
-    vector<int> areas(min(widths.size(), heights.size()));
-    int aspectIndex;
-    for (i = 0; i < areas.size(); i++)
-    {
-        w = widths[i];
-        h = heights[i];
-        areas[i] = w * h;
-        aspectIndex = round(log(static_cast<float>(h) / static_cast<float>(w)) * 50 + 100);
-        if (aspectIndex >= 0 && aspectIndex < hist.size())
-            hist(aspectIndex) += 1;
-    }
-    
-    // Filter histogram with large gaussian smoothing filter and select maximum as aspect ratio
-    Eigen::Array<float, 1, 201> filter;
-    for (i = 0; i < filter.size(); i++)
-        filter(i) = exp(static_cast<float>((100 - i) * (100 - i)) / -400.0f);
-    float curValue, maxValue = 0;
-    int maxIndex = 0;
-    for (i = 0; i < hist.size(); i++)
-    {
-        curValue = 0;
-        for (j = max(i - 100, 0); j < min(i + 100, 200); j++)
-            curValue += hist(j) * filter(j - i + 100);
-        if (curValue > maxValue)
-        {
-            maxIndex = i;
-            maxValue = curValue;
-        }
-    }
-    float aspect = exp(maxIndex * 0.02f - 2);
-    
-    // Nasty hack from the original WHO code: pick 20 percentile area and
-    // ensure that HOG feature areas are neither too big nor too small
-    sort(areas.begin(), areas.end());
-    int area = areas[static_cast<size_t>(floor(areas.size() * 0.2))];
-    area = max(min(area, 7000), 5000);
-    
-    // Calculate model size in cells
-    float width = sqrt(static_cast<float>(area) / aspect);
-    float height = width * aspect;
-    Size size;
-    size.width = max(static_cast<int>(round(width / this->m_bg.cellSize)), 1);
-    size.height = max(static_cast<int>(round(height / this->m_bg.cellSize)), 1);
-    return size;
-}
-
-
-void ModelLearner::addPositiveSample(const JPEGImage & sample, const FFLD::Rectangle & boundingBox)
-{
-    if (sample.empty())
-        return;
-    WHOSample s;
-    s.img = sample;
-    s.bboxes.push_back((boundingBox.empty()) ? FFLD::Rectangle(0, 0, s.img.width(), s.img.height()) : boundingBox);
-    s.modelAssoc.push_back(0);
-    s.whoFeatures.push_back(FeatureExtractor::FeatureMatrix());
-    this->m_samples.push_back(s);
-    this->m_numSamples++;
-}
-
-
-void ModelLearner::addPositiveSample(const JPEGImage & sample, const vector<FFLD::Rectangle> & boundingBoxes)
-{
-    if (sample.empty())
-        return;
-    
-    // Check if any of the bounding boxes is empty and use only one bounding boxes spanning the entire image
-    // in that case
-    if (boundingBoxes.empty())
-    {
-        this->addPositiveSample(sample, FFLD::Rectangle());
-        return;
-    }
-    for (vector<FFLD::Rectangle>::const_iterator it = boundingBoxes.begin(); it != boundingBoxes.end(); it++)
-        if (it->empty())
-        {
-            this->addPositiveSample(sample, *it);
-            return;
-        }
-    
-    WHOSample s;
-    s.img = sample;
-    s.bboxes = boundingBoxes;
-    s.modelAssoc.assign(s.bboxes.size(), 0);
-    s.whoFeatures.assign(s.bboxes.size(), FeatureExtractor::FeatureMatrix());
-    this->m_samples.push_back(s);
-    this->m_numSamples += boundingBoxes.size();
-}
-
-
-bool ModelLearner::learn(const unsigned int maxAspectClusters, const unsigned int maxWHOClusters, ProgressCallback progressCB, void * cbData)
-{
-    this->m_models.clear();
-    this->m_normFactors.clear();
-    this->m_thresholds.clear();
-    if (this->m_bg.empty() || this->m_samples.empty() || this->m_bg.getNumFeatures() > FeatureExtractor::numFeatures)
+    else
         return false;
+}
 
+
+bool ModelLearner::addPositiveSample(const JPEGImage & sample, const vector<FFLD::Rectangle> & boundingBoxes)
+{
+    if (ModelLearnerBase::addPositiveSample(sample, boundingBoxes))
+    {
+        Sample & s = this->m_samples.back();
+        s.data = reinterpret_cast<void*>(new vector<FeatureExtractor::FeatureMatrix>(s.bboxes.size(), FeatureExtractor::FeatureMatrix()));
+        return true;
+    }
+    else
+        return false;
+}
+
+
+bool ModelLearner::learn_init()
+{
+    this->m_normFactors.clear();
+    return (ModelLearnerBase::learn_init() && !this->m_bg.empty() && this->m_bg.getNumFeatures() <= FeatureExtractor::numFeatures);
+}
+
+
+void ModelLearner::m_learn(Eigen::VectorXi & aspectClusterAssignment, vector<int> & samplesPerAspectCluster, vector<Size> & cellNumbers,
+                           const unsigned int maxWHOClusters, ProgressCallback progressCB, void * cbData)
+{
     unsigned int c, i, j, k, l, s, t; // yes, we do need that much iteration variables
-    vector<WHOSample>::iterator sample;
+    unsigned int numAspectClusters = samplesPerAspectCluster.size();
+    vector<Sample>::iterator sample;
     vector<FFLD::Rectangle>::iterator bbox;
     vector<FeatureExtractor::FeatureMatrix>::iterator whoStorage;
-    
-    // Cluster by aspect ratio
-    Eigen::VectorXi aspectClusterAssignment = Eigen::VectorXi::Zero(this->getNumSamples());
-    unsigned int numAspectClusters = 1;
-    if (maxAspectClusters > 1)
-    {
-        if (this->m_verbose)
-            start();
-        // Calculate aspect ratios
-        Eigen::VectorXf aspects(this->getNumSamples());
-        for (sample = this->m_samples.begin(), i = 0; sample != this->m_samples.end(); sample++)
-            for (bbox = sample->bboxes.begin(); bbox != sample->bboxes.end(); bbox++, i++)
-                aspects(i) = static_cast<float>(bbox->height()) / static_cast<float>(bbox->width());
-        // Perform k-means clustering
-        Eigen::VectorXf centroids;
-        repeatedKMeansClustering(aspects, maxAspectClusters, &aspectClusterAssignment, &centroids, 100);
-        mergeNearbyClusters(aspectClusterAssignment, centroids, 0.2f);
-        numAspectClusters = centroids.rows();
-        if (this->m_verbose)
-            cerr << "Formed " << numAspectClusters << " clusters by aspect ratio in " << stop() << " ms." << endl;
-    }
-    
-    // Compute optimal cell number for each aspect ratio
-    if (this->m_verbose)
-        start();
-    vector<Size> cellNumbers(numAspectClusters);
-    vector<int> samplesPerAspectCluster(numAspectClusters, 0);
-    {
-        vector< vector<int> > widths(numAspectClusters), heights(numAspectClusters);
-        for (sample = this->m_samples.begin(), i = 0; sample != this->m_samples.end(); sample++)
-            for (bbox = sample->bboxes.begin(); bbox != sample->bboxes.end(); bbox++, i++)
-            {
-                c = aspectClusterAssignment(i);
-                widths[c].push_back(bbox->width());
-                heights[c].push_back(bbox->height());
-                samplesPerAspectCluster[c]++;
-            }
-        for (i = 0; i < numAspectClusters; i++)
-            cellNumbers[i] = this->computeOptimalCellNumber(widths[i], heights[i]);
-    }
-    if (this->m_verbose)
-        cerr << "Computed optimal cell numbers in " << stop() << " ms." << endl;
     
     // Learn models for each aspect ratio cluster
     FeatureExtractor::Cell negMean = FeatureExtractor::Cell::Zero();
@@ -342,7 +221,7 @@ bool ModelLearner::learn(const unsigned int maxAspectClusters, const unsigned in
             Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> hogFeatures(samplesPerAspectCluster[c], posVector.size());
             Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> whoFeatures(samplesPerAspectCluster[c], posVector.size());
             for (sample = this->m_samples.begin(), s = 0, t = 0; sample != this->m_samples.end(); sample++)
-                for (bbox = sample->bboxes.begin(), whoStorage = sample->whoFeatures.begin(); bbox != sample->bboxes.end(); bbox++, whoStorage++, s++)
+                for (bbox = sample->bboxes.begin(), whoStorage = reinterpret_cast< vector<FeatureExtractor::FeatureMatrix> *>(sample->data)->begin(); bbox != sample->bboxes.end(); bbox++, whoStorage++, s++)
                     if (aspectClusterAssignment(s) == c)
                     {
                         // Extract HOG features
@@ -456,16 +335,6 @@ bool ModelLearner::learn(const unsigned int maxAspectClusters, const unsigned in
         if (progressCB != NULL)
             progressCB(progressStep, progressTotal, cbData);
     }
-    
-    this->m_clusterSizes.assign(this->m_models.size(), 0);
-    if (this->m_models.size() == 0)
-        return false;
-    for (sample = this->m_samples.begin(); sample != this->m_samples.end(); sample++)
-        for (i = 0; i < sample->modelAssoc.size(); i++)
-            if (sample->modelAssoc[i] < this->m_clusterSizes.size())
-                this->m_clusterSizes[sample->modelAssoc[i]]++;
-    
-    return true;
 }
 
 
@@ -490,7 +359,7 @@ const vector<float> & ModelLearner::optimizeThreshold(const unsigned int maxPosi
         // Build vector of pointers to positive samples
         vector<Sample*> positive;
         positive.reserve(this->m_samples.size());
-        for (vector<WHOSample>::iterator sample = this->m_samples.begin(); sample != this->m_samples.end(); sample++)
+        for (vector<Sample>::iterator sample = this->m_samples.begin(); sample != this->m_samples.end(); sample++)
             positive.push_back(&(*sample));
         
         // Create an evaluator for the learned models
@@ -538,51 +407,19 @@ const vector<float> & ModelLearner::optimizeThreshold(const unsigned int maxPosi
 }
 
 
-bool ModelLearner::save(const string & filename, const bool addToMixture) const
-{
-    if (this->m_models.size() == 0)
-        return false;
-
-    Mixture mix;
-    // Try to read existing mixture file
-    if (addToMixture)
-    {
-        ifstream infile(filename.c_str());
-        if (infile.is_open() && infile.good())
-            infile >> mix;
-    }
-    
-    for (size_t i = 0; i < this->m_models.size(); i++)
-    {
-        Model model(this->m_models[i], -1 * this->m_thresholds[i]);
-        mix.addModel(model);
-    }
-    
-    // Write to file
-    ofstream outfile(filename.c_str(), ofstream::out | ofstream::trunc);
-    if (outfile.is_open() && outfile.good())
-    {
-        outfile << mix;
-        return true;
-    }
-    else
-        return false;
-}
-
-
 Mixture * loo_who(const Mixture * orig, const Sample * sample, const unsigned int objectIndex, const unsigned int numLeftOut, void * data)
 {
     loo_data_t * looData = reinterpret_cast<loo_data_t*>(data);
-    const WHOSample * whoSample = dynamic_cast<const WHOSample*>(sample);
-    if (whoSample != NULL && whoSample->whoFeatures[objectIndex].size() > 0
-            && whoSample->modelAssoc[objectIndex] < looData->clusterSizes->size()
-            && (*(looData->clusterSizes))[whoSample->modelAssoc[objectIndex]] > numLeftOut + 1)
+    const vector<FeatureExtractor::FeatureMatrix> * whoFeatures = reinterpret_cast<const vector<FeatureExtractor::FeatureMatrix> *>(sample->data);
+    if ((*whoFeatures)[objectIndex].size() > 0
+            && sample->modelAssoc[objectIndex] < looData->clusterSizes->size()
+            && (*(looData->clusterSizes))[sample->modelAssoc[objectIndex]] > numLeftOut + 1)
     {
-        unsigned int clusterSize = (*(looData->clusterSizes))[whoSample->modelAssoc[objectIndex]];
-        FeatureExtractor::Scalar normFactor = (*(looData->normFactors))[whoSample->modelAssoc[objectIndex]];
+        unsigned int clusterSize = (*(looData->clusterSizes))[sample->modelAssoc[objectIndex]];
+        FeatureExtractor::Scalar normFactor = (*(looData->normFactors))[sample->modelAssoc[objectIndex]];
         unsigned int n = clusterSize - numLeftOut;
         const FeatureExtractor::FeatureMatrix * origModel = &(orig->models()[0].filters(0));
-        const FeatureExtractor::FeatureMatrix * sampleFeatures = &(whoSample->whoFeatures[objectIndex]);
+        const FeatureExtractor::FeatureMatrix * sampleFeatures = &((*whoFeatures)[objectIndex]);
         FeatureExtractor::FeatureMatrix newModel(origModel->rows(), origModel->cols());
         for (FeatureExtractor::FeatureMatrix::Index i = 0; i < newModel.size(); i++)
             newModel(i) = ((*origModel)(i) * (static_cast<FeatureExtractor::Scalar>(n) * normFactor)

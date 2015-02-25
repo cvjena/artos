@@ -18,6 +18,7 @@ struct Sample
     FFLD::JPEGImage img; /**< The entire image. */
     std::vector<FFLD::Rectangle> bboxes; /**< Vector of bounding boxes around objects on the image. */
     std::vector<unsigned int> modelAssoc; /**< Associates objects in bounding boxes with learned models. */
+    void * data; /**< Arbitrary pointer to custom data associated with the sample. */
     virtual ~Sample() { };
 };
 

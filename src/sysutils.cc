@@ -8,6 +8,7 @@
 #include <unistd.h>
 #include <limits.h>
 #include <libgen.h>
+#include <dirent.h>
 #include <sys/stat.h>
 #endif
 
@@ -162,5 +163,50 @@ bool is_dir(const string & path)
     struct stat st_buf;
     int status = stat(path.c_str(), &st_buf);
     return (status == 0 && S_ISDIR(st_buf.st_mode));
+#endif
+}
+
+void scandir(const string & dir, vector<string> & files, const FileType ft, const string & extensionFilter)
+{
+#ifdef _WIN32
+    WIN32_FIND_DATA findData;
+    HANDLE hFind;
+    string searchPattern = join_path(2, dir.c_str(), "*");
+    if (!extensionFilter.empty())
+        searchPattern += "." + extensionFilter;
+    hFind = FindFirstFile(searchPattern.c_str(), &findData);
+    if (hFind != INVALID_HANDLE_VALUE)
+    {
+        do
+        {
+            string name(findData.cFileName);
+            if (((ft & ftFile) && !(findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY))
+                    || ((ft & ftDirectory) && (findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) && name != "." && name != ".."))
+                files.push_back(findData.cFileName);
+        }
+        while (FindNextFile(hFind, &findData));
+        FindClose(hFind);
+    }
+#else
+    DIR * dirp = opendir(dir.c_str());
+    if (dirp != NULL)
+    {
+        struct dirent * entry;
+        size_t extLen = extensionFilter.length() + 1;
+        while ((entry = readdir(dirp)) != NULL)
+        {
+            string name(entry->d_name);
+#ifdef _DIRENT_HAVE_D_TYPE
+            if (ft == ftAny || ((ft & ftFile) && entry->d_type == DT_REG) || ((ft & ftDirectory) && entry->d_type == DT_DIR))
+#else
+            string path = join_path(2, dir.c_str(), name.c_str());
+            if (ft == ftAny || ((ft & ftFile) && is_file(path)) || ((ft & ftDirectory) && is_dir(path)))
+#endif
+                if (name != "." && name != ".."
+                        && (extLen <= 1 || (name.length() > extLen && name.substr(name.length() - extLen) == "." + extensionFilter)))
+                    files.push_back(name);
+        }
+        closedir(dirp);
+    }
 #endif
 }

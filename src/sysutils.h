@@ -9,6 +9,7 @@
 #define SYSUTILS_H
 
 #include <string>
+#include <vector>
 
 /**
 * @return The current working directory.
@@ -105,6 +106,25 @@ bool is_file(const std::string & path);
 * @return True if `path` points to an existing directory, otherwise false.
 */
 bool is_dir(const std::string & path);
+
+
+enum FileType { ftFile = 1, ftDirectory = 2, ftAny = ftFile | ftDirectory };
+
+/**
+* Lists all files and/or directories inside of a given directory.
+*
+* The sub-directories "." and ".." will be ignored.
+*
+* @param[in] dir The directory to scan.
+*
+* @param[out] files String vector which the names of the files/directories in the given directory will be appended to (basenames only).
+* Existing elements of the vector won't be removed.
+*
+* @param[in] ft Specifies if files, directories or both will be listed.
+*
+* @param[in] extensionFilter If set to a non-empty string, only files with the given extension will be listed (directories are not affected).
+*/
+void scandir(const std::string & dir, std::vector<std::string> & files, const FileType ft = ftAny, const std::string & extensionFilter = "");
 
 #endif
 
