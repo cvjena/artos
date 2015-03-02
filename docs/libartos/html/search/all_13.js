@@ -21,6 +21,7 @@ var searchData=
   ['tft_5funknown',['tft_unknown',['../namespace_a_r_t_o_s.html#a7dad6285366859034dccdfa2761faa92ac94532c862444f39bfef76e7a3166242',1,'ARTOS']]],
   ['threshold',['threshold',['../struct_a_r_t_o_s_1_1_model_evaluator_1_1_test_result.html#a93f390c71af99f21af898f74197fb89d',1,'ARTOS::ModelEvaluator::TestResult']]],
   ['thresholds',['thresholds',['../class_a_r_t_o_s_1_1_d_p_m_detection.html#a23f8516da0c21db581065f246819b155',1,'ARTOS::DPMDetection']]],
+  ['todo_20list',['Todo List',['../todo.html',1,'']]],
   ['top',['top',['../struct_flat_detection.html#a39aa3cfba3a1b7adc53ec3473a675d36',1,'FlatDetection::top()'],['../struct_flat_bounding_box.html#aea99496c01c31a3ca10a8b218eb5ad49',1,'FlatBoundingBox::top()']]],
   ['tp',['tp',['../struct_a_r_t_o_s_1_1_model_evaluator_1_1_test_result.html#a6b1f163313ff2c608084cfa40456271e',1,'ARTOS::ModelEvaluator::TestResult']]],
   ['trim',['trim',['../strutils_8cc.html#aa7cb820696f8a66d03330e091482020c',1,'trim(string str):&#160;strutils.cc'],['../strutils_8h.html#a9b855aac79a01bc69b093a4ee12bb688',1,'trim(std::string str):&#160;strutils.h']]],

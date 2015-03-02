@@ -1,10 +1,12 @@
 <map id="HOGFeatureExtractor.h" name="HOGFeatureExtractor.h">
-<area shape="rect" id="node2" href="$_feature_extractor_8h.html" title="FeatureExtractor.h" alt="" coords="187,80,316,107"/>
-<area shape="rect" id="node3" href="$_feature_extractor_8cc.html" title="FeatureExtractor.cc" alt="" coords="35,155,172,181"/>
-<area shape="rect" id="node4" href="$_model_learner_8h.html" title="ModelLearner.h" alt="" coords="197,155,307,181"/>
-<area shape="rect" id="node9" href="$_stationary_background_8cc.html" title="StationaryBackground.cc" alt="" coords="332,155,500,181"/>
-<area shape="rect" id="node5" href="$_image_net_model_learner_8h.html" title="ImageNetModelLearner.h" alt="" coords="84,229,252,256"/>
-<area shape="rect" id="node8" href="$_model_learner_8cc.html" title="ModelLearner.cc" alt="" coords="277,229,395,256"/>
-<area shape="rect" id="node6" href="$_image_net_model_learner_8cc.html" title="ImageNetModelLearner.cc" alt="" coords="5,304,179,331"/>
-<area shape="rect" id="node7" href="$libartos_8cc.html" title="libartos.cc" alt="" coords="204,304,285,331"/>
+<area shape="rect" id="node2" href="$_feature_extractor_8h.html" title="FeatureExtractor.h" alt="" coords="264,80,393,107"/>
+<area shape="rect" id="node3" href="$_feature_extractor_8cc.html" title="FeatureExtractor.cc" alt="" coords="97,155,233,181"/>
+<area shape="rect" id="node4" href="$_model_learner_base_8h.html" title="ModelLearnerBase.h" alt="" coords="259,155,399,181"/>
+<area shape="rect" id="node11" href="$_stationary_background_8cc.html" title="StationaryBackground.cc" alt="" coords="424,155,592,181"/>
+<area shape="rect" id="node5" href="$_model_learner_8h.html" title="ModelLearner.h" alt="" coords="197,229,307,256"/>
+<area shape="rect" id="node10" href="$_model_learner_base_8cc.html" title="ModelLearnerBase.cc" alt="" coords="331,229,479,256"/>
+<area shape="rect" id="node6" href="$_image_net_model_learner_8h.html" title="ImageNetModelLearner.h" alt="" coords="84,304,252,331"/>
+<area shape="rect" id="node9" href="$_model_learner_8cc.html" title="ModelLearner.cc" alt="" coords="277,304,395,331"/>
+<area shape="rect" id="node7" href="$_image_net_model_learner_8cc.html" title="ImageNetModelLearner.cc" alt="" coords="5,379,179,405"/>
+<area shape="rect" id="node8" href="$libartos_8cc.html" title="libartos.cc" alt="" coords="204,379,285,405"/>
 </map>

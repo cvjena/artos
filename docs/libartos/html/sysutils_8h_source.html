@@ -30,7 +30,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">ARTOS
-   &#160;<span id="projectnumber">1.1</span>
+   &#160;<span id="projectnumber">1.2</span>
    </div>
    <div id="projectbrief">Adaptive Real-Time Object Detection System</div>
   </td>
@@ -46,6 +46,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li><a href="annotated.html"><span>Classes</span></a></li>
       <li class="current"><a href="files.html"><span>Files</span></a></li>
@@ -93,7 +94,7 @@ $(document).ready(function(){initNavTree('sysutils_8h_source.html','');});
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Macros</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(10)"><span class="SelectionMark">&#160;</span>Pages</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -112,40 +113,51 @@ $(document).ready(function(){initNavTree('sysutils_8h_source.html','');});
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define SYSUTILS_H</span></div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;std::string <a class="code" href="sysutils_8h.html#a063842d8b2c77e02edb88c7ab397f649">get_cwd</a>();</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="sysutils_8h.html#ad31ae7bce85c7bde47b7a7720f1f377c">change_cwd</a>(<span class="keyword">const</span> std::string &amp; wd);</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &lt;vector&gt;</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;std::string <a class="code" href="sysutils_8h.html#a063842d8b2c77e02edb88c7ab397f649">get_cwd</a>();</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="sysutils_8h.html#ad31ae7bce85c7bde47b7a7720f1f377c">change_cwd</a>(<span class="keyword">const</span> std::string &amp; wd);</div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;std::string <a class="code" href="sysutils_8h.html#a7f549a793caa9d676b7a7e9b2f1bcf9d">real_path</a>(<span class="keyword">const</span> std::string &amp; path);</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;std::string <a class="code" href="sysutils_8h.html#aa83df8bcf09460e087cc55957b06e409">extract_dirname</a>(<span class="keyword">const</span> std::string &amp; path);</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;std::string <a class="code" href="sysutils_8h.html#a8efa724268ddfead049b5e5e1bdf42e8">extract_basename</a>(<span class="keyword">const</span> std::string &amp; path);</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;std::string <a class="code" href="sysutils_8h.html#a29c78512720b4f2b0325036c515758b0">replace_file_extension</a>(<span class="keyword">const</span> std::string &amp; path, <span class="keyword">const</span> std::string &amp; newExtension);</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;std::string <a class="code" href="sysutils_8h.html#a1d0c9a230f56ab84caf62b95b344a632">strip_file_extension</a>(<span class="keyword">const</span> std::string &amp; path);</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;std::string <a class="code" href="sysutils_8h.html#afe506a8ac0a80f7fddb66f0847c21815">join_path</a>(<span class="keywordtype">int</span> numComponents, ...);</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;std::string <a class="code" href="sysutils_8h.html#a7f549a793caa9d676b7a7e9b2f1bcf9d">real_path</a>(<span class="keyword">const</span> std::string &amp; path);</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;std::string <a class="code" href="sysutils_8h.html#aa83df8bcf09460e087cc55957b06e409">extract_dirname</a>(<span class="keyword">const</span> std::string &amp; path);</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;std::string <a class="code" href="sysutils_8h.html#a8efa724268ddfead049b5e5e1bdf42e8">extract_basename</a>(<span class="keyword">const</span> std::string &amp; path);</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;std::string <a class="code" href="sysutils_8h.html#a29c78512720b4f2b0325036c515758b0">replace_file_extension</a>(<span class="keyword">const</span> std::string &amp; path, <span class="keyword">const</span> std::string &amp; newExtension);</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;std::string <a class="code" href="sysutils_8h.html#a1d0c9a230f56ab84caf62b95b344a632">strip_file_extension</a>(<span class="keyword">const</span> std::string &amp; path);</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;std::string <a class="code" href="sysutils_8h.html#afe506a8ac0a80f7fddb66f0847c21815">join_path</a>(<span class="keywordtype">int</span> numComponents, ...);</div>
 <div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="sysutils_8h.html#a30a27fc5392e67f42f348e3ac4e38add">is_file</a>(<span class="keyword">const</span> std::string &amp; path);</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="sysutils_8h.html#ad5849662d9826d4f6ac56a07c6088432">is_dir</a>(<span class="keyword">const</span> std::string &amp; path);</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="preprocessor"></span></div>
-<div class="ttc" id="sysutils_8h_html_a063842d8b2c77e02edb88c7ab397f649"><div class="ttname"><a href="sysutils_8h.html#a063842d8b2c77e02edb88c7ab397f649">get_cwd</a></div><div class="ttdeci">std::string get_cwd()</div><div class="ttdef"><b>Definition:</b> sysutils.cc:16</div></div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="sysutils_8h.html#a30a27fc5392e67f42f348e3ac4e38add">is_file</a>(<span class="keyword">const</span> std::string &amp; path);</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="sysutils_8h.html#ad5849662d9826d4f6ac56a07c6088432">is_dir</a>(<span class="keyword">const</span> std::string &amp; path);</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;</div>
+<div class="line"><a name="l00111"></a><span class="lineno"><a class="line" href="sysutils_8h.html#a2c794c5c13ab4dd7e65bad031dbe41c3addc701d8168aef1d5e99835a52297a9c">  111</a></span>&#160;<span class="keyword">enum</span> <a class="code" href="sysutils_8h.html#a2c794c5c13ab4dd7e65bad031dbe41c3">FileType</a> { <a class="code" href="sysutils_8h.html#a2c794c5c13ab4dd7e65bad031dbe41c3addc701d8168aef1d5e99835a52297a9c">ftFile</a> = 1, <a class="code" href="sysutils_8h.html#a2c794c5c13ab4dd7e65bad031dbe41c3a49b9ff327bc90f1d27abb3242bb82270">ftDirectory</a> = 2, <a class="code" href="sysutils_8h.html#a2c794c5c13ab4dd7e65bad031dbe41c3a691586f3e0eb49533a2e1a34eaf0673b">ftAny</a> = <a class="code" href="sysutils_8h.html#a2c794c5c13ab4dd7e65bad031dbe41c3addc701d8168aef1d5e99835a52297a9c">ftFile</a> | <a class="code" href="sysutils_8h.html#a2c794c5c13ab4dd7e65bad031dbe41c3a49b9ff327bc90f1d27abb3242bb82270">ftDirectory</a> };</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;<span class="keywordtype">void</span> <a class="code" href="sysutils_8h.html#a30cdb8548199d8d59b30303a60b3be7c">scandir</a>(<span class="keyword">const</span> std::string &amp; dir, std::vector&lt;std::string&gt; &amp; files, <span class="keyword">const</span> <a class="code" href="sysutils_8h.html#a2c794c5c13ab4dd7e65bad031dbe41c3">FileType</a> ft = <a class="code" href="sysutils_8h.html#a2c794c5c13ab4dd7e65bad031dbe41c3a691586f3e0eb49533a2e1a34eaf0673b">ftAny</a>, <span class="keyword">const</span> std::string &amp; extensionFilter = <span class="stringliteral">&quot;&quot;</span>);</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;<span class="preprocessor"></span></div>
+<div class="ttc" id="sysutils_8h_html_a2c794c5c13ab4dd7e65bad031dbe41c3"><div class="ttname"><a href="sysutils_8h.html#a2c794c5c13ab4dd7e65bad031dbe41c3">FileType</a></div><div class="ttdeci">FileType</div><div class="ttdef"><b>Definition:</b> sysutils.h:111</div></div>
+<div class="ttc" id="sysutils_8h_html_a063842d8b2c77e02edb88c7ab397f649"><div class="ttname"><a href="sysutils_8h.html#a063842d8b2c77e02edb88c7ab397f649">get_cwd</a></div><div class="ttdeci">std::string get_cwd()</div><div class="ttdef"><b>Definition:</b> sysutils.cc:17</div></div>
+<div class="ttc" id="sysutils_8h_html_a2c794c5c13ab4dd7e65bad031dbe41c3addc701d8168aef1d5e99835a52297a9c"><div class="ttname"><a href="sysutils_8h.html#a2c794c5c13ab4dd7e65bad031dbe41c3addc701d8168aef1d5e99835a52297a9c">ftFile</a></div><div class="ttdef"><b>Definition:</b> sysutils.h:111</div></div>
+<div class="ttc" id="sysutils_8h_html_a30cdb8548199d8d59b30303a60b3be7c"><div class="ttname"><a href="sysutils_8h.html#a30cdb8548199d8d59b30303a60b3be7c">scandir</a></div><div class="ttdeci">void scandir(const std::string &amp;dir, std::vector&lt; std::string &gt; &amp;files, const FileType ft=ftAny, const std::string &amp;extensionFilter=&quot;&quot;)</div></div>
 <div class="ttc" id="sysutils_8h_html_a7f549a793caa9d676b7a7e9b2f1bcf9d"><div class="ttname"><a href="sysutils_8h.html#a7f549a793caa9d676b7a7e9b2f1bcf9d">real_path</a></div><div class="ttdeci">std::string real_path(const std::string &amp;path)</div></div>
-<div class="ttc" id="sysutils_8h_html_afe506a8ac0a80f7fddb66f0847c21815"><div class="ttname"><a href="sysutils_8h.html#afe506a8ac0a80f7fddb66f0847c21815">join_path</a></div><div class="ttdeci">std::string join_path(int numComponents,...)</div><div class="ttdef"><b>Definition:</b> sysutils.cc:116</div></div>
+<div class="ttc" id="sysutils_8h_html_afe506a8ac0a80f7fddb66f0847c21815"><div class="ttname"><a href="sysutils_8h.html#afe506a8ac0a80f7fddb66f0847c21815">join_path</a></div><div class="ttdeci">std::string join_path(int numComponents,...)</div><div class="ttdef"><b>Definition:</b> sysutils.cc:117</div></div>
 <div class="ttc" id="sysutils_8h_html_ad31ae7bce85c7bde47b7a7720f1f377c"><div class="ttname"><a href="sysutils_8h.html#ad31ae7bce85c7bde47b7a7720f1f377c">change_cwd</a></div><div class="ttdeci">bool change_cwd(const std::string &amp;wd)</div></div>
 <div class="ttc" id="sysutils_8h_html_a30a27fc5392e67f42f348e3ac4e38add"><div class="ttname"><a href="sysutils_8h.html#a30a27fc5392e67f42f348e3ac4e38add">is_file</a></div><div class="ttdeci">bool is_file(const std::string &amp;path)</div></div>
 <div class="ttc" id="sysutils_8h_html_a8efa724268ddfead049b5e5e1bdf42e8"><div class="ttname"><a href="sysutils_8h.html#a8efa724268ddfead049b5e5e1bdf42e8">extract_basename</a></div><div class="ttdeci">std::string extract_basename(const std::string &amp;path)</div></div>
 <div class="ttc" id="sysutils_8h_html_a29c78512720b4f2b0325036c515758b0"><div class="ttname"><a href="sysutils_8h.html#a29c78512720b4f2b0325036c515758b0">replace_file_extension</a></div><div class="ttdeci">std::string replace_file_extension(const std::string &amp;path, const std::string &amp;newExtension)</div></div>
+<div class="ttc" id="sysutils_8h_html_a2c794c5c13ab4dd7e65bad031dbe41c3a49b9ff327bc90f1d27abb3242bb82270"><div class="ttname"><a href="sysutils_8h.html#a2c794c5c13ab4dd7e65bad031dbe41c3a49b9ff327bc90f1d27abb3242bb82270">ftDirectory</a></div><div class="ttdef"><b>Definition:</b> sysutils.h:111</div></div>
 <div class="ttc" id="sysutils_8h_html_aa83df8bcf09460e087cc55957b06e409"><div class="ttname"><a href="sysutils_8h.html#aa83df8bcf09460e087cc55957b06e409">extract_dirname</a></div><div class="ttdeci">std::string extract_dirname(const std::string &amp;path)</div></div>
 <div class="ttc" id="sysutils_8h_html_a1d0c9a230f56ab84caf62b95b344a632"><div class="ttname"><a href="sysutils_8h.html#a1d0c9a230f56ab84caf62b95b344a632">strip_file_extension</a></div><div class="ttdeci">std::string strip_file_extension(const std::string &amp;path)</div></div>
+<div class="ttc" id="sysutils_8h_html_a2c794c5c13ab4dd7e65bad031dbe41c3a691586f3e0eb49533a2e1a34eaf0673b"><div class="ttname"><a href="sysutils_8h.html#a2c794c5c13ab4dd7e65bad031dbe41c3a691586f3e0eb49533a2e1a34eaf0673b">ftAny</a></div><div class="ttdef"><b>Definition:</b> sysutils.h:111</div></div>
 <div class="ttc" id="sysutils_8h_html_ad5849662d9826d4f6ac56a07c6088432"><div class="ttname"><a href="sysutils_8h.html#ad5849662d9826d4f6ac56a07c6088432">is_dir</a></div><div class="ttdeci">bool is_dir(const std::string &amp;path)</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
@@ -153,7 +165,7 @@ $(document).ready(function(){initNavTree('sysutils_8h_source.html','');});
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="sysutils_8h.html">sysutils.h</a></li>
-    <li class="footer">Generated on Fri Oct 31 2014 10:21:06 for ARTOS by
+    <li class="footer">Generated on Mon Mar 2 2015 15:20:29 for ARTOS by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>

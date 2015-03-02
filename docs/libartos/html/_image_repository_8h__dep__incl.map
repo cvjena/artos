@@ -1,7 +1,7 @@
 <map id="ImageNet/ImageRepository.h" name="ImageNet/ImageRepository.h">
-<area shape="rect" id="node3" href="$_image_repository_8cc.html" title="ImageNet/ImageRepository.cc" alt="" coords="5,83,205,112"/>
-<area shape="rect" id="node5" href="$_synset_iterators_8cc.html" title="ImageNet/SynsetIterators.cc" alt="" coords="229,83,419,112"/>
-<area shape="rect" id="node7" href="$_image_net_model_learner_8h.html" title="ImageNetModelLearner.h" alt="" coords="443,83,611,112"/>
-<area shape="rect" id="node11" href="$libartos_8cc.html" title="libartos.cc" alt="" coords="607,160,689,189"/>
-<area shape="rect" id="node9" href="$_image_net_model_learner_8cc.html" title="ImageNetModelLearner.cc" alt="" coords="409,160,583,189"/>
+<area shape="rect" id="node2" href="$_image_repository_8cc.html" title="ImageNet/ImageRepository.cc" alt="" coords="5,80,204,107"/>
+<area shape="rect" id="node3" href="$_synset_iterators_8cc.html" title="ImageNet/SynsetIterators.cc" alt="" coords="230,80,420,107"/>
+<area shape="rect" id="node4" href="$_image_net_model_learner_8h.html" title="ImageNetModelLearner.h" alt="" coords="445,80,613,107"/>
+<area shape="rect" id="node6" href="$libartos_8cc.html" title="libartos.cc" alt="" coords="609,155,691,181"/>
+<area shape="rect" id="node5" href="$_image_net_model_learner_8cc.html" title="ImageNetModelLearner.cc" alt="" coords="410,155,584,181"/>
 </map>

@@ -1,5 +1,5 @@
 <map id="ARTOS::ImageRepository::getNumSynsets" name="ARTOS::ImageRepository::getNumSynsets">
-<area shape="rect" id="node3" href="$class_a_r_t_o_s_1_1_image_repository.html#a18706ff915b43b52ea826aa163a776ac" title="ARTOS::ImageRepository\l::listSynsets" alt="" coords="231,23,404,70"/>
-<area shape="rect" id="node5" href="$sysutils_8cc.html#aea7fafd2be88e54c39022ea792fd76e2" title="join_path" alt="" coords="453,5,528,35"/>
-<area shape="rect" id="node7" href="$strutils_8cc.html#aa7cb820696f8a66d03330e091482020c" title="trim" alt="" coords="469,59,512,88"/>
+<area shape="rect" id="node2" href="$class_a_r_t_o_s_1_1_image_repository.html#a18706ff915b43b52ea826aa163a776ac" title="ARTOS::ImageRepository\l::listSynsets" alt="" coords="230,23,405,65"/>
+<area shape="rect" id="node3" href="$sysutils_8cc.html#aea7fafd2be88e54c39022ea792fd76e2" title="join_path" alt="" coords="453,5,528,32"/>
+<area shape="rect" id="node4" href="$strutils_8cc.html#aa7cb820696f8a66d03330e091482020c" title="trim" alt="" coords="469,56,513,83"/>
 </map>

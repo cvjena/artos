@@ -1,3 +1,4 @@
 <map id="ARTOS::ModelLearner" name="ARTOS::ModelLearner">
-<area shape="rect" id="node3" href="$class_a_r_t_o_s_1_1_image_net_model_learner.html" title="ARTOS::ImageNetModelLearner" alt="" coords="5,83,216,112"/>
+<area shape="rect" id="node3" href="$class_a_r_t_o_s_1_1_image_net_model_learner.html" title="ARTOS::ImageNetModelLearner" alt="" coords="4,155,213,181"/>
+<area shape="rect" id="node2" href="$class_a_r_t_o_s_1_1_model_learner_base.html" title="ARTOS::ModelLearnerBase" alt="" coords="17,5,201,32"/>
 </map>

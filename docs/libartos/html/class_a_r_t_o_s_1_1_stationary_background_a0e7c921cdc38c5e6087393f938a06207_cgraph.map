@@ -1,4 +1,4 @@
 <map id="ARTOS::StationaryBackground::StationaryBackground" name="ARTOS::StationaryBackground::StationaryBackground">
-<area shape="rect" id="node3" href="$class_a_r_t_o_s_1_1_stationary_background.html#ad3c45596746bf9b8f6d77adf8f7eceed" title="ARTOS::StationaryBackground\l::readFromFile" alt="" coords="260,5,463,51"/>
-<area shape="rect" id="node5" href="$class_a_r_t_o_s_1_1_stationary_background.html#aa3baa4f38a7cacbfe700208877522970" title="ARTOS::StationaryBackground\l::clear" alt="" coords="513,5,716,51"/>
+<area shape="rect" id="node2" href="$class_a_r_t_o_s_1_1_stationary_background.html#ad3c45596746bf9b8f6d77adf8f7eceed" title="ARTOS::StationaryBackground\l::readFromFile" alt="" coords="259,5,463,46"/>
+<area shape="rect" id="node3" href="$class_a_r_t_o_s_1_1_stationary_background.html#aa3baa4f38a7cacbfe700208877522970" title="ARTOS::StationaryBackground\l::clear" alt="" coords="513,5,717,46"/>
 </map>

@@ -1,5 +1,5 @@
 <map id="ARTOS::StationaryBackground::writeToFile" name="ARTOS::StationaryBackground::writeToFile">
-<area shape="rect" id="node3" href="$class_a_r_t_o_s_1_1_stationary_background.html#a1f0385ffbb6ce834fa20a0ad9fb141d2" title="ARTOS::StationaryBackground\l::empty" alt="" coords="260,5,463,51"/>
-<area shape="rect" id="node5" href="$class_a_r_t_o_s_1_1_stationary_background.html#aad9a7a50f4e57211c7cae821327df1e4" title="ARTOS::StationaryBackground\l::getNumFeatures" alt="" coords="260,74,463,121"/>
-<area shape="rect" id="node7" href="$class_a_r_t_o_s_1_1_stationary_background.html#ab46d4c5ac3ec2490380beb06ae821c4f" title="ARTOS::StationaryBackground\l::getNumOffsets" alt="" coords="260,143,463,190"/>
+<area shape="rect" id="node2" href="$class_a_r_t_o_s_1_1_stationary_background.html#a1f0385ffbb6ce834fa20a0ad9fb141d2" title="ARTOS::StationaryBackground\l::empty" alt="" coords="259,5,463,46"/>
+<area shape="rect" id="node3" href="$class_a_r_t_o_s_1_1_stationary_background.html#aad9a7a50f4e57211c7cae821327df1e4" title="ARTOS::StationaryBackground\l::getNumFeatures" alt="" coords="259,70,463,111"/>
+<area shape="rect" id="node4" href="$class_a_r_t_o_s_1_1_stationary_background.html#ab46d4c5ac3ec2490380beb06ae821c4f" title="ARTOS::StationaryBackground\l::getNumOffsets" alt="" coords="259,135,463,177"/>
 </map>

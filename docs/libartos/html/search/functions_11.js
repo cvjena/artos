@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['save',['save',['../class_a_r_t_o_s_1_1_model_learner.html#a068517d1502a0535ad6d82d2f3e4fa89',1,'ARTOS::ModelLearner']]],
+  ['save',['save',['../class_a_r_t_o_s_1_1_model_learner_base.html#a67b999c285472ac03522f8c327d7aa61',1,'ARTOS::ModelLearnerBase']]],
+  ['scandir',['scandir',['../sysutils_8cc.html#a85b755fb78fe3676f140370464d672d8',1,'scandir(const string &amp;dir, vector&lt; string &gt; &amp;files, const FileType ft, const string &amp;extensionFilter):&#160;sysutils.cc'],['../sysutils_8h.html#a30cdb8548199d8d59b30303a60b3be7c',1,'scandir(const std::string &amp;dir, std::vector&lt; std::string &gt; &amp;files, const FileType ft=ftAny, const std::string &amp;extensionFilter=&quot;&quot;):&#160;sysutils.h']]],
   ['search_5fsynsets',['search_synsets',['../libartos_8cc.html#aa5f9fa191364a3227ccb670379774f6e',1,'search_synsets(const char *repo_directory, const char *phrase, SynsetSearchResult *result_buf, unsigned int *result_buf_size):&#160;libartos.cc'],['../libartos_8h.html#aa5f9fa191364a3227ccb670379774f6e',1,'search_synsets(const char *repo_directory, const char *phrase, SynsetSearchResult *result_buf, unsigned int *result_buf_size):&#160;libartos.cc']]],
   ['searchoptimalthresholdcombination',['searchOptimalThresholdCombination',['../class_a_r_t_o_s_1_1_model_evaluator.html#a0e0234beafc6185d8a907145c9a38806',1,'ARTOS::ModelEvaluator']]],
   ['searchsynsets',['searchSynsets',['../class_a_r_t_o_s_1_1_image_repository.html#a9211412e3267c81081b079ec84dac7bf',1,'ARTOS::ImageRepository']]],

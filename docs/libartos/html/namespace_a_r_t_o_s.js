@@ -16,8 +16,8 @@ var namespace_a_r_t_o_s =
     [ "TarExtractor", "class_a_r_t_o_s_1_1_tar_extractor.html", "class_a_r_t_o_s_1_1_tar_extractor" ],
     [ "ImageNetModelLearner", "class_a_r_t_o_s_1_1_image_net_model_learner.html", "class_a_r_t_o_s_1_1_image_net_model_learner" ],
     [ "ModelEvaluator", "class_a_r_t_o_s_1_1_model_evaluator.html", "class_a_r_t_o_s_1_1_model_evaluator" ],
-    [ "WHOSample", "struct_a_r_t_o_s_1_1_w_h_o_sample.html", "struct_a_r_t_o_s_1_1_w_h_o_sample" ],
     [ "ModelLearner", "class_a_r_t_o_s_1_1_model_learner.html", "class_a_r_t_o_s_1_1_model_learner" ],
+    [ "ModelLearnerBase", "class_a_r_t_o_s_1_1_model_learner_base.html", "class_a_r_t_o_s_1_1_model_learner_base" ],
     [ "Random", "class_a_r_t_o_s_1_1_random.html", null ],
     [ "StationaryBackground", "class_a_r_t_o_s_1_1_stationary_background.html", "class_a_r_t_o_s_1_1_stationary_background" ]
 ];

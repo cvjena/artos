@@ -1,12 +1,11 @@
 <map id="learner_run" name="learner_run">
-<area shape="rect" id="node2" href="$libartos_8cc.html#a7f0b115c2293574072fc57cc5e5b6137" title="is_valid_learner_handle" alt="" coords="141,5,299,32"/>
-<area shape="rect" id="node3" href="$class_a_r_t_o_s_1_1_model_learner.html#a7266ff6d5ffca37f6b18ca8690c1a8bc" title="ARTOS::ModelLearner\l::getNumSamples" alt="" coords="143,57,297,98"/>
-<area shape="rect" id="node4" href="$libartos_8cc.html#a7647fc5439e2e06dec23ca1821aaf806" title="progress_proxy" alt="" coords="165,123,275,149"/>
-<area shape="rect" id="node5" href="$class_a_r_t_o_s_1_1_model_learner.html#a7703aedb2696cdacc8b7983a90a714ba" title="ARTOS::ModelLearner\l::learn" alt="" coords="143,174,297,215"/>
-<area shape="rect" id="node6" href="$namespace_a_r_t_o_s.html#a13910115ab667592b26511453d72a9d2" title="ARTOS::repeatedKMeansClustering" alt="" coords="347,131,581,157"/>
-<area shape="rect" id="node10" href="$namespace_a_r_t_o_s.html#a04d256e698b1056a935847df6c69ac34" title="ARTOS::mergeNearbyClusters" alt="" coords="363,181,565,208"/>
-<area shape="rect" id="node11" href="$class_a_r_t_o_s_1_1_h_o_g_feature_extractor.html#a0068b8d35c0a9667a1f55f2397c9ca5e" title="ARTOS::HOGFeatureExtractor\l::extract" alt="" coords="363,233,565,274"/>
-<area shape="rect" id="node7" href="$namespace_a_r_t_o_s.html#a9353cb7d44add44ac35800f4109cf929" title="ARTOS::kMeansClustering" alt="" coords="629,131,811,157"/>
-<area shape="rect" id="node8" href="$class_a_r_t_o_s_1_1_random.html#a55a61b6c2859deced8d0c5b690671abf" title="ARTOS::Random::seedOnce" alt="" coords="859,105,1051,132"/>
-<area shape="rect" id="node9" href="$class_a_r_t_o_s_1_1_random.html#a0a5026c38579688e7ef13325a8676fe4" title="ARTOS::Random::getInt" alt="" coords="871,156,1038,183"/>
+<area shape="rect" id="node2" href="$libartos_8cc.html#a7f0b115c2293574072fc57cc5e5b6137" title="is_valid_learner_handle" alt="" coords="155,5,312,32"/>
+<area shape="rect" id="node3" href="$class_a_r_t_o_s_1_1_model_learner_base.html#ac07c1709ed7767676298eb849f3a246b" title="ARTOS::ModelLearnerBase\l::getNumSamples" alt="" coords="141,57,325,98"/>
+<area shape="rect" id="node4" href="$libartos_8cc.html#a7647fc5439e2e06dec23ca1821aaf806" title="progress_proxy" alt="" coords="178,123,289,149"/>
+<area shape="rect" id="node5" href="$class_a_r_t_o_s_1_1_model_learner_base.html#a67845ab0c83058b475e747366d67102c" title="ARTOS::ModelLearnerBase\l::learn" alt="" coords="141,174,325,215"/>
+<area shape="rect" id="node6" href="$namespace_a_r_t_o_s.html#a13910115ab667592b26511453d72a9d2" title="ARTOS::repeatedKMeansClustering" alt="" coords="374,156,607,183"/>
+<area shape="rect" id="node10" href="$namespace_a_r_t_o_s.html#a04d256e698b1056a935847df6c69ac34" title="ARTOS::mergeNearbyClusters" alt="" coords="389,207,592,233"/>
+<area shape="rect" id="node7" href="$namespace_a_r_t_o_s.html#a9353cb7d44add44ac35800f4109cf929" title="ARTOS::kMeansClustering" alt="" coords="656,156,837,183"/>
+<area shape="rect" id="node8" href="$class_a_r_t_o_s_1_1_random.html#a55a61b6c2859deced8d0c5b690671abf" title="ARTOS::Random::seedOnce" alt="" coords="885,131,1077,157"/>
+<area shape="rect" id="node9" href="$class_a_r_t_o_s_1_1_random.html#a0a5026c38579688e7ef13325a8676fe4" title="ARTOS::Random::getInt" alt="" coords="898,181,1065,208"/>
 </map>

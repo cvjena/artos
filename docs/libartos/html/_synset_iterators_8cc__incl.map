@@ -1,10 +1,10 @@
 <map id="ImageNet/SynsetIterators.cc" name="ImageNet/SynsetIterators.cc">
-<area shape="rect" id="node3" href="$_synset_iterators_8h.html" title="SynsetIterators.h" alt="" coords="408,237,531,267"/>
-<area shape="rect" id="node34" href="$_synset_8h.html" title="Synset.h" alt="" coords="659,160,733,189"/>
-<area shape="rect" id="node38" href="$_image_repository_8h.html" title="ImageRepository.h" alt="" coords="552,83,683,112"/>
-<area shape="rect" id="node44" href="$libartos__def_8h.html" title="libartos_def.h" alt="" coords="1021,83,1120,112"/>
-<area shape="rect" id="node46" href="$strutils_8h.html" title="strutils.h" alt="" coords="612,315,684,344"/>
-<area shape="rect" id="node50" href="$sysutils_8h.html" title="sysutils.h" alt="" coords="808,160,885,189"/>
-<area shape="rect" id="node9" href="$_synset_image_8h.html" title="SynsetImage.h" alt="" coords="424,315,533,344"/>
-<area shape="rect" id="node21" href="$_tar_extractor_8h.html" title="TarExtractor.h" alt="" coords="187,315,291,344"/>
+<area shape="rect" id="node2" href="$_synset_iterators_8h.html" title="SynsetIterators.h" alt="" coords="150,229,272,256"/>
+<area shape="rect" id="node16" href="$_synset_8h.html" title="Synset.h" alt="" coords="179,155,252,181"/>
+<area shape="rect" id="node17" href="$_image_repository_8h.html" title="ImageRepository.h" alt="" coords="248,80,379,107"/>
+<area shape="rect" id="node18" href="$libartos__def_8h.html" title="libartos_def.h" alt="" coords="404,80,503,107"/>
+<area shape="rect" id="node19" href="$strutils_8h.html" title="strutils.h" alt="" coords="448,304,520,331"/>
+<area shape="rect" id="node20" href="$sysutils_8h.html" title="sysutils.h" alt="" coords="545,304,623,331"/>
+<area shape="rect" id="node5" href="$_synset_image_8h.html" title="SynsetImage.h" alt="" coords="648,304,758,331"/>
+<area shape="rect" id="node11" href="$_tar_extractor_8h.html" title="TarExtractor.h" alt="" coords="166,304,271,331"/>
 </map>

@@ -1,14 +1,11 @@
-\form#0:\[\frac{(1 + b^2) \cdot precision \cdot recall}{b^2 \cdot precision + recall}\]
+\form#0:\[\frac{(1 + b^2) \cdot \mbox{precision} \cdot \mbox{recall}}{b^2 \cdot \mbox{precision} + \mbox{recall}}\]
 \form#1:$m = \Sigma^{-1} \cdot (\mu_{pos} - \mu_{neg})$
-\form#2:$x_{i,j}$
-\form#3:$x_{m,n}$
-\form#4:$(m-i, n-j)$
-\form#5:$N * num\_features^2$
-\form#6:$N^2 * num\_features^2$
-\form#7:$\mathcal{O}(N \cdot num\_features^2)$
-\form#8:$\mathcal{O}(N^2 \cdot num\_features^2)$
-\form#9:\[\frac{(1 + b^2) \cdot \mbox{precision} \cdot \mbox{recall}}{b^2 \cdot \mbox{precision} + \mbox{recall}}\]
-\form#10:\[\frac{\mu_0^T \Sigma^-1 \mu_0 - \mu_1^T \Sigma^-1 \mu_1}{2}\]
-\form#11:$\ln \left ( \frac{\varphi}{\varphi - 1} \right )$
-\form#12:$\mathcal{N}(\mbox{mean},\,\mbox{sigma}^2)$
-\form#13:\[ \mathcal{F}^{-1} \left ( \overline{\mathcal{F} \left(I \right) } \circ \mathcal{F} \left(J \right) \right ) \]
+\form#2:\[\frac{\mu_0^T \Sigma^-1 \mu_0 - \mu_1^T \Sigma^-1 \mu_1}{2}\]
+\form#3:$\ln \left ( \frac{\varphi}{\varphi - 1} \right )$
+\form#4:$\mathcal{N}(\mbox{mean},\,\mbox{sigma}^2)$
+\form#5:$x_{i,j}$
+\form#6:$x_{m,n}$
+\form#7:$(m-i, n-j)$
+\form#8:$\mathcal{O}(N \cdot num\_features^2)$
+\form#9:$\mathcal{O}(N^2 \cdot num\_features^2)$
+\form#10:\[ \mathcal{F}^{-1} \left ( \overline{\mathcal{F} \left(I \right) } \circ \mathcal{F} \left(J \right) \right ) \]

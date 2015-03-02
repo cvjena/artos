@@ -1,12 +1,13 @@
 <map id="ImageNetModelLearner.h" name="ImageNetModelLearner.h">
-<area shape="rect" id="node3" href="$_model_learner_8h.html" title="ModelLearner.h" alt="" coords="671,80,781,107"/>
-<area shape="rect" id="node25" href="$_image_repository_8h.html" title="ImageRepository.h" alt="" coords="210,80,341,107"/>
-<area shape="rect" id="node26" href="$_synset_8h.html" title="Synset.h" alt="" coords="124,155,197,181"/>
-<area shape="rect" id="node7" href="$defs_8h.html" title="defs.h" alt="" coords="663,304,720,331"/>
-<area shape="rect" id="node13" href="$_stationary_background_8h.html" title="StationaryBackground.h" alt="" coords="451,155,612,181"/>
-<area shape="rect" id="node22" href="$_feature_extractor_8h.html" title="FeatureExtractor.h" alt="" coords="900,229,1029,256"/>
-<area shape="rect" id="node15" href="$_synset_iterators_8h.html" title="SynsetIterators.h" alt="" coords="127,229,249,256"/>
-<area shape="rect" id="node18" href="$_synset_image_8h.html" title="SynsetImage.h" alt="" coords="426,304,536,331"/>
-<area shape="rect" id="node20" href="$_tar_extractor_8h.html" title="TarExtractor.h" alt="" coords="143,304,248,331"/>
-<area shape="rect" id="node23" href="$_h_o_g_feature_extractor_8h.html" title="HOGFeatureExtractor.h" alt="" coords="989,304,1148,331"/>
+<area shape="rect" id="node3" href="$_model_learner_8h.html" title="ModelLearner.h" alt="" coords="791,80,901,107"/>
+<area shape="rect" id="node25" href="$_image_repository_8h.html" title="ImageRepository.h" alt="" coords="967,80,1099,107"/>
+<area shape="rect" id="node26" href="$_synset_8h.html" title="Synset.h" alt="" coords="1179,155,1252,181"/>
+<area shape="rect" id="node4" href="$_model_learner_base_8h.html" title="ModelLearnerBase.h" alt="" coords="448,229,588,256"/>
+<area shape="rect" id="node16" href="$_stationary_background_8h.html" title="StationaryBackground.h" alt="" coords="725,155,885,181"/>
+<area shape="rect" id="node7" href="$defs_8h.html" title="defs.h" alt="" coords="489,304,547,331"/>
+<area shape="rect" id="node13" href="$_feature_extractor_8h.html" title="FeatureExtractor.h" alt="" coords="85,304,215,331"/>
+<area shape="rect" id="node14" href="$_h_o_g_feature_extractor_8h.html" title="HOGFeatureExtractor.h" alt="" coords="5,379,164,405"/>
+<area shape="rect" id="node18" href="$_synset_iterators_8h.html" title="SynsetIterators.h" alt="" coords="972,229,1095,256"/>
+<area shape="rect" id="node21" href="$_synset_image_8h.html" title="SynsetImage.h" alt="" coords="674,304,784,331"/>
+<area shape="rect" id="node23" href="$_tar_extractor_8h.html" title="TarExtractor.h" alt="" coords="911,304,1016,331"/>
 </map>

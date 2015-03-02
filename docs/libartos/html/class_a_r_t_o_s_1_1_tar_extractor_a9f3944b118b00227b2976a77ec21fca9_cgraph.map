@@ -1,4 +1,4 @@
 <map id="ARTOS::TarExtractor::findFile" name="ARTOS::TarExtractor::findFile">
-<area shape="rect" id="node3" href="$sysutils_8cc.html#a830125924ecdba4b09a0a90b67e1bf26" title="strip_file_extension" alt="" coords="204,13,337,43"/>
-<area shape="rect" id="node5" href="$sysutils_8cc.html#a9f553f0e7879b17ba31ff13349402053" title="replace_file_extension" alt="" coords="388,13,537,43"/>
+<area shape="rect" id="node2" href="$sysutils_8cc.html#a830125924ecdba4b09a0a90b67e1bf26" title="strip_file_extension" alt="" coords="203,12,338,39"/>
+<area shape="rect" id="node3" href="$sysutils_8cc.html#a9f553f0e7879b17ba31ff13349402053" title="replace_file_extension" alt="" coords="387,12,538,39"/>
 </map>

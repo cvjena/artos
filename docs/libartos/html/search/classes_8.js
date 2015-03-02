@@ -1,7 +1,7 @@
 var searchData=
 [
   ['sample',['Sample',['../struct_a_r_t_o_s_1_1_sample.html',1,'ARTOS']]],
-  ['size',['Size',['../struct_a_r_t_o_s_1_1_model_learner_1_1_size.html',1,'ARTOS::ModelLearner']]],
+  ['size',['Size',['../struct_a_r_t_o_s_1_1_model_learner_base_1_1_size.html',1,'ARTOS::ModelLearnerBase']]],
   ['stationarybackground',['StationaryBackground',['../class_a_r_t_o_s_1_1_stationary_background.html',1,'ARTOS']]],
   ['synset',['Synset',['../struct_a_r_t_o_s_1_1_synset.html',1,'ARTOS']]],
   ['synsetimage',['SynsetImage',['../class_a_r_t_o_s_1_1_synset_image.html',1,'ARTOS']]],

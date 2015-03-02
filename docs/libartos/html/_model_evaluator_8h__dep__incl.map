@@ -1,4 +1,5 @@
 <map id="ModelEvaluator.h" name="ModelEvaluator.h">
-<area shape="rect" id="node3" href="$_model_evaluator_8cc.html" title="ModelEvaluator.cc" alt="" coords="5,83,136,112"/>
-<area shape="rect" id="node5" href="$_model_learner_8cc.html" title="ModelLearner.cc" alt="" coords="160,83,277,112"/>
+<area shape="rect" id="node2" href="$_model_evaluator_8cc.html" title="ModelEvaluator.cc" alt="" coords="5,80,135,107"/>
+<area shape="rect" id="node3" href="$_model_learner_8cc.html" title="ModelLearner.cc" alt="" coords="159,80,277,107"/>
+<area shape="rect" id="node4" href="$_model_learner_base_8cc.html" title="ModelLearnerBase.cc" alt="" coords="302,80,449,107"/>
 </map>

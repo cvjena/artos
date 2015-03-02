@@ -1,0 +1,8 @@
+<map id="ARTOS::ModelLearnerBase::optimizeThreshold" name="ARTOS::ModelLearnerBase::optimizeThreshold">
+<area shape="rect" id="node2" href="$class_a_r_t_o_s_1_1_d_p_m_detection.html#af0a95dcd6dc893401d68fa50a8929338" title="ARTOS::DPMDetection\l::addModel" alt="" coords="279,5,441,46"/>
+<area shape="rect" id="node3" href="$class_a_r_t_o_s_1_1_model_evaluator.html#a7430c554715656da96d4b70ce5efa2de" title="ARTOS::ModelEvaluator\l::testModels" alt="" coords="277,70,443,111"/>
+<area shape="rect" id="node4" href="$class_a_r_t_o_s_1_1_model_evaluator.html#a8979269a8d0f73a8e8d0a613cad76bf3" title="ARTOS::ModelEvaluator\l::getMaxFMeasure" alt="" coords="277,135,443,177"/>
+<area shape="rect" id="node5" href="$class_a_r_t_o_s_1_1_model_evaluator.html#a0e0234beafc6185d8a907145c9a38806" title="ARTOS::ModelEvaluator\l::searchOptimalThresholdCombination" alt="" coords="238,201,482,242"/>
+<area shape="rect" id="node6" href="$namespace_a_r_t_o_s.html#abb19f751e8c4b1e73d44a8167a8a23c8" title="ARTOS::repeated_harmony\l_search" alt="" coords="531,171,714,213"/>
+<area shape="rect" id="node7" href="$_model_evaluator_8cc.html#a96889736e5f53a5d8d22efd6dd6fc5a0" title="hs_fmeasure_cb" alt="" coords="563,237,682,264"/>
+</map>

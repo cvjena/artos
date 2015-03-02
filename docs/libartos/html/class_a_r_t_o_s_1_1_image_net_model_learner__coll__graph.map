@@ -1,5 +1,6 @@
 <map id="ARTOS::ImageNetModelLearner" name="ARTOS::ImageNetModelLearner">
-<area shape="rect" id="node2" href="$class_a_r_t_o_s_1_1_model_learner.html" title="ARTOS::ModelLearner" alt="" coords="29,101,184,131"/>
-<area shape="rect" id="node4" href="$class_a_r_t_o_s_1_1_stationary_background.html" title="ARTOS::StationaryBackground" alt="" coords="5,5,208,35"/>
-<area shape="rect" id="node6" href="$class_a_r_t_o_s_1_1_image_repository.html" title="ARTOS::ImageRepository" alt="" coords="208,101,381,131"/>
+<area shape="rect" id="node2" href="$class_a_r_t_o_s_1_1_model_learner.html" title="ARTOS::ModelLearner" alt="" coords="129,96,283,123"/>
+<area shape="rect" id="node3" href="$class_a_r_t_o_s_1_1_model_learner_base.html" title="ARTOS::ModelLearnerBase" alt="" coords="5,5,189,32"/>
+<area shape="rect" id="node4" href="$class_a_r_t_o_s_1_1_stationary_background.html" title="ARTOS::StationaryBackground" alt="" coords="214,5,417,32"/>
+<area shape="rect" id="node5" href="$class_a_r_t_o_s_1_1_image_repository.html" title="ARTOS::ImageRepository" alt="" coords="309,96,483,123"/>
 </map>

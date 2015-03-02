@@ -1,6 +1,6 @@
 <map id="learner_optimize_th" name="learner_optimize_th">
 <area shape="rect" id="node2" href="$libartos_8cc.html#a7f0b115c2293574072fc57cc5e5b6137" title="is_valid_learner_handle" alt="" coords="216,5,373,32"/>
-<area shape="rect" id="node3" href="$class_a_r_t_o_s_1_1_model_learner.html#a0831dd483e29c6f8b8256a345f8e0e4b" title="ARTOS::ModelLearner\l::getModels" alt="" coords="217,57,372,98"/>
+<area shape="rect" id="node3" href="$class_a_r_t_o_s_1_1_model_learner_base.html#a3239865136bcb217fc55e925c6249901" title="ARTOS::ModelLearnerBase\l::getModels" alt="" coords="203,57,387,98"/>
 <area shape="rect" id="node4" href="$class_a_r_t_o_s_1_1_image_net_model_learner.html#aa85319a90b54735b087f262ea1384366" title="ARTOS::ImageNetModelLearner\l::getRepository" alt="" coords="189,122,400,163"/>
 <area shape="rect" id="node5" href="$class_a_r_t_o_s_1_1_image_repository.html#a181a1aef6315324ee6df03f61f60e1f4" title="ARTOS::ImageRepository\l::getRepoDirectory" alt="" coords="207,187,382,229"/>
 <area shape="rect" id="node6" href="$libartos_8cc.html#a7647fc5439e2e06dec23ca1821aaf806" title="progress_proxy" alt="" coords="239,253,350,280"/>

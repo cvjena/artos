@@ -9,5 +9,6 @@ var sysutils_8cc =
     [ "join_path", "sysutils_8cc.html#aea7fafd2be88e54c39022ea792fd76e2", null ],
     [ "real_path", "sysutils_8cc.html#ad6db4dab9a77cd6740ecd629a94d66ab", null ],
     [ "replace_file_extension", "sysutils_8cc.html#a9f553f0e7879b17ba31ff13349402053", null ],
+    [ "scandir", "sysutils_8cc.html#a85b755fb78fe3676f140370464d672d8", null ],
     [ "strip_file_extension", "sysutils_8cc.html#a830125924ecdba4b09a0a90b67e1bf26", null ]
 ];

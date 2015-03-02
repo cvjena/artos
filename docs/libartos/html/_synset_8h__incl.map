@@ -1,5 +1,5 @@
 <map id="ImageNet/Synset.h" name="ImageNet/Synset.h">
-<area shape="rect" id="node5" href="$_synset_iterators_8h.html" title="SynsetIterators.h" alt="" coords="439,83,561,112"/>
-<area shape="rect" id="node11" href="$_synset_image_8h.html" title="SynsetImage.h" alt="" coords="295,160,404,189"/>
-<area shape="rect" id="node22" href="$_tar_extractor_8h.html" title="TarExtractor.h" alt="" coords="448,160,552,189"/>
+<area shape="rect" id="node3" href="$_synset_iterators_8h.html" title="SynsetIterators.h" alt="" coords="444,80,567,107"/>
+<area shape="rect" id="node6" href="$_synset_image_8h.html" title="SynsetImage.h" alt="" coords="298,155,408,181"/>
+<area shape="rect" id="node11" href="$_tar_extractor_8h.html" title="TarExtractor.h" alt="" coords="453,155,557,181"/>
 </map>

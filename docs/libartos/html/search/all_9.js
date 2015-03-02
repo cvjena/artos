@@ -17,6 +17,7 @@ var searchData=
   ['img',['img',['../struct_a_r_t_o_s_1_1_sample.html#a01f49439602f1d246cc428247f44adc1',1,'ARTOS::Sample']]],
   ['index',['index',['../struct_a_r_t_o_s_1_1_tar_file_info.html#a99de878fd3f6af53409829714ae6e837',1,'ARTOS::TarFileInfo']]],
   ['inith',['inith',['../class_a_r_t_o_s_1_1_d_p_m_detection.html#aca8b9e1d71671a6325c71c17b909406e',1,'ARTOS::DPMDetection']]],
+  ['initpatchwork',['initPatchwork',['../class_a_r_t_o_s_1_1_d_p_m_detection.html#a9e875e93dfc610b4865cd63be33176e7',1,'ARTOS::DPMDetection']]],
   ['initw',['initw',['../class_a_r_t_o_s_1_1_d_p_m_detection.html#a60d0cc7b412d04a25e0b70a41fee9e17',1,'ARTOS::DPMDetection']]],
   ['interval',['interval',['../class_a_r_t_o_s_1_1_d_p_m_detection.html#a6ebe57f9d07353177fc76e83933602c9',1,'ARTOS::DPMDetection::interval()'],['../class_a_r_t_o_s_1_1_feature_pyramid.html#ab3c9064626fd35cece4369e074a97d65',1,'ARTOS::FeaturePyramid::interval()']]],
   ['is_5fdir',['is_dir',['../sysutils_8cc.html#a673ec6a3fa94cbc71c56abc7c767c37e',1,'is_dir(const string &amp;path):&#160;sysutils.cc'],['../sysutils_8h.html#ad5849662d9826d4f6ac56a07c6088432',1,'is_dir(const std::string &amp;path):&#160;sysutils.h']]],

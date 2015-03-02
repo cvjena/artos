@@ -1,6 +1,6 @@
 <map id="ARTOS::SynsetImage::loadBoundingBoxes" name="ARTOS::SynsetImage::loadBoundingBoxes">
-<area shape="rect" id="node3" href="$sysutils_8cc.html#aea7fafd2be88e54c39022ea792fd76e2" title="join_path" alt="" coords="239,5,313,35"/>
-<area shape="rect" id="node5" href="$sysutils_8cc.html#a830125924ecdba4b09a0a90b67e1bf26" title="strip_file_extension" alt="" coords="209,59,343,88"/>
-<area shape="rect" id="node9" href="$sysutils_8cc.html#aba491b60b98d44c64cbe8faf6fe56c81" title="extract_basename" alt="" coords="212,112,340,141"/>
-<area shape="rect" id="node7" href="$sysutils_8cc.html#a9f553f0e7879b17ba31ff13349402053" title="replace_file_extension" alt="" coords="393,59,543,88"/>
+<area shape="rect" id="node2" href="$sysutils_8cc.html#aea7fafd2be88e54c39022ea792fd76e2" title="join_path" alt="" coords="239,5,313,32"/>
+<area shape="rect" id="node3" href="$sysutils_8cc.html#a830125924ecdba4b09a0a90b67e1bf26" title="strip_file_extension" alt="" coords="209,56,343,83"/>
+<area shape="rect" id="node5" href="$sysutils_8cc.html#aba491b60b98d44c64cbe8faf6fe56c81" title="extract_basename" alt="" coords="211,107,341,133"/>
+<area shape="rect" id="node4" href="$sysutils_8cc.html#a9f553f0e7879b17ba31ff13349402053" title="replace_file_extension" alt="" coords="393,56,543,83"/>
 </map>

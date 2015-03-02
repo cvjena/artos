@@ -15,7 +15,7 @@ var searchData=
   ['computeaverageprecision',['computeAveragePrecision',['../class_a_r_t_o_s_1_1_model_evaluator.html#a9b9ef60f388c3fd53c1b04aae81d7f42',1,'ARTOS::ModelEvaluator']]],
   ['computecovariance',['computeCovariance',['../class_a_r_t_o_s_1_1_stationary_background.html#a297919d54f44a7afb375c6876101f6b4',1,'ARTOS::StationaryBackground']]],
   ['computeflattenedcovariance',['computeFlattenedCovariance',['../class_a_r_t_o_s_1_1_stationary_background.html#a4c576e8274efa80d4afdfa22d37f11a7',1,'ARTOS::StationaryBackground']]],
-  ['computeoptimalcellnumber',['computeOptimalCellNumber',['../class_a_r_t_o_s_1_1_model_learner.html#ad2e211dddf5c19b224c81a1e145ab255',1,'ARTOS::ModelLearner']]],
+  ['computeoptimalcellnumber',['computeOptimalCellNumber',['../class_a_r_t_o_s_1_1_model_learner_base.html#a33a5b2f4ebe59c073dd7108ebd4e452f',1,'ARTOS::ModelLearnerBase']]],
   ['cov',['cov',['../class_a_r_t_o_s_1_1_stationary_background.html#ac245fc9b8d97396d0d3e3deccb74169e',1,'ARTOS::StationaryBackground']]],
   ['covmatrix',['CovMatrix',['../class_a_r_t_o_s_1_1_stationary_background.html#a475baa7536212a32863fc30873b77bc3',1,'ARTOS::StationaryBackground']]],
   ['covmatrixarray',['CovMatrixArray',['../class_a_r_t_o_s_1_1_stationary_background.html#a1f50f3cc677d2918905cb1eea4bc7607',1,'ARTOS::StationaryBackground']]],

@@ -1,5 +1,5 @@
 <map id="detect_raw" name="detect_raw">
-<area shape="rect" id="node3" href="$libartos_8cc.html#ae819ec44a4682b57d63dd84941fc8b35" title="detect_jpeg" alt="" coords="143,32,231,61"/>
-<area shape="rect" id="node5" href="$libartos_8cc.html#a9410497cc2ce4aa85415e175502a025b" title="is_valid_detector_handle" alt="" coords="280,5,445,35"/>
-<area shape="rect" id="node7" href="$libartos_8cc.html#a130ead863678478d5a2b947b0bda8304" title="write_results_to_buffer" alt="" coords="285,59,440,88"/>
+<area shape="rect" id="node2" href="$libartos_8cc.html#ae819ec44a4682b57d63dd84941fc8b35" title="detect_jpeg" alt="" coords="142,31,231,57"/>
+<area shape="rect" id="node3" href="$libartos_8cc.html#a9410497cc2ce4aa85415e175502a025b" title="is_valid_detector_handle" alt="" coords="280,5,445,32"/>
+<area shape="rect" id="node4" href="$libartos_8cc.html#a130ead863678478d5a2b947b0bda8304" title="write_results_to_buffer" alt="" coords="285,56,440,83"/>
 </map>

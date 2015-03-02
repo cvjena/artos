@@ -1,4 +1,4 @@
 <map id="detect_jpeg" name="detect_jpeg">
-<area shape="rect" id="node3" href="$libartos_8cc.html#a9410497cc2ce4aa85415e175502a025b" title="is_valid_detector_handle" alt="" coords="144,5,309,35"/>
-<area shape="rect" id="node5" href="$libartos_8cc.html#a130ead863678478d5a2b947b0bda8304" title="write_results_to_buffer" alt="" coords="149,59,304,88"/>
+<area shape="rect" id="node2" href="$libartos_8cc.html#a9410497cc2ce4aa85415e175502a025b" title="is_valid_detector_handle" alt="" coords="144,5,309,32"/>
+<area shape="rect" id="node3" href="$libartos_8cc.html#a130ead863678478d5a2b947b0bda8304" title="write_results_to_buffer" alt="" coords="149,56,304,83"/>
 </map>

@@ -29,9 +29,12 @@ var files =
     ] ],
     [ "ModelLearner.cc", "_model_learner_8cc.html", "_model_learner_8cc" ],
     [ "ModelLearner.h", "_model_learner_8h.html", [
-      [ "WHOSample", "struct_a_r_t_o_s_1_1_w_h_o_sample.html", "struct_a_r_t_o_s_1_1_w_h_o_sample" ],
-      [ "ModelLearner", "class_a_r_t_o_s_1_1_model_learner.html", "class_a_r_t_o_s_1_1_model_learner" ],
-      [ "Size", "struct_a_r_t_o_s_1_1_model_learner_1_1_size.html", "struct_a_r_t_o_s_1_1_model_learner_1_1_size" ]
+      [ "ModelLearner", "class_a_r_t_o_s_1_1_model_learner.html", "class_a_r_t_o_s_1_1_model_learner" ]
+    ] ],
+    [ "ModelLearnerBase.cc", "_model_learner_base_8cc.html", null ],
+    [ "ModelLearnerBase.h", "_model_learner_base_8h.html", [
+      [ "ModelLearnerBase", "class_a_r_t_o_s_1_1_model_learner_base.html", "class_a_r_t_o_s_1_1_model_learner_base" ],
+      [ "Size", "struct_a_r_t_o_s_1_1_model_learner_base_1_1_size.html", "struct_a_r_t_o_s_1_1_model_learner_base_1_1_size" ]
     ] ],
     [ "portable_endian.h", "portable__endian_8h.html", null ],
     [ "Random.cc", "_random_8cc.html", null ],

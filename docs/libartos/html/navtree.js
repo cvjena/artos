@@ -1,6 +1,7 @@
 var NAVTREE =
 [
   [ "ARTOS", "index.html", [
+    [ "Todo List", "todo.html", null ],
     [ "Namespaces", null, [
       [ "Namespace List", "namespaces.html", "namespaces" ],
       [ "Namespace Members", "namespacemembers.html", [
@@ -30,6 +31,8 @@ var NAVTREE =
         [ "Functions", "globals_func.html", null ],
         [ "Variables", "globals_vars.html", null ],
         [ "Typedefs", "globals_type.html", null ],
+        [ "Enumerations", "globals_enum.html", null ],
+        [ "Enumerator", "globals_eval.html", null ],
         [ "Macros", "globals_defs.html", null ]
       ] ]
     ] ]
@@ -39,8 +42,8 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "_d_p_m_detection_8cc.html",
-"class_a_r_t_o_s_1_1_synset_image_iterator.html#a8c1a2e9304541f8c2c58b6e7a115fb75",
-"struct_flat_detection.html#ae86302fb7e2290558d000c2a6286c631"
+"class_a_r_t_o_s_1_1_synset_image.html#a50eed6eb53b7323881f1f066e8163fa7",
+"struct_a_r_t_o_s_1_1_synset.html#af3e9809523a8c003a35c6bcb7c3b05a1"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
