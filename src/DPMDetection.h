@@ -96,6 +96,14 @@ class DPMDetection
     * @return Returns zero on success, otherwise a negative error code.
     */
     int detect ( const FFLD::JPEGImage & image, std::vector<Detection> & detections );
+
+    /**
+    * Detects only the highest scoring object in a given image which matches one of the models added before using addModel() or addModels().
+    * @param[in] image The image.
+    * @param[out] detection A detection object which will receive information about the highest scoring detection.
+    * @return Returns zero on success, otherwise a negative error code.
+    */
+    int detectMax ( const FFLD::JPEGImage & image, Detection & detection );
     
     /**
     * Adds a model to the detection stack.
@@ -152,6 +160,20 @@ class DPMDetection
     unsigned int getNumModels() const { return this->mixtures.size(); };
     
     /**
+    * Returns a model added before using addModel() or addModels().
+    * @param[in] classname The class name of the model to be returned.
+    * @return Returns a pointer to an FFLD::Mixture object or NULL if there is no model with that class name.
+    */
+    const FFLD::Mixture * getModel(const std::string & classname) const;
+    
+    /**
+    * Returns a model added before using addModel() or addModels().
+    * @param[in] modelIndex The index of the model to be returned.
+    * @return Returns a pointer to an FFLD::Mixture object or NULL if the given index is out of bounds.
+    */
+    const FFLD::Mixture * getModel(const unsigned int modelIndex) const;
+    
+    /**
     * Determines the classname of the model with a given index in the detection stack.
     * @param[in] modelIndex The index of the model.
     * @return Returns the classname of the model at the given index or an empty string if
@@ -172,6 +194,8 @@ class DPMDetection
     std::map<std::string, double> thresholds;
     std::map<std::string, std::string> synsetIds;
     std::map<std::string, unsigned int> modelIndices;
+    
+    int initPatchwork(unsigned int rows, unsigned int cols);
 
   private:
     void init ( bool verbose, double overlap, int padding, int interval );

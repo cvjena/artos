@@ -462,6 +462,7 @@ bool ModelEvaluator::dumpTestResults(const string & filename, const int modelInd
     }
     
     file.close();
+    return true;
 }
 
 

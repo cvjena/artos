@@ -102,6 +102,18 @@ int DPMDetection::replaceModel ( const unsigned int modelIndex, const Mixture & 
     return (classname.empty()) ? ARTOS_RES_INTERNAL_ERROR : this->addModel(classname, model, threshold);
 }
 
+const Mixture * DPMDetection::getModel(const string & classname) const
+{
+    map<string, Mixture*>::const_iterator it = mixtures.find(classname);
+    return (it != mixtures.end()) ? it->second : NULL;
+}
+
+const Mixture * DPMDetection::getModel(const unsigned int modelIndex) const
+{
+    string classname = this->getClassnameFromIndex(modelIndex);
+    return (!classname.empty()) ? this->getModel(classname) : NULL;
+}
+
 std::string DPMDetection::getClassnameFromIndex( const unsigned int modelIndex ) const
 {
     for (map<string, unsigned int>::const_iterator it = modelIndices.begin(); it != modelIndices.end(); it++)
@@ -141,44 +153,16 @@ int DPMDetection::detect ( const JPEGImage & image, vector<Detection> & detectio
     if (this->verbose) {
         cerr << "Computed HOG features in " << stop() << " ms for an image of size " <<
                 image.width() << " x " << image.height() << endl;
-        start();
     }
 
-    // Initialize the Patchwork class (only when necessary)
-    int w = (pyramid.levels()[0].rows() - this->padding + 15) & ~15;
-    int h = (pyramid.levels()[0].cols() - this->padding + 15) & ~15;
-    if ( w != initw || h != inith )
-    {
-        if (this->verbose)
-            cerr << "Init values for Patchwork: " << w << " x " << h << endl;
-
-        if (!Patchwork::Init(w,h)) {
-            if (this->verbose)
-                cerr << "\nCould not initialize the Patchwork class" << endl;
-            return ARTOS_RES_INTERNAL_ERROR;
-        }
-        if (this->verbose) {
-            cerr << "Initialized FFTW in " << stop() << " ms" << endl;
-            start();
-        }
-        
-        // Cache filters
-        for ( map<std::string, Mixture *>::iterator i = this->mixtures.begin(); i != this->mixtures.end(); i++ )
-        {
-            Mixture *mixture = i->second;
-            mixture->cacheFilters();
-        }
-        if (this->verbose) 
-            cerr << "Transformed the filters in " << stop() << " ms" << endl;
-
-        initw = w;
-        inith = h;
-    }
+    int errcode = this->initPatchwork(pyramid.levels()[0].rows(), pyramid.levels()[0].cols());
+    if (errcode != ARTOS_RES_OK)
+        return errcode;
 
     if ( this->verbose )
         start();
 
-    int errcode = this->detect( image.width(), image.height(), pyramid, detections);
+    errcode = this->detect( image.width(), image.height(), pyramid, detections);
  
     if (this->verbose)
         cerr << "Computed the convolutions and distance transforms in " << stop() << " ms" << endl;
@@ -275,6 +259,134 @@ int DPMDetection::detect(int width, int height, const HOGPyramid & pyramid, vect
             cerr << "Number of detections after non-maximum suppression: " << single_detections.size() << endl;
 
         detections.insert ( detections.begin(), single_detections.begin(), single_detections.end() );
+    }
+    return ARTOS_RES_OK;
+}
+
+int DPMDetection::detectMax ( const JPEGImage & image, Detection & detection )
+{
+    if ( mixtures.size() == 0 )
+        return ARTOS_DETECT_RES_NO_MODELS;
+
+    // Compute the HOG features
+    if (this->verbose)
+        start();
+
+    HOGPyramid pyramid(image, this->padding, this->padding, this->interval);
+
+    if (pyramid.empty()) {
+        if (this->verbose)
+            cerr << "\nInvalid image!" << endl;
+        return ARTOS_DETECT_RES_INVALID_IMAGE;
+    }
+
+    if (this->verbose) {
+        cerr << "Computed HOG features in " << stop() << " ms for an image of size " <<
+                image.width() << " x " << image.height() << endl;
+    }
+
+    int errcode = this->initPatchwork(pyramid.levels()[0].rows(), pyramid.levels()[0].cols());
+    if (errcode != ARTOS_RES_OK)
+        return errcode;
+
+    if ( this->verbose )
+        start();
+
+    HOGPyramid::Scalar score, maxScore = -1 * numeric_limits<HOGPyramid::Scalar>::infinity();
+    int y, x;
+    for ( map<std::string, Mixture *>::iterator i = this->mixtures.begin(); i != this->mixtures.end(); i++ )
+    {
+        Mixture *mixture = i->second;
+        const std::string & classname = i->first;
+        const std::string & synsetId = synsetIds[classname];
+        unsigned int modelIndex = modelIndices[classname];
+
+        // Compute the scores
+        vector<HOGPyramid::Matrix> scores;
+        vector<Mixture::Indices> argmaxes;
+        
+        // there is also a version which allows obtaining the part positions, but who cares :)
+        // see the original ffld code for this call
+        mixture->convolve(pyramid, scores, argmaxes);
+        
+        if (this->verbose)
+            cerr << "Running detector for " << classname << endl;
+        
+        // Cache the size of the models
+        vector<pair<int, int> > sizes(mixture->models().size());
+        
+        for (int i = 0; i < sizes.size(); ++i)
+            sizes[i] = mixture->models()[i].rootSize();
+        
+        // For each scale
+        for (int i = pyramid.interval(); i < scores.size(); ++i)
+        {
+            // Scale = 8 / 2^(1 - i / interval)
+            const double scale = pow(2.0, static_cast<double>(i) / pyramid.interval() + 2.0);
+          
+            score = scores[i].maxCoeff(&y, &x);
+            if (score > maxScore)
+            {
+                FFLD::Rectangle bndbox((int)((x - pyramid.padx()) * scale + 0.5),
+                                       (int)((y - pyramid.pady()) * scale + 0.5),
+                                       (int)(sizes[argmaxes[i](y, x)].second * scale + 0.5),
+                                       (int)(sizes[argmaxes[i](y, x)].first * scale + 0.5));
+                  
+                // Truncate the object
+                bndbox.setX(max(bndbox.x(), 0));
+                bndbox.setY(max(bndbox.y(), 0));
+                bndbox.setWidth(min(bndbox.width(), image.width() - bndbox.x()));
+                bndbox.setHeight(min(bndbox.height(), image.height() - bndbox.y()));
+                  
+                if (!bndbox.empty())
+                {
+                    detection = Detection(score, i, x, y, bndbox, classname, synsetId, modelIndex);
+                    maxScore = score;
+                }
+            }
+        }
+
+    }
+ 
+    if (this->verbose)
+        cerr << "Computed the convolutions and distance transforms in " << stop() << " ms" << endl;
+
+    return ARTOS_RES_OK;
+}
+
+int DPMDetection::initPatchwork(unsigned int rows, unsigned int cols)
+{
+    // Initialize the Patchwork class (only when necessary)
+    int w = (rows - this->padding + 15) & ~15;
+    int h = (cols - this->padding + 15) & ~15;
+    if ( w != initw || h != inith )
+    {
+        if (this->verbose) {
+            cerr << "Init values for Patchwork: " << w << " x " << h << endl;
+            start();
+        }
+
+        if (!Patchwork::Init(w,h)) {
+            if (this->verbose)
+                cerr << "\nCould not initialize the Patchwork class" << endl;
+            return ARTOS_RES_INTERNAL_ERROR;
+        }
+        if (this->verbose) {
+            cerr << "Initialized FFTW in " << stop() << " ms" << endl;
+            start();
+        }
+        
+        // Cache filters
+        for ( map<std::string, Mixture *>::iterator i = this->mixtures.begin(); i != this->mixtures.end(); i++ )
+        {
+            Mixture *mixture = i->second;
+            mixture->cacheFilters();
+        }
+        if (this->verbose) 
+            cerr << "Transformed the filters in " << stop() << " ms" << endl;
+
+        initw = w;
+        inith = h;
     }
     return ARTOS_RES_OK;
 }
