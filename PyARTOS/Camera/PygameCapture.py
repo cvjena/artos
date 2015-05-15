@@ -12,7 +12,10 @@ import pygame
 import pygame.camera
 import pygame.image
 from pygame.locals import *
-from PIL import Image
+try:
+    from PIL import Image
+except:
+    import Image
 
 
 

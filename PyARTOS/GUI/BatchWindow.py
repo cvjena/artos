@@ -18,7 +18,10 @@ except:
 
 import os, gc
 from glob import glob
-from PIL import Image, ImageTk
+try:
+    from PIL import Image, ImageTk
+except:
+    import Image, ImageTk
 
 from . import gui_utils
 from .. import utils, detecting

@@ -7,7 +7,10 @@ Author: Bjoern Barz
 """
 
 import cv2
-from PIL import Image
+try:
+    from PIL import Image
+except:
+    import Image
 
 
 class Capture(object):

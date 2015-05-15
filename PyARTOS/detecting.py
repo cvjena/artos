@@ -7,7 +7,10 @@ set of models in images.
 
 from . import artos_wrapper, utils
 from .artos_wrapper import libartos
-from PIL import Image, ImageDraw
+try:
+    from PIL import Image, ImageDraw
+except:
+    import Image, ImageDraw
 import ctypes
 import sys
 

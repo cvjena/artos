@@ -3,7 +3,10 @@
 
 from . import artos_wrapper, utils
 from .artos_wrapper import libartos
-from PIL import Image
+try:
+    from PIL import Image
+except:
+    import Image
 from glob import glob
 import ctypes, os.path, re, tarfile
 

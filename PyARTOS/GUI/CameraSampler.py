@@ -14,7 +14,10 @@ except:
     import tkMessageBox
 
 import os.path
-from PIL import Image, ImageTk
+try:
+    from PIL import Image, ImageTk
+except:
+    import Image, ImageTk
 
 from . import gui_utils
 from .. import utils

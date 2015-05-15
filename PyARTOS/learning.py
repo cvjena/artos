@@ -11,7 +11,10 @@ from . import artos_wrapper, imagenet, utils
 from .artos_wrapper import libartos
 from .detecting import BoundingBox
 
-from PIL import Image, ImageDraw
+try:
+    from PIL import Image, ImageDraw
+except:
+    import Image, ImageDraw
 import math, re, os, ctypes
 
 

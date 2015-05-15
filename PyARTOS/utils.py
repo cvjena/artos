@@ -1,7 +1,10 @@
 """Provides some common helper functions."""
 
 import math, re, os.path, sys, time
-from PIL import Image
+try:
+    from PIL import Image, ImageTk
+except:
+    import Image, ImageTk
 
 
 basedir = os.path.dirname(os.path.abspath(__file__))
