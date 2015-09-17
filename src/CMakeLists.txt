@@ -10,7 +10,7 @@ set(API_VERSION 1)
 ADD_SUBDIRECTORY(ffld)
 INCLUDE_DIRECTORIES("${PROJECT_SOURCE_DIR}/ffld")
 #### Build static library for image repository access ####
-IF(NOT CMAKE_BUILD_TYPE)
+IF(NOT IMAGE_REPOSITORY_SRC)
   SET(IMAGE_REPOSITORY_SRC "ImageNet" CACHE STRING "Subdirectory with source files for image repository access.")
 ENDIF()
 INCLUDE_DIRECTORIES("${PROJECT_SOURCE_DIR}" "${PROJECT_SOURCE_DIR}/${IMAGE_REPOSITORY_SRC}")
