@@ -67,6 +67,7 @@ JPEGImage::JPEGImage(const string & filename) : width_(0), height_(0), depth_(0)
 	if ((jpeg_read_header(&cinfo, TRUE) != JPEG_HEADER_OK) || (cinfo.data_precision != 8) ||
 		!jpeg_start_decompress(&cinfo)) {
 		fclose(file);
+		jpeg_destroy_decompress(&cinfo);
 		return;
 	}
 	
@@ -77,11 +78,14 @@ JPEGImage::JPEGImage(const string & filename) : width_(0), height_(0), depth_(0)
 		
 		if (jpeg_read_scanlines(&cinfo, &row, 1) != 1) {
 			fclose(file);
+			jpeg_abort_decompress(&cinfo);
+			jpeg_destroy_decompress(&cinfo);
 			return;
 		}
 	}
 	
 	jpeg_finish_decompress(&cinfo);
+	jpeg_destroy_decompress(&cinfo);
 	
 	fclose(file);
 	
@@ -106,6 +110,7 @@ JPEGImage::JPEGImage(FILE * filehandle) : width_(0), height_(0), depth_(0)
 	
 	if ((jpeg_read_header(&cinfo, TRUE) != JPEG_HEADER_OK) || (cinfo.data_precision != 8) ||
 		!jpeg_start_decompress(&cinfo)) {
+		jpeg_destroy_decompress(&cinfo);
 		return;
 	}
 	
@@ -115,11 +120,14 @@ JPEGImage::JPEGImage(FILE * filehandle) : width_(0), height_(0), depth_(0)
 		JSAMPLE * row = static_cast<JSAMPLE *>(&bits[y * cinfo.image_width * cinfo.num_components]);
 		
 		if (jpeg_read_scanlines(&cinfo, &row, 1) != 1) {
+			jpeg_abort_decompress(&cinfo);
+			jpeg_destroy_decompress(&cinfo);
 			return;
 		}
 	}
 	
 	jpeg_finish_decompress(&cinfo);
+	jpeg_destroy_decompress(&cinfo);
 	
 	// Recopy everyting if the loading was successful
 	width_ = cinfo.image_width;

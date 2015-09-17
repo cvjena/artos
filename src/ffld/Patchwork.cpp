@@ -295,7 +295,11 @@ bool Patchwork::Init(int maxRows, int maxCols)
 		MaxRows_ = maxRows;
 		MaxCols_ = maxCols;
 		HalfCols_ = maxCols / 2 + 1;
+		if (Forwards_ != 0)
+			fftwf_destroy_plan(Forwards_);
 		Forwards_ = forwards;
+		if (Inverse_ != 0)
+			fftwf_destroy_plan(Inverse_);
 		Inverse_ = inverse;
 		return true;
 	}
