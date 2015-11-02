@@ -1,6 +1,20 @@
 ARTOS Changelog
 ===============
 
+Version 1.2 (2015-11-02)
+------------------------
+
+- [Improvement] Instead of the tar archives used by ImageNet, one may now store images and annotation files in plain directories by using the
+  new ImageDirectories interface as a drop-in replacement for ImageNet (see README.md for details).
+- [Change] Added an abstraction layer to the model learning process: The new abstract base class ModelLearnerBase is agnostic of the concrete
+  learning method, which may be the WHO method implemented by ModelLearner as well as any other linear classifier.
+- [Misc] Added DPMDetection::detectMax(), which yields just the highest scoring detection on a given image (may be useful for classification-like tasks).
+- [Misc] Support for legacy way of importing PIL.
+- [Fix] Fixed a bug which broke AnnotationDialog if used with large images.
+- [Fix] Fixed some memory leaks in the FFLD library shipped with ARTOS.
+- [Fix] Minor fixes to the build process.
+
+
 Version 1.1 (2014-10-31)
 ------------------------
 

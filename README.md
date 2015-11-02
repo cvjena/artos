@@ -100,8 +100,10 @@ To build *libartos* on **Windows**, use the *CMake GUI* to create a *MinGW Makef
 4. Setting up the environment
 -----------------------------
 
-The use of the **[ImageNet][3]** image repository is an essential part of the ARTOS-workflow.  
-Hence, before the first use of *ARTOS*, you need to download:
+ARTOS has been designed to work seamlessly with the **[ImageNet][3]** image repository. If you want to use other data instead,
+please refer to the corresponding section below.
+
+To get started with ImageNet you need to download:
 
 1. **a (full) copy of the ImageNet image data for all synsets**
 
@@ -129,6 +131,40 @@ Having those three components (images, annotations and the synset listfile), str
 3. Create 2 sub-directories: `Images` and `Annotation`
 4. Unpack the images Tar file to the `Images` directory, so that it contains one tar file for each synset.
 5. Unpack the annotations Tar file to the `Annotation` directory, so that it contains one tar file for each synset. If those archives are compressed (gzipped), decompress them by running `gzip -d -r .`
+
+
+### Using custom image repositories ###
+
+If you do not want to obey the structure of tar archives used by the *ImageNet* repository (see above), but want to store your own images and annotations
+in plain directories, make up your directory structure like follows:
+
+    Images
+      |
+      |--synset1
+      |    |-- image1.jpg
+      |    |-- image1.xml
+      |    |-- image2.jpg
+      |    |-- image2.xml
+      |    |-- ...
+      |--synset2
+      |    |-- image1.jpg
+      |    |-- image1.xml
+      |    |-- ...
+      |-- ...
+
+There must be one root directory (`Images` in this case), which will be referred to as *the image repository*.  
+This directory would contain several sub-directories called *synsets*, one for each object class. Those directories contain the images and annotation files
+for the respective class. Each image has it's own xml file with bounding box annotations which must follow the annotation schema of PASCAL VOC, which is
+used by ImageNet too.
+
+The annotation files must have the same name as the image, just with `.xml` as file extension instead of `.jpg` or `.jpeg`. Images and annotations may be
+stored in further sub-directories of the synset, since the synset directory will be scanned recursively, but each annotation file must be located in
+the same directory as the image.
+
+Please also note, that the file extensions of images and annotation files must be in lower-case. This means, `.jpg`, `.jpeg` and `.xml` are okay, but
+`.JPG`, `.JPeG` or `.XML` won't be found.
+
+Finally, you have to change the `CMake` variable `IMAGE_REPOSITORY_SRC` from `ImageNet` to `ImageDirectories` and re-build `libartos`.
 
 
 5. Launching the ARTOS GUI
