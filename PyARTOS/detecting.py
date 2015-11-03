@@ -280,8 +280,12 @@ class Detector(object):
             numbytes = img.size[0] * img.size[1]
             if not grayscale:
                 numbytes = numbytes * 3
+            try:
+                imgbytes = img.tobytes()
+            except:
+                imgbytes = img.tostring()
             imgdata = ctypes.create_string_buffer(numbytes)
-            ctypes.memmove(imgdata, img.tostring(), numbytes)
+            ctypes.memmove(imgdata, imgbytes, numbytes)
             # Run detector
             libartos.detect_raw(self.handle, ctypes.cast(imgdata, artos_wrapper.c_ubyte_p), img.size[0], img.size[1], grayscale, buf, buf_size)
         else:

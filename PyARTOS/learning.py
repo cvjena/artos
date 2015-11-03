@@ -134,8 +134,12 @@ class ModelLearner(object):
             numbytes = sample.size[0] * sample.size[1]
             if not grayscale:
                 numbytes = numbytes * 3
+            try:
+                imgbytes = sample.tobytes()
+            except:
+                imgbytes = sample.tostring()
             imgdata = ctypes.create_string_buffer(numbytes)
-            ctypes.memmove(imgdata, sample.tostring(), numbytes)
+            ctypes.memmove(imgdata, imgbytes, numbytes)
             # Add sample
             libartos.learner_add_raw(self.handle, ctypes.cast(imgdata, artos_wrapper.c_ubyte_p), \
                                      sample.size[0], sample.size[1], grayscale, bboxes, numBBoxes)

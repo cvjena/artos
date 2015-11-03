@@ -36,7 +36,10 @@ class Capture(object):
         """Returns a snapshot from the device as PIL.Image.Image object."""
         
         data, w, h, orientation = self.grabRawFrame()
-        return Image.fromstring("RGB", (w, h), data, "raw", "BGR", 0, orientation)
+        try:
+            return Image.frombytes("RGB", (w, h), data, "raw", "BGR", 0, orientation)
+        except:
+            return Image.fromstring("RGB", (w, h), data, "raw", "BGR", 0, orientation)
 
 
     def grabRawFrame(self):
