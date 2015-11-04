@@ -5,6 +5,7 @@
 #include <vector>
 #include "defs.h"
 #include "FeatureExtractor.h"
+#include "SynsetImage.h"
 #include "ffld/JPEGImage.h"
 #include "ffld/Rectangle.h"
 
@@ -77,6 +78,15 @@ public:
     * Resets this learner to it's initial state and makes it forget all learned models, thresholds and added samples.
     */
     virtual void reset();
+    
+    /**
+    * Adds a positive sample to learn from given by a SynsetImage object.
+    *
+    * @param[in] sample The SynsetImage object to be added as positive sample.
+    *
+    * @return True if the sample has been added, otherwise false.
+    */
+    virtual bool addPositiveSample(SynsetImage & sample);
     
     /**
     * Adds a positive sample to learn from given by an image and a bounding box around the object on that image.

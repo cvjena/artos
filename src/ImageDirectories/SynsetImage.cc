@@ -12,8 +12,10 @@ SynsetImage::SynsetImage(const string & repoDirectory, const string & synsetId,
                          const string & filename, const JPEGImage * img)
 : m_repoDir(repoDirectory), m_synsetId(synsetId), m_filename(strip_file_extension(filename)), m_imgLoaded(false), m_bboxesLoaded(false)
 {
+#ifndef NO_CACHE_POSITIVES
     if (img != NULL && !img->empty())
         this->m_img = JPEGImage(img->width(), img->height(), img->depth(), img->bits());
+#endif
 }
 
 
@@ -26,11 +28,11 @@ string SynsetImage::getPath() const
 }
 
 
-void SynsetImage::loadImage()
+void SynsetImage::loadImage(JPEGImage * target) const
 {
     string path = this->getPath();
     if (!path.empty())
-        this->m_img = JPEGImage(path);
+        *target = JPEGImage(path);
 }
 
 

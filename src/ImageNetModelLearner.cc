@@ -37,9 +37,14 @@ unsigned int ImageNetModelLearner::addPositiveSamplesFromSynset(const Synset & s
         SynsetImage simg = *imgIt;
         if (simg.loadBoundingBoxes())
         {
+#ifndef NO_CACHE_POSITIVES
             JPEGImage & img = simg.getImage();
-            if (!img.empty() && this->addPositiveSample(img, simg.bboxes))
+            if (!img.empty() && this->addPositiveSample(simg))
                 numSamples += simg.bboxes.size();
+#else
+            if (this->addPositiveSample(simg))
+                numSamples += simg.bboxes.size();
+#endif
         }
     }
     if (this->m_verbose)

@@ -2,8 +2,16 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 
 PROJECT(ARTOS)
 
-set(BUILD_VERSION "1.1")
+set(BUILD_VERSION "1.2")
 set(API_VERSION 1)
+
+
+#### Build options ####
+OPTION(CACHE_POSITIVES "Keep positive samples in RAM to save time." ON)
+
+IF(NOT CACHE_POSITIVES)
+  ADD_DEFINITIONS(-DNO_CACHE_POSITIVES)
+ENDIF()
 
 
 #### Build FFLD static library ####

@@ -135,14 +135,14 @@ void ModelEvaluator::testModels(const vector<Sample*> & positive, unsigned int m
                         {
                             sample = positive[sampleIndex];
                             if (detected(sampleIndex).size() == 0)
-                                detected(sampleIndex) = Eigen::Array<bool, 1, Eigen::Dynamic>::Constant(1, sample->bboxes.size(), false);
+                                detected(sampleIndex) = Eigen::Array<bool, 1, Eigen::Dynamic>::Constant(1, sample->bboxes().size(), false);
                             // Treat as true positive if detection area overlaps with bounding box
                             // by at least 50%
                             Intersector intersect(detIt->second);
-                            for (bboxIndex = 0; bboxIndex < sample->bboxes.size(); bboxIndex++)
+                            for (bboxIndex = 0; bboxIndex < sample->bboxes().size(); bboxIndex++)
                                 if (!detected(sampleIndex)(bboxIndex)
                                         && sample->modelAssoc[bboxIndex] == detIt->second.modelIndex
-                                        && intersect(sample->bboxes[bboxIndex]))
+                                        && intersect(sample->bboxes()[bboxIndex]))
                                 {
                                     isPositive = true;
                                     detected(sampleIndex)(bboxIndex) = true; // count only one detection for the same object
@@ -214,7 +214,7 @@ vector<float> ModelEvaluator::searchOptimalThresholdCombination(
         for (sampleIndex = 0, objectBaseIndex = 0; sampleIndex < positive.size(); sampleIndex++)
         {
             sample = positive[sampleIndex];
-            for (i = 0; i < sample->bboxes.size(); i++)
+            for (i = 0; i < sample->bboxes().size(); i++)
                 objectDetections.push_back(vector<const Detection*>());
             for (detIt = detections->begin(); detIt != detections->end(); detIt++)
                 if (detIt->first == sampleIndex)
@@ -223,8 +223,8 @@ vector<float> ModelEvaluator::searchOptimalThresholdCombination(
                     // Treat as true positive if detection area overlaps with bounding box
                     // by at least 50%
                     Intersector intersect(detIt->second);
-                    for (bboxIndex = 0; bboxIndex < sample->bboxes.size(); bboxIndex++)
-                        if (intersect(sample->bboxes[bboxIndex]))
+                    for (bboxIndex = 0; bboxIndex < sample->bboxes().size(); bboxIndex++)
+                        if (intersect(sample->bboxes()[bboxIndex]))
                         {
                             isPositive = true;
                             objectDetections[objectBaseIndex + bboxIndex].push_back(&detIt->second);
@@ -234,7 +234,7 @@ vector<float> ModelEvaluator::searchOptimalThresholdCombination(
                         for (i = 0; i < fpPerBias[detIt->second.modelIndex].size() && biases[detIt->second.modelIndex][i] <= detIt->second.score; i++)
                             fpPerBias[detIt->second.modelIndex][i]++;
                 }
-            objectBaseIndex += sample->bboxes.size();
+            objectBaseIndex += sample->bboxes().size();
         }
         // Count false positives per model and bias
         for (detIt = detections->begin(); detIt != detections->end(); detIt++)
@@ -332,7 +332,7 @@ vector<unsigned int> ModelEvaluator::runDetector(SampleDetectionsVector & detect
         // Run detector and store detections
         try
         {
-            this->detect(positive[i]->img, sampleDetections);
+            this->detect(positive[i]->img(), sampleDetections);
         }
         catch (const bad_alloc&)
         {

@@ -16,12 +16,14 @@ SynsetImage::SynsetImage(const string & repoDirectory, const string & synsetId,
                          const string & filename, const JPEGImage * img)
 : m_repoDir(repoDirectory), m_synsetId(synsetId), m_filename(strip_file_extension(filename)), m_imgLoaded(false), m_bboxesLoaded(false)
 {
+#ifndef NO_CACHE_POSITIVES
     if (img != NULL && !img->empty())
         this->m_img = JPEGImage(img->width(), img->height(), img->depth(), img->bits());
+#endif
 }
 
 
-void SynsetImage::loadImage()
+void SynsetImage::loadImage(JPEGImage * target) const
 {
     // Search for the image in the Tar archive and determine it's offset
     string tarFilename = this->m_synsetId + ".tar";
@@ -30,16 +32,16 @@ void SynsetImage::loadImage()
     if (info.type == tft_file)
     {
         // Load image from file using libjpeg
-        this->readImageFromFileOffset(tarPath, info.offset);
+        this->readImageFromFileOffset(tarPath, info.offset, target);
     }
-    
-    this->m_imgLoaded = true;
 }
 
 
-bool SynsetImage::readImageFromFileOffset(const string & filename, streamoff offset)
+bool SynsetImage::readImageFromFileOffset(const string & filename, streamoff offset, JPEGImage * target) const
 {
     bool success = false;
+    if (target == NULL)
+        target = &(this->m_img);
     FILE * fh = fopen(filename.c_str(), "rb");
     if (fh != NULL)
     {
@@ -51,7 +53,7 @@ bool SynsetImage::readImageFromFileOffset(const string & filename, streamoff off
         }
         if (fseek(fh, offset, SEEK_CUR) == 0)
         {
-            this->m_img = JPEGImage(fh);
+            *target = JPEGImage(fh);
             success = true;
         }
         fclose(fh);

@@ -80,13 +80,52 @@ ModelLearnerBase::Size ModelLearnerBase::computeOptimalCellNumber(const std::vec
 }
 
 
+bool ModelLearnerBase::addPositiveSample(SynsetImage & sample)
+{
+    if (!sample.valid())
+        return false;
+    
+    Sample s;
+    s.m_simg = sample;
+    
+    if (sample.loadBoundingBoxes() && !sample.bboxes.empty())
+    {
+        // Check if any of the bounding boxes is empty and use only one bounding boxes spanning the entire image
+        // in that case
+        bool validBBoxes = true;
+        for (vector<FFLD::Rectangle>::const_iterator it = sample.bboxes.begin(); it != sample.bboxes.end(); it++)
+            if (it->empty())
+            {
+                validBBoxes = false;
+                break;
+            }
+        if (validBBoxes)
+            s.m_bboxes = sample.bboxes;
+    }
+    if (s.m_bboxes.empty())
+    {
+        FFLD::Rectangle bbox(0, 0, 0, 0);
+        JPEGImage img = sample.getImage();
+        bbox.setWidth(img.width());
+        bbox.setHeight(img.height());
+        s.m_bboxes.push_back(bbox);
+    }
+    
+    s.modelAssoc.assign(s.m_bboxes.size(), 0);
+    s.data = NULL;
+    this->m_samples.push_back(s);
+    this->m_numSamples += s.m_bboxes.size();
+    return true;
+}
+
 bool ModelLearnerBase::addPositiveSample(const JPEGImage & sample, const FFLD::Rectangle & boundingBox)
 {
     if (sample.empty())
         return false;
+    
     Sample s;
-    s.img = sample;
-    s.bboxes.push_back((boundingBox.empty()) ? FFLD::Rectangle(0, 0, s.img.width(), s.img.height()) : boundingBox);
+    s.m_img = sample;
+    s.m_bboxes.push_back((boundingBox.empty()) ? FFLD::Rectangle(0, 0, sample.width(), sample.height()) : boundingBox);
     s.modelAssoc.push_back(0);
     s.data = NULL;
     this->m_samples.push_back(s);
@@ -109,9 +148,9 @@ bool ModelLearnerBase::addPositiveSample(const JPEGImage & sample, const vector<
             return this->addPositiveSample(sample, *it);
     
     Sample s;
-    s.img = sample;
-    s.bboxes = boundingBoxes;
-    s.modelAssoc.assign(s.bboxes.size(), 0);
+    s.m_img = sample;
+    s.m_bboxes = boundingBoxes;
+    s.modelAssoc.assign(s.m_bboxes.size(), 0);
     s.data = NULL;
     this->m_samples.push_back(s);
     this->m_numSamples += boundingBoxes.size();
@@ -134,7 +173,7 @@ bool ModelLearnerBase::learn(const unsigned int maxAspectClusters, const unsigne
     
     int i, c;
     vector<Sample>::iterator sample;
-    vector<FFLD::Rectangle>::iterator bbox;
+    vector<FFLD::Rectangle>::const_iterator bbox;
     
     // Cluster by aspect ratio
     Eigen::VectorXi aspectClusterAssignment = Eigen::VectorXi::Zero(this->getNumSamples());
@@ -146,7 +185,7 @@ bool ModelLearnerBase::learn(const unsigned int maxAspectClusters, const unsigne
         // Calculate aspect ratios
         Eigen::VectorXf aspects(this->getNumSamples());
         for (sample = this->m_samples.begin(), i = 0; sample != this->m_samples.end(); sample++)
-            for (bbox = sample->bboxes.begin(); bbox != sample->bboxes.end(); bbox++, i++)
+            for (bbox = sample->bboxes().begin(); bbox != sample->bboxes().end(); bbox++, i++)
                 aspects(i) = static_cast<float>(bbox->height()) / static_cast<float>(bbox->width());
         // Perform k-means clustering
         Eigen::VectorXf centroids;
@@ -165,7 +204,7 @@ bool ModelLearnerBase::learn(const unsigned int maxAspectClusters, const unsigne
     {
         vector< vector<int> > widths(numAspectClusters), heights(numAspectClusters);
         for (sample = this->m_samples.begin(), i = 0; sample != this->m_samples.end(); sample++)
-            for (bbox = sample->bboxes.begin(); bbox != sample->bboxes.end(); bbox++, i++)
+            for (bbox = sample->bboxes().begin(); bbox != sample->bboxes().end(); bbox++, i++)
             {
                 c = aspectClusterAssignment(i);
                 widths[c].push_back(bbox->width());

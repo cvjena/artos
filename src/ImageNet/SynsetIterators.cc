@@ -98,6 +98,7 @@ SynsetImage SynsetImageIterator::operator*()
     if (!this->m_lastFileName.empty())
     {
         SynsetImage simg(this->m_repoDir, this->m_synsetId, this->m_lastFileName);
+#ifndef NO_CACHE_POSITIVES
         if (!this->m_bboxMode)
         {
             // Try to read image from the stored offset in the tar archive
@@ -115,6 +116,7 @@ SynsetImage SynsetImageIterator::operator*()
                 free(xmlData);
             }
         }*/
+#endif
         return simg;
     }
     else
@@ -225,9 +227,11 @@ SynsetImage MixedImageIterator::operator*()
     if (!this->m_lastFileName.empty())
     {
         SynsetImage simg(this->m_repoDir, this->m_lastSynset, this->m_lastFileName);
+#ifndef NO_CACHE_POSITIVES
         // Try to read image from the stored offset in the tar archive
         string tarFilename = this->m_lastSynset + ".tar";
         simg.readImageFromFileOffset(join_path(3, this->m_repoDir.c_str(), IMAGENET_IMAGE_DIR, tarFilename.c_str()), this->m_lastFileOffset);
+#endif
         return simg;
     }
     else

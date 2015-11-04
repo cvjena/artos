@@ -62,18 +62,35 @@ public:
     */
     bool valid() const { return (!this->m_repoDir.empty() && !this->m_synsetId.empty() && !this->m_filename.empty()); };
     
+#ifndef NO_CACHE_POSITIVES
     /**
     * Returns the image itself. If the image isn't already in memory, it
     * will be loaded from the synset archive.
     *
     * @return The image as JPEGImage object.
     */
-    FFLD::JPEGImage & getImage()
+    FFLD::JPEGImage & getImage() const
     {
         if (!this->m_imgLoaded && this->m_img.empty())
-            this->loadImage();
+        {
+            this->loadImage(&(this->m_img));
+            this->m_imgLoaded = true;
+        }
         return this->m_img;
     };
+#else
+    /**
+    * Returns the image itself, which will be loaded from the synset archive each time this function is called.
+    *
+    * @return The image as JPEGImage object.
+    */
+    FFLD::JPEGImage getImage() const
+    {
+        FFLD::JPEGImage img;
+        this->loadImage(&img);
+        return img;
+    };
+#endif
     
     /**
     * Loads the actual image data from a specific position in a given file.
@@ -82,9 +99,12 @@ public:
     *
     * @param[in] offset The offset in the file, where the image data begins.
     *
+    * @param[out] target Pointer to the JPEGImage object which will receive the image data.  
+    * If set to NULL, `target` will be set to the address of this object's `m_img` field.
+    *
     * @return True if image data could be read, otherwise false.
     */
-    bool readImageFromFileOffset(const std::string & filename, std::streamoff offset);
+    bool readImageFromFileOffset(const std::string & filename, std::streamoff offset, FFLD::JPEGImage * target = NULL) const;
     
     /**
     * Loads bounding box annotations for this image into the bboxes vector if available.
@@ -127,14 +147,16 @@ protected:
     std::string m_repoDir; /**< The path to the repository directory. */
     std::string m_synsetId; /**< The ID of the synset this image belongs to. */
     std::string m_filename; /**< The filename of this image. */
-    FFLD::JPEGImage m_img; /**< Image data (may be an empty image if not loaded yet). */
-    bool m_imgLoaded; /**< Specifies whether an attempt to load the image has been made. */
-    bool m_bboxesLoaded; /**< Specifies if bounding box annotations have already been loaded for this image. */
+    mutable FFLD::JPEGImage m_img; /**< Image data (may be an empty image if not loaded yet). */
+    mutable bool m_imgLoaded; /**< Specifies whether an attempt to load the image has been made. */
+    mutable bool m_bboxesLoaded; /**< Specifies if bounding box annotations have already been loaded for this image. */
 
     /**
-    * Loads the actual image data from the synset archive into the m_img field.
+    * Loads the actual image data from the synset archive into the JPEGImage object provided.
+    *
+    * @param[out] target Pointer to the JPEGImage object which will receive the image data.
     */
-    void loadImage();
+    void loadImage(FFLD::JPEGImage * target) const;
 
 };
 

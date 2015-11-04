@@ -36,6 +36,19 @@ void ModelLearner::reset()
 }
 
 
+bool ModelLearner::addPositiveSample(SynsetImage & sample)
+{
+    if (ModelLearnerBase::addPositiveSample(sample))
+    {
+        Sample & s = this->m_samples.back();
+        s.data = reinterpret_cast<void*>(new vector<FeatureExtractor::FeatureMatrix>(s.bboxes().size(), FeatureExtractor::FeatureMatrix()));
+        return true;
+    }
+    else
+        return false;
+}
+
+
 bool ModelLearner::addPositiveSample(const JPEGImage & sample, const FFLD::Rectangle & boundingBox)
 {
     if (ModelLearnerBase::addPositiveSample(sample, boundingBox))
@@ -53,7 +66,7 @@ bool ModelLearner::addPositiveSample(const JPEGImage & sample, const vector<FFLD
     if (ModelLearnerBase::addPositiveSample(sample, boundingBoxes))
     {
         Sample & s = this->m_samples.back();
-        s.data = reinterpret_cast<void*>(new vector<FeatureExtractor::FeatureMatrix>(s.bboxes.size(), FeatureExtractor::FeatureMatrix()));
+        s.data = reinterpret_cast<void*>(new vector<FeatureExtractor::FeatureMatrix>(s.bboxes().size(), FeatureExtractor::FeatureMatrix()));
         return true;
     }
     else
@@ -74,7 +87,7 @@ void ModelLearner::m_learn(Eigen::VectorXi & aspectClusterAssignment, vector<int
     unsigned int c, i, j, k, l, s, t; // yes, we do need that much iteration variables
     unsigned int numAspectClusters = samplesPerAspectCluster.size();
     vector<Sample>::iterator sample;
-    vector<FFLD::Rectangle>::iterator bbox;
+    vector<FFLD::Rectangle>::const_iterator bbox;
     vector<FeatureExtractor::FeatureMatrix>::iterator whoStorage;
     
     // Learn models for each aspect ratio cluster
@@ -106,7 +119,7 @@ void ModelLearner::m_learn(Eigen::VectorXi & aspectClusterAssignment, vector<int
                     stop();
                 }
                 for (sample = this->m_samples.begin(), i = 0; sample != this->m_samples.end(); sample++)
-                    for (bbox = sample->bboxes.begin(), j = 0; bbox != sample->bboxes.end(); bbox++, j++, i++)
+                    for (bbox = sample->bboxes().begin(), j = 0; bbox != sample->bboxes().end(); bbox++, j++, i++)
                         if (aspectClusterAssignment(i) == c)
                             sample->modelAssoc[j] = static_cast<unsigned int>(-1);
                 progressStep += 2;
@@ -169,11 +182,11 @@ void ModelLearner::m_learn(Eigen::VectorXi & aspectClusterAssignment, vector<int
             // Just average over all positive samples, centre and whiten them.
             
             for (sample = this->m_samples.begin(), i = 0; sample != this->m_samples.end(); sample++)
-                for (bbox = sample->bboxes.begin(), j = 0; bbox != sample->bboxes.end(); bbox++, j++, i++)
+                for (bbox = sample->bboxes().begin(), j = 0; bbox != sample->bboxes().end(); bbox++, j++, i++)
                     if (aspectClusterAssignment(i) == c)
                     {
-                        JPEGImage resizedSample = sample->img.crop(bbox->x(), bbox->y(), bbox->width(), bbox->height())
-                                                             .resize(modelSize.width * this->m_bg.cellSize, modelSize.height * this->m_bg.cellSize);
+                        JPEGImage resizedSample = sample->img().crop(bbox->x(), bbox->y(), bbox->width(), bbox->height())
+                                                               .resize(modelSize.width * this->m_bg.cellSize, modelSize.height * this->m_bg.cellSize);
                         FeatureExtractor::FeatureMatrix hog;
                         FeatureExtractor::extract(resizedSample, hog); // compute HOG features
                         positive += hog; // add to feature accumulator
@@ -221,12 +234,12 @@ void ModelLearner::m_learn(Eigen::VectorXi & aspectClusterAssignment, vector<int
             Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> hogFeatures(samplesPerAspectCluster[c], posVector.size());
             Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> whoFeatures(samplesPerAspectCluster[c], posVector.size());
             for (sample = this->m_samples.begin(), s = 0, t = 0; sample != this->m_samples.end(); sample++)
-                for (bbox = sample->bboxes.begin(), whoStorage = reinterpret_cast< vector<FeatureExtractor::FeatureMatrix> *>(sample->data)->begin(); bbox != sample->bboxes.end(); bbox++, whoStorage++, s++)
+                for (bbox = sample->bboxes().begin(), whoStorage = reinterpret_cast< vector<FeatureExtractor::FeatureMatrix> *>(sample->data)->begin(); bbox != sample->bboxes().end(); bbox++, whoStorage++, s++)
                     if (aspectClusterAssignment(s) == c)
                     {
                         // Extract HOG features
-                        JPEGImage resizedSample = sample->img.crop(bbox->x(), bbox->y(), bbox->width(), bbox->height())
-                                                             .resize(modelSize.width * this->m_bg.cellSize, modelSize.height * this->m_bg.cellSize);
+                        JPEGImage resizedSample = sample->img().crop(bbox->x(), bbox->y(), bbox->width(), bbox->height())
+                                                               .resize(modelSize.width * this->m_bg.cellSize, modelSize.height * this->m_bg.cellSize);
                         FeatureExtractor::extract(resizedSample, positive); // compute HOG features
                         // Flatten HOG feature matrix into vector
                         hogFeatures.row(t).setConstant(0.0f);
@@ -301,7 +314,7 @@ void ModelLearner::m_learn(Eigen::VectorXi & aspectClusterAssignment, vector<int
             
             // Save cluster assignment for samples
             for (sample = this->m_samples.begin(), s = 0, t = 0; sample != this->m_samples.end(); sample++)
-                for (bbox = sample->bboxes.begin(), j = 0; bbox != sample->bboxes.end(); bbox++, s++, j++)
+                for (bbox = sample->bboxes().begin(), j = 0; bbox != sample->bboxes().end(); bbox++, s++, j++)
                     if (aspectClusterAssignment(s) == c)
                     {
                         sample->modelAssoc[j] = (whoClusterAssignment(t) >= 0)

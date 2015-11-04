@@ -103,6 +103,15 @@ public:
     virtual void reset();
     
     /**
+    * Adds a positive sample to learn from given by a SynsetImage object.
+    *
+    * @param[in] sample The SynsetImage object to be added as positive sample.
+    *
+    * @return True if the sample has been added, otherwise false.
+    */
+    virtual bool addPositiveSample(SynsetImage & sample);
+    
+    /**
     * Adds a positive sample to learn from given by an image and a bounding box around the object on that image.
     *
     * @param[in] sample The image which contains the object.
