@@ -153,15 +153,10 @@ void ModelLearner::m_learn(Eigen::VectorXi & aspectClusterAssignment, vector<int
         if (progressCB != NULL)
             progressCB(progressStep, progressTotal, cbData);
         
-        // Compute negative bias term in advance: mu_0'*S^-1*mu_0
         Eigen::VectorXf hogVector(modelSize.height * modelSize.width * FeatureExtractor::numFeatures);
-        Eigen::VectorXf negVector(hogVector.size());
-        negVector.setConstant(0.0f);
         // Replicate negative mean over all cells
-        for (i = 0, l = 0; i < modelSize.height; i++)
-            for (j = 0; j < modelSize.width; j++)
-                for (k = 0; k < FeatureExtractor::numFeatures; k++, l++)
-                    negVector(l) = negMean(k);
+        Eigen::VectorXf negVector = negMean.replicate(modelSize.height * modelSize.width, 1);
+        // Compute negative bias term in advance: mu_0'*S^-1*mu_0
         float biasNeg = negVector.dot(llt.solve(negVector));
         if (this->m_verbose)
         {

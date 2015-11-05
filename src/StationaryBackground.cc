@@ -466,7 +466,7 @@ void StationaryBackground::learnCovariance_accurate(ImageIterator & imgIt, const
                                 feat1.row(l) = (*dLevelIt)(i, j).transpose();
                                 feat2.row(l) = (*dLevelIt)(i + dy, j + dx).transpose();
                             }
-                        cov(o) += feat1.transpose() * feat2;
+                        cov(o).noalias() += feat1.transpose() * feat2;
                         numSamples(o) += t;
                     }
                 }

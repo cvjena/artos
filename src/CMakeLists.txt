@@ -5,6 +5,8 @@ PROJECT(ARTOS)
 set(BUILD_VERSION "1.2")
 set(API_VERSION 1)
 
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/../cmake/")
+
 
 #### Build options ####
 OPTION(CACHE_POSITIVES "Keep positive samples in RAM to save time." ON)
@@ -80,10 +82,18 @@ IF(LIBXML2_FOUND)
   ADD_DEFINITIONS(${LIBXML2_DEFINITIONS})
 ENDIF()
 
-# Not required, but strongly recommended on multi-core systems
+
+
+#### Detect and enable some useful compiler features ####
+
+# OpenMP (not required, but strongly recommended on multi-core systems)
 FIND_PACKAGE(OpenMP)
 IF(OPENMP_FOUND)
   SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
   SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
   SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_C_FLAGS}")
 ENDIF()
+
+# SSE
+# enabling SSE caused ugly access violations on Win32 and I don't know why at the moment
+#include(CheckSSEFeatures)

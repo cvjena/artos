@@ -68,7 +68,7 @@ void kMeansClustering(const Eigen::MatrixBase<Derived> & dataPoints, const unsig
     int c, d, l;
     Scalar distance, minDistance;
     int minDistanceIndex;
-    Eigen::VectorXi numAssignments(k);
+    Eigen::Array<int, Eigen::Dynamic, 1> numAssignments(k);
     bool assignmentsChanged;
     for (assignmentsChanged = true, l = 0; assignmentsChanged && l < 10000; l++)
     {
@@ -86,7 +86,7 @@ void kMeansClustering(const Eigen::MatrixBase<Derived> & dataPoints, const unsig
                     minDistanceIndex = c;
                 }
             }
-            if (assign(d) != minDistanceIndex)
+            if (l == 0 || assign(d) != minDistanceIndex)
             {
                 assign(d) = minDistanceIndex;
                 assignmentsChanged = true;
@@ -101,7 +101,7 @@ void kMeansClustering(const Eigen::MatrixBase<Derived> & dataPoints, const unsig
             centr.row(assign(d)) += dataPoints.row(d);
             numAssignments(assign(d)) += 1;
         }
-        centr = centr.cwiseQuotient(numAssignments.cast<Scalar>().replicate(1, centr.cols()));
+        centr = centr.array().colwise() / numAssignments.cast<Scalar>();
     }
     
     // Copy results to output parameters
