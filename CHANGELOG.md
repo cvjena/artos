@@ -1,6 +1,15 @@
 ARTOS Changelog
 ===============
 
+Version 1.3 (2015-11-05)
+------------------------
+
+- [Improvement] If there are more training images than RAM available, caching of the entire images containing positive samples may now be turned off
+  by setting the CMake option `CACHE_POSITIVES` to `OFF`.
+- [Fix] Compatibility of PyARTOS with Pillow >= 2.0
+- [Fix] Fixed a minor bug with clustering
+
+
 Version 1.2 (2015-11-02)
 ------------------------
 
