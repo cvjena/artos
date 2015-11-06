@@ -40,9 +40,25 @@ public:
 	/// @param[in] models A list of models (mixture components).
 	Mixture(const std::vector<Model> & models);
 	
+	/// Constructs a mixture from parameters.
+	/// @param[in] models A list of models (mixture components).
+	Mixture(std::vector<Model> && models);
+	
 	/// Copy constructor.
 	/// @param[in] other Another mixture to be copied.
 	Mixture(const Mixture & other);
+	
+	/// Move constructor.
+	/// @param[in] other Another mixture to be moved.
+	Mixture(Mixture && other);
+	
+	/// Copy assignment operator.
+	/// @param[in] other Another mixture to be copied.
+	Mixture & operator=(const Mixture & other) = default;
+	
+	/// Move assignment operator.
+	/// @param[in] other Another mixture to be moved.
+	Mixture & operator=(Mixture && other);
 	
 	/// Returns whether the mixture is empty. An empty mixture has no model.
 	bool empty() const;
@@ -52,6 +68,9 @@ public:
 	
 	/// Adds a model as new component of the mixture.
 	void addModel(const Model & model);
+	
+	/// Adds a model as new component of the mixture.
+	void addModel(Model && model);
 	
 	/// Returns the minimum root filter size (<tt>rows x cols</tt>).
 	std::pair<int, int> minSize() const;

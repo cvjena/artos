@@ -83,7 +83,8 @@ Anyway, adding support for a new or another video capturing module can be done e
 3. Building the library
 -----------------------
 
-Building *libartos* requires **[CMake][2]** and a **C++ compiler**. It has been successfully built using the **GNU C++ Compiler**. Other compilers may be supported too, but have not been tested.
+Building *libartos* requires **[CMake][2]** (version >= 3.1 recommended) and a **C++ compiler** which supports C++11.
+It has been successfully built using the **GNU C++ Compiler**. Other compilers may be supported too, but have not been tested.
 
 To build *libartos* on **Unix**, run the following from the ARTOS root directory:
 

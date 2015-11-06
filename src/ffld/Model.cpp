@@ -21,6 +21,7 @@
 #include "Model.h"
 
 #include <algorithm>
+#include <utility>
 #include <cmath>
 
 using namespace Eigen;
@@ -38,6 +39,29 @@ Model::Model(const HOGPyramid::Level & root, const Scalar bias) : parts_(1), bia
 	parts_[0].filter = root;
 	parts_[0].offset.setZero();
 	parts_[0].deformation.setZero();
+}
+
+Model::Model(HOGPyramid::Level && root, const Scalar bias) : parts_(1), bias_(bias)
+{
+	parts_[0].filter = move(root);
+	parts_[0].offset.setZero();
+	parts_[0].deformation.setZero();
+}
+
+Model::Model(Model && other) : parts_(move(other.parts_)), bias_(other.bias_)
+{
+	other.parts_ = std::vector< Part, Eigen::aligned_allocator<Part> >(1);
+	other.parts_[0].offset.setZero();
+	other.parts_[0].deformation.setZero();
+}
+
+Model & Model::operator=(Model && other)
+{
+	parts_ = move(other.parts_);
+	bias_ = other.bias_;
+	other.parts_ = std::vector< Part, Eigen::aligned_allocator<Part> >(1);
+	other.parts_[0].offset.setZero();
+	other.parts_[0].deformation.setZero();
 }
 
 bool Model::empty() const

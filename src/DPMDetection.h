@@ -86,6 +86,19 @@ class DPMDetection
     * @param[in] interval Number of levels per octave in the HOG pyramid.
     */
     DPMDetection ( const FFLD::Mixture & model, double threshold = 0.8, bool verbose = false, double overlap = 0.5, int padding = 12, int interval = 10 );
+    
+    /** 
+    * Initializes the detector and adds a single model.
+    * This is equivalent to constructing the detector with `DPMDetection(verbose, overlap, padding, interval)`
+    * and then calling `addModel("single", model, threshold)`.
+    * @param[in] model The model to be added as FFLD::Mixture object, whose contents will be moved.
+    * @param[in] threshold The detection threshold for the model.
+    * @param[in] verbose If set to true, debug and timing information will be logged to stderr.
+    * @param[in] overlap Minimum overlap in non maxima suppression.
+    * @param[in] padding Amount of zero padding in HOG cells. Must be greater or equal to half the greatest filter dimension.
+    * @param[in] interval Number of levels per octave in the HOG pyramid.
+    */
+    DPMDetection ( FFLD::Mixture && model, double threshold = 0.8, bool verbose = false, double overlap = 0.5, int padding = 12, int interval = 10 );
 
     ~DPMDetection();
 
@@ -128,6 +141,17 @@ class DPMDetection
     int addModel ( const std::string & classname, const FFLD::Mixture & model, double threshold, const std::string & synsetId = "" );
     
     /**
+    * Adds a model to the detection stack.
+    * @param[in] classname The name of the class ('bicycle' for example). It is used to name the objects detected in an image.
+    *                      If there already is a model with the same class name, it will be replaced with this new one.
+    * @param[in] model The model to be added as FFLD::Mixture object, whose contents will be moved.
+    * @param[in] threshold The detection threshold for this model.
+    * @param[in] synsetId Optionally, the ID of the synset associated with the class. It will be present in the Detection structs.
+    * @return Returns zero on success, otherwise a negative error code.
+    */
+    int addModel ( const std::string & classname, FFLD::Mixture && model, double threshold, const std::string & synsetId = "" );
+    
+    /**
     * Replaces the model at a specific position in the detection stack. The new model will use the same class name as the old one.
     * @param[in] modelIndex The index of the model to be replaced.
     * @param[in] model The new model as FFLD::Mixture object.
@@ -136,6 +160,16 @@ class DPMDetection
     *         ARTOS_RES_INTERNAL_ERROR will be returned if there is no model with the given index.
     */
     int replaceModel ( const unsigned int modelIndex, const FFLD::Mixture & model, double threshold );
+    
+    /**
+    * Replaces the model at a specific position in the detection stack. The new model will use the same class name as the old one.
+    * @param[in] modelIndex The index of the model to be replaced.
+    * @param[in] model The new model as FFLD::Mixture object, whose contents will be moved.
+    * @param[in] threshold The detection threshold for the new model.
+    * @return Returns zero on success, otherwise a negative error code.
+    *         ARTOS_RES_INTERNAL_ERROR will be returned if there is no model with the given index.
+    */
+    int replaceModel ( const unsigned int modelIndex, FFLD::Mixture && model, double threshold );
 
     /**
     * Adds multiple models to the detection stack at once using information given in a file enumerating the models.
@@ -196,6 +230,8 @@ class DPMDetection
     std::map<std::string, unsigned int> modelIndices;
     
     int initPatchwork(unsigned int rows, unsigned int cols);
+
+    int addModelPointer ( const std::string & classname, FFLD::Mixture * model, double threshold, const std::string & synsetId = "" );
 
   private:
     void init ( bool verbose, double overlap, int padding, int interval );

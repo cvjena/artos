@@ -3,6 +3,7 @@
 #include <cstdio>
 #include <cmath>
 #include <limits>
+#include <utility>
 #include "libartos_def.h"
 #include "TarExtractor.h"
 #include "sysutils.h"
@@ -20,6 +21,28 @@ SynsetImage::SynsetImage(const string & repoDirectory, const string & synsetId,
     if (img != NULL && !img->empty())
         this->m_img = JPEGImage(img->width(), img->height(), img->depth(), img->bits());
 #endif
+}
+
+
+SynsetImage::SynsetImage(SynsetImage && other)
+: bboxes(move(other.bboxes)), m_repoDir(move(other.m_repoDir)), m_synsetId(move(other.m_synsetId)), m_filename(move(other.m_filename)),
+  m_img(move(other.m_img)), m_imgLoaded(other.m_imgLoaded), m_bboxesLoaded(other.m_bboxesLoaded)
+{
+    other.m_imgLoaded = other.m_bboxesLoaded = false;
+}
+
+
+SynsetImage & SynsetImage::operator=(SynsetImage && other)
+{
+    this->bboxes = move(other.bboxes);
+    this->m_img = move(other.m_img);
+    this->m_repoDir = move(other.m_repoDir);
+    this->m_synsetId = move(other.m_synsetId);
+    this->m_filename = move(other.m_filename);
+    this->m_imgLoaded = other.m_imgLoaded;
+    this->m_bboxesLoaded = other.m_bboxesLoaded;
+    other.m_imgLoaded = other.m_bboxesLoaded = false;
+    return *this;
 }
 
 

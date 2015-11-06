@@ -75,6 +75,14 @@ public:
 	/// @note The amount of padding and the interval should be at least 1.
 	HOGPyramid(int padx, int pady, int interval, const std::vector<Level> & levels);
 	
+	/// Constructs a pyramid from parameters and a list of levels.
+	/// @param[in] padx Amount of horizontal zero padding (in cells).
+	/// @param[in] pady Amount of vertical zero padding (in cells).
+	/// @param[in] interval Number of levels per octave in the pyramid.
+	/// @param[in] levels List of pyramid levels whose contents will be moved.
+	/// @note The amount of padding and the interval should be at least 1.
+	HOGPyramid(int padx, int pady, int interval, std::vector<Level> && levels);
+	
 	/// Constructs a pyramid from the JPEGImage of a Scene.
 	/// @param[in] image The JPEGImage of the Scene.
 	/// @param[in] padx Amount of horizontal zero padding (in cells).
@@ -82,6 +90,22 @@ public:
 	/// @param[in] interval Number of levels per octave in the pyramid.
 	/// @note The amount of padding and the interval should be at least 1.
 	HOGPyramid(const JPEGImage & image, int padx, int pady, int interval = 10);
+	
+	/// Constructs a pyramid by copying the levels of another one.
+	/// @param[in] other The HOGPyramid those levels are to be copied.
+	HOGPyramid(const HOGPyramid & other) = default;
+	
+	/// Constructs a pyramid by moving the levels of another one and leaving that one empty.
+	/// @param[in] other The HOGPyramid those levels are to be moved.
+	HOGPyramid(HOGPyramid && other);
+	
+	/// Copies the levels of another HOGPyramid to this one.
+	/// @param[in] other The HOGPyramid those levels are to be copied.
+	HOGPyramid & operator=(const HOGPyramid & other);
+	
+	/// Moves the levels of another HOGPyramid to this one and leaves the other one empty.
+	/// @param[in] other The HOGPyramid those levels are to be moved.
+	HOGPyramid & operator=(HOGPyramid && other);
 	
 	/// Returns whether the pyramid is empty. An empty pyramid has no level.
 	bool empty() const;

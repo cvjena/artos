@@ -1,6 +1,7 @@
 #include "ImageNetModelLearner.h"
 
 #include <vector>
+#include <utility>
 #include <iostream>
 
 #include "ffld/JPEGImage.h"
@@ -31,19 +32,19 @@ unsigned int ImageNetModelLearner::addPositiveSamplesFromSynset(const Synset & s
     // Fetch samples from synset
     if (this->m_verbose)
         start();
-    unsigned int numSamples = 0;
+    unsigned int numSamples = 0, numBBoxes;
     for (SynsetImageIterator imgIt = synset.getImageIterator(true); imgIt.ready() && (maxSamples == 0 || (unsigned int) imgIt < maxSamples); ++imgIt)
     {
         SynsetImage simg = *imgIt;
         if (simg.loadBoundingBoxes())
         {
+            numBBoxes = simg.bboxes.size();
 #ifndef NO_CACHE_POSITIVES
-            JPEGImage & img = simg.getImage();
-            if (!img.empty() && this->addPositiveSample(simg))
-                numSamples += simg.bboxes.size();
+            if (!simg.getImage().empty() && this->addPositiveSample(move(simg)))
+                numSamples += numBBoxes;
 #else
-            if (this->addPositiveSample(simg))
-                numSamples += simg.bboxes.size();
+            if (this->addPositiveSample(move(simg)))
+                numSamples += numBBoxes;
 #endif
         }
     }

@@ -82,6 +82,8 @@ public:
     */
     operator int() const { return this->m_pos; };
     
+    SynsetIterator & operator=(const SynsetIterator&) = delete;
+    
     /**
     * @return Returns the path to the repository directory.
     */
@@ -93,11 +95,6 @@ protected:
     std::string m_repoDir; /**< Path to the repository directory. */
     std::vector<std::string> m_ids; /**< Vector of synset IDs. */
     size_t m_pos; /**< Index of the current synset. */
-
-
-private:
-
-    SynsetIterator & operator=(const SynsetIterator);
 
 };
 
@@ -266,6 +263,8 @@ public:
     * @return Returns the ID of the synset this iterator is associated with.
     */
     virtual std::string getSynsetId() const { return this->m_synsetId; };
+    
+    SynsetImageIterator & operator=(const SynsetImageIterator&) = delete;
 
 
 protected:
@@ -273,11 +272,6 @@ protected:
     std::string m_synsetId; /**< ID of the synset. */
     bool m_bboxMode; /**< Specifies if only images which bounding box annotations are available for are taken into account. */
     std::vector<std::string> m_filenames; /**< Vector with filenames (without extension) of images in the synset. */
-
-
-private:
-
-    SynsetImageIterator & operator=(const SynsetImageIterator);
 
 };
 
@@ -336,6 +330,8 @@ public:
     */
     virtual SynsetImage operator*();
     
+    MixedImageIterator & operator=(const MixedImageIterator&) = delete;
+    
     /**
     * Resets the iterator to it's initial state.
     */
@@ -371,8 +367,6 @@ protected:
 
 
 private:
-
-    MixedImageIterator & operator=(const MixedImageIterator);
     
     /**
     * Called from constructors to initialize the iterator.

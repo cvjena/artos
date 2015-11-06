@@ -54,6 +54,15 @@ public:
 	/// Constructs an one-part model (i. e. only root without other parts) from given HOG features and given bias.
 	Model(const HOGPyramid::Level & root, const Scalar bias);
 	
+	/// Constructs an one-part model (i. e. only root without other parts) from given HOG features and given bias.
+	Model(HOGPyramid::Level && root, const Scalar bias);
+	
+	/// Copy constructor
+	Model(const Model&) = default;
+	
+	/// Move constructor
+	Model(Model && other);
+	
 	/// Returns whether the model is empty. An empty model has an empty root and no part.
 	bool empty() const;
 	
@@ -85,6 +94,12 @@ public:
 	
 	/// Returns the flipped version (horizontally) of a model or a fixed sample.
 	Model flip() const;
+	
+	/// Copies another model.
+	Model & operator=(const Model &) = default;
+	
+	/// Moves the data of another model to this one and leaves the other one empty.
+	Model & operator=(Model && other);
 	
 	/// Serializes a model to a stream.
 	friend std::ostream & operator<<(std::ostream & os, const Model & model);

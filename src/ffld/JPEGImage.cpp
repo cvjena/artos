@@ -136,6 +136,21 @@ JPEGImage::JPEGImage(FILE * filehandle) : width_(0), height_(0), depth_(0)
 	bits_.swap(bits);
 }
 
+JPEGImage::JPEGImage(JPEGImage && other) : width_(other.width_), height_(other.height_), depth_(other.depth_), bits_(std::move(other.bits_))
+{
+	other.width_ = other.height_ = other.depth_ = 0;
+}
+
+JPEGImage & JPEGImage::operator=(JPEGImage && other)
+{
+	width_ = other.width_;
+	height_ = other.height_;
+	depth_ = other.depth_;
+	bits_ = std::move(other.bits_);
+	other.width_ = other.height_ = other.depth_ = 0;
+	return *this;
+}
+
 int JPEGImage::width() const
 {
 	return width_;

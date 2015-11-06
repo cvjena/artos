@@ -3,6 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <utility>
 #include <cmath>
 
 #include "ffld/Mixture.h"
@@ -80,43 +81,33 @@ ModelLearnerBase::Size ModelLearnerBase::computeOptimalCellNumber(const std::vec
 }
 
 
-bool ModelLearnerBase::addPositiveSample(SynsetImage & sample)
+bool ModelLearnerBase::addPositiveSample(const SynsetImage & sample)
 {
     if (!sample.valid())
         return false;
     
     Sample s;
     s.m_simg = sample;
-    
-    if (sample.loadBoundingBoxes() && !sample.bboxes.empty())
-    {
-        // Check if any of the bounding boxes is empty and use only one bounding boxes spanning the entire image
-        // in that case
-        bool validBBoxes = true;
-        for (vector<FFLD::Rectangle>::const_iterator it = sample.bboxes.begin(); it != sample.bboxes.end(); it++)
-            if (it->empty())
-            {
-                validBBoxes = false;
-                break;
-            }
-        if (validBBoxes)
-            s.m_bboxes = sample.bboxes;
-    }
-    if (s.m_bboxes.empty())
-    {
-        FFLD::Rectangle bbox(0, 0, 0, 0);
-        JPEGImage img = sample.getImage();
-        bbox.setWidth(img.width());
-        bbox.setHeight(img.height());
-        s.m_bboxes.push_back(bbox);
-    }
-    
-    s.modelAssoc.assign(s.m_bboxes.size(), 0);
-    s.data = NULL;
-    this->m_samples.push_back(s);
+    this->initSampleFromSynsetImage(s);
     this->m_numSamples += s.m_bboxes.size();
+    this->m_samples.push_back(move(s));
     return true;
 }
+
+
+bool ModelLearnerBase::addPositiveSample(SynsetImage && sample)
+{
+    if (!sample.valid())
+        return false;
+    
+    Sample s;
+    s.m_simg = move(sample);
+    this->initSampleFromSynsetImage(s);
+    this->m_numSamples += s.m_bboxes.size();
+    this->m_samples.push_back(move(s));
+    return true;
+}
+
 
 bool ModelLearnerBase::addPositiveSample(const JPEGImage & sample, const FFLD::Rectangle & boundingBox)
 {
@@ -128,7 +119,23 @@ bool ModelLearnerBase::addPositiveSample(const JPEGImage & sample, const FFLD::R
     s.m_bboxes.push_back((boundingBox.empty()) ? FFLD::Rectangle(0, 0, sample.width(), sample.height()) : boundingBox);
     s.modelAssoc.push_back(0);
     s.data = NULL;
-    this->m_samples.push_back(s);
+    this->m_samples.push_back(move(s));
+    this->m_numSamples++;
+    return true;
+}
+
+
+bool ModelLearnerBase::addPositiveSample(JPEGImage && sample, const FFLD::Rectangle & boundingBox)
+{
+    if (sample.empty())
+        return false;
+    
+    Sample s;
+    s.m_img = move(sample);
+    s.m_bboxes.push_back((boundingBox.empty()) ? FFLD::Rectangle(0, 0, s.m_img.width(), s.m_img.height()) : boundingBox);
+    s.modelAssoc.push_back(0);
+    s.data = NULL;
+    this->m_samples.push_back(move(s));
     this->m_numSamples++;
     return true;
 }
@@ -152,9 +159,63 @@ bool ModelLearnerBase::addPositiveSample(const JPEGImage & sample, const vector<
     s.m_bboxes = boundingBoxes;
     s.modelAssoc.assign(s.m_bboxes.size(), 0);
     s.data = NULL;
-    this->m_samples.push_back(s);
     this->m_numSamples += boundingBoxes.size();
+    this->m_samples.push_back(move(s));
     return true;
+}
+
+
+bool ModelLearnerBase::addPositiveSample(JPEGImage && sample, const vector<FFLD::Rectangle> & boundingBoxes)
+{
+    if (sample.empty())
+        return false;
+    
+    // Check if any of the bounding boxes is empty and use only one bounding boxes spanning the entire image
+    // in that case
+    if (boundingBoxes.empty())
+        return this->addPositiveSample(move(sample), FFLD::Rectangle());
+    for (vector<FFLD::Rectangle>::const_iterator it = boundingBoxes.begin(); it != boundingBoxes.end(); it++)
+        if (it->empty())
+            return this->addPositiveSample(move(sample), *it);
+    
+    Sample s;
+    s.m_img = move(sample);
+    s.m_bboxes = boundingBoxes;
+    s.modelAssoc.assign(s.m_bboxes.size(), 0);
+    s.data = NULL;
+    this->m_numSamples += boundingBoxes.size();
+    this->m_samples.push_back(move(s));
+    return true;
+}
+
+
+void ModelLearnerBase::initSampleFromSynsetImage(Sample & s)
+{
+    if (s.m_simg.loadBoundingBoxes() && !s.m_simg.bboxes.empty())
+    {
+        // Check if any of the bounding boxes is empty and use only one bounding boxes spanning the entire image
+        // in that case
+        bool validBBoxes = true;
+        for (vector<FFLD::Rectangle>::const_iterator it = s.m_simg.bboxes.begin(); it != s.m_simg.bboxes.end(); it++)
+            if (it->empty())
+            {
+                validBBoxes = false;
+                break;
+            }
+        if (validBBoxes)
+            s.m_bboxes = s.m_simg.bboxes;
+    }
+    if (s.m_bboxes.empty())
+    {
+        FFLD::Rectangle bbox(0, 0, 0, 0);
+        JPEGImage img = s.m_simg.getImage();
+        bbox.setWidth(img.width());
+        bbox.setHeight(img.height());
+        s.m_bboxes.push_back(bbox);
+    }
+    
+    s.modelAssoc.assign(s.m_bboxes.size(), 0);
+    s.data = NULL;
 }
 
 
@@ -266,7 +327,7 @@ const vector<float> & ModelLearnerBase::optimizeThreshold(const unsigned int max
             mixture.addModel(Model(this->m_models[i], 0));
             stringstream classname;
             classname << i;
-            eval.addModel(classname.str(), mixture, 0.0);
+            eval.addModel(classname.str(), move(mixture), 0.0);
         }
         
         // Test models against samples

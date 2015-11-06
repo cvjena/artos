@@ -3,6 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <utility>
 #include <cmath>
 
 #include <Eigen/Cholesky>
@@ -36,9 +37,22 @@ void ModelLearner::reset()
 }
 
 
-bool ModelLearner::addPositiveSample(SynsetImage & sample)
+bool ModelLearner::addPositiveSample(const SynsetImage & sample)
 {
     if (ModelLearnerBase::addPositiveSample(sample))
+    {
+        Sample & s = this->m_samples.back();
+        s.data = reinterpret_cast<void*>(new vector<FeatureExtractor::FeatureMatrix>(s.bboxes().size(), FeatureExtractor::FeatureMatrix()));
+        return true;
+    }
+    else
+        return false;
+}
+
+
+bool ModelLearner::addPositiveSample(SynsetImage && sample)
+{
+    if (ModelLearnerBase::addPositiveSample(move(sample)))
     {
         Sample & s = this->m_samples.back();
         s.data = reinterpret_cast<void*>(new vector<FeatureExtractor::FeatureMatrix>(s.bboxes().size(), FeatureExtractor::FeatureMatrix()));
@@ -61,9 +75,34 @@ bool ModelLearner::addPositiveSample(const JPEGImage & sample, const FFLD::Recta
 }
 
 
+bool ModelLearner::addPositiveSample(JPEGImage && sample, const FFLD::Rectangle & boundingBox)
+{
+    if (ModelLearnerBase::addPositiveSample(move(sample), boundingBox))
+    {
+        this->m_samples.back().data = reinterpret_cast<void*>(new vector<FeatureExtractor::FeatureMatrix>(1, FeatureExtractor::FeatureMatrix()));
+        return true;
+    }
+    else
+        return false;
+}
+
+
 bool ModelLearner::addPositiveSample(const JPEGImage & sample, const vector<FFLD::Rectangle> & boundingBoxes)
 {
     if (ModelLearnerBase::addPositiveSample(sample, boundingBoxes))
+    {
+        Sample & s = this->m_samples.back();
+        s.data = reinterpret_cast<void*>(new vector<FeatureExtractor::FeatureMatrix>(s.bboxes().size(), FeatureExtractor::FeatureMatrix()));
+        return true;
+    }
+    else
+        return false;
+}
+
+
+bool ModelLearner::addPositiveSample(JPEGImage && sample, const vector<FFLD::Rectangle> & boundingBoxes)
+{
+    if (ModelLearnerBase::addPositiveSample(move(sample), boundingBoxes))
     {
         Sample & s = this->m_samples.back();
         s.data = reinterpret_cast<void*>(new vector<FeatureExtractor::FeatureMatrix>(s.bboxes().size(), FeatureExtractor::FeatureMatrix()));
@@ -378,7 +417,7 @@ const vector<float> & ModelLearner::optimizeThreshold(const unsigned int maxPosi
             mixture.addModel(Model(this->m_models[i], 0));
             stringstream classname;
             classname << i;
-            eval.addModel(classname.str(), mixture, 0.0);
+            eval.addModel(classname.str(), move(mixture), 0.0);
         }
         
         // Test models against samples

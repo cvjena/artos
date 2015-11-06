@@ -86,7 +86,16 @@ public:
     *
     * @return True if the sample has been added, otherwise false.
     */
-    virtual bool addPositiveSample(SynsetImage & sample);
+    virtual bool addPositiveSample(const SynsetImage & sample);
+    
+    /**
+    * Adds a positive sample to learn from given by a SynsetImage object.
+    *
+    * @param[in] sample The SynsetImage object to be added as positive sample.
+    *
+    * @return True if the sample has been added, otherwise false.
+    */
+    virtual bool addPositiveSample(SynsetImage && sample);
     
     /**
     * Adds a positive sample to learn from given by an image and a bounding box around the object on that image.
@@ -101,6 +110,18 @@ public:
     virtual bool addPositiveSample(const FFLD::JPEGImage & sample, const FFLD::Rectangle & boundingBox);
     
     /**
+    * Adds a positive sample to learn from given by an image and a bounding box around the object on that image.
+    *
+    * @param[in] sample The image which contains the object.
+    *
+    * @param[in] boundingBox The bounding box around the object on the given image.
+    * If the bounding box is empty (a rectangle with zero area), the entire image will be used as positive sample.
+    *
+    * @return True if the sample has been added, otherwise false.
+    */
+    virtual bool addPositiveSample(FFLD::JPEGImage && sample, const FFLD::Rectangle & boundingBox);
+    
+    /**
     * Adds multiple positive samples to learn from on the same image given by bounding boxes around the objects.
     *
     * @param[in] sample The image which contains the objects.
@@ -111,6 +132,18 @@ public:
     * @return True if the sample has been added, otherwise false.
     */
     virtual bool addPositiveSample(const FFLD::JPEGImage & sample, const std::vector<FFLD::Rectangle> & boundingBoxes);
+    
+    /**
+    * Adds multiple positive samples to learn from on the same image given by bounding boxes around the objects.
+    *
+    * @param[in] sample The image which contains the objects.
+    *
+    * @param[in] boundingBoxes Vector of bounding boxes around each object on the given image. If just one of the
+    * bounding boxes is empty (a rectangle with zero area) only one sample will be added, which is the entire image.
+    *
+    * @return True if the sample has been added, otherwise false.
+    */
+    virtual bool addPositiveSample(FFLD::JPEGImage && sample, const std::vector<FFLD::Rectangle> & boundingBoxes);
     
     /**
     * Performs the actual learning step and stores the resulting models, so that they can be retrieved later on by getModels().
@@ -242,6 +275,13 @@ protected:
     * It should be modified to be more generally applicable, so that it can be used with other feature extractors.
     */
     virtual Size computeOptimalCellNumber(const std::vector<int> & widths, const std::vector<int> & heights);
+    
+    /**
+    * Used by addPositiveSample() to initialize a given sample based on its m_simg field.
+    *
+    * @param[in,out] s The sample to be set up.
+    */
+    virtual void initSampleFromSynsetImage(Sample & s);
 
 };
 

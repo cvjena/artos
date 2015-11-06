@@ -52,6 +52,22 @@ public:
 	/// @note The returned image might be empty if the image could not be loaded.
 	JPEGImage(FILE * filehandle);
 	
+	/// Copies image data from another JPEGImage object.
+	/// @p other The JPEGImage whose data is to be copied.
+	JPEGImage(const JPEGImage & other) = default;
+	
+	/// Moves image data from another JPEGImage object and leaves that empty.
+	/// @p other The JPEGImage whose data is to be moved to this one,
+	JPEGImage(JPEGImage && other);
+	
+	/// Copies image data from another JPEGImage object.
+	/// @p other The JPEGImage whose data is to be copied.
+	JPEGImage & operator=(const JPEGImage & other) = default;
+	
+	/// Moves image data from another JPEGImage object and leaves that empty.
+	/// @p other The JPEGImage whose data is to be moved to this one.
+	JPEGImage & operator=(JPEGImage && other);
+	
 	/// Returns the width of the image.
 	int width() const;
 	

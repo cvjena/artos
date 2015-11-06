@@ -29,6 +29,12 @@ DPMDetection::DPMDetection ( const Mixture & model, double threshold, bool verbo
     addModel ( "single", model, threshold );
 }
 
+DPMDetection::DPMDetection ( Mixture && model, double threshold, bool verbose, double overlap, int padding, int interval ) 
+{
+    init ( verbose, overlap, padding, interval );
+    addModel ( "single", move(model), threshold );
+}
+
 void DPMDetection::init ( bool verbose, double overlap, int padding, int interval )
 {
     this->overlap = overlap;
@@ -61,6 +67,24 @@ int DPMDetection::addModel ( const std::string & classname, const std::string & 
         return ARTOS_DETECT_RES_INVALID_MODEL_FILE;
     }
 
+    return this->addModelPointer(classname, mixture, threshold, synsetId);
+}
+
+int DPMDetection::addModel ( const std::string & classname, const Mixture & model, double threshold, const std::string & synsetId )
+{
+    Mixture * mixture = new Mixture(model);
+    return this->addModelPointer(classname, mixture, threshold, synsetId);
+}
+
+
+int DPMDetection::addModel ( const std::string & classname, Mixture && model, double threshold, const std::string & synsetId )
+{
+    Mixture * mixture = new Mixture(move(model));
+    return this->addModelPointer(classname, mixture, threshold, synsetId);
+}
+
+int DPMDetection::addModelPointer ( const std::string & classname, Mixture * mixture, double threshold, const std::string & synsetId )
+{
     pair< map<std::string, Mixture*>::iterator, bool > insertResult = mixtures.insert ( pair<std::string, Mixture*> ( classname, mixture ) );
     if (insertResult.second)
         modelIndices[classname] = this->nextModelIndex++;
@@ -78,28 +102,16 @@ int DPMDetection::addModel ( const std::string & classname, const std::string & 
     return ARTOS_RES_OK;
 }
 
-int DPMDetection::addModel ( const std::string & classname, const Mixture & model, double threshold, const std::string & synsetId )
-{
-    Mixture * mixture = new Mixture(model);
-    pair< map<std::string, Mixture*>::iterator, bool > insertResult = mixtures.insert ( pair<std::string, Mixture*> ( classname, mixture ) );
-    if (insertResult.second)
-        modelIndices[classname] = this->nextModelIndex++;
-    else
-    {
-        delete insertResult.first->second;
-        insertResult.first->second = mixture;
-    }
-    thresholds[classname] = threshold;
-    synsetIds[classname] = synsetId;
-    this->initw = -1;
-    this->inith = -1;
-    return ARTOS_RES_OK;
-}
-
 int DPMDetection::replaceModel ( const unsigned int modelIndex, const Mixture & model, double threshold )
 {
     string classname = this->getClassnameFromIndex(modelIndex);
     return (classname.empty()) ? ARTOS_RES_INTERNAL_ERROR : this->addModel(classname, model, threshold);
+}
+
+int DPMDetection::replaceModel ( const unsigned int modelIndex, Mixture && model, double threshold )
+{
+    string classname = this->getClassnameFromIndex(modelIndex);
+    return (classname.empty()) ? ARTOS_RES_INTERNAL_ERROR : this->addModel(classname, move(model), threshold);
 }
 
 const Mixture * DPMDetection::getModel(const string & classname) const

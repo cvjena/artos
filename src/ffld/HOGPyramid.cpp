@@ -21,6 +21,7 @@
 #include "HOGPyramid.h"
 
 #include <algorithm>
+#include <utility>
 #include <cassert>
 #include <cmath>
 #include <limits>
@@ -37,8 +38,7 @@ HOGPyramid::HOGPyramid() : padx_(0), pady_(0), interval_(0)
 {
 }
 
-HOGPyramid::HOGPyramid(int padx, int pady, int interval, const vector<Level> & levels) : padx_(0),
-pady_(0), interval_(0)
+HOGPyramid::HOGPyramid(int padx, int pady, int interval, const vector<Level> & levels) : padx_(0), pady_(0), interval_(0)
 {
 	if ((padx < 1) || (pady < 1) || (interval < 1))
 		return;
@@ -49,8 +49,18 @@ pady_(0), interval_(0)
 	levels_ = levels;
 }
 
-HOGPyramid::HOGPyramid(const JPEGImage & image, int padx, int pady, int interval) : padx_(0),
-pady_(0), interval_(0)
+HOGPyramid::HOGPyramid(int padx, int pady, int interval, vector<Level> && levels) : padx_(0), pady_(0), interval_(0)
+{
+	if ((padx < 1) || (pady < 1) || (interval < 1))
+		return;
+	
+	padx_ = padx;
+	pady_ = pady;
+	interval_ = interval;
+	levels_ = std::move(levels);
+}
+
+HOGPyramid::HOGPyramid(const JPEGImage & image, int padx, int pady, int interval) : padx_(0), pady_(0), interval_(0)
 {
 	if (image.empty() || (padx < 1) || (pady < 1) || (interval < 1))
 		return;
@@ -122,6 +132,21 @@ pady_(0), interval_(0)
 		levels_[i].swap(tmp);
 	}
 #endif
+}
+
+HOGPyramid::HOGPyramid(HOGPyramid && other) : padx_(other.padx_), pady_(other.pady_), interval_(other.interval_), levels_(std::move(other.levels_))
+{
+	other.padx_ = other.pady_ = other.interval_ = 0;
+}
+
+HOGPyramid & HOGPyramid::operator=(HOGPyramid && other)
+{
+	padx_ = other.padx_;
+	pady_ = other.pady_;
+	interval_ = other.interval_;
+	levels_ = std::move(other.levels_);
+	other.padx_ = other.pady_ = other.interval_ = 0;
+	return *this;
 }
 
 int HOGPyramid::padx() const

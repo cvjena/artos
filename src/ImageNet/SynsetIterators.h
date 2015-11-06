@@ -83,6 +83,8 @@ public:
     */
     operator int() const { return this->m_pos - 1; };
     
+    SynsetIterator & operator=(const SynsetIterator&) = delete;
+    
     /**
     * @return Returns the path to the repository directory.
     */
@@ -95,11 +97,6 @@ protected:
     std::ifstream m_listFile; /**< File stream associated with the synset list file. */
     std::string m_lastLine; /**< Last line read from the list file. */
     size_t m_pos; /**< Index of the current synset. */
-
-
-private:
-
-    SynsetIterator & operator=(const SynsetIterator);
 
 };
 
@@ -260,6 +257,8 @@ public:
     * @return Returns the ID of the synset this iterator is associated with.
     */
     virtual std::string getSynsetId() const { return this->m_synsetId; };
+    
+    SynsetImageIterator & operator=(const SynsetImageIterator&) = delete;
 
 
 protected:
@@ -270,11 +269,6 @@ protected:
     unsigned int m_lastFileIndex; /**< Index of the last file in the Tar archive. */
     std::ifstream::pos_type m_lastFileOffset; /**< Offset of the last file relative to the beginning of the Tar archive. */
     TarExtractor m_tar; /**< TarExtractor instance associated with the synset archive. */
-
-
-private:
-
-    SynsetImageIterator & operator=(const SynsetImageIterator);
 
 };
 
@@ -333,6 +327,8 @@ public:
     */
     virtual SynsetImage operator*();
     
+    MixedImageIterator & operator=(const MixedImageIterator&) = delete;
+    
     /**
     * Resets the iterator to it's initial state.
     */
@@ -372,8 +368,6 @@ protected:
 
 
 private:
-
-    MixedImageIterator & operator=(const MixedImageIterator);
     
     /**
     * Called from constructors to initialize the iterator.

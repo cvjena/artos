@@ -38,6 +38,34 @@ public:
     */
     SynsetImage(const std::string & repoDirectory, const std::string & synsetId,
                 const std::string & filename, const FFLD::JPEGImage * img = NULL);
+    
+    /**
+    * Copies all data from another SynsetImage object to the new one.
+    * 
+    * @param[in] other The other SynsetImage, whose contents are to be copied.
+    */
+    SynsetImage(const SynsetImage & other) = default;
+    
+    /**
+    * Moves all data from another SynsetImage object to the new one and leaves the other one empty.
+    * 
+    * @param[in] other The other SynsetImage, whose contents are to be moved.
+    */
+    SynsetImage(SynsetImage && other);
+    
+    /**
+    * Copies all data from another SynsetImage object to this one.
+    * 
+    * @param[in] other The other SynsetImage, whose contents are to be copied.
+    */
+    SynsetImage & operator=(const SynsetImage & other) = default;
+    
+    /**
+    * Moves all data from another SynsetImage object to this one and leaves the other one empty.
+    * 
+    * @param[in] other The other SynsetImage, whose contents are to be moved.
+    */
+    SynsetImage & operator=(SynsetImage && other);
 
     /**
     * @return Returns the path to the repository directory.

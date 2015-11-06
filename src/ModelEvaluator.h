@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <utility>
 #include "defs.h"
 #include "DPMDetection.h"
 
@@ -83,7 +84,23 @@ public:
     * @param[in] interval Number of levels per octave in the HOG pyramid.
     */
     ModelEvaluator(const FFLD::Mixture & model, double overlap = 0.5, int padding = 12, int interval = 10)
-    : DPMDetection(model, -100.0, false, overlap, padding, interval), m_results() { }; 
+    : DPMDetection(model, -100.0, false, overlap, padding, interval), m_results() { };
+    
+    /** 
+    * Initializes the ModelEvaluator and adds a single model.
+    * This is equivalent to constructing the object with `ModelEvaluator(overlap, padding, interval)`
+    * and then calling `addModel("single", model)`.
+    *
+    * @param[in] model The model to be added as FFLD::Mixture object, whose contents will be moved.
+    *
+    * @param[in] overlap Minimum overlap in non maxima suppression.
+    *
+    * @param[in] padding Amount of zero padding in HOG cells. Must be greater or equal to half the greatest filter dimension.
+    *
+    * @param[in] interval Number of levels per octave in the HOG pyramid.
+    */
+    ModelEvaluator(FFLD::Mixture && model, double overlap = 0.5, int padding = 12, int interval = 10)
+    : DPMDetection(std::move(model), -100.0, false, overlap, padding, interval), m_results() { }; 
     
     /**
     * Returns a reference to a vector with TestResult objects for a specific model computed by testModels().

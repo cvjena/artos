@@ -22,6 +22,7 @@
 #include "Mixture.h"
 
 #include <algorithm>
+#include <utility>
 #include <fstream>
 
 using namespace Eigen;
@@ -36,8 +37,26 @@ Mixture::Mixture(const vector<Model> & models) : models_(models), cached_(false)
 {
 }
 
+Mixture::Mixture(vector<Model> && models) : models_(std::move(models)), cached_(false)
+{
+}
+
 Mixture::Mixture(const Mixture & other) : models_(other.models_), cached_(false)
 {
+}
+
+Mixture::Mixture(Mixture && other) : models_(std::move(other.models_)), cached_(false)
+{
+}
+
+Mixture & Mixture::operator=(Mixture && other)
+{
+	models_ = std::move(other.models_);
+	filterCache_.clear();
+	cached_ = false;
+	other.filterCache_.clear();
+	other.cached_ = false;
+	return *this;
 }
 
 bool Mixture::empty() const
@@ -53,6 +72,12 @@ const vector<Model> & Mixture::models() const
 void Mixture::addModel(const Model & model)
 {
 	models_.push_back(model);
+	cached_ = false;
+}
+
+void Mixture::addModel(Model && model)
+{
+	models_.push_back(std::move(model));
 	cached_ = false;
 }
 
