@@ -26,7 +26,7 @@ bool StationaryBackground::readFromFile(const string & filename)
     uint32_t formatVersion, csx, csy, nf, no;
     file.read(reinterpret_cast<char*>(&formatVersion), sizeof(uint32_t));
     formatVersion = le32toh(formatVersion);
-    if (formatVersion & 0xFFFFFF00 == ARTOS_BG_MAGIC)   // Check if first 24 bits of first integer correspond to magic number.
+    if ((formatVersion & 0xFFFFFF00) == ARTOS_BG_MAGIC) // Check if first 24 bits of first integer correspond to magic number.
         formatVersion = formatVersion & 0xFF;           // If so, the last 8 bits specify the file format version.
     else                                                // Otherwise, this is the first format version, which did not have
     {                                                   // a dedicated version field at all.
@@ -40,11 +40,11 @@ bool StationaryBackground::readFromFile(const string & filename)
     {
         file.read(reinterpret_cast<char*>(&csx), sizeof(uint32_t));
         file.read(reinterpret_cast<char*>(&csy), sizeof(uint32_t));
+        csx = le32toh(csx);
+        csy = le32toh(csy);
     }
     file.read(reinterpret_cast<char*>(&nf), sizeof(uint32_t));
     file.read(reinterpret_cast<char*>(&no), sizeof(uint32_t));
-    csx = le32toh(csx);
-    csy = le32toh(csy);
     nf = le32toh(nf);
     no = le32toh(no);
     if (csx == 0 || csy == 0 || nf == 0 || no == 0)
