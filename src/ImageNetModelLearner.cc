@@ -4,11 +4,10 @@
 #include <utility>
 #include <iostream>
 
-#include "ffld/JPEGImage.h"
-#include "ffld/timingtools.h"
+#include "JPEGImage.h"
+#include "timingtools.h"
 
 using namespace ARTOS;
-using namespace FFLD;
 using namespace std;
 
 

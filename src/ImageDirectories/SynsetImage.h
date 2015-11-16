@@ -4,8 +4,8 @@
 #include <string>
 #include <vector>
 #include <ios>
-#include "ffld/JPEGImage.h"
-#include "ffld/Rectangle.h"
+#include "JPEGImage.h"
+#include "Rectangle.h"
 
 namespace ARTOS
 {
@@ -37,7 +37,7 @@ public:
     *                given by this argument, so that it doesn't have to be loaded again later on.
     */
     SynsetImage(const std::string & repoDirectory, const std::string & synsetId,
-                const std::string & filename, const FFLD::JPEGImage * img = NULL);
+                const std::string & filename, const JPEGImage * img = NULL);
     
     /**
     * Copies all data from another SynsetImage object to the new one.
@@ -101,7 +101,7 @@ public:
     *
     * @return The image as JPEGImage object.
     */
-    FFLD::JPEGImage & getImage() const
+    JPEGImage & getImage() const
     {
         if (!this->m_imgLoaded && this->m_img.empty())
         {
@@ -116,9 +116,9 @@ public:
     *
     * @return The image as JPEGImage object.
     */
-    FFLD::JPEGImage getImage() const
+    JPEGImage getImage() const
     {
-        FFLD::JPEGImage img;
+        JPEGImage img;
         this->loadImage(&img);
         return img;
     };
@@ -140,7 +140,7 @@ public:
     * 
     * @param[out] samples Vector that the sub-images inside of the bounding boxes will be appended to.
     */
-    void getSamplesFromBoundingBoxes(std::vector< FFLD::JPEGImage > & samples);
+    void getSamplesFromBoundingBoxes(std::vector<JPEGImage> & samples);
     
     /**
     * Vector with rectangular bounding boxes around instances of the object category associated with
@@ -148,7 +148,7 @@ public:
     *
     * @note Bounding box annotations need to be loaded before using loadBoundingBoxes().
     */
-    std::vector< FFLD::Rectangle > bboxes;
+    std::vector<Rectangle> bboxes;
 
 
 protected:
@@ -156,7 +156,7 @@ protected:
     std::string m_repoDir; /**< The path to the repository directory. */
     std::string m_synsetId; /**< The ID of the synset this image belongs to. */
     std::string m_filename; /**< The filename of this image. */
-    mutable FFLD::JPEGImage m_img; /**< Image data (may be an empty image if not loaded yet). */
+    mutable JPEGImage m_img; /**< Image data (may be an empty image if not loaded yet). */
     mutable bool m_imgLoaded; /**< Specifies whether an attempt to load the image has been made. */
     mutable bool m_bboxesLoaded; /**< Specifies if bounding box annotations have already been loaded for this image. */
 
@@ -165,7 +165,7 @@ protected:
     *
     * @param[out] target Pointer to the JPEGImage object which will receive the image data.
     */
-    void loadImage(FFLD::JPEGImage * target) const;
+    void loadImage(JPEGImage * target) const;
 
 };
 

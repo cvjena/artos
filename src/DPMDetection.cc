@@ -1,48 +1,45 @@
 #include <stdlib.h>
 #include <iostream>
+#include <iomanip>
 #include <fstream>
 #include <limits>
 
 #include "DPMDetection.h"
 #include "sysutils.h"
-#include "ffld/Intersector.h"
-#include "ffld/timingtools.h"
+#include "Intersector.h"
+#include "timingtools.h"
 
 using namespace ARTOS;
-using namespace FFLD;
 using namespace std;
 
-DPMDetection::DPMDetection ( bool verbose, double overlap, int padding, int interval )
+DPMDetection::DPMDetection ( bool verbose, double overlap, int interval )
 {
-    init ( verbose, overlap, padding, interval );
+    init ( verbose, overlap, interval );
 }
 
-DPMDetection::DPMDetection ( const std::string & modelfile, double threshold, bool verbose, double overlap, int padding, int interval ) 
+DPMDetection::DPMDetection ( const std::string & modelfile, double threshold, bool verbose, double overlap, int interval ) 
 {
-    init ( verbose, overlap, padding, interval );
+    init ( verbose, overlap, interval );
     addModel ( "single", modelfile, threshold );
 }
 
-DPMDetection::DPMDetection ( const Mixture & model, double threshold, bool verbose, double overlap, int padding, int interval ) 
+DPMDetection::DPMDetection ( const Mixture & model, double threshold, bool verbose, double overlap, int interval ) 
 {
-    init ( verbose, overlap, padding, interval );
+    init ( verbose, overlap, interval );
     addModel ( "single", model, threshold );
 }
 
-DPMDetection::DPMDetection ( Mixture && model, double threshold, bool verbose, double overlap, int padding, int interval ) 
+DPMDetection::DPMDetection ( Mixture && model, double threshold, bool verbose, double overlap, int interval ) 
 {
-    init ( verbose, overlap, padding, interval );
+    init ( verbose, overlap, interval );
     addModel ( "single", move(model), threshold );
 }
 
-void DPMDetection::init ( bool verbose, double overlap, int padding, int interval )
+void DPMDetection::init ( bool verbose, double overlap, int interval )
 {
     this->overlap = overlap;
-    this->padding = padding;
     this->interval = interval;
     this->verbose = verbose;
-    this->initw = -1;
-    this->inith = -1;
     this->nextModelIndex = 0;
 }
 
@@ -58,12 +55,18 @@ int DPMDetection::addModel ( const std::string & classname, const std::string & 
         return ARTOS_DETECT_RES_INVALID_MODEL_FILE;
     }
     
-    Mixture *mixture = new Mixture();
-    in >> (*mixture);
-
-    if (mixture->empty()) {
+    Mixture * mixture = new Mixture();
+    try {
+        in >> (*mixture);
+    } catch (const Exception & e) {
         if (this->verbose)
-            cerr << "\nInvalid model file " << modelfile << endl;
+            cerr << "Invalid model file: " << modelfile << " (" << e.what() << ")" << endl;
+        delete mixture;
+        return ARTOS_DETECT_RES_INVALID_MODEL_FILE;
+    } catch (const std::invalid_argument & e) {
+        if (this->verbose)
+            cerr << "Invalid model file: " << modelfile << " (" << e.what() << ")" << endl;
+        delete mixture;
         return ARTOS_DETECT_RES_INVALID_MODEL_FILE;
     }
 
@@ -96,8 +99,19 @@ int DPMDetection::addModelPointer ( const std::string & classname, Mixture * mix
     thresholds[classname] = threshold;
     synsetIds[classname] = synsetId;
     
-    this->initw = -1;
-    this->inith = -1;
+    int feIndex = -1;
+    for (int i = 0; i < featureExtractors.size(); i++)
+        if (*(featureExtractors[i]) == *(mixture->featureExtractor()))
+        {
+            feIndex = i;
+            break;
+        }
+    if (feIndex < 0)
+    {
+        feIndex = featureExtractors.size();
+        featureExtractors.push_back(mixture->featureExtractor());
+    }
+    featureExtractorIndices[classname] = static_cast<unsigned int>(feIndex);
 
     return ARTOS_RES_OK;
 }
@@ -134,6 +148,22 @@ std::string DPMDetection::getClassnameFromIndex( const unsigned int modelIndex )
     return "";
 }
 
+Size DPMDetection::minModelSize() const
+{
+    Size s;
+    for (map<std::string, Mixture*>::const_iterator m = this->mixtures.begin(); m != this->mixtures.end(); ++m)
+        s = (s.min() == 0) ? m->second->minSize() : min(s, m->second->minSize());
+    return s;
+}
+
+Size DPMDetection::maxModelSize() const
+{
+    Size s;
+    for (map<std::string, Mixture*>::const_iterator m = this->mixtures.begin(); m != this->mixtures.end(); ++m)
+        s = max(s, m->second->maxSize());
+    return s;
+}
+
 DPMDetection::~DPMDetection()
 {
     for ( map<std::string, Mixture *>::iterator i = mixtures.begin(); i != mixtures.end(); i++ )
@@ -150,128 +180,137 @@ int DPMDetection::detect ( const JPEGImage & image, vector<Detection> & detectio
     if ( mixtures.size() == 0 )
         return ARTOS_DETECT_RES_NO_MODELS;
 
-    // Compute the HOG features
-    if (this->verbose)
-        start();
-
-    HOGPyramid pyramid(image, this->padding, this->padding, this->interval);
-
-    if (pyramid.empty()) {
+    int errcode;
+    
+    // Separate detection for every unique feature extractor
+    for (unsigned int feIndex = 0; feIndex < this->featureExtractors.size(); feIndex++)
+    {
+    
+        // Compute the features
         if (this->verbose)
-            cerr << "\nInvalid image!" << endl;
-        return ARTOS_DETECT_RES_INVALID_IMAGE;
+            start();
+
+        FeaturePyramid pyramid(image, this->featureExtractors[feIndex], this->interval);
+
+        if (pyramid.empty())
+        {
+            if (this->verbose)
+                cerr << "\nCould not create feature pyramid! Image may be invalid." << endl;
+            return ARTOS_DETECT_RES_INVALID_IMAGE;
+        }
+
+        if (this->verbose)
+        {
+            cerr << "Computed " << pyramid.featureExtractor()->type() << " features in " << stop() << " ms for an image of size " <<
+                    image.width() << " x " << image.height() << endl;
+        }
+
+        errcode = this->initPatchwork(pyramid.levels()[0].rows(), pyramid.levels()[0].cols(), pyramid.levels()[0].channels());
+        if (errcode != ARTOS_RES_OK)
+            return errcode;
+
+        if ( this->verbose )
+            start();
+
+        errcode = this->detect( image.width(), image.height(), pyramid, feIndex, detections);
+        if (errcode != ARTOS_RES_OK)
+            return errcode;
+     
+        if (this->verbose)
+            cerr << "Computed the convolutions and distance transforms in " << stop() << " ms" << endl;
+    
     }
-
-    if (this->verbose) {
-        cerr << "Computed HOG features in " << stop() << " ms for an image of size " <<
-                image.width() << " x " << image.height() << endl;
-    }
-
-    int errcode = this->initPatchwork(pyramid.levels()[0].rows(), pyramid.levels()[0].cols());
-    if (errcode != ARTOS_RES_OK)
-        return errcode;
-
-    if ( this->verbose )
-        start();
-
-    errcode = this->detect( image.width(), image.height(), pyramid, detections);
- 
-    if (this->verbose)
-        cerr << "Computed the convolutions and distance transforms in " << stop() << " ms" << endl;
 
     return errcode;
 }
 
-int DPMDetection::detect(int width, int height, const HOGPyramid & pyramid, vector<Detection> & detections)
+int DPMDetection::detect(int width, int height, const FeaturePyramid & pyramid, unsigned int featureExtractorIndex, vector<Detection> & detections)
 {
-    for ( map<std::string, Mixture *>::iterator i = this->mixtures.begin(); i != this->mixtures.end(); i++ )
-    {
-        Mixture *mixture = i->second;
-        const std::string & classname = i->first;
-        double threshold = thresholds[classname];
-        const std::string & synsetId = synsetIds[classname];
-        unsigned int modelIndex = modelIndices[classname];
-
-        // Compute the scores
-        vector<HOGPyramid::Matrix> scores;
-        vector<Mixture::Indices> argmaxes;
-        vector<Detection> single_detections;
-        
-        // there is also a version which allows obtaining the part positions, but who cares :)
-        // see the original ffld code for this call
-        mixture->convolve(pyramid, scores, argmaxes);
-        
-        if (this->verbose)
-            cerr << "Running detector for " << classname << endl;
-        
-        // Cache the size of the models
-        vector<pair<int, int> > sizes(mixture->models().size());
-        
-        for (int i = 0; i < sizes.size(); ++i)
-            sizes[i] = mixture->models()[i].rootSize();
-        
-        // For each scale
-        for (int i = pyramid.interval(); i < scores.size(); ++i)
+    for ( map<std::string, Mixture *>::iterator m = this->mixtures.begin(); m != this->mixtures.end(); m++ )
+        if (this->featureExtractorIndices[m->first] == featureExtractorIndex)
         {
-            // Scale = 8 / 2^(1 - i / interval)
-            const double scale = pow(2.0, static_cast<double>(i) / pyramid.interval() + 2.0);
-          
-            const int rows = scores[i].rows();
-            const int cols = scores[i].cols();
-          
-            for (int y = 0; y < rows; ++y)
-            {
-                for (int x = 0; x < cols; ++x)
-                {
-                    const float score = scores[i](y, x);
-              
-                    if (score > threshold)
-                    {
-                        if (((y == 0) || (x == 0) || (score > scores[i](y - 1, x - 1))) &&
-                          ((y == 0) || (score > scores[i](y - 1, x))) &&
-                          ((y == 0) || (x == cols - 1) || (score > scores[i](y - 1, x + 1))) &&
-                          ((x == 0) || (score > scores[i](y, x - 1))) &&
-                          ((x == cols - 1) || (score > scores[i](y, x + 1))) &&
-                          ((y == rows - 1) || (x == 0) || (score > scores[i](y + 1, x - 1))) &&
-                          ((y == rows - 1) || (score > scores[i](y + 1, x))) &&
-                          ((y == rows - 1) || (x == cols - 1) || (score > scores[i](y + 1, x + 1))))
-                        {
-                            FFLD::Rectangle bndbox((int)((x - pyramid.padx()) * scale + 0.5),
-                                       (int)((y - pyramid.pady()) * scale + 0.5),
-                                       (int)(sizes[argmaxes[i](y, x)].second * scale + 0.5),
-                                       (int)(sizes[argmaxes[i](y, x)].first * scale + 0.5));
-                  
-                            // Truncate the object
-                            bndbox.setX(max(bndbox.x(), 0));
-                            bndbox.setY(max(bndbox.y(), 0));
-                            bndbox.setWidth(min(bndbox.width(), width - bndbox.x()));
-                            bndbox.setHeight(min(bndbox.height(), height - bndbox.y()));
-                              
-                            if (!bndbox.empty())
-                                single_detections.push_back(Detection(score, i, x, y, bndbox, classname, synsetId, modelIndex));
+            Mixture * mixture = m->second;
+            const std::string & classname = m->first;
+            double threshold = thresholds[classname];
+            const std::string & synsetId = synsetIds[classname];
+            unsigned int modelIndex = modelIndices[classname];
 
+            // Compute the scores
+            if (this->verbose)
+                cerr << "Running detector for " << classname << endl;
+            vector<ScalarMatrix> scores;
+            vector<Mixture::Indices> argmaxes;
+            vector<Detection> single_detections;
+            mixture->convolve(pyramid, scores, argmaxes);
+            
+            // Cache the size of the models
+            vector<Size> sizes(mixture->models().size());
+            for (int i = 0; i < sizes.size(); ++i)
+                sizes[i] = mixture->models()[i].rootSize();
+            
+            // For each scale
+            for (int i = 0; i < scores.size(); ++i)
+            {
+                const double scale = pyramid.scales()[i];
+              
+                const int rows = scores[i].rows();
+                const int cols = scores[i].cols();
+              
+                for (int y = 0; y < rows; ++y)
+                {
+                    for (int x = 0; x < cols; ++x)
+                    {
+                        const float score = scores[i](y, x);
+                  
+                        if (score > threshold)
+                        {
+                            if (((y == 0) || (x == 0) || (score > scores[i](y - 1, x - 1))) &&
+                              ((y == 0) || (score > scores[i](y - 1, x))) &&
+                              ((y == 0) || (x == cols - 1) || (score > scores[i](y - 1, x + 1))) &&
+                              ((x == 0) || (score > scores[i](y, x - 1))) &&
+                              ((x == cols - 1) || (score > scores[i](y, x + 1))) &&
+                              ((y == rows - 1) || (x == 0) || (score > scores[i](y + 1, x - 1))) &&
+                              ((y == rows - 1) || (score > scores[i](y + 1, x))) &&
+                              ((y == rows - 1) || (x == cols - 1) || (score > scores[i](y + 1, x + 1))))
+                            {
+                                const Size pos = pyramid.featureExtractor()->cellCoordsToPixels(Size(x / scale + 0.5, y / scale + 0.5));
+                                const Size size = pyramid.featureExtractor()->cellsToPixels(Size(
+                                        sizes[argmaxes[i](y, x)].width / scale + 0.5,
+                                        sizes[argmaxes[i](y, x)].height / scale + 0.5
+                                ));
+                                Rectangle bndbox(pos.width, pos.height, size.width, size.height);
+                      
+                                // Truncate the object
+                                bndbox.setX(max(bndbox.x(), 0));
+                                bndbox.setY(max(bndbox.y(), 0));
+                                bndbox.setWidth(min(bndbox.width(), width - bndbox.x()));
+                                bndbox.setHeight(min(bndbox.height(), height - bndbox.y()));
+                                  
+                                if (!bndbox.empty())
+                                    single_detections.push_back(Detection(score, scale, x, y, bndbox, classname, synsetId, modelIndex));
+
+                            }
                         }
                     }
                 }
             }
+
+            if (this->verbose)
+                cerr << "Number of detections before non-maximum suppression: " << single_detections.size() << endl;
+
+            // Non maxima suppression
+            sort(single_detections.begin(), single_detections.end());
+            
+            for (int i = 1; i < single_detections.size(); ++i)
+                single_detections.resize(remove_if(single_detections.begin() + i, single_detections.end(),
+                        Intersector(single_detections[i - 1], this->overlap, true)) -
+                        single_detections.begin());
+
+            if (this->verbose)
+                cerr << "Number of detections after non-maximum suppression: " << single_detections.size() << endl;
+
+            detections.insert ( detections.begin(), single_detections.begin(), single_detections.end() );
         }
-
-        if (this->verbose)
-            cerr << "Number of detections before non-maximum suppression: " << single_detections.size() << endl;
-
-        // Non maxima suppression
-        sort(single_detections.begin(), single_detections.end());
-        
-        for (int i = 1; i < single_detections.size(); ++i)
-            single_detections.resize(remove_if(single_detections.begin() + i, single_detections.end(),
-                    Intersector(single_detections[i - 1], this->overlap, true)) -
-                    single_detections.begin());
-
-        if (this->verbose)
-            cerr << "Number of detections after non-maximum suppression: " << single_detections.size() << endl;
-
-        detections.insert ( detections.begin(), single_detections.begin(), single_detections.end() );
-    }
     return ARTOS_RES_OK;
 }
 
@@ -280,105 +319,112 @@ int DPMDetection::detectMax ( const JPEGImage & image, Detection & detection )
     if ( mixtures.size() == 0 )
         return ARTOS_DETECT_RES_NO_MODELS;
 
-    // Compute the HOG features
-    if (this->verbose)
-        start();
-
-    HOGPyramid pyramid(image, this->padding, this->padding, this->interval);
-
-    if (pyramid.empty()) {
-        if (this->verbose)
-            cerr << "\nInvalid image!" << endl;
-        return ARTOS_DETECT_RES_INVALID_IMAGE;
-    }
-
-    if (this->verbose) {
-        cerr << "Computed HOG features in " << stop() << " ms for an image of size " <<
-                image.width() << " x " << image.height() << endl;
-    }
-
-    int errcode = this->initPatchwork(pyramid.levels()[0].rows(), pyramid.levels()[0].cols());
-    if (errcode != ARTOS_RES_OK)
-        return errcode;
-
-    if ( this->verbose )
-        start();
-
-    HOGPyramid::Scalar score, maxScore = -1 * numeric_limits<HOGPyramid::Scalar>::infinity();
-    int y, x;
-    for ( map<std::string, Mixture *>::iterator i = this->mixtures.begin(); i != this->mixtures.end(); i++ )
+    // Separate detection for every unique feature extractor
+    for (unsigned int feIndex = 0; feIndex < this->featureExtractors.size(); feIndex++)
     {
-        Mixture *mixture = i->second;
-        const std::string & classname = i->first;
-        const std::string & synsetId = synsetIds[classname];
-        unsigned int modelIndex = modelIndices[classname];
-
-        // Compute the scores
-        vector<HOGPyramid::Matrix> scores;
-        vector<Mixture::Indices> argmaxes;
         
-        // there is also a version which allows obtaining the part positions, but who cares :)
-        // see the original ffld code for this call
-        mixture->convolve(pyramid, scores, argmaxes);
-        
+        // Compute the features
         if (this->verbose)
-            cerr << "Running detector for " << classname << endl;
+            start();
         
-        // Cache the size of the models
-        vector<pair<int, int> > sizes(mixture->models().size());
-        
-        for (int i = 0; i < sizes.size(); ++i)
-            sizes[i] = mixture->models()[i].rootSize();
-        
-        // For each scale
-        for (int i = pyramid.interval(); i < scores.size(); ++i)
+        FeaturePyramid pyramid(image, this->featureExtractors[feIndex], this->interval);
+
+        if (pyramid.empty())
         {
-            // Scale = 8 / 2^(1 - i / interval)
-            const double scale = pow(2.0, static_cast<double>(i) / pyramid.interval() + 2.0);
-          
-            score = scores[i].maxCoeff(&y, &x);
-            if (score > maxScore)
-            {
-                FFLD::Rectangle bndbox((int)((x - pyramid.padx()) * scale + 0.5),
-                                       (int)((y - pyramid.pady()) * scale + 0.5),
-                                       (int)(sizes[argmaxes[i](y, x)].second * scale + 0.5),
-                                       (int)(sizes[argmaxes[i](y, x)].first * scale + 0.5));
-                  
-                // Truncate the object
-                bndbox.setX(max(bndbox.x(), 0));
-                bndbox.setY(max(bndbox.y(), 0));
-                bndbox.setWidth(min(bndbox.width(), image.width() - bndbox.x()));
-                bndbox.setHeight(min(bndbox.height(), image.height() - bndbox.y()));
-                  
-                if (!bndbox.empty())
-                {
-                    detection = Detection(score, i, x, y, bndbox, classname, synsetId, modelIndex);
-                    maxScore = score;
-                }
-            }
+            if (this->verbose)
+                cerr << "\nCould not create feature pyramid! Image may be invalid." << endl;
+            return ARTOS_DETECT_RES_INVALID_IMAGE;
         }
 
-    }
- 
-    if (this->verbose)
-        cerr << "Computed the convolutions and distance transforms in " << stop() << " ms" << endl;
+        if (this->verbose) {
+            cerr << "Computed " << pyramid.featureExtractor()->type() << " features in " << stop() << " ms for an image of size " <<
+                    image.width() << " x " << image.height() << endl;
+        }
 
+        int errcode = this->initPatchwork(pyramid.levels()[0].rows(), pyramid.levels()[0].cols(), pyramid.levels()[0].channels());
+        if (errcode != ARTOS_RES_OK)
+            return errcode;
+
+        if ( this->verbose )
+            start();
+
+        FeatureScalar score, maxScore = -1 * numeric_limits<FeatureScalar>::infinity();
+        int y, x;
+        for ( map<std::string, Mixture *>::iterator m = this->mixtures.begin(); m != this->mixtures.end(); m++ )
+            if (this->featureExtractorIndices[m->first] == feIndex)
+            {
+                Mixture * mixture = m->second;
+                const std::string & classname = m->first;
+                const std::string & synsetId = synsetIds[classname];
+                unsigned int modelIndex = modelIndices[classname];
+
+                // Compute the scores
+                if (this->verbose)
+                    cerr << "Running detector for " << classname << endl;
+                vector<ScalarMatrix> scores;
+                vector<Mixture::Indices> argmaxes;
+                mixture->convolve(pyramid, scores, argmaxes);
+                
+                // Cache the size of the models
+                vector<Size> sizes(mixture->models().size());
+                for (int i = 0; i < sizes.size(); ++i)
+                    sizes[i] = mixture->models()[i].rootSize();
+                
+                // For each scale
+                for (int i = 0; i < scores.size(); ++i)
+                {
+                    const double scale = pyramid.scales()[i];
+                  
+                    score = scores[i].maxCoeff(&y, &x);
+                    if (score > maxScore)
+                    {
+                        const Size pos = pyramid.featureExtractor()->cellCoordsToPixels(Size(x / scale + 0.5, y / scale + 0.5));
+                        const Size size = pyramid.featureExtractor()->cellsToPixels(Size(
+                                sizes[argmaxes[i](y, x)].width / scale + 0.5,
+                                sizes[argmaxes[i](y, x)].height / scale + 0.5
+                        ));
+                        Rectangle bndbox(pos.width, pos.height, size.width, size.height);
+                          
+                        // Truncate the object
+                        bndbox.setX(max(bndbox.x(), 0));
+                        bndbox.setY(max(bndbox.y(), 0));
+                        bndbox.setWidth(min(bndbox.width(), image.width() - bndbox.x()));
+                        bndbox.setHeight(min(bndbox.height(), image.height() - bndbox.y()));
+                          
+                        if (!bndbox.empty())
+                        {
+                            detection = Detection(score, scale, x, y, bndbox, classname, synsetId, modelIndex);
+                            maxScore = score;
+                        }
+                    }
+                }
+
+            }
+     
+        if (this->verbose)
+            cerr << "Computed the convolutions and distance transforms in " << stop() << " ms" << endl;
+
+    }
+    
     return ARTOS_RES_OK;
 }
 
-int DPMDetection::initPatchwork(unsigned int rows, unsigned int cols)
+int DPMDetection::initPatchwork(unsigned int rows, unsigned int cols, unsigned int numFeatures)
 {
     // Initialize the Patchwork class (only when necessary)
-    int w = (rows - this->padding + 15) & ~15;
-    int h = (cols - this->padding + 15) & ~15;
-    if ( w != initw || h != inith )
+    const Size maxFilterSize = this->maxModelSize();
+    int w = (rows + maxFilterSize.height + 2 + 15) & ~15;
+    int h = (cols + maxFilterSize.width + 2 + 15) & ~15;
+    if ( w > Patchwork::MaxCols() || h > Patchwork::MaxRows() || numFeatures != Patchwork::NumFeatures() )
     {
+        w = max(w, Patchwork::MaxCols());
+        h = max(h, Patchwork::MaxRows());
         if (this->verbose) {
-            cerr << "Init values for Patchwork: " << w << " x " << h << endl;
+            cerr << "Init values for Patchwork: " << w << " x " << h << " x " << numFeatures << endl;
             start();
         }
 
-        if (!Patchwork::Init(w,h)) {
+        if (!Patchwork::Init(w, h, numFeatures)) {
             if (this->verbose)
                 cerr << "\nCould not initialize the Patchwork class" << endl;
             return ARTOS_RES_INTERNAL_ERROR;
@@ -390,15 +436,9 @@ int DPMDetection::initPatchwork(unsigned int rows, unsigned int cols)
         
         // Cache filters
         for ( map<std::string, Mixture *>::iterator i = this->mixtures.begin(); i != this->mixtures.end(); i++ )
-        {
-            Mixture *mixture = i->second;
-            mixture->cacheFilters();
-        }
+            i->second->cacheFilters();
         if (this->verbose) 
             cerr << "Transformed the filters in " << stop() << " ms" << endl;
-
-        initw = w;
-        inith = h;
     }
     return ARTOS_RES_OK;
 }

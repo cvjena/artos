@@ -184,7 +184,7 @@ string MixedImageIterator::extract(const string & outDirectory)
     if (this->ready())
     {
         SynsetImage simg = **this;
-        FFLD::JPEGImage img = simg.getImage();
+        JPEGImage img = simg.getImage();
         if (!img.empty())
         {
             string resultFileName = join_path(2, outDirectory.c_str(), (simg.getFilename() + ".jpg").c_str());

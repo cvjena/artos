@@ -6,15 +6,23 @@
 #include <utility>
 #include <cmath>
 
-#include "ffld/Mixture.h"
-#include "ffld/timingtools.h"
+#include "Mixture.h"
+#include "timingtools.h"
 
 #include "clustering.h"
 #include "ModelEvaluator.h"
 
 using namespace ARTOS;
-using namespace FFLD;
 using namespace std;
+
+
+void ModelLearnerBase::setFeatureExtractor(const std::shared_ptr<FeatureExtractor> & featureExtractor)
+{
+    this->m_models.clear();
+    this->m_thresholds.clear();
+    this->m_clusterSizes.clear();
+    this->m_featureExtractor = (featureExtractor) ? featureExtractor : FeatureExtractor::defaultFeatureExtractor();
+}
 
 
 void ModelLearnerBase::reset()
@@ -24,60 +32,6 @@ void ModelLearnerBase::reset()
     this->m_clusterSizes.clear();
     this->m_samples.clear();
     this->m_numSamples = 0;
-}
-
-
-ModelLearnerBase::Size ModelLearnerBase::computeOptimalCellNumber(const std::vector<int> & widths, const std::vector<int> & heights)
-{
-    int i, j, w, h;
-    
-    // Fill histogram and area vector
-    Eigen::Array<float, 1, 201> hist; // histogram of logarithmic aspect ratios with bins from -2 to +2 in steps of 0.02
-    hist.setConstant(0.0f);
-    vector<int> areas(min(widths.size(), heights.size()));
-    int aspectIndex;
-    for (i = 0; i < areas.size(); i++)
-    {
-        w = widths[i];
-        h = heights[i];
-        areas[i] = w * h;
-        aspectIndex = round(log(static_cast<float>(h) / static_cast<float>(w)) * 50 + 100);
-        if (aspectIndex >= 0 && aspectIndex < hist.size())
-            hist(aspectIndex) += 1;
-    }
-    
-    // Filter histogram with large gaussian smoothing filter and select maximum as aspect ratio
-    Eigen::Array<float, 1, 201> filter;
-    for (i = 0; i < filter.size(); i++)
-        filter(i) = exp(static_cast<float>((100 - i) * (100 - i)) / -400.0f);
-    float curValue, maxValue = 0;
-    int maxIndex = 0;
-    for (i = 0; i < hist.size(); i++)
-    {
-        curValue = 0;
-        for (j = max(i - 100, 0); j < min(i + 100, 200); j++)
-            curValue += hist(j) * filter(j - i + 100);
-        if (curValue > maxValue)
-        {
-            maxIndex = i;
-            maxValue = curValue;
-        }
-    }
-    float aspect = exp(maxIndex * 0.02f - 2);
-    
-    // Nasty hack from the original WHO code: pick 20 percentile area and
-    // ensure that HOG feature areas are neither too big nor too small
-    sort(areas.begin(), areas.end());
-    int area = areas[static_cast<size_t>(floor(areas.size() * 0.2))];
-    area = max(min(area, 7000), 5000);
-    
-    // Calculate model size in cells
-    float width = sqrt(static_cast<float>(area) / aspect);
-    float height = width * aspect;
-    Size size;
-    size.width = max(static_cast<int>(round(width / FeatureExtractor::cellSize)), 1);
-    size.height = max(static_cast<int>(round(height / FeatureExtractor::cellSize)), 1);
-    return size;
 }
 
 
@@ -109,14 +63,14 @@ bool ModelLearnerBase::addPositiveSample(SynsetImage && sample)
 }
 
 
-bool ModelLearnerBase::addPositiveSample(const JPEGImage & sample, const FFLD::Rectangle & boundingBox)
+bool ModelLearnerBase::addPositiveSample(const JPEGImage & sample, const Rectangle & boundingBox)
 {
     if (sample.empty())
         return false;
     
     Sample s;
     s.m_img = sample;
-    s.m_bboxes.push_back((boundingBox.empty()) ? FFLD::Rectangle(0, 0, sample.width(), sample.height()) : boundingBox);
+    s.m_bboxes.push_back((boundingBox.empty()) ? Rectangle(0, 0, sample.width(), sample.height()) : boundingBox);
     s.modelAssoc.push_back(0);
     s.data = NULL;
     this->m_samples.push_back(move(s));
@@ -125,14 +79,14 @@ bool ModelLearnerBase::addPositiveSample(const JPEGImage & sample, const FFLD::R
 }
 
 
-bool ModelLearnerBase::addPositiveSample(JPEGImage && sample, const FFLD::Rectangle & boundingBox)
+bool ModelLearnerBase::addPositiveSample(JPEGImage && sample, const Rectangle & boundingBox)
 {
     if (sample.empty())
         return false;
     
     Sample s;
     s.m_img = move(sample);
-    s.m_bboxes.push_back((boundingBox.empty()) ? FFLD::Rectangle(0, 0, s.m_img.width(), s.m_img.height()) : boundingBox);
+    s.m_bboxes.push_back((boundingBox.empty()) ? Rectangle(0, 0, s.m_img.width(), s.m_img.height()) : boundingBox);
     s.modelAssoc.push_back(0);
     s.data = NULL;
     this->m_samples.push_back(move(s));
@@ -141,7 +95,7 @@ bool ModelLearnerBase::addPositiveSample(JPEGImage && sample, const FFLD::Rectan
 }
 
 
-bool ModelLearnerBase::addPositiveSample(const JPEGImage & sample, const vector<FFLD::Rectangle> & boundingBoxes)
+bool ModelLearnerBase::addPositiveSample(const JPEGImage & sample, const vector<Rectangle> & boundingBoxes)
 {
     if (sample.empty())
         return false;
@@ -149,8 +103,8 @@ bool ModelLearnerBase::addPositiveSample(const JPEGImage & sample, const vector<
     // Check if any of the bounding boxes is empty and use only one bounding boxes spanning the entire image
     // in that case
     if (boundingBoxes.empty())
-        return this->addPositiveSample(sample, FFLD::Rectangle());
-    for (vector<FFLD::Rectangle>::const_iterator it = boundingBoxes.begin(); it != boundingBoxes.end(); it++)
+        return this->addPositiveSample(sample, Rectangle());
+    for (vector<Rectangle>::const_iterator it = boundingBoxes.begin(); it != boundingBoxes.end(); it++)
         if (it->empty())
             return this->addPositiveSample(sample, *it);
     
@@ -165,7 +119,7 @@ bool ModelLearnerBase::addPositiveSample(const JPEGImage & sample, const vector<
 }
 
 
-bool ModelLearnerBase::addPositiveSample(JPEGImage && sample, const vector<FFLD::Rectangle> & boundingBoxes)
+bool ModelLearnerBase::addPositiveSample(JPEGImage && sample, const vector<Rectangle> & boundingBoxes)
 {
     if (sample.empty())
         return false;
@@ -173,8 +127,8 @@ bool ModelLearnerBase::addPositiveSample(JPEGImage && sample, const vector<FFLD:
     // Check if any of the bounding boxes is empty and use only one bounding boxes spanning the entire image
     // in that case
     if (boundingBoxes.empty())
-        return this->addPositiveSample(move(sample), FFLD::Rectangle());
-    for (vector<FFLD::Rectangle>::const_iterator it = boundingBoxes.begin(); it != boundingBoxes.end(); it++)
+        return this->addPositiveSample(move(sample), Rectangle());
+    for (vector<Rectangle>::const_iterator it = boundingBoxes.begin(); it != boundingBoxes.end(); it++)
         if (it->empty())
             return this->addPositiveSample(move(sample), *it);
     
@@ -196,7 +150,7 @@ void ModelLearnerBase::initSampleFromSynsetImage(Sample & s)
         // Check if any of the bounding boxes is empty and use only one bounding boxes spanning the entire image
         // in that case
         bool validBBoxes = true;
-        for (vector<FFLD::Rectangle>::const_iterator it = s.m_simg.bboxes.begin(); it != s.m_simg.bboxes.end(); it++)
+        for (vector<Rectangle>::const_iterator it = s.m_simg.bboxes.begin(); it != s.m_simg.bboxes.end(); it++)
             if (it->empty())
             {
                 validBBoxes = false;
@@ -207,7 +161,7 @@ void ModelLearnerBase::initSampleFromSynsetImage(Sample & s)
     }
     if (s.m_bboxes.empty())
     {
-        FFLD::Rectangle bbox(0, 0, 0, 0);
+        Rectangle bbox(0, 0, 0, 0);
         JPEGImage img = s.m_simg.getImage();
         bbox.setWidth(img.width());
         bbox.setHeight(img.height());
@@ -234,7 +188,7 @@ bool ModelLearnerBase::learn(const unsigned int maxAspectClusters, const unsigne
     
     int i, c;
     vector<Sample>::iterator sample;
-    vector<FFLD::Rectangle>::const_iterator bbox;
+    vector<Rectangle>::const_iterator bbox;
     
     // Cluster by aspect ratio
     Eigen::VectorXi aspectClusterAssignment = Eigen::VectorXi::Zero(this->getNumSamples());
@@ -263,17 +217,16 @@ bool ModelLearnerBase::learn(const unsigned int maxAspectClusters, const unsigne
     vector<Size> cellNumbers(numAspectClusters);
     vector<int> samplesPerAspectCluster(numAspectClusters, 0);
     {
-        vector< vector<int> > widths(numAspectClusters), heights(numAspectClusters);
+        vector< vector<Size> > sampleSizes(numAspectClusters);
         for (sample = this->m_samples.begin(), i = 0; sample != this->m_samples.end(); sample++)
             for (bbox = sample->bboxes().begin(); bbox != sample->bboxes().end(); bbox++, i++)
             {
                 c = aspectClusterAssignment(i);
-                widths[c].push_back(bbox->width());
-                heights[c].push_back(bbox->height());
+                sampleSizes[c].push_back(Size(bbox->width(), bbox->height()));
                 samplesPerAspectCluster[c]++;
             }
         for (i = 0; i < numAspectClusters; i++)
-            cellNumbers[i] = this->computeOptimalCellNumber(widths[i], heights[i]);
+            cellNumbers[i] = this->m_featureExtractor->computeOptimalModelSize(sampleSizes[i], this->maximumModelSize());
     }
     if (this->m_verbose)
         cerr << "Computed optimal cell numbers in " << stop() << " ms." << endl;
@@ -323,7 +276,7 @@ const vector<float> & ModelLearnerBase::optimizeThreshold(const unsigned int max
         ModelEvaluator eval;
         for (size_t i = 0; i < this->m_models.size(); i++)
         {
-            Mixture mixture;
+            Mixture mixture(this->m_featureExtractor);
             mixture.addModel(Model(this->m_models[i], 0));
             stringstream classname;
             classname << i;
@@ -359,7 +312,7 @@ bool ModelLearnerBase::save(const string & filename, const bool addToMixture) co
     if (this->m_models.size() == 0)
         return false;
 
-    Mixture mix;
+    Mixture mix(this->m_featureExtractor);
     // Try to read existing mixture file
     if (addToMixture)
     {

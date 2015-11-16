@@ -8,14 +8,12 @@
 
 #include <Eigen/Cholesky>
 
-#include "ffld/Mixture.h"
-#include "ffld/timingtools.h"
-
 #include "clustering.h"
 #include "ModelEvaluator.h"
+#include "Mixture.h"
+#include "timingtools.h"
 
 using namespace ARTOS;
-using namespace FFLD;
 using namespace std;
 
 
@@ -23,7 +21,7 @@ Mixture * loo_who(const Mixture *, const Sample *, const unsigned int, const uns
 
 typedef struct {
     vector<unsigned int> * clusterSizes;
-    vector<FeatureExtractor::Scalar> * normFactors;
+    vector<FeatureScalar> * normFactors;
 } loo_data_t;
 
 
@@ -31,7 +29,7 @@ void ModelLearner::reset()
 {
     for (vector<Sample>::iterator sample = this->m_samples.begin(); sample != this->m_samples.end(); sample++)
         if (sample->data != NULL)
-            delete reinterpret_cast< vector<FeatureExtractor::FeatureMatrix> *>(sample->data);
+            delete reinterpret_cast< vector<FeatureMatrix> *>(sample->data);
     ModelLearnerBase::reset();
     this->m_normFactors.clear();
 }
@@ -42,7 +40,7 @@ bool ModelLearner::addPositiveSample(const SynsetImage & sample)
     if (ModelLearnerBase::addPositiveSample(sample))
     {
         Sample & s = this->m_samples.back();
-        s.data = reinterpret_cast<void*>(new vector<FeatureExtractor::FeatureMatrix>(s.bboxes().size(), FeatureExtractor::FeatureMatrix()));
+        s.data = reinterpret_cast<void*>(new vector<FeatureMatrix>(s.bboxes().size(), FeatureMatrix()));
         return true;
     }
     else
@@ -55,7 +53,7 @@ bool ModelLearner::addPositiveSample(SynsetImage && sample)
     if (ModelLearnerBase::addPositiveSample(move(sample)))
     {
         Sample & s = this->m_samples.back();
-        s.data = reinterpret_cast<void*>(new vector<FeatureExtractor::FeatureMatrix>(s.bboxes().size(), FeatureExtractor::FeatureMatrix()));
+        s.data = reinterpret_cast<void*>(new vector<FeatureMatrix>(s.bboxes().size(), FeatureMatrix()));
         return true;
     }
     else
@@ -63,11 +61,11 @@ bool ModelLearner::addPositiveSample(SynsetImage && sample)
 }
 
 
-bool ModelLearner::addPositiveSample(const JPEGImage & sample, const FFLD::Rectangle & boundingBox)
+bool ModelLearner::addPositiveSample(const JPEGImage & sample, const Rectangle & boundingBox)
 {
     if (ModelLearnerBase::addPositiveSample(sample, boundingBox))
     {
-        this->m_samples.back().data = reinterpret_cast<void*>(new vector<FeatureExtractor::FeatureMatrix>(1, FeatureExtractor::FeatureMatrix()));
+        this->m_samples.back().data = reinterpret_cast<void*>(new vector<FeatureMatrix>(1, FeatureMatrix()));
         return true;
     }
     else
@@ -75,11 +73,11 @@ bool ModelLearner::addPositiveSample(const JPEGImage & sample, const FFLD::Recta
 }
 
 
-bool ModelLearner::addPositiveSample(JPEGImage && sample, const FFLD::Rectangle & boundingBox)
+bool ModelLearner::addPositiveSample(JPEGImage && sample, const Rectangle & boundingBox)
 {
     if (ModelLearnerBase::addPositiveSample(move(sample), boundingBox))
     {
-        this->m_samples.back().data = reinterpret_cast<void*>(new vector<FeatureExtractor::FeatureMatrix>(1, FeatureExtractor::FeatureMatrix()));
+        this->m_samples.back().data = reinterpret_cast<void*>(new vector<FeatureMatrix>(1, FeatureMatrix()));
         return true;
     }
     else
@@ -87,12 +85,12 @@ bool ModelLearner::addPositiveSample(JPEGImage && sample, const FFLD::Rectangle 
 }
 
 
-bool ModelLearner::addPositiveSample(const JPEGImage & sample, const vector<FFLD::Rectangle> & boundingBoxes)
+bool ModelLearner::addPositiveSample(const JPEGImage & sample, const vector<Rectangle> & boundingBoxes)
 {
     if (ModelLearnerBase::addPositiveSample(sample, boundingBoxes))
     {
         Sample & s = this->m_samples.back();
-        s.data = reinterpret_cast<void*>(new vector<FeatureExtractor::FeatureMatrix>(s.bboxes().size(), FeatureExtractor::FeatureMatrix()));
+        s.data = reinterpret_cast<void*>(new vector<FeatureMatrix>(s.bboxes().size(), FeatureMatrix()));
         return true;
     }
     else
@@ -100,37 +98,50 @@ bool ModelLearner::addPositiveSample(const JPEGImage & sample, const vector<FFLD
 }
 
 
-bool ModelLearner::addPositiveSample(JPEGImage && sample, const vector<FFLD::Rectangle> & boundingBoxes)
+bool ModelLearner::addPositiveSample(JPEGImage && sample, const vector<Rectangle> & boundingBoxes)
 {
     if (ModelLearnerBase::addPositiveSample(move(sample), boundingBoxes))
     {
         Sample & s = this->m_samples.back();
-        s.data = reinterpret_cast<void*>(new vector<FeatureExtractor::FeatureMatrix>(s.bboxes().size(), FeatureExtractor::FeatureMatrix()));
+        s.data = reinterpret_cast<void*>(new vector<FeatureMatrix>(s.bboxes().size(), FeatureMatrix()));
         return true;
     }
     else
         return false;
+}
+
+
+Size ModelLearner::maximumModelSize() const
+{
+    int mo = max(0, this->m_bg.getMaxOffset() + 1);
+    return Size(mo, mo);
 }
 
 
 bool ModelLearner::learn_init()
 {
     this->m_normFactors.clear();
-    return (ModelLearnerBase::learn_init() && !this->m_bg.empty() && this->m_bg.getNumFeatures() <= FeatureExtractor::numFeatures);
+    return (ModelLearnerBase::learn_init() && !this->m_bg.empty()
+            && this->m_bg.cellSize.width == this->m_featureExtractor->cellSize().width
+            && this->m_bg.getNumFeatures() <= this->m_featureExtractor->numFeatures());
 }
 
 
 void ModelLearner::m_learn(Eigen::VectorXi & aspectClusterAssignment, vector<int> & samplesPerAspectCluster, vector<Size> & cellNumbers,
                            const unsigned int maxWHOClusters, ProgressCallback progressCB, void * cbData)
 {
-    unsigned int c, i, j, k, l, s, t; // yes, we do need that much iteration variables
-    unsigned int numAspectClusters = samplesPerAspectCluster.size();
+    unsigned int c, i, j, s, t; // yes, we do need that much iteration variables
+    const unsigned int numFeatures = this->m_featureExtractor->numFeatures();
+    const unsigned int numAspectClusters = samplesPerAspectCluster.size();
+    const Size bs = this->m_featureExtractor->borderSize();
+    vector< pair<unsigned int, unsigned int> > sampleIndices;
+    sampleIndices.reserve(this->m_samples.size());
     vector<Sample>::iterator sample;
-    vector<FFLD::Rectangle>::const_iterator bbox;
-    vector<FeatureExtractor::FeatureMatrix>::iterator whoStorage;
+    vector<Rectangle>::const_iterator bbox;
+    vector<FeatureMatrix>::iterator whoStorage;
     
     // Learn models for each aspect ratio cluster
-    FeatureExtractor::Cell negMean = FeatureExtractor::Cell::Zero();
+    FeatureCell negMean = FeatureCell::Zero(numFeatures);
     negMean.head(this->m_bg.getNumFeatures()) = this->m_bg.mean;
     unsigned int curClusterIndex = 0;
     unsigned int progressStep = 0, progressTotal = numAspectClusters * 2;
@@ -138,18 +149,31 @@ void ModelLearner::m_learn(Eigen::VectorXi & aspectClusterAssignment, vector<int
         progressCB(progressStep, progressTotal, cbData);
     for (c = 0; c < numAspectClusters; c++)
     {
-        Size modelSize = cellNumbers[c];
+        const Size modelSize = cellNumbers[c];
+        const Size cropSize = this->m_featureExtractor->cellsToPixels(modelSize);
         if (this->m_verbose)
             cerr << "-- Learning model for aspect ratio cluster " << (c+1) << " --" << endl
                  << "There are " << samplesPerAspectCluster[c] << " samples in this cluster." << endl
-                 << "Optimal cell number: " << modelSize.width << " x " << modelSize.height << endl;
+                 << "Optimal cell number: " << modelSize.width << " x " << modelSize.height
+                 << " (Pixels: " << cropSize.width << " x " << cropSize.height << ")" << endl;
+        
+        // Build map of the first sample from each image to its sequential sample index and its index in the feature matrix
+        // (used for parallelization)
+        sampleIndices.clear();
+        for (sample = this->m_samples.begin(), s = 0, t = 0; sample != this->m_samples.end(); sample++)
+        {
+            sampleIndices.push_back(pair<unsigned int, unsigned int>(s, t));
+            for (bbox = sample->bboxes().begin(); bbox != sample->bboxes().end(); bbox++, s++)
+                if (aspectClusterAssignment(s) == c)
+                    ++t;
+        }
         
         // Get background covariance
         if (this->m_verbose)
             start();
-        Eigen::LLT<StationaryBackground::Matrix> llt;
+        Eigen::LLT<ScalarMatrix> llt;
         {
-            StationaryBackground::Matrix cov = this->m_bg.computeFlattenedCovariance(modelSize.height, modelSize.width, FeatureExtractor::numFeatures);
+            ScalarMatrix cov = this->m_bg.computeFlattenedCovariance(modelSize.height, modelSize.width, numFeatures);
             if (cov.size() == 0)
             {
                 if (this->m_verbose)
@@ -173,7 +197,7 @@ void ModelLearner::m_learn(Eigen::VectorXi & aspectClusterAssignment, vector<int
             }
             // Cholesky decomposition for stable inversion
             float lambda = 0.0f; // regularizer
-            StationaryBackground::Matrix identity = StationaryBackground::Matrix::Identity(cov.rows(), cov.cols());
+            ScalarMatrix identity = ScalarMatrix::Identity(cov.rows(), cov.cols());
             do
             {
                 lambda += 0.01f; // increase regularizer on every attempt
@@ -192,11 +216,11 @@ void ModelLearner::m_learn(Eigen::VectorXi & aspectClusterAssignment, vector<int
         if (progressCB != NULL)
             progressCB(progressStep, progressTotal, cbData);
         
-        Eigen::VectorXf hogVector(modelSize.height * modelSize.width * FeatureExtractor::numFeatures);
+        FeatureCell featureVector(modelSize.height * modelSize.width * numFeatures);
         // Replicate negative mean over all cells
-        Eigen::VectorXf negVector = negMean.replicate(modelSize.height * modelSize.width, 1);
+        FeatureCell negVector = negMean.replicate(modelSize.height * modelSize.width, 1);
         // Compute negative bias term in advance: mu_0'*S^-1*mu_0
-        float biasNeg = negVector.dot(llt.solve(negVector));
+        FeatureScalar biasNeg = negVector.dot(llt.solve(negVector));
         if (this->m_verbose)
         {
             cerr << "Computed negative bias term in " << stop() << " ms." << endl;
@@ -204,12 +228,13 @@ void ModelLearner::m_learn(Eigen::VectorXi & aspectClusterAssignment, vector<int
         }
         
         // Extract HOG features from samples, optionally cluster and whiten them 
-        FeatureExtractor::FeatureMatrix positive = FeatureExtractor::FeatureMatrix::Constant( // accumulator for positive features
-            modelSize.height, modelSize.width, FeatureExtractor::Cell::Zero()
+        FeatureMatrix hog;
+        FeatureMatrix positive( // accumulator for positive features
+            modelSize.height, modelSize.width, FeatureCell::Zero(numFeatures)
         );
-        Eigen::VectorXf posVector(positive.rows() * positive.cols() * FeatureExtractor::numFeatures); // flattened version of `positive`
-        Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> whoCentroids;
-        Eigen::VectorXf biases;
+        FeatureCell posVector(positive.rows() * positive.cols() * numFeatures); // flattened version of `positive`
+        ScalarMatrix whoCentroids;
+        FeatureCell biases;
         if ((maxWHOClusters <= 1 || samplesPerAspectCluster[c] == 1) && !this->m_loocv)
         {
             // Procedure without WHO clustering and LOOCV:
@@ -219,11 +244,11 @@ void ModelLearner::m_learn(Eigen::VectorXi & aspectClusterAssignment, vector<int
                 for (bbox = sample->bboxes().begin(), j = 0; bbox != sample->bboxes().end(); bbox++, j++, i++)
                     if (aspectClusterAssignment(i) == c)
                     {
-                        JPEGImage resizedSample = sample->img().crop(bbox->x(), bbox->y(), bbox->width(), bbox->height())
-                                                               .resize(modelSize.width * this->m_bg.cellSize, modelSize.height * this->m_bg.cellSize);
-                        FeatureExtractor::FeatureMatrix hog;
-                        FeatureExtractor::extract(resizedSample, hog); // compute HOG features
-                        positive += hog; // add to feature accumulator
+                        JPEGImage resizedSample = sample->img()
+                                .cropPadded(bbox->x() - bs.width, bbox->y() - bs.height, bbox->width() + bs.width, bbox->height() + bs.height)
+                                .resize(cropSize.width, cropSize.height);
+                        this->m_featureExtractor->extract(resizedSample, hog); // compute HOG features
+                        positive.data() += hog.data(); // add to feature accumulator
                         sample->modelAssoc[j] = curClusterIndex;
                     }
             if (this->m_verbose)
@@ -233,29 +258,21 @@ void ModelLearner::m_learn(Eigen::VectorXi & aspectClusterAssignment, vector<int
             }
             
             // Average positive features and flatten the matrix into a vector
-            for (i = 0, l = 0; i < positive.rows(); i++)
-                for (j = 0; j < positive.cols(); j++)
-                    for (k = 0; k < FeatureExtractor::numFeatures; k++, l++)
-                        posVector(l) = positive(i, j)(k) / static_cast<float>(this->getNumSamples());
+            posVector = positive.asVector() / static_cast<FeatureScalar>(this->getNumSamples());
             
             // Centre positive features
-            Eigen::VectorXf posCentred = posVector - negVector;
-            if (this->m_verbose)
-            {
-                cerr << "Centred positive feature vector in " << stop() << " ms." << endl;
-                start();
-            }
+            featureVector = posVector - negVector;
             
-            // Now we compute MODEL = cov^-1 * (pos - neg) = cov^-1 * posCentred = (L * LT)^-1 * posCentred = LT^-1 * L^-1 * posCentred
-            // llt.solveInPlace() will do this for us by solving the linear equation system cov * MODEL = posCentred
-            llt.solveInPlace(posCentred);
+            // Now we compute MODEL = cov^-1 * (pos - neg) = cov^-1 * featureVector = (L * LT)^-1 * featureVector = LT^-1 * L^-1 * featureVector
+            // llt.solveInPlace() will do this for us by solving the linear equation system cov * MODEL = featureVector
+            llt.solveInPlace(featureVector);
             if (this->m_verbose)
                 cerr << "Whitened feature vector in " << stop() << " ms." << endl;
-            whoCentroids = posCentred.transpose();
+            whoCentroids = featureVector.transpose();
             // We can obtain an estimated bias of the model as BIAS = (neg' * cov^-1 * neg - pos' * cov^-1 * pos) / 2
             // (under the assumption, that the a-priori class-probability is 0.5)
-            float biasPos = posVector.dot(llt.solve(posVector));
-            biases = Eigen::VectorXf::Constant(1, (biasNeg - biasPos) / 2.0f);
+            FeatureScalar biasPos = posVector.dot(llt.solve(posVector));
+            biases = FeatureCell::Constant(1, (biasNeg - biasPos) / 2.0f);
             curClusterIndex++;
         }
         else
@@ -265,38 +282,35 @@ void ModelLearner::m_learn(Eigen::VectorXi & aspectClusterAssignment, vector<int
             // clustering. We can then use the centroids of the clusters as models.
             
             // Extract HOG features of each sample, centre, whiten and store them
-            Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> hogFeatures(samplesPerAspectCluster[c], posVector.size());
-            Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> whoFeatures(samplesPerAspectCluster[c], posVector.size());
-            for (sample = this->m_samples.begin(), s = 0, t = 0; sample != this->m_samples.end(); sample++)
-                for (bbox = sample->bboxes().begin(), whoStorage = reinterpret_cast< vector<FeatureExtractor::FeatureMatrix> *>(sample->data)->begin(); bbox != sample->bboxes().end(); bbox++, whoStorage++, s++)
+            ScalarMatrix hogFeatures(samplesPerAspectCluster[c], posVector.size());
+            ScalarMatrix whoFeatures(samplesPerAspectCluster[c], posVector.size());
+            #pragma omp parallel for private(i,s,t,bbox,whoStorage,hog)
+            for (i = 0; i < this->m_samples.size(); i++)
+            {
+                s = sampleIndices[i].first;
+                t = sampleIndices[i].second;
+                Sample & sample = this->m_samples[i];
+                for (bbox = sample.bboxes().begin(), whoStorage = reinterpret_cast< vector<FeatureMatrix> *>(sample.data)->begin(); bbox != sample.bboxes().end(); bbox++, whoStorage++, s++)
                     if (aspectClusterAssignment(s) == c)
                     {
                         // Extract HOG features
-                        JPEGImage resizedSample = sample->img().crop(bbox->x(), bbox->y(), bbox->width(), bbox->height())
-                                                               .resize(modelSize.width * this->m_bg.cellSize, modelSize.height * this->m_bg.cellSize);
-                        FeatureExtractor::extract(resizedSample, positive); // compute HOG features
+                        JPEGImage resizedSample = sample.img()
+                                .cropPadded(bbox->x() - bs.width, bbox->y() - bs.height, bbox->width() + bs.width, bbox->height() + bs.height)
+                                .resize(cropSize.width, cropSize.height);
+                        this->m_featureExtractor->extract(resizedSample, hog); // compute HOG features
                         // Flatten HOG feature matrix into vector
-                        hogFeatures.row(t).setConstant(0.0f);
-                        for (i = 0, l = 0; i < positive.rows(); i++)
-                            for (j = 0; j < positive.cols(); j++)
-                                for (k = 0; k < FeatureExtractor::numFeatures; k++, l++)
-                                    hogFeatures(t, l) = positive(i, j)(k);
-                        // Centre feature vector
-                        posVector = hogFeatures.row(t).transpose() - negVector;
-                        // Whiten feature vector
-                        llt.solveInPlace(posVector);
-                        // Store
-                        whoFeatures.row(t++) = posVector;
+                        hogFeatures.row(t) = hog.asVector().transpose();
+                        // Centre and whiten feature vector
+                        whoFeatures.row(t) = llt.solve(hogFeatures.row(t).transpose() - negVector).transpose();
                         // Shape back into matrix and store it with the sample if we need it later for LOOCV
                         if (this->m_loocv)
                         {
-                            whoStorage->resize(positive.rows(), positive.cols());
-                            for (i = 0, l = 0; i < positive.rows(); i++)
-                                for (j = 0; j < positive.cols(); j++)
-                                    for (k = 0; k < FeatureExtractor::numFeatures; k++, l++)
-                                        (*whoStorage)(i, j)(k) = posVector(l);
+                            whoStorage->resize(positive.rows(), positive.cols(), numFeatures);
+                            whoStorage->asVector() = whoFeatures.row(t).transpose();
                         }
+                        ++t;
                     }
+            }
             if (this->m_verbose)
             {
                 cerr << "Computed WHO features of positive samples in " << stop() << " ms." << endl;
@@ -305,7 +319,7 @@ void ModelLearner::m_learn(Eigen::VectorXi & aspectClusterAssignment, vector<int
             
             // Cluster by WHO features
             Eigen::VectorXi whoClusterAssignment = Eigen::VectorXi::Zero(whoFeatures.rows());
-            Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> tmpCentroids;
+            ScalarMatrix tmpCentroids;
             repeatedKMeansClustering(whoFeatures, min(maxWHOClusters, static_cast<unsigned int>(samplesPerAspectCluster[c])),
                                      &whoClusterAssignment, &tmpCentroids, 30);
             // Ignore clusters with too few samples and compute positive bias terms
@@ -318,20 +332,20 @@ void ModelLearner::m_learn(Eigen::VectorXi & aspectClusterAssignment, vector<int
             }
             whoCentroids.resize(tmpCentroids.rows(), tmpCentroids.cols());
             biases.resize(tmpCentroids.rows());
-            float biasPos;
+            FeatureScalar biasPos;
             for (i = 0, t = 0; i < tmpCentroids.rows(); i++)
                 if (whoClusterAssignment.cwiseEqual(i).count() >= whoClusterAssignment.rows() / 10)
                 {
                     whoCentroids.row(t) = tmpCentroids.row(i);
-                    hogVector.setConstant(0.0f);
+                    featureVector.setConstant(0.0f);
                     for (j = 0; j < whoClusterAssignment.size(); j++)
                         if (whoClusterAssignment(j) == i)
                         {
                             whoClusterAssignment(j) = t;
-                            hogVector += hogFeatures.row(j);
+                            featureVector += hogFeatures.row(j);
                         }
-                    hogVector /= static_cast<float>(whoClusterAssignment.cwiseEqual(t).count());
-                    biasPos = hogVector.dot(llt.solve(hogVector)); // positive bias term: pos' * cov^-1 * pos
+                    featureVector /= static_cast<float>(whoClusterAssignment.cwiseEqual(t).count());
+                    biasPos = featureVector.dot(llt.solve(featureVector)); // positive bias term: pos' * cov^-1 * pos
                     biases(t) = (biasNeg - biasPos) / 2.0f; // assumes an a-priori class-probability of 0.5, so that we don't need to add ln(phi/(1-phi))
                     t++;
                 }
@@ -339,12 +353,15 @@ void ModelLearner::m_learn(Eigen::VectorXi & aspectClusterAssignment, vector<int
                 {
                     if (this->m_verbose)
                         cerr << "Ignoring WHO cluster #" << i << " (too few samples)." << endl;
-                    whoCentroids.conservativeResize(whoCentroids.rows() - 1, whoCentroids.cols());
-                    biases.conservativeResize(biases.size() - 1);
                     for (j = 0; j < whoClusterAssignment.size(); j++)
                         if (whoClusterAssignment(j) == i)
                             whoClusterAssignment(j) = -1;
                 }
+            if (t < tmpCentroids.rows())
+            {
+                whoCentroids.conservativeResize(t, whoCentroids.cols());
+                biases.conservativeResize(t);
+            }
             
             // Save cluster assignment for samples
             for (sample = this->m_samples.begin(), s = 0, t = 0; sample != this->m_samples.end(); sample++)
@@ -362,16 +379,12 @@ void ModelLearner::m_learn(Eigen::VectorXi & aspectClusterAssignment, vector<int
         }
         
         // Finally normalize the model vectors and reshape them back into rows and columns
-        Eigen::VectorXf centroid;
         for (s = 0; s < whoCentroids.rows(); s++)
         {
-            centroid = whoCentroids.row(s);
+            auto centroid = whoCentroids.row(s);
             this->m_normFactors.push_back(centroid.cwiseAbs().maxCoeff());
             centroid /= this->m_normFactors.back();
-            for (i = 0, l = 0; i < positive.rows(); i++)
-                for (j = 0; j < positive.cols(); j++)
-                    for (k = 0; k < FeatureExtractor::numFeatures; k++, l++)
-                        positive(i, j)(k) = centroid(l);
+            positive.asVector() = centroid.transpose();
             this->m_models.push_back(positive);
             this->m_thresholds.push_back(-1 * biases(s) / this->m_normFactors.back());
             if (this->m_verbose)
@@ -413,7 +426,7 @@ const vector<float> & ModelLearner::optimizeThreshold(const unsigned int maxPosi
         ModelEvaluator eval;
         for (size_t i = 0; i < this->m_models.size(); i++)
         {
-            Mixture mixture;
+            Mixture mixture(this->m_featureExtractor);
             mixture.addModel(Model(this->m_models[i], 0));
             stringstream classname;
             classname << i;
@@ -457,22 +470,21 @@ const vector<float> & ModelLearner::optimizeThreshold(const unsigned int maxPosi
 Mixture * loo_who(const Mixture * orig, const Sample * sample, const unsigned int objectIndex, const unsigned int numLeftOut, void * data)
 {
     loo_data_t * looData = reinterpret_cast<loo_data_t*>(data);
-    const vector<FeatureExtractor::FeatureMatrix> * whoFeatures = reinterpret_cast<const vector<FeatureExtractor::FeatureMatrix> *>(sample->data);
-    if ((*whoFeatures)[objectIndex].size() > 0
+    const vector<FeatureMatrix> * whoFeatures = reinterpret_cast<const vector<FeatureMatrix> *>(sample->data);
+    if (!(*whoFeatures)[objectIndex].empty()
             && sample->modelAssoc[objectIndex] < looData->clusterSizes->size()
             && (*(looData->clusterSizes))[sample->modelAssoc[objectIndex]] > numLeftOut + 1)
     {
         unsigned int clusterSize = (*(looData->clusterSizes))[sample->modelAssoc[objectIndex]];
-        FeatureExtractor::Scalar normFactor = (*(looData->normFactors))[sample->modelAssoc[objectIndex]];
+        FeatureScalar normFactor = (*(looData->normFactors))[sample->modelAssoc[objectIndex]];
         unsigned int n = clusterSize - numLeftOut;
-        const FeatureExtractor::FeatureMatrix * origModel = &(orig->models()[0].filters(0));
-        const FeatureExtractor::FeatureMatrix * sampleFeatures = &((*whoFeatures)[objectIndex]);
-        FeatureExtractor::FeatureMatrix newModel(origModel->rows(), origModel->cols());
-        for (FeatureExtractor::FeatureMatrix::Index i = 0; i < newModel.size(); i++)
-            newModel(i) = ((*origModel)(i) * (static_cast<FeatureExtractor::Scalar>(n) * normFactor)
-                           - (*sampleFeatures)(i)) / (static_cast<FeatureExtractor::Scalar>(n - 1) * normFactor);
-        Mixture * replacement = new Mixture();
-        replacement->addModel(Model(newModel, orig->models()[0].bias()));
+        const FeatureMatrix * origModel = &(orig->models()[0].filters(0));
+        const FeatureMatrix * sampleFeatures = &((*whoFeatures)[objectIndex]);
+        FeatureMatrix newModel(origModel->rows(), origModel->cols(), origModel->channels());
+        newModel.data() = (origModel->data() * (static_cast<FeatureScalar>(n) * normFactor)
+                          - sampleFeatures->data()) / (static_cast<FeatureScalar>(n - 1) * normFactor);
+        Mixture * replacement = new Mixture(orig->featureExtractor());
+        replacement->addModel(Model(move(newModel), orig->models()[0].bias()));
         return replacement;
     }
     else

@@ -9,7 +9,6 @@
 #include "StationaryBackground.h"
 #include "sysutils.h"
 using namespace std;
-using namespace FFLD;
 using namespace ARTOS;
 
 
@@ -25,12 +24,12 @@ void write_results_to_buffer(const vector<Detection> & detections, FlatDetection
 bool is_valid_detector_handle(const unsigned int detector);
 
 
-unsigned int create_detector(const double overlap, const int padding, const int interval, const bool debug)
+unsigned int create_detector(const double overlap, const int interval, const bool debug)
 {
     DPMDetection * newDetector = 0;
     try
     {
-        newDetector = new DPMDetection(debug, overlap, padding, interval);
+        newDetector = new DPMDetection(debug, overlap, interval);
         detectors.push_back(newDetector);
         return detectors.size(); // return handle of the new detector
     }
@@ -180,7 +179,7 @@ int learn_imagenet(const char * repo_directory, const char * synset_id, const ch
         progress_cb(0, progParams.overall_steps_total, 0, 0);
     
     // Learn model
-    ImageNetModelLearner learner(bg, repo, (th_opt_mode == ARTOS_THOPT_LOOCV), debug);
+    ImageNetModelLearner learner(bg, repo, nullptr, (th_opt_mode == ARTOS_THOPT_LOOCV), debug);
     if (learner.addPositiveSamplesFromSynset(synset) == 0)
         return ARTOS_IMGREPO_RES_EXTRACTION_FAILED;
     progParams.overall_step++;
@@ -223,8 +222,8 @@ int learn_files_jpeg(const char ** imagefiles, const unsigned int num_imagefiles
         progress_cb(0, progParams.overall_steps_total, 0, 0);
     
     // Add samples
-    ModelLearner learner(bg, (th_opt_mode == ARTOS_THOPT_LOOCV), debug);
-    FFLD::Rectangle bbox; // empty bounding box
+    ModelLearner learner(bg, nullptr, (th_opt_mode == ARTOS_THOPT_LOOCV), debug);
+    Rectangle bbox; // empty bounding box
     const FlatBoundingBox * flat_bbox;
     for (unsigned int i = 0; i < num_imagefiles; i++)
     {
@@ -234,7 +233,7 @@ int learn_files_jpeg(const char ** imagefiles, const unsigned int num_imagefiles
             if (bounding_boxes != NULL)
             {
                 flat_bbox = bounding_boxes + i;
-                bbox = FFLD::Rectangle(flat_bbox->left, flat_bbox->top, flat_bbox->width, flat_bbox->height);
+                bbox = Rectangle(flat_bbox->left, flat_bbox->top, flat_bbox->width, flat_bbox->height);
             }
             learner.addPositiveSample(img, bbox);
         }
@@ -273,7 +272,7 @@ unsigned int create_learner(const char * bg_file, const char * repo_directory, c
 {
     if (!ImageRepository::hasRepositoryStructure(repo_directory))
         repo_directory = "";
-    ImageNetModelLearner * newLearner = new ImageNetModelLearner(bg_file, repo_directory, th_opt_loocv, debug);
+    ImageNetModelLearner * newLearner = new ImageNetModelLearner(bg_file, repo_directory, nullptr, th_opt_loocv, debug);
     if (newLearner->getBackground().empty())
     {
         delete newLearner;
@@ -380,10 +379,10 @@ int learner_add_jpeg(const unsigned int learner, const JPEGImage & img, const Fl
         return ARTOS_RES_INVALID_HANDLE;
     if (img.empty())
         return ARTOS_LEARN_RES_INVALID_IMG_DATA;
-    vector<FFLD::Rectangle> _bboxes;
+    vector<Rectangle> _bboxes;
     if (bboxes != NULL)
         for (const FlatBoundingBox * flat_bbox = bboxes; flat_bbox < bboxes + num_bboxes; flat_bbox++)
-            _bboxes.push_back(FFLD::Rectangle(flat_bbox->left, flat_bbox->top, flat_bbox->width, flat_bbox->height));
+            _bboxes.push_back(Rectangle(flat_bbox->left, flat_bbox->top, flat_bbox->width, flat_bbox->height));
     learners[learner - 1]->addPositiveSample(img, _bboxes);
     return ARTOS_RES_OK;
 }
@@ -431,6 +430,158 @@ int learn_bg(const char * repo_directory, const char * bg_file,
     if (progress_cb != NULL)
         progress_cb(progParams.overall_steps_total, progParams.overall_steps_total, 0, 0);
     return (bg.writeToFile(bg_file)) ? ARTOS_RES_OK : ARTOS_RES_FILE_ACCESS_DENIED;
+}
+
+
+
+//------------------------------------------------------------------
+//---------------------------- Settings ----------------------------
+//------------------------------------------------------------------
+
+
+int change_feature_extractor(const char * type)
+{
+    try {
+        FeatureExtractor::setDefaultFeatureExtractor(type);
+        return ARTOS_RES_OK;
+    } catch (const UnknownFeatureExtractorException & e) {
+        return ARTOS_SETTINGS_RES_UNKNOWN_FEATURE_EXTRACTOR;
+    }
+}
+
+
+int feature_extractor_get_info(FeatureExtractorInfo * info)
+{
+    if (info)
+    {
+        shared_ptr<FeatureExtractor> fe = FeatureExtractor::defaultFeatureExtractor();
+        memset(info->type, 0, sizeof(info->type));
+        strncpy(info->type, fe->type(), sizeof(info->type) - 1);
+        memset(info->name, 0, sizeof(info->name));
+        strncpy(info->name, fe->name(), sizeof(info->name) - 1);
+    }
+    return ARTOS_RES_OK;
+}
+
+
+int list_feature_extractors(FeatureExtractorInfo * info_buf, unsigned int * info_buf_size)
+{
+    if (info_buf)
+    {
+        vector< shared_ptr<FeatureExtractor> > featureExtractors;
+        FeatureExtractor::listFeatureExtractors(featureExtractors);
+        FeatureExtractorInfo * info = info_buf;
+        unsigned int i;
+        for (i = 0; i < *info_buf_size && i < featureExtractors.size(); i++, info++)
+        {
+            memset(info->type, 0, sizeof(info->type));
+            strncpy(info->type, featureExtractors[i]->type(), sizeof(info->type) - 1);
+            memset(info->name, 0, sizeof(info->name));
+            strncpy(info->name, featureExtractors[i]->name(), sizeof(info->name) - 1);
+        }
+        *info_buf_size = i;
+    }
+    else
+        *info_buf_size = static_cast<unsigned int>(FeatureExtractor::numFeatureExtractors());
+    return ARTOS_RES_OK;
+}
+
+
+static int write_fe_params_to_buffer(const vector<FeatureExtractor::ParameterInfo> & params, FeatureExtractorParameter * param_buf, unsigned int * param_buf_size)
+{
+    if (param_buf)
+    {
+        FeatureExtractorParameter * info = param_buf;
+        unsigned int i;
+        for (i = 0; i < *param_buf_size && i < params.size(); i++, info++)
+        {
+            memset(info->name, 0, sizeof(info->name));
+            params[i].name.copy(info->name, sizeof(info->name) - 1);
+            switch (params[i].type)
+            {
+                case FeatureExtractor::ParameterType::INT:
+                    info->type = ARTOS_PARAM_TYPE_INT;
+                    info->val.intVal = static_cast<int>(params[i].intValue);
+                    break;
+                case FeatureExtractor::ParameterType::SCALAR:
+                    info->type = ARTOS_PARAM_TYPE_SCALAR;
+                    info->val.scalarVal = static_cast<float>(params[i].scalarValue);
+                    break;
+                case FeatureExtractor::ParameterType::STRING:
+                    info->type = ARTOS_PARAM_TYPE_STRING;
+                    info->val.stringVal = params[i].stringValue;
+                    break;
+                default:
+                    info->type = static_cast<unsigned int>(params[i].type);
+            }
+        }
+        *param_buf_size = i;
+    }
+    else
+        *param_buf_size = params.size();
+    return ARTOS_RES_OK;
+}
+
+
+int list_feature_extractor_params(const char * type, FeatureExtractorParameter * param_buf, unsigned int * param_buf_size)
+{
+    shared_ptr<FeatureExtractor> fe;
+    try {
+        fe = FeatureExtractor::create(type);
+    } catch (const UnknownFeatureExtractorException & e) {
+        return ARTOS_SETTINGS_RES_UNKNOWN_FEATURE_EXTRACTOR;
+    }
+    
+    vector<FeatureExtractor::ParameterInfo> params;
+    fe->listParameters(params);
+    return write_fe_params_to_buffer(params, param_buf, param_buf_size);
+}
+
+
+int feature_extractor_list_params(FeatureExtractorParameter * param_buf, unsigned int * param_buf_size)
+{
+    vector<FeatureExtractor::ParameterInfo> params;
+    FeatureExtractor::defaultFeatureExtractor()->listParameters(params);
+    return write_fe_params_to_buffer(params, param_buf, param_buf_size);
+}
+
+
+int feature_extractor_set_int_param(const char * param_name, int value)
+{
+    try {
+        FeatureExtractor::defaultFeatureExtractor()->setParam(param_name, static_cast<int32_t>(value));
+    } catch (const UnknownParameterException & e) {
+        return ARTOS_SETTINGS_RES_UNKNOWN_PARAMETER;
+    } catch (const invalid_argument & e) {
+        return ARTOS_SETTINGS_RES_INVALID_PARAMETER_VALUE;
+    }
+    return ARTOS_RES_OK;
+}
+
+
+int feature_extractor_set_scalar_param(const char * param_name, float value)
+{
+    try {
+        FeatureExtractor::defaultFeatureExtractor()->setParam(param_name, static_cast<FeatureScalar>(value));
+    } catch (const UnknownParameterException & e) {
+        return ARTOS_SETTINGS_RES_UNKNOWN_PARAMETER;
+    } catch (const invalid_argument & e) {
+        return ARTOS_SETTINGS_RES_INVALID_PARAMETER_VALUE;
+    }
+    return ARTOS_RES_OK;
+}
+
+
+int feature_extractor_set_string_param(const char * param_name, const char * value)
+{
+    try {
+        FeatureExtractor::defaultFeatureExtractor()->setParam(param_name, value);
+    } catch (const UnknownParameterException & e) {
+        return ARTOS_SETTINGS_RES_UNKNOWN_PARAMETER;
+    } catch (const invalid_argument & e) {
+        return ARTOS_SETTINGS_RES_INVALID_PARAMETER_VALUE;
+    }
+    return ARTOS_RES_OK;
 }
 
 

@@ -1102,7 +1102,8 @@ class HOGInspector(Tkinter.Toplevel):
         self.lblModelName = ttk.Label(self, text = os.path.basename(self.model.filename), font = 'TkDefaultFont 12 bold')
         self.lblModelName.grid(column = 1, row = 1, pady = 8)
         self.btnExport = ttk.Button(self, text = 'Export Visualization', command = self.export)
-        self.btnExport.grid(column = 0, row = 1, padx = 8)
+        if self.model.type == "HOG":
+            self.btnExport.grid(column = 0, row = 1, padx = 8)
         self.btnApply = ttk.Button(self, text = 'Apply', command = self.apply)
         self.btnApply.grid(column = 3, row = 1, padx = 8)
         self.btnCancel = ttk.Button(self, text = 'Cancel', command = self.destroy)
@@ -1111,7 +1112,7 @@ class HOGInspector(Tkinter.Toplevel):
         self.rowconfigure(0, weight = 1)
         self.columnconfigure(1, weight = 1)
         
-        # HOG images
+        # Model components
         self.hogFrames = []
         maxImgSize = [0, 0]
         for i, model in enumerate(self.model.models):
@@ -1131,18 +1132,28 @@ class HOGInspector(Tkinter.Toplevel):
                 frm.frmControls.btnRemove['state'] = 'disabled'
             frm.frmControls.btnRemove.pack(side = 'top', pady = 20, fill = 'x', expand = True)
             # HOG images
-            posImg = learning.Model.hogImage(model['parts'][0]['data'], 24, False)
-            negImg = learning.Model.hogImage(model['parts'][0]['data'], 24, True)
-            if posImg.size[0] > maxImgSize[0]:
-                maxImgSize[0] = posImg.size[0]
-            if posImg.size[1] > maxImgSize[1]:
-                maxImgSize[1] = posImg.size[1]
-            frm.lblHogPos = ttk.Label(frm, text = 'Positive', compound = 'bottom')
-            frm.lblHogPos._img = ImageTk.PhotoImage(posImg)
-            frm.lblHogPos['image'] = frm.lblHogPos._img
-            frm.lblHogNeg = ttk.Label(frm, text = 'Negative', compound = 'bottom')
-            frm.lblHogNeg._img = ImageTk.PhotoImage(negImg)
-            frm.lblHogNeg['image'] = frm.lblHogNeg._img
+            if self.model.type == "HOG":
+                posImg = learning.Model.hogImage(model['parts'][0]['data'], 24, False)
+                negImg = learning.Model.hogImage(model['parts'][0]['data'], 24, True)
+                if posImg.size[0] > maxImgSize[0]:
+                    maxImgSize[0] = posImg.size[0]
+                if posImg.size[1] > maxImgSize[1]:
+                    maxImgSize[1] = posImg.size[1]
+                frm.lblHogPos = ttk.Label(frm, text = 'Positive', compound = 'bottom')
+                frm.lblHogPos._img = ImageTk.PhotoImage(posImg)
+                frm.lblHogPos['image'] = frm.lblHogPos._img
+                frm.lblHogNeg = ttk.Label(frm, text = 'Negative', compound = 'bottom')
+                frm.lblHogNeg._img = ImageTk.PhotoImage(negImg)
+                frm.lblHogNeg['image'] = frm.lblHogNeg._img
+            else:
+                frm.lblHogPos = ttk.Label(frm, text = 'Component of\nsize {}x{}'.format(
+                        len(model['parts'][0]['data'][0]), len(model['parts'][0]['data'])
+                ), justify = 'center', anchor = 'center')
+                frm.lblHogPos._img = None
+                frm.lblHogNeg = ttk.Label(frm, text = 'Visualization is available\nfor HOG models only',
+                                          justify = 'center', anchor = 'center')
+                frm.lblHogNeg._img = None
+                maxImgSize = [100, 100]
             # Layout
             frm.lblModelIndex.grid(column = 0, row = 0)
             frm.lblHogPos.grid(column = 1, row = 0, sticky = E, padx = 8)

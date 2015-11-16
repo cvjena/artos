@@ -2,8 +2,8 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 
 PROJECT(ARTOS)
 
-set(BUILD_VERSION "1.3")
-set(API_VERSION 1)
+set(BUILD_VERSION "2.0")
+set(API_VERSION 2)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/../cmake/")
 
@@ -24,10 +24,12 @@ IF(NOT CACHE_POSITIVES)
   ADD_DEFINITIONS(-DNO_CACHE_POSITIVES)
 ENDIF()
 
+# Select a default build configuration if none was chosen
+IF(NOT CMAKE_BUILD_TYPE)
+  SET(CMAKE_BUILD_TYPE "Release" CACHE STRING "Choose the type of build, options are: None (CMAKE_CXX_FLAGS or CMAKE_C_FLAGS used) Debug Release RelWithDebInfo MinSizeRel." FORCE)
+ENDIF()
 
-#### Build FFLD static library ####
-ADD_SUBDIRECTORY(ffld)
-INCLUDE_DIRECTORIES("${PROJECT_SOURCE_DIR}/ffld")
+
 #### Build static library for image repository access ####
 IF(NOT IMAGE_REPOSITORY_SRC)
   SET(IMAGE_REPOSITORY_SRC "ImageNet" CACHE STRING "Subdirectory with source files for image repository access.")
@@ -37,39 +39,41 @@ ADD_SUBDIRECTORY(${IMAGE_REPOSITORY_SRC})
 # Add compiler flags to build static libraries as place-independent code (pic),
 # so that it can be linked to our shared ARTOS library.
 if(UNIX)
-    SET_TARGET_PROPERTIES(ffld PROPERTIES COMPILE_FLAGS "-fpic")
     SET_TARGET_PROPERTIES(imagenet PROPERTIES COMPILE_FLAGS "-fpic")
 endif(UNIX)
 
 
 #### Build ARTOS shared library ####
 
-# Select a default build configuration if none was chosen
-IF(NOT CMAKE_BUILD_TYPE)
-  SET(CMAKE_BUILD_TYPE "Release" CACHE STRING "Choose the type of build, options are: None (CMAKE_CXX_FLAGS or CMAKE_C_FLAGS used) Debug Release RelWithDebInfo MinSizeRel." FORCE)
-ENDIF()
-
 # List files and set properties
-SET(HEADERS DPMDetection.h FeatureExtractor.h HOGFeatureExtractor.h StationaryBackground.h ModelLearnerBase.h ModelLearner.h ImageNetModelLearner.h ModelEvaluator.h
-Random.h harmony_search.h sysutils.h strutils.h portable_endian.h libartos_def.h libartos.h)
-SET(SOURCES DPMDetection.cc FeatureExtractor.cc StationaryBackground.cc ModelLearnerBase.cc ModelLearner.cc ImageNetModelLearner.cc ModelEvaluator.cc
-Random.cc harmony_search.cc sysutils.cc strutils.cc)
+SET(SOURCES DPMDetection.cc FeatureExtractor.cc FeaturePyramid.cc HOGFeatureExtractor.cc JPEGImage.cc
+ModelLearnerBase.cc ModelLearner.cc ImageNetModelLearner.cc Mixture.cc Model.cc ModelEvaluator.cc
+Object.cc Patchwork.cc Random.cc Rectangle.cc Scene.cc StationaryBackground.cc
+blf.cc harmony_search.cc sysutils.cc strutils.cc timingtools.cc)
 ADD_LIBRARY(artos SHARED ${SOURCES} libartos.cc)
 SET_TARGET_PROPERTIES(artos PROPERTIES VERSION ${BUILD_VERSION} SOVERSION ${API_VERSION})
 
 # Link sub-libraries
 IF(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_GNUCC)
-    TARGET_LINK_LIBRARIES(artos LINK_PRIVATE -Wl,-whole-archive ffld imagenet -Wl,-no-whole-archive)
+    TARGET_LINK_LIBRARIES(artos LINK_PUBLIC -Wl,-whole-archive imagenet -Wl,-no-whole-archive)
 ELSEIF("${CMAKE_SYSTEM}" MATCHES IRIX)
-    TARGET_LINK_LIBRARIES(artos LINK_PRIVATE -Wl,-all ffld imagenet -Wl,-notall)
+    TARGET_LINK_LIBRARIES(artos LINK_PUBLIC -Wl,-all imagenet -Wl,-notall)
 ELSE()
-    TARGET_LINK_LIBRARIES(artos LINK_PRIVATE ffld imagenet)
+    TARGET_LINK_LIBRARIES(artos LINK_PUBLIC imagenet)
 ENDIF()
 
 
-#### Find and link libraries used by FFLD ####
+#### Find and link external libraries ####
 
-# There are no CMake FFTW package, so find it ourselves
+# There is no CMake Eigen package, so find it ourselves
+FILE(GLOB EIGEN_ARCHIVE "eigen*")
+FIND_PATH(EIGEN_INCLUDE_DIR Eigen ${EIGEN_ARCHIVE} .)
+IF(NOT EIGEN_INCLUDE_DIR)
+  MESSAGE(FATAL_ERROR "Could not find Eigen.")
+ENDIF()
+INCLUDE_DIRECTORIES(${EIGEN_INCLUDE_DIR})
+
+# There is no CMake FFTW package, so find it ourselves
 FIND_PATH(FFTW3_INCLUDE_DIR fftw3.h)
 FIND_LIBRARY(FFTW3_LIBRARIES fftw3f)
 IF(NOT FFTW3_INCLUDE_DIR OR NOT FFTW3_LIBRARIES)

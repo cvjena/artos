@@ -7,9 +7,8 @@
 #include "libartos_def.h"
 #include "TarExtractor.h"
 #include "sysutils.h"
-#include "ffld/Scene.h"
+#include "Scene.h"
 using namespace ARTOS;
-using namespace FFLD;
 using namespace std;
 
 

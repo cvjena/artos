@@ -6,8 +6,8 @@
 #include "defs.h"
 #include "FeatureExtractor.h"
 #include "SynsetImage.h"
-#include "ffld/JPEGImage.h"
-#include "ffld/Rectangle.h"
+#include "JPEGImage.h"
+#include "Rectangle.h"
 
 namespace ARTOS
 {
@@ -21,26 +21,25 @@ namespace ARTOS
 class ModelLearnerBase
 {
 
-protected:
-
-    typedef struct { int width; int height; } Size;
-
-
 public:
 
     /**
     * Default constructor.
     */
     ModelLearnerBase()
-    : m_verbose(false), m_samples(), m_numSamples(0), m_models(), m_thresholds(), m_clusterSizes() { };
+    : m_featureExtractor(FeatureExtractor::defaultFeatureExtractor()),
+      m_verbose(false), m_samples(), m_numSamples(0), m_models(), m_thresholds(), m_clusterSizes() { };
     
     /**
     * Constructs a new ModelLearnerBase.
     *
+    * @param[in] featureExtractor A shared pointer to the feature extractor to be used by the new model learner.
+    *
     * @param[in] verbose If set to true, debug and timing information will be printed to stderr.
     */
-    ModelLearnerBase(const bool verbose)
-    : m_verbose(verbose), m_samples(), m_numSamples(0), m_models(), m_thresholds(), m_clusterSizes() { };
+    ModelLearnerBase(const std::shared_ptr<FeatureExtractor> & featureExtractor, const bool verbose = false)
+    : m_featureExtractor((featureExtractor) ? featureExtractor : FeatureExtractor::defaultFeatureExtractor()),
+      m_verbose(verbose), m_samples(), m_numSamples(0), m_models(), m_thresholds(), m_clusterSizes() { };
     
     virtual ~ModelLearnerBase() {};
     
@@ -60,7 +59,7 @@ public:
     * @return The models learned by learn(), which will be an empty vector if learn() hasn't been called yet
     * or has failed.
     */
-    virtual const std::vector<FeatureExtractor::FeatureMatrix> & getModels() { return this->m_models; };
+    virtual const std::vector<FeatureMatrix> & getModels() { return this->m_models; };
     
     /**
     * @return The thresholds for the learned models determined by optimizeThreshold(), which will be 0 if
@@ -73,6 +72,21 @@ public:
     * An empty vector will be returned if no model has been learned yet.
     */
     virtual const std::vector<unsigned int> & getClusterSizes() const { return this->m_clusterSizes; };
+    
+    /**
+    * @return Returns a shared pointer to the FeatureExtractor used by this model learner.
+    */
+    virtual std::shared_ptr<FeatureExtractor> getFeatureExtractor() const { return this->m_featureExtractor; };
+    
+    /**
+    * Changes the feature extractor used by this model learner.
+    *
+    * @param[in] featureExtractor A shared pointer to the new feature extractor to be used by this model learner.
+    * If a nullptr is given, the default feature extractor will be used.
+    *
+    * @note This function also clears all models and thresholds learned so far.
+    */
+    virtual void setFeatureExtractor(const std::shared_ptr<FeatureExtractor> & featureExtractor);
     
     /**
     * Resets this learner to it's initial state and makes it forget all learned models, thresholds and added samples.
@@ -107,7 +121,7 @@ public:
     *
     * @return True if the sample has been added, otherwise false.
     */
-    virtual bool addPositiveSample(const FFLD::JPEGImage & sample, const FFLD::Rectangle & boundingBox);
+    virtual bool addPositiveSample(const JPEGImage & sample, const Rectangle & boundingBox);
     
     /**
     * Adds a positive sample to learn from given by an image and a bounding box around the object on that image.
@@ -119,7 +133,7 @@ public:
     *
     * @return True if the sample has been added, otherwise false.
     */
-    virtual bool addPositiveSample(FFLD::JPEGImage && sample, const FFLD::Rectangle & boundingBox);
+    virtual bool addPositiveSample(JPEGImage && sample, const Rectangle & boundingBox);
     
     /**
     * Adds multiple positive samples to learn from on the same image given by bounding boxes around the objects.
@@ -131,7 +145,7 @@ public:
     *
     * @return True if the sample has been added, otherwise false.
     */
-    virtual bool addPositiveSample(const FFLD::JPEGImage & sample, const std::vector<FFLD::Rectangle> & boundingBoxes);
+    virtual bool addPositiveSample(const JPEGImage & sample, const std::vector<Rectangle> & boundingBoxes);
     
     /**
     * Adds multiple positive samples to learn from on the same image given by bounding boxes around the objects.
@@ -143,7 +157,7 @@ public:
     *
     * @return True if the sample has been added, otherwise false.
     */
-    virtual bool addPositiveSample(FFLD::JPEGImage && sample, const std::vector<FFLD::Rectangle> & boundingBoxes);
+    virtual bool addPositiveSample(JPEGImage && sample, const std::vector<Rectangle> & boundingBoxes);
     
     /**
     * Performs the actual learning step and stores the resulting models, so that they can be retrieved later on by getModels().
@@ -197,7 +211,7 @@ public:
     * obtained later on using getThreshold().
     */
     virtual const std::vector<float> & optimizeThreshold(const unsigned int maxPositive = 0,
-                                                         const std::vector<FFLD::JPEGImage> * negative = NULL,
+                                                         const std::vector<JPEGImage> * negative = NULL,
                                                          const float b = 1.0f,
                                                          ProgressCallback progressCB = NULL, void * cbData = NULL);
     
@@ -217,13 +231,15 @@ public:
 
 protected:
 
+    std::shared_ptr<FeatureExtractor> m_featureExtractor; /**< The feature extractor used by this model learner. */
+
     bool m_verbose; /**< Specifies if debugging and timing information will be output to stderr. */
 
     std::vector<Sample> m_samples; /**< Positive samples consisting of images with given bounding boxes. */
 
     unsigned int m_numSamples; /**< Number of positive samples added (i. e. the number of bounding boxes summed over m_samples). */
     
-    std::vector<FeatureExtractor::FeatureMatrix> m_models; /**< The models learned by `learn`. */
+    std::vector<FeatureMatrix> m_models; /**< The models learned by `learn`. */
     
     std::vector<float> m_thresholds; /**< Optimal thresholds for the learned models computed by `optimizeThreshold`. */
     
@@ -262,19 +278,13 @@ protected:
     
     
     /**
-    * Computes an optimal common number of cells in x and y direction for given widths and heights of samples.
+    * Specifies the highest possible size of a model learned by this model learner.
+    * This information will be used to compute the actual model dimensions.
     *
-    * @param[in] widths Vector with the widths of the samples.
-    *
-    * @param[in] heights Vector with the heights of the samples, corresponding to `width`.
-    *
-    * @return Returns the optimal cell number in x and y direction as a struct with `width` and `height` fields.
-    *
-    * @todo The implementation of this function is a legacy from the original WHO code and depends on the assumption
-    * of having a cell size of 8 pixels and a maximum allowed model dimension of 20x20 cells.
-    * It should be modified to be more generally applicable, so that it can be used with other feature extractors.
+    * @return Returns the maximum size of a model which can be learned by this model learner
+    * in each dimension, given in cells. If any dimension is 0, its extension won't be limited.
     */
-    virtual Size computeOptimalCellNumber(const std::vector<int> & widths, const std::vector<int> & heights);
+    virtual Size maximumModelSize() const { return Size(); };
     
     /**
     * Used by addPositiveSample() to initialize a given sample based on its m_simg field.

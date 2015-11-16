@@ -10,10 +10,9 @@
 #include <Eigen/Core>
 
 #include "harmony_search.h"
-#include "ffld/Intersector.h"
+#include "Intersector.h"
 
 using namespace ARTOS;
-using namespace FFLD;
 using namespace std;
 
 
@@ -85,7 +84,7 @@ float ModelEvaluator::computeAveragePrecision(const unsigned int modelIndex) con
 
 
 void ModelEvaluator::testModels(const vector<Sample*> & positive, unsigned int maxSamples,
-                                const vector<FFLD::JPEGImage> * negative,
+                                const vector<JPEGImage> * negative,
                                 const unsigned int granularity,
                                 ProgressCallback progressCB, void * cbData, LOOFunc looFunc, void * looData)
 {
@@ -175,7 +174,7 @@ void ModelEvaluator::testModels(const vector<Sample*> & positive, unsigned int m
 
 vector<float> ModelEvaluator::searchOptimalThresholdCombination(
                                 const vector<Sample*> & positive, unsigned int maxSamples,
-                                const vector<FFLD::JPEGImage> * negative,
+                                const vector<JPEGImage> * negative,
                                 const unsigned int granularity, const float b,
                                 ProgressCallback progressCB, void * cbData, LOOFunc looFunc, void * looData)
 {
@@ -259,7 +258,7 @@ vector<float> ModelEvaluator::searchOptimalThresholdCombination(
 
 vector<unsigned int> ModelEvaluator::runDetector(SampleDetectionsVector & detections,
                                                  const vector<Sample*> & positive, unsigned int maxSamples,
-                                                 const vector<FFLD::JPEGImage> * negative,
+                                                 const vector<JPEGImage> * negative,
                                                  ProgressCallback progressCB, void * cbData, LOOFunc looFunc, void * looData)
 {
     size_t numModels = this->getNumModels();
@@ -324,8 +323,6 @@ vector<unsigned int> ModelEvaluator::runDetector(SampleDetectionsVector & detect
                         replacementModels.push_back(replacement);
                         numLeftOut[*modelAssocIt]++;
                         this->mixtures[classnames[*modelAssocIt]] = replacement;
-                        this->initw = -1;
-                        this->inith = -1;
                     }
                 }
             }
@@ -352,8 +349,6 @@ vector<unsigned int> ModelEvaluator::runDetector(SampleDetectionsVector & detect
             replacementModels.clear();
             numLeftOut.assign(numModels, 0);
             this->mixtures = originalMixtures;
-            this->initw = -1;
-            this->inith = -1;
         }
         // Update progress
         numSamplesProcessed++;

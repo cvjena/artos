@@ -3,8 +3,8 @@
 *
 * Procedural C-style interface to ARTOS, the Adaptive Real-Time Object Detection system.
 *
-* This file provides a procedural interface to the object detection, whitened HOG model learning
-* and image retrieval functionalities of ARTOS for integrating libartos into other projects
+* This file provides a procedural interface to the object detection, LDA based model learning
+* and image fetching functionalities of ARTOS for integrating libartos into other projects
 * created with any programming language.
 *
 * The **detection interface** is handle-controlled. First, you create a detector instance by calling
@@ -20,14 +20,20 @@
 * After that, samples can be added either from ImageNet, from file or from raw pixel data using one of the
 * `learner_add_*` functions. The actual learning step is performed by `learner_run` and, optionally,
 * `learner_optimize_th`. Finally, the learned model can be saved with `learner_save`.  
-* The all-in-one short-cut functions mentioned above handle all those steps with just one function call.
+* The all-in-one short-cut functions mentioned above handle all those steps with just one function call.  
+* By default, HOG features are used for learning new models, but the feature extraction method may be changed
+* using `change_feature_extractor` and one of the `feature_extractor_set_*_param` functions can be used for
+* setting parameters specific to each feature extractors. `list_feature_extractors` will provide a list of all
+* available feature extractors (which currently consists of HOG only) and `list_feature_extractor_params`
+* enumerates all parameters supported by a specific feature extractor.
 *
 * The **ImageNet interface** provides functionality for searching synsets and extracting whole images
 * as well as samples of objects from them to disk. In-memory extraction as provided by the object-oriented
 * interface, `ImageRepository` and it's related classes, is not supported in this C-style library interface.  
 * In the default implementation, all images and annotations from ImageNet have to be downloaded and made
 * available on the filesystem (that are some terabytes of data). See the documentation of the `ImageRepository`
-* class for how to structure your local copy of ImageNet.
+* class for how to structure your local copy of ImageNet.  
+* It is also possible to use other image data stored in plain directories on disk. See `README.md` for details on this.
 *
 * @author Bjoern Barz <bjoern.barz@uni-jena.de>
 */
@@ -65,12 +71,11 @@ typedef struct {
 /**
 * Creates a new detector instance.
 * @param[in] overlap Minimum overlap in non maxima suppression.
-* @param[in] padding Amount of zero padding in HOG cells. Must be greater or equal to half the greatest filter dimension.
-* @param[in] interval Number of levels per octave in the HOG pyramid.
+* @param[in] interval Number of levels per octave in the feature pyramid.
 * @param[in] debug If this is set to true, debug and performance information will be printed to stderr.
 * @return Handle to the new detector instance or 0 if the memory for the instance could not be allocated.
 */
-unsigned int create_detector(const double overlap = 0.5, const int padding = 12, const int interval = 10, const bool debug = false);
+unsigned int create_detector(const double overlap = 0.5, const int interval = 10, const bool debug = false);
 
 /**
 * Frees a detector instance.
@@ -411,7 +416,8 @@ int learner_reset(const unsigned int learner);
 //-------------------------------
 
 /**
-* Learns a negative mean and a stationary covariance matrix as autocorrelation function from ImageNet samples.
+* Learns a negative mean and a stationary covariance matrix as autocorrelation function from ImageNet samples for the current
+* default feature extractor.
 * Both are required for learning WHO models. This expensive computation has only to be done once and the default
 * background statistics shipped with ARTOS should be sufficient for most purposes.
 * @param[in] repo_directory The path to the image repository directory.
@@ -441,6 +447,122 @@ int learner_reset(const unsigned int learner);
 int learn_bg(const char * repo_directory, const char * bg_file,
              const unsigned int num_images, const unsigned int max_offset = 19, overall_progress_cb_t progress_cb = 0,
              const bool accurate_autocorrelation = false);
+
+
+//------------------------------------
+//     Feature Extractor Settings
+//------------------------------------
+
+/**
+* Basic information about a feature extractor.
+*/
+typedef struct {
+    char type[28]; /**< The type specifier of the feature extractor. */
+    char name[100]; /**< Human-readable name of the feature extractor. */
+} FeatureExtractorInfo;
+
+typedef union {
+    int intVal;
+    float scalarVal;
+    const char * stringVal;
+} FeatureExtractorParameterValue;
+
+/**
+* Information about a parameter of a feature extractor.
+*/
+typedef struct {
+    char name[52]; /**< The name of the parameter. */
+    unsigned int type; /**< Type of the parameter as one of the `ARTOS_PARAM_TYPE_*` constants */
+    FeatureExtractorParameterValue val; /**< Current value of the parameter. */
+} FeatureExtractorParameter;
+
+
+/**
+* Changes the default feature extractor used for learning of models and background statistics. This won't affect learner objects
+* which already have been created, but only new ones.  
+* The new default feature extractor will be created with default parameter values, which may be changed later using one
+* of the `feature_extractor_set_*_param` functions.  
+* A list of available feature extractors may be retrieved using `list_feature_extractors`.
+* @param[in] type The type specifier of the new feature extractor.
+* @return Returns `ARTOS_RES_OK` on success or `ARTOS_SETTINGS_RES_UNKNOWN_FEATURE_EXTRACTOR` if the specified feature extraction
+*         method is not known.
+*/
+int change_feature_extractor(const char * type);
+
+/**
+* Retrieves information about the current default feature extractor.
+* @param[out] info A pointer to a FeatureExtractorInfo struct that will receive information about the current feature extractor.
+* @return Returns `ARTOS_RES_OK`.
+*/
+int feature_extractor_get_info(FeatureExtractorInfo * info);
+
+/**
+* Lists all available feature extraction methods.
+* @param[out] info_buf A beforehand allocated array of FeatureExtractorInfo structs, which will be filled up with information about
+*                      the available feature extractors.
+* @param[in,out] info_buf_size The number of array slots allocated for `info_buf`. In turn, the number of actually written array
+*                              elements will be stored at this pointer's location. If `info_buf` is NULL, this will be set to the
+*                              number of available feature extractors instead.
+* @return Returns `ARTOS_RES_OK`.
+*/
+int list_feature_extractors(FeatureExtractorInfo * info_buf, unsigned int * info_buf_size);
+
+/**
+* Lists all parameters supported by a specific feature extractor with their default values.
+* @param[in] type The type specifier of the feature extractor.
+* @param[out] param_buf A beforehand allocated array of FeatureExtractorParameter structs, which will be filled up with information
+*                       about the available feature extractors.
+* @param[in,out] param_buf_size The number of array slots allocated for `param_buf`. In turn, the number of actually written array
+*                               elements will be stored at this pointer's location. If `param_buf` is NULL, this will be set to the
+*                               number of available feature extractors instead.
+* @return Returns `ARTOS_RES_OK` on success or `ARTOS_SETTINGS_RES_UNKNOWN_FEATURE_EXTRACTOR` if the specified feature extraction
+*         method is not known.
+*/
+int list_feature_extractor_params(const char * type, FeatureExtractorParameter * param_buf, unsigned int * param_buf_size);
+
+/**
+* Lists all parameters supported by the current feature extractor with their current values.
+* @param[out] param_buf A beforehand allocated array of FeatureExtractorParameter structs, which will be filled up with information
+*                       about the available feature extractors.
+* @param[in,out] param_buf_size The number of array slots allocated for `param_buf`. In turn, the number of actually written array
+*                               elements will be stored at this pointer's location. If `param_buf` is NULL, this will be set to the
+*                               number of available feature extractors instead.
+* @return Returns `ARTOS_RES_OK`.
+*/
+int feature_extractor_list_params(FeatureExtractorParameter * param_buf, unsigned int * param_buf_size);
+
+/**
+* Changes the value of a parameter of the current feature extractor of type integer.
+* @param[in] param_name The name of the parameter to be set. `list_feature_extractor_params` can be used to retrieve a list of all
+*                       available parameters.
+* @param[in] value The new value for the parameter.
+* @return Returns `ARTOS_RES_OK` on success or one of the following error codes on failure:
+*                   - `ARTOS_SETTINGS_RES_UNKNOWN_PARAMETER`
+*                   - `ARTOS_SETTINGS_RES_INVALID_PARAMETER_VALUE`
+*/
+int feature_extractor_set_int_param(const char * param_name, int value);
+
+/**
+* Changes the value of a parameter of the current feature extractor of scalar type.
+* @param[in] param_name The name of the parameter to be set. `list_feature_extractor_params` can be used to retrieve a list of all
+*                       available parameters.
+* @param[in] value The new value for the parameter.
+* @return Returns `ARTOS_RES_OK` on success or one of the following error codes on failure:
+*                   - `ARTOS_SETTINGS_RES_UNKNOWN_PARAMETER`
+*                   - `ARTOS_SETTINGS_RES_INVALID_PARAMETER_VALUE`
+*/
+int feature_extractor_set_scalar_param(const char * param_name, float value);
+
+/**
+* Changes the value of a parameter of the current feature extractor of type string.
+* @param[in] param_name The name of the parameter to be set. `list_feature_extractor_params` can be used to retrieve a list of all
+*                       available parameters.
+* @param[in] value The new value for the parameter as NUL-terminated string.
+* @return Returns `ARTOS_RES_OK` on success or one of the following error codes on failure:
+*                   - `ARTOS_SETTINGS_RES_UNKNOWN_PARAMETER`
+*                   - `ARTOS_SETTINGS_RES_INVALID_PARAMETER_VALUE`
+*/
+int feature_extractor_set_string_param(const char * param_name, const char * value);
 
 
 //------------------

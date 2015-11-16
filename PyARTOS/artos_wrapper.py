@@ -20,6 +20,10 @@ THOPT_NONE = 0
 THOPT_OVERLAPPING = 1
 THOPT_LOOCV = 2
 
+PARAM_TYPE_INT = 0
+PARAM_TYPE_SCALAR = 1
+PARAM_TYPE_STRING = 2
+
 # libartos result codes
 RES_OK = 0
 RES_INVALID_HANDLE = -1
@@ -41,6 +45,9 @@ LEARN_RES_MODEL_NOT_LEARNED = -205
 IMGREPO_RES_INVALID_REPOSITORY = -301
 IMGREPO_RES_SYNSET_NOT_FOUND = -302
 IMGREPO_RES_EXTRACTION_FAILED = -303
+SETTINGS_RES_UNKNOWN_FEATURE_EXTRACTOR = -401
+SETTINGS_RES_UNKNOWN_PARAMETER = -402
+SETTINGS_RES_INVALID_PARAMETER_VALUE = -403
 
 
 
@@ -70,6 +77,26 @@ class SynsetSearchResult(Structure):
                 ('score', c_float)]
 
 
+# FeatureExtractorInfo structure definition according to libartos.h
+class FeatureExtractorInfo(Structure):
+    _fields_ = [('type', c_char * 28),
+                ('name', c_char * 100)]
+
+
+# FeatureExtractorParameterValue union definition according to libartos.h
+class FeatureExtractorParameterValue(Union):
+    _fields_ = [('intVal', c_int),
+                ('scalarVal', c_float),
+                ('stringVal', c_char_p)]
+
+
+# FeatureExtractorParameter structure definition according to libartos.h
+class FeatureExtractorParameter(Structure):
+    _fields_ = [('name', c_char * 52),
+                ('type', c_uint),
+                ('val', FeatureExtractorParameterValue)]
+
+
 
 # Callback types
 progress_cb_t = CFUNCTYPE(c_bool, c_uint, c_uint)
@@ -84,6 +111,9 @@ c_float_p = POINTER(c_float)
 FlatDetection_p = POINTER(FlatDetection)
 FlatBoundingBox_p = POINTER(FlatBoundingBox)
 SynsetSearchResult_p = POINTER(SynsetSearchResult)
+FeatureExtractorInfo_p = POINTER(FeatureExtractorInfo)
+FeatureExtractorParameterValue_p = POINTER(FeatureExtractorParameterValue)
+FeatureExtractorParameter_p = POINTER(FeatureExtractorParameter)
 
 
 
@@ -96,8 +126,8 @@ class _LibARTOS(object):
         self._lib = library
         
         # create_detector function
-        prototype = CFUNCTYPE(c_uint, c_double, c_int, c_int, c_bool)
-        paramflags = (1, 'overlap', 0.5), (1, 'padding', 12), (1, 'interval', 10), (1, 'debug', False)
+        prototype = CFUNCTYPE(c_uint, c_double, c_int, c_bool)
+        paramflags = (1, 'overlap', 0.5), (1, 'interval', 10), (1, 'debug', False)
         self.create_detector = prototype(('create_detector', self._lib), paramflags)
         self.create_detector.errcheck = self._errcheck_create_detector
         
@@ -208,6 +238,54 @@ class _LibARTOS(object):
         self.learn_bg = prototype(('learn_bg', self._lib), paramflags)
         self.learn_bg.errcheck = self._errcheck_common
         
+        # change_feature_extractor function
+        prototype = CFUNCTYPE(c_int, c_char_p)
+        paramflags = ((1, 'type'), )
+        self.change_feature_extractor = prototype(('change_feature_extractor', self._lib), paramflags)
+        self.change_feature_extractor.errcheck = self._errcheck_common
+        
+        # feature_extractor_get_info function
+        prototype = CFUNCTYPE(c_int, FeatureExtractorInfo_p)
+        paramflags = ((1, 'info'), )
+        self.feature_extractor_get_info = prototype(('feature_extractor_get_info', self._lib), paramflags)
+        self.feature_extractor_get_info.errcheck = self._errcheck_common
+        
+        # list_feature_extractors function
+        prototype = CFUNCTYPE(c_int, FeatureExtractorInfo_p, c_uint_p)
+        paramflags = (1, 'info_buf'), (1, 'info_buf_size')
+        self.list_feature_extractors = prototype(('list_feature_extractors', self._lib), paramflags)
+        self.list_feature_extractors.errcheck = self._errcheck_common
+        
+        # list_feature_extractor_params function
+        prototype = CFUNCTYPE(c_int, c_char_p, FeatureExtractorParameter_p, c_uint_p)
+        paramflags = (1, 'type'), (1, 'param_buf'), (1, 'param_buf_size')
+        self.list_feature_extractor_params = prototype(('list_feature_extractor_params', self._lib), paramflags)
+        self.list_feature_extractor_params.errcheck = self._errcheck_common
+        
+        # feature_extractor_list_params function
+        prototype = CFUNCTYPE(c_int, FeatureExtractorParameter_p, c_uint_p)
+        paramflags = (1, 'param_buf'), (1, 'param_buf_size')
+        self.feature_extractor_list_params = prototype(('feature_extractor_list_params', self._lib), paramflags)
+        self.feature_extractor_list_params.errcheck = self._errcheck_common
+        
+        # feature_extractor_set_int_param function
+        prototype = CFUNCTYPE(c_int, c_char_p, c_int)
+        paramflags = (1, 'param_name'), (1, 'value')
+        self.feature_extractor_set_int_param = prototype(('feature_extractor_set_int_param', self._lib), paramflags)
+        self.feature_extractor_set_int_param.errcheck = self._errcheck_common
+        
+        # feature_extractor_set_scalar_param function
+        prototype = CFUNCTYPE(c_int, c_char_p, c_float)
+        paramflags = (1, 'param_name'), (1, 'value')
+        self.feature_extractor_set_scalar_param = prototype(('feature_extractor_set_scalar_param', self._lib), paramflags)
+        self.feature_extractor_set_scalar_param.errcheck = self._errcheck_common
+        
+        # feature_extractor_set_string_param function
+        prototype = CFUNCTYPE(c_int, c_char_p, c_char_p)
+        paramflags = (1, 'param_name'), (1, 'value')
+        self.feature_extractor_set_string_param = prototype(('feature_extractor_set_string_param', self._lib), paramflags)
+        self.feature_extractor_set_string_param.errcheck = self._errcheck_common
+        
         # list_synsets function
         prototype = CFUNCTYPE(c_int, c_char_p, SynsetSearchResult_p, c_uint_p)
         paramflags = (1, 'repo_directory'), (1, 'synset_buf'), (1, 'synset_buf_size')
@@ -260,26 +338,29 @@ class _LibARTOS(object):
 class LibARTOSException(Exception):
 
     errmsgs = {
-        RES_INVALID_HANDLE                  : 'Invalid handle given',
-        RES_DIRECTORY_NOT_FOUND             : 'Could not find the given directory',
-        RES_FILE_NOT_FOUND                  : 'File not found',
-        RES_FILE_ACCESS_DENIED              : 'Access to file denied',
-        RES_ABORTED                         : 'Operation aborted by user',
-        RES_INTERNAL_ERROR                  : 'Internal error',
-        DETECT_RES_INVALID_IMG_DATA         : 'Invalid image',
-        DETECT_RES_INVALID_MODEL_FILE       : 'Model file could not be read or parsed',
-        DETECT_RES_INVALID_MODEL_LIST_FILE  : 'Model list file could not be read or parsed',
-        DETECT_RES_NO_MODELS                : 'Models must be added to the detector before detecting',
-        DETECT_RES_INVALID_IMAGE            : 'Image could not be processed',
-        LEARN_RES_FAILED                    : 'Learning the model failed for some reason',
-        LEARN_RES_INVALID_BG_FILE           : 'Given background statistics file is invalid',
-        LEARN_RES_INVALID_IMG_DATA          : 'Invalid image',
-        LEARN_RES_NO_SAMPLES                : 'No positive sample has been added yet',
-        LEARN_RES_MODEL_NOT_LEARNED         : 'No model has been learned yet',
-        IMGREPO_RES_INVALID_REPOSITORY      : 'Given path doesn\'t point to a valid image repository',
-        IMGREPO_RES_SYNSET_NOT_FOUND        : 'Synset not found',
-        IMGREPO_RES_EXTRACTION_FAILED       : 'Could not extract images from synset. Please check your image repository and make sure, ' \
-                                              'that both the image and the annotation archive are there.'
+        RES_INVALID_HANDLE                      : 'Invalid handle given',
+        RES_DIRECTORY_NOT_FOUND                 : 'Could not find the given directory',
+        RES_FILE_NOT_FOUND                      : 'File not found',
+        RES_FILE_ACCESS_DENIED                  : 'Access to file denied',
+        RES_ABORTED                             : 'Operation aborted by user',
+        RES_INTERNAL_ERROR                      : 'Internal error',
+        DETECT_RES_INVALID_IMG_DATA             : 'Invalid image',
+        DETECT_RES_INVALID_MODEL_FILE           : 'Model file could not be read or parsed',
+        DETECT_RES_INVALID_MODEL_LIST_FILE      : 'Model list file could not be read or parsed',
+        DETECT_RES_NO_MODELS                    : 'Models must be added to the detector before detecting',
+        DETECT_RES_INVALID_IMAGE                : 'Image could not be processed',
+        LEARN_RES_FAILED                        : 'Learning the model failed for some reason',
+        LEARN_RES_INVALID_BG_FILE               : 'Given background statistics file is invalid',
+        LEARN_RES_INVALID_IMG_DATA              : 'Invalid image',
+        LEARN_RES_NO_SAMPLES                    : 'No positive sample has been added yet',
+        LEARN_RES_MODEL_NOT_LEARNED             : 'No model has been learned yet',
+        IMGREPO_RES_INVALID_REPOSITORY          : 'Given path doesn\'t point to a valid image repository',
+        IMGREPO_RES_SYNSET_NOT_FOUND            : 'Synset not found',
+        IMGREPO_RES_EXTRACTION_FAILED           : 'Could not extract images from synset. Please check your image repository and make sure, ' \
+                                                  'that both the image and the annotation archive are there.',
+        SETTINGS_RES_UNKNOWN_FEATURE_EXTRACTOR  : 'Unknown feature extractor',
+        SETTINGS_RES_UNKNOWN_PARAMETER          : 'Parameter is not known by the current feature extractor',
+        SETTINGS_RES_INVALID_PARAMETER_VALUE    : 'Invalid value for feature extractor parameter given'
     }
 
 

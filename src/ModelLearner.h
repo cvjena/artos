@@ -9,14 +9,14 @@ namespace ARTOS
 
 
 /**
-* Handles learning of WHO (*Whitened Histogram of Orientations* [Hariharan et. al.]) models using
-* Linear Discriminant Analysis (LDA).
+* Handles learning of models using Linear Discriminant Analysis (LDA). If this method is used in conjunction with
+* HOG (*Histogram of Oriented Gradients* [Dalal & Triggs]) features, it is called WHO (*Whitened Histogram of Orientations*),
+* as proposed by Hariharan et. al.
 *
 * Here's our **learning method** in a nutshell: \f$m = \Sigma^{-1} \cdot (\mu_{pos} - \mu_{neg})\f$
 *
-* Average the HOG (*Histogram of Oriented Gradients* [Dalal & Triggs]) features of each positive sample,
-* centre them by subtracting the previously learned negative mean `neg` and decorrelate ("whiten") them with
-* the also previously learned covariance matrix `S`.
+* Average the features of each positive sample, centre them by subtracting the previously learned negative mean `neg` and
+* decorrelate ("whiten") them with the also previously learned covariance matrix `S`.
 *
 * The typical **work-flow** for using this class is as follows:
 *   1. Create a new model learner and pass in background statistics as StationaryBackground object or file name.
@@ -33,17 +33,20 @@ class ModelLearner : public ModelLearnerBase
 public:
 
     /**
-    * Constructs an empty ModelLearner, which can not be used until some background statistics are given
-    * using setBackground().
+    * Constructs an empty ModelLearner, which uses the default feature extractor and can not be used until
+    * some background statistics are given using setBackground().
     */
     ModelLearner()
     : ModelLearnerBase(), m_loocv(true), m_bg(), m_normFactors() { };
     
     /**
-    * Constructs a new ModelLearner with given background statistics.
+    * Constructs a new ModelLearner with given background statistics and feature extractor.
     *
     * @param[in] bg The stationary background statistics.
     *
+    * @param[in] featureExtractor A pointer to the feature extractor to be used by the new model learner.
+    * If a NULL pointer is given, the default feature extractor will be used.
+    *
     * @param[in] loocv If set to true, *Leave-one-out-cross-validation* will be performed for threshold optimization.
     * This will increase memory usage, since the WHO features of all samples have to be stored for this, and will slow
     * down threshold optimization as well as the model learning step if only one WHO cluster is used. But it will guarantee
@@ -51,14 +54,18 @@ public:
     *
     * @param[in] verbose If set to true, debug and timing information will be printed to stderr.
     */
-    ModelLearner(const StationaryBackground & bg, const bool loocv = true, const bool verbose = false)
-    : ModelLearnerBase(verbose), m_loocv(loocv), m_bg(bg), m_normFactors() { };
+    ModelLearner(const StationaryBackground & bg, const std::shared_ptr<FeatureExtractor> & featureExtractor = nullptr,
+                 const bool loocv = true, const bool verbose = false)
+    : ModelLearnerBase(featureExtractor, verbose), m_loocv(loocv), m_bg(bg), m_normFactors() { };
     
     /**
-    * Constructs a new ModelLearner with given background statistics.
+    * Constructs a new ModelLearner with given background statistics and feature extractor.
     *
     * @param[in] bgFile Path to a file containing background statistics.
     *
+    * @param[in] featureExtractor A pointer to the feature extractor to be used by the new model learner.
+    * If a NULL pointer is given, the default feature extractor will be used.
+    *
     * @param[in] loocv If set to true, *Leave-one-out-cross-validation* will be performed for threshold optimization.
     * This will increase memory usage, since the WHO features of all samples have to be stored for this, and will slow
     * down threshold optimization as well as the model learning step if only one WHO cluster is used. But it will guarantee
@@ -66,8 +73,9 @@ public:
     *
     * @param[in] verbose If set to true, debug and timing information will be printed to stderr.
     */
-    ModelLearner(const std::string & bgFile, const bool loocv = true, const bool verbose = false)
-    : ModelLearnerBase(verbose), m_loocv(loocv), m_bg(bgFile), m_normFactors() { };
+    ModelLearner(const std::string & bgFile, const std::shared_ptr<FeatureExtractor> & featureExtractor = nullptr,
+                 const bool loocv = true, const bool verbose = false)
+    : ModelLearnerBase(featureExtractor, verbose), m_loocv(loocv), m_bg(bgFile), m_normFactors() { };
     
     virtual ~ModelLearner() { this->reset(); };
     
@@ -94,7 +102,7 @@ public:
     * @return The factors `f` which have been used to normalize each model by `w = w/f`.
     * An empty vector will be returned if no model has been learned yet.
     */
-    const std::vector<FeatureExtractor::Scalar> & getNormFactors() const { return this->m_normFactors; };
+    const std::vector<FeatureScalar> & getNormFactors() const { return this->m_normFactors; };
     
     /**
     * Resets this learner to it's initial state and makes it forget all learned models, thresholds and added samples.
@@ -130,7 +138,7 @@ public:
     *
     * @return True if the sample has been added, otherwise false.
     */
-    virtual bool addPositiveSample(const FFLD::JPEGImage & sample, const FFLD::Rectangle & boundingBox);
+    virtual bool addPositiveSample(const JPEGImage & sample, const Rectangle & boundingBox);
     
     /**
     * Adds a positive sample to learn from given by an image and a bounding box around the object on that image.
@@ -142,7 +150,7 @@ public:
     *
     * @return True if the sample has been added, otherwise false.
     */
-    virtual bool addPositiveSample(FFLD::JPEGImage && sample, const FFLD::Rectangle & boundingBox);
+    virtual bool addPositiveSample(JPEGImage && sample, const Rectangle & boundingBox);
     
     /**
     * Adds multiple positive samples to learn from on the same image given by bounding boxes around the objects.
@@ -154,7 +162,7 @@ public:
     *
     * @return True if the sample has been added, otherwise false.
     */
-    virtual bool addPositiveSample(const FFLD::JPEGImage & sample, const std::vector<FFLD::Rectangle> & boundingBoxes);
+    virtual bool addPositiveSample(const JPEGImage & sample, const std::vector<Rectangle> & boundingBoxes);
     
     /**
     * Adds multiple positive samples to learn from on the same image given by bounding boxes around the objects.
@@ -166,7 +174,7 @@ public:
     *
     * @return True if the sample has been added, otherwise false.
     */
-    virtual bool addPositiveSample(FFLD::JPEGImage && sample, const std::vector<FFLD::Rectangle> & boundingBoxes);
+    virtual bool addPositiveSample(JPEGImage && sample, const std::vector<Rectangle> & boundingBoxes);
     
     /**
     * Finds the optimal combination of thresholds for the models learned previously with learn() by testing them
@@ -197,7 +205,7 @@ public:
     * obtained later on using getThreshold().
     */
     virtual const std::vector<float> & optimizeThreshold(const unsigned int maxPositive = 0,
-                                                         const std::vector<FFLD::JPEGImage> * negative = NULL,
+                                                         const std::vector<JPEGImage> * negative = NULL,
                                                          const float b = 1.0f,
                                                          ProgressCallback progressCB = NULL, void * cbData = NULL);
 
@@ -208,7 +216,7 @@ protected:
 
     StationaryBackground m_bg; /**< Stationary background statistics (to obtain negative mean and covariance). */
     
-    std::vector<FeatureExtractor::Scalar> m_normFactors; /**< Vector with factors, each model has been divided by for normalization. */
+    std::vector<FeatureScalar> m_normFactors; /**< Vector with factors, each model has been divided by for normalization. */
 
 
     /**
@@ -249,6 +257,16 @@ protected:
     * @return Returns true if learning may be performed or false if the model learner is not ready.
     */
     virtual bool learn_init();
+    
+    
+    /**
+    * Specifies the highest possible size of a model learned by this model learner.
+    * This information will be used to compute the actual model dimensions.
+    *
+    * @return Returns the maximum size of a model which can be learned by this model learner
+    * in each dimension, given in cells. If any dimension is 0, its extension won't be limited.
+    */
+    virtual Size maximumModelSize() const;
 
 };
 

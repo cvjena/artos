@@ -34,8 +34,8 @@ public:
     
     typedef std::vector< std::pair<int, Detection> > SampleDetectionsVector;
     
-    typedef FFLD::Mixture * (*LOOFunc)(const FFLD::Mixture * orig, const Sample * sample, const unsigned int objectIndex,
-                                       const unsigned int numLeftOut, void * data);
+    typedef Mixture * (*LOOFunc)(const Mixture * orig, const Sample * sample, const unsigned int objectIndex,
+                                 const unsigned int numLeftOut, void * data);
     
     static const unsigned int PRECISION = 1;
     static const unsigned int RECALL = 2;
@@ -47,60 +47,52 @@ public:
     *
     * @param[in] overlap Minimum overlap in non maxima suppression.
     *
-    * @param[in] padding Amount of zero padding in HOG cells. Must be greater or equal to half the greatest filter dimension.
-    *
     * @param[in] interval Number of levels per octave in the HOG pyramid.
     */
-    ModelEvaluator(double overlap = 0.5, int padding = 12, int interval = 10)
-    : DPMDetection(false, overlap, padding, interval), m_results() { }; 
+    ModelEvaluator(double overlap = 0.5, int interval = 10)
+    : DPMDetection(false, overlap, interval), m_results() { }; 
 
     /** 
     * Initializes the ModelEvaluator and loads a single model from disk.  
-    * This is equivalent to constructing the object with `ModelEvaluator(overlap, padding, interval)`
+    * This is equivalent to constructing the object with `ModelEvaluator(overlap, interval)`
     * and then calling `addModel("single", modelfile)`.
     *
     * @param[in] modelfile The filename of the model to load.
     *
     * @param[in] overlap Minimum overlap in non maxima suppression.
     *
-    * @param[in] padding Amount of zero padding in HOG cells. Must be greater or equal to half the greatest filter dimension.
-    *
     * @param[in] interval Number of levels per octave in the HOG pyramid.
     */
-    ModelEvaluator(const std::string & modelfile, double overlap = 0.5, int padding = 12, int interval = 10)
-    : DPMDetection(modelfile, -100.0, false, overlap, padding, interval), m_results() { }; 
+    ModelEvaluator(const std::string & modelfile, double overlap = 0.5, int interval = 10)
+    : DPMDetection(modelfile, -100.0, false, overlap, interval), m_results() { }; 
     
     /** 
     * Initializes the ModelEvaluator and adds a single model.
-    * This is equivalent to constructing the object with `ModelEvaluator(overlap, padding, interval)`
+    * This is equivalent to constructing the object with `ModelEvaluator(overlap, interval)`
     * and then calling `addModel("single", model)`.
     *
-    * @param[in] model The model to be added as FFLD::Mixture object.
+    * @param[in] model The model to be added as Mixture object.
     *
     * @param[in] overlap Minimum overlap in non maxima suppression.
     *
-    * @param[in] padding Amount of zero padding in HOG cells. Must be greater or equal to half the greatest filter dimension.
-    *
     * @param[in] interval Number of levels per octave in the HOG pyramid.
     */
-    ModelEvaluator(const FFLD::Mixture & model, double overlap = 0.5, int padding = 12, int interval = 10)
-    : DPMDetection(model, -100.0, false, overlap, padding, interval), m_results() { };
+    ModelEvaluator(const Mixture & model, double overlap = 0.5, int interval = 10)
+    : DPMDetection(model, -100.0, false, overlap, interval), m_results() { };
     
     /** 
     * Initializes the ModelEvaluator and adds a single model.
-    * This is equivalent to constructing the object with `ModelEvaluator(overlap, padding, interval)`
+    * This is equivalent to constructing the object with `ModelEvaluator(overlap, interval)`
     * and then calling `addModel("single", model)`.
     *
-    * @param[in] model The model to be added as FFLD::Mixture object, whose contents will be moved.
+    * @param[in] model The model to be added as Mixture object, whose contents will be moved.
     *
     * @param[in] overlap Minimum overlap in non maxima suppression.
     *
-    * @param[in] padding Amount of zero padding in HOG cells. Must be greater or equal to half the greatest filter dimension.
-    *
     * @param[in] interval Number of levels per octave in the HOG pyramid.
     */
-    ModelEvaluator(FFLD::Mixture && model, double overlap = 0.5, int padding = 12, int interval = 10)
-    : DPMDetection(std::move(model), -100.0, false, overlap, padding, interval), m_results() { }; 
+    ModelEvaluator(Mixture && model, double overlap = 0.5, int interval = 10)
+    : DPMDetection(std::move(model), -100.0, false, overlap, interval), m_results() { }; 
     
     /**
     * Returns a reference to a vector with TestResult objects for a specific model computed by testModels().
@@ -200,7 +192,7 @@ public:
     * @param[in] looData Will be passed to the `looFunc` callback as last parameter.
     */
     virtual void testModels(const std::vector<Sample*> & positive, unsigned int maxSamples = 0,
-                            const std::vector<FFLD::JPEGImage> * negative = NULL,
+                            const std::vector<JPEGImage> * negative = NULL,
                             const unsigned int granularity = 100,
                             ProgressCallback progressCB = NULL, void * cbData = NULL,
                             LOOFunc looFunc = NULL, void * looData = NULL);
@@ -250,7 +242,7 @@ public:
     */
     virtual std::vector<float> searchOptimalThresholdCombination(
                             const std::vector<Sample*> & positive, unsigned int maxSamples = 0,
-                            const std::vector<FFLD::JPEGImage> * negative = NULL,
+                            const std::vector<JPEGImage> * negative = NULL,
                             const unsigned int granularity = 100, const float b = 1.0f,
                             ProgressCallback progressCB = NULL, void * cbData = NULL,
                             LOOFunc looFunc = NULL, void * looData = NULL);
@@ -296,7 +288,7 @@ public:
     */
     virtual std::vector<unsigned int> runDetector(SampleDetectionsVector & detections,
                                                   const std::vector<Sample*> & positive, unsigned int maxSamples = 0,
-                                                  const std::vector<FFLD::JPEGImage> * negative = NULL,
+                                                  const std::vector<JPEGImage> * negative = NULL,
                                                   ProgressCallback progressCB = NULL, void * cbData = NULL,
                                                   LOOFunc looFunc = NULL, void * looData = NULL);
     

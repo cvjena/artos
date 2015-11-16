@@ -23,7 +23,7 @@
 #include <algorithm>
 #include <iostream>
 
-using namespace FFLD;
+using namespace ARTOS;
 using namespace std;
 
 Rectangle::Rectangle() : x_(0), y_(0), width_(0), height_(0)
@@ -41,111 +41,111 @@ height_(height)
 
 int Rectangle::x() const
 {
-	return x_;
+    return x_;
 }
 
 void Rectangle::setX(int x)
 {
-	x_ = x;
+    x_ = x;
 }
 
 int Rectangle::y() const
 {
-	return y_;
+    return y_;
 }
 
 void Rectangle::setY(int y)
 {
-	y_ = y;
+    y_ = y;
 }
 
 int Rectangle::width() const
 {
-	return width_;
+    return width_;
 }
 
 void Rectangle::setWidth(int width)
 {
-	width_ = width;
+    width_ = width;
 }
 
 int Rectangle::height() const
 {
-	return height_;
+    return height_;
 }
 
 void Rectangle::setHeight(int height)
 {
-	height_ = height;
+    height_ = height;
 }
 
 int Rectangle::left() const
 {
-	return x();
+    return x();
 }
 
 void Rectangle::setLeft(int left)
 {
-	setWidth(right() - left + 1);
-	setX(left);
+    setWidth(right() - left + 1);
+    setX(left);
 }
 
 int Rectangle::top() const
 {
-	return y();
+    return y();
 }
 
 void Rectangle::setTop(int top)
 {
-	setHeight(bottom() - top + 1);
-	setY(top);
+    setHeight(bottom() - top + 1);
+    setY(top);
 }
 
 int Rectangle::right() const
 {
-	return x() + width() - 1;
+    return x() + width() - 1;
 }
 
 void Rectangle::setRight(int right)
 {
-	setWidth(right - left() + 1);
+    setWidth(right - left() + 1);
 }
 
 int Rectangle::bottom() const
 {
-	return y() + height() - 1;
+    return y() + height() - 1;
 }
 
 void Rectangle::setBottom(int bottom)
 {
-	setHeight(bottom - top() + 1);
+    setHeight(bottom - top() + 1);
 }
 
 bool Rectangle::empty() const
 {
-	return (width() <= 0) || (height() <= 0);
+    return (width() <= 0) || (height() <= 0);
 }
 
 int Rectangle::area() const
 {
-	return max(width(), 0) * max(height(), 0);
+    return max(width(), 0) * max(height(), 0);
 }
 
-ostream & FFLD::operator<<(ostream & os, const Rectangle & rect)
+ostream & ARTOS::operator<<(ostream & os, const Rectangle & rect)
 {
-	return os << rect.x() << ' ' << rect.y() << ' ' << rect.width() << ' ' << rect.height();
+    return os << rect.x() << ' ' << rect.y() << ' ' << rect.width() << ' ' << rect.height();
 }
 
-istream & FFLD::operator>>(istream & is, Rectangle & rect)
+istream & ARTOS::operator>>(istream & is, Rectangle & rect)
 {
-	int x, y, width, height;
-	
+    int x, y, width, height;
+    
     is >> x >> y >> width >> height;
-	
+    
     rect.setX(x);
-	rect.setY(y);
-	rect.setWidth(width);
-	rect.setHeight(height);
-	
-	return is;
+    rect.setY(y);
+    rect.setWidth(width);
+    rect.setHeight(height);
+    
+    return is;
 }

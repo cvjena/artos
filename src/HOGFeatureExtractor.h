@@ -1,37 +1,78 @@
 #ifndef ARTOS_HOGFEATUREEXTRACTOR_H
 #define ARTOS_HOGFEATUREEXTRACTOR_H
 
-#include "ffld/JPEGImage.h"
-#include "ffld/HOGPyramid.h"
+#include "FeatureExtractor.h"
 
 namespace ARTOS
 {
 
 /**
-* Computes histograms of oriented gradients (HOG) as image features by delegating
-* the main computations to the FFLD library.
+* Computes histograms of oriented gradients (HOG) as image features based on the
+* implementation of the FFLD library.
 *
 * The HOG features used for that implementation are described in "Object Detection
 * with Discriminatively Trained Part Based Models" by Felzenszwalb, Girshick,
 * McAllester and Ramanan, PAMI10.
 *
-* To use another feature extractor by default, re-define `FeatureExtractor` in
+* **Parameters of this feature extractor:**
+*     - *cellSizeX* (`int`) - size of pooling cells in x direction in pixels.
+*     - *cellSizeY* (`int`) - size of pooling cells in y direction in pixels.
+*
+* To use another feature extractor by default, re-define `DefaultFeatureExtractor` in
 * FeatureExtractor.h.
 *
 * @author Bjoern Barz <bjoern.barz@uni-jena.de>
 */
-class HOGFeatureExtractor
+class HOGFeatureExtractor : public FeatureExtractor
 {
 
 public:
 
-    typedef FFLD::HOGPyramid::Scalar Scalar; /**< Scalar type of the components of a cell's feature vector. */
-    typedef FFLD::HOGPyramid::Cell Cell; /**< Feature vector type of a single cell. */
-    typedef FFLD::HOGPyramid::Level FeatureMatrix; /**< Array of cells which forms the feature vector of the entire image. */
+    /**
+    * Constructs a HOG feature extractor with a default cell size of 8 pixels.
+    */
+    HOGFeatureExtractor();
     
-    static const int numFeatures = FFLD::HOGPyramid::NbFeatures; /**< Number of features per cell. */
-    static const int numRelevantFeatures = 31; /**< Number of relevant features per cell (for instance, the last dimension may be a truncation dimension and always set to 0). */
-    static const int cellSize = 8; /**< Number of pixels of each cell in both x and y direction. */
+    /**
+    * Constructs a HOG feature extractor with a specific cell size.
+    *
+    * @param[in] cellSize The size of pooling cells in each direction in pixels.
+    */
+    HOGFeatureExtractor(const Size & cellSize);
+
+    /**
+    * @return Returns the unique identifier of this kind of feature extractor. That type specifier
+    * must consist of alphanumeric characters + dashes + underscores only.
+    */
+    virtual const char * type() const { return "HOG"; };
+    
+    /**
+    * @return Human-readable name of this feature extractor.
+    */
+    virtual const char * name() const { return "HOG (Histograms of Oriented Gradients)"; };
+    
+    /**
+    * @return Returns the number of features this feature extractor extracts from each cell.
+    */
+    virtual int numFeatures() const { return 32; };
+    
+    /**
+    * @return Returns the number of relevant features per cell (for instance, the last dimension
+    * may be a truncation dimension and always set to 0 and, thus, not relevant).
+    */
+    virtual int numRelevantFeatures() const { return 31; };
+    
+    /**
+    * @return Returns the size of the cells used by this feature extractor in x and y direction.
+    */
+    virtual Size cellSize() const { return this->m_cellSize; };
+    
+    /**
+    * @return Returns true if this feature extractors implements the extract() method with explicit
+    * cell size specification which differs from the default cell size reported by cellSize().
+    * If this method returns true, the 3-parameter version of extract() should not throw an UnsupportedException.
+    */
+    virtual bool supportsVariableCellSize() const { return true; };
     
     /**
     * Computes HOG features for a given image.
@@ -40,20 +81,91 @@ public:
     *
     * @param[out] feat Destination matrix to store the extracted features in.
     * It will be resized to fit the number of cells in the given image.
-    *
-    * @param[in] cs Optionally, the size of the feature cells if different from the default cellSize.
     */
-    static void extract(const FFLD::JPEGImage & img, FeatureMatrix & feat, int cs = cellSize)
-    {
-        if (cs <= 0)
-            cs = cellSize;
-        FFLD::HOGPyramid::Level hog;
-        FFLD::HOGPyramid::Hog(img, hog, 1, 1, cs);
-        if (hog.rows() > 2 && hog.cols() > 2)
-            feat = hog.block(1, 1, hog.rows() - 2, hog.cols() - 2); // cut off padding
-        else
-            feat = hog;
-    };
+    virtual void extract(const JPEGImage & img, FeatureMatrix & feat) const
+    { this->extract(img, feat, this->cellSize()); };
+    
+    /**
+    * Computes HOG features for a given image using a non-default cell size.
+    *
+    * This may be useful for oversampling, where it is more efficient to divide the cell size
+    * by two instead of doubling the size of the entire image. But an arbitrary feature extractor
+    * does not need to support this. In that case, a NotSupported exception is thrown.
+    *
+    * @param[in] img The image to compute HOG features for.
+    *
+    * @param[out] feat Destination matrix to store the extracted features in.
+    * It will be resized to fit the number of cells in the given image.
+    *
+    * @param[in] cellSize The size of the feature cells.
+    */
+    virtual void extract(const JPEGImage & img, FeatureMatrix & feat, const Size & cellSize) const;
+    
+    /**
+    * Transforms a feature matrix into a feature representation of the horizontally flipped image.
+    *
+    * For HOG features, there is an easy way to compute the feature representation of the horizontally
+    * flipped version of an image given the features of that original image, so that it is not necessary
+    * to actually flip the image and compute its features from scratch. This is what this method does.
+    *
+    * @param[in] feat The features extracted from the original image using this feature extractor.
+    *
+    * @param[out] flipped Destination matrix to store the features of the horizontally flipped image in.
+    * It will be resized to the same size as feat.
+    */
+    virtual void flip(const FeatureMatrix & feat, FeatureMatrix & flipped) const;
+    
+    /**
+    * Changes the value of an integer parameter specific to the concrete feature extraction method.
+    *
+    * @param[in] val The new value for the parameter.
+    *
+    * @throws UnknownParameterException There is no string parameter with the given name.
+    *
+    * @throws std::invalid_argument The given value is not allowed for the given parameter.
+    */
+    virtual void setParam(const std::string & paramName, int32_t val);
+    
+    /**
+    * Proposes an optimal size of a model for images with given sizes.
+    * This information will be used by the ModelLearner.
+    *
+    * @param[in] sizes A vector with the dimensions of the images.
+    *
+    * @param[in] maxSize Optionally, the highest allowable extensions of the model size in each dimension.
+    * This function is guaranteed to return a model size within this bounds. Setting any dimension to 0
+    * does not limit the computed size in that dimension.
+    *
+    * @return Returns a proposal for the size of a model for images with the given sizes.
+    * The size must be specified in cells.
+    */
+    virtual Size computeOptimalModelSize(const std::vector<Size> & sizes, const Size & maxSize = Size()) const;
+
+
+public:
+
+    /**
+    * Extracts HOG features from a given image and stores them in a FeatureMatrix.
+    *
+    * The implementation of this method is mainly based on the HOG implementation of FFLD.
+    *
+    * @param[in] image The image to extract HOG features from.
+    *
+    * @param[out] feat The FeatureMatrix where the HOG features will be stored. The matrix will
+    * be resized to `(ceil(image.width() / cellSize) + 2 * padding.width, ceil(image.height() / cellSize) + 2 * padding.height)`.
+    *
+    * @param[in] padding Number of empty cells to pad the feature matrix with around the borders in
+    * each direction before interpolation of gradient orientations among neighbouring cells. Must be at least (1, 1).
+    *
+    * @param[in] cellSize The number of pixels in each direction per histogram cell.
+    * Each dimension must be a multiple of 2.
+    */
+    static void HOG(const JPEGImage & image, FeatureMatrix & feat, const Size & padding, const Size & cellSize);
+
+
+private:
+
+    Size m_cellSize;
 
 };
 

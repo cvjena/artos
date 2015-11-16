@@ -4,7 +4,10 @@
 #include <string>
 #include <Eigen/Core>
 #include "defs.h"
+#include "FeatureExtractor.h"
 #include "SynsetIterators.h"
+
+#define ARTOS_BG_MAGIC 0x04667900
 
 namespace ARTOS
 {
@@ -28,16 +31,11 @@ class StationaryBackground
 {
 
 public:
-
-    /**
-    * Mean feature vector for a single cell.
-    */
-    typedef Eigen::Array<float, Eigen::Dynamic, 1> MeanVector;
     
     /**
     * Covariance matrix between features for a specific offset.
     */
-    typedef Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> CovMatrix;
+    typedef ScalarMatrix CovMatrix;
     
     /**
     * Vector of feature covariance matrices.
@@ -54,41 +52,37 @@ public:
     */
     typedef Eigen::Array<int, Eigen::Dynamic, 2, Eigen::RowMajor> OffsetArray;
     
-    /**
-    * A generic 2-D matrix of floats.
-    */
-    typedef Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> Matrix;
-    
     
     /**
     * Constructs uninitialized background statistics, which can be read later using `readFromFile`.
     */
-    StationaryBackground() : mean(), cov(), offsets(), cellSize(0) { };
-    
-    /**
-    * Constructs empty background statistics with given dimensions.
-    *
-    * @param[in] numOffsets Number of spatial offsets.
-    *
-    * @param[in] numFeatures Number of features.
-    *
-    * @param[in] cellSize Number of pixels each cell spans in both dimensions.
-    */
-    StationaryBackground(const unsigned int numOffsets, const unsigned int numFeatures = 31, const unsigned int cellSize = 8);
+    StationaryBackground() : mean(), cov(), offsets(), cellSize(), m_featureExtractor(FeatureExtractor::defaultFeatureExtractor()) { };
     
     /**
     * Constructs a new background statistics object and reads the statistics from a given file.
     *
     * @param[in] backgroundFile Path of the binary background statistics file.
     */
-    StationaryBackground(const std::string & backgroundFile) : mean(), cov(), offsets(), cellSize(0)
+    StationaryBackground(const std::string & backgroundFile)
+    : mean(), cov(), offsets(), cellSize(), m_featureExtractor(FeatureExtractor::defaultFeatureExtractor())
     { this->readFromFile(backgroundFile); };
+    
+    /**
+    * Constructs an empty background statistics object for a given feature extractor.
+    * This is intended to be used when the object will be used to compute new statistics.
+    * Specifying the feature extractor is not necessary if you just want to reconstruct covariance
+    * matrices from existing statistics.
+    *
+    * @param[in] featureExtractor A shared pointer to the feature extractor which will be used
+    * to compute image features. If a nullptr is passed, the default feature extractor will be used.
+    */
+    StationaryBackground(const std::shared_ptr<FeatureExtractor> & featureExtractor)
+    : mean(), cov(), offsets(), cellSize(), m_featureExtractor((featureExtractor) ? featureExtractor : FeatureExtractor::defaultFeatureExtractor()) {};
     
     /**
     * Copy constructor.
     */
-    StationaryBackground(const StationaryBackground & other)
-    : mean(other.mean), cov(other.cov), offsets(other.offsets), cellSize(other.cellSize) { };
+    StationaryBackground(const StationaryBackground & other) = default;
     
     /**
     * Reads background statistics from a file.
@@ -153,10 +147,11 @@ public:
     
     /**
     * Reconstructs a covariance matrix from the spatial autocorrelation function for a specific number of
-    * rows and columns and flattens it into a 2-D matrix, so that the k-th feature of the cell at position (x, y)
-    * yields to the index `(x * cols + y) * numFeatures + k` in the resulting matrix.
+    * rows and columns and flattens it into a 2-D matrix, so that the covariance between the k-th and the l-th
+    * feature of the cell at position (y, x) will be located at index `(y * numFeatures + k, x * numFeatures + l)`
+    * in the resulting matrix.
     */
-    Matrix computeFlattenedCovariance(const int rows, const int cols, unsigned int features = 0);
+    ScalarMatrix computeFlattenedCovariance(const int rows, const int cols, unsigned int features = 0);
     
     /**
     * Learns a mean feature vector from features extracted from different positions at various scales of a set of images.
@@ -251,16 +246,25 @@ public:
                                   ProgressCallback progressCB = NULL, void * cbData = NULL);
     
     
-    MeanVector mean; /**< Stationary negative mean of features. */
+    FeatureCell mean; /**< Stationary negative mean of features. */
     
     CovMatrixArray cov; /**< Stationary covariance matrices for each offset as spatial autocorrelation function. */
     
     OffsetArray offsets; /**< Array of (dx, dy) spatial offsets corresponding to the elements of `cov`. */
     
-    unsigned int cellSize; /**< Number of pixels per cell in both dimensions used for training this background statistics. */
+    /**
+    * Number of pixels per cell in each dimension used for training this background statistics.
+    */
+    Size cellSize;
 
 
 protected:
+
+    /**
+    * A shared pointer to the feature extractor used by this object for computation of background statistics.
+    * The feature extractor will *not* be used for reconstruction of covariance matrices from existing statistics.
+    */
+    std::shared_ptr<FeatureExtractor> m_featureExtractor;
 
     /**
     * Initializes the `offsets` array.

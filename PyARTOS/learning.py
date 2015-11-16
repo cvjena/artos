@@ -355,17 +355,36 @@ class Model(object):
     
     
     def _readFile(self, file):
-        """Reads a mixture file into the `models` list.
+        """Reads a mixture file into the `models` list and sets the `type` and `parameters` attributes.
         
-        Each component in that list represents a component of the mixture and is a dictionary
+        Each component in the `models` list represents a component of the mixture and is a dictionary
         with the keys 'parts' and 'bias'. 'parts' is a list with the parts of that component
         which are dictionaries with the keys 'data', 'offset' (2-tuple) and 'params' (deformation
         coefficients, 4-tuple). 'data' is a list with the rows of the part. Finally, each row is a
         list with the cells in that row and each cell is a list with the feature weights.
+        
+        The `type` attribute is a string specifying the type of feature extractor used to create the
+        model and `parameters` is a dictionary with the parameters of the feature extractor.
         """
         
         self.models = []
-        mixtures = int(file.readline().strip()) # numMixtures
+        line = file.readline().strip()
+        try:
+            # Old model format (v1)
+            mixtures = int(line) # numMixtures
+            self.formatVersion = 1
+            self.type = "HOG"
+            self.parameters = { 'cellSizeX' : 8, 'cellSizeY' : 8 }
+        except ValueError:
+            # New model format (v2)
+            self.formatVersion = 2
+            self.type = line
+            self._parseParameters(file.readline().strip())
+            line = ""
+            while line == "":
+                line = file.readline().strip()
+            mixtures = int(line)
+            
         for mix in range(mixtures):
             line = ""
             while line == "":
@@ -389,6 +408,45 @@ class Model(object):
             self.models.append(mixture)
     
     
+    def _parseParameters(self, paramLine):
+        """Parses feature extractor parameters given as single string into the `parameters` dictionary."""
+        
+        self.parameters = {}
+        tok = paramLine.split()
+        
+        # Merge string sequences
+        isString = [False] * len(tok)
+        stringStart = -1
+        i = 0
+        while i < len(tok):
+            if stringStart >= 0:
+                tok[stringStart] += tok[i]
+            elif tok[i].startswith("{str{"):
+                stringStart = i
+                isString[stringStart] = True
+            i += 1
+            if (stringStart >= 0) and (tok[stringStart].endswith("}str}")):
+                tok[stringStart] = tok[stringStart][5:-5]
+                del tok[stringStart+1:i]
+                i = stringStart + 1
+                stringStart = -1
+        
+        # Parse parameters
+        if len(tok) % 2 != 0:
+            raise ValueError("Invalid feature extractor parameter line given.")
+        for i in range(0, len(tok), 2):
+            if isString[i+1]:
+                self.parameters[tok[i]] = tok[i+1]
+            else:
+                try:
+                    self.parameters[tok[i]] = int(tok[i+1])
+                except ValueError:
+                    try:
+                        self.parameters[tok[i]] = float(tok[i+1])
+                    except ValueError:
+                        self.parameters[tok[i]] = tok[i+1]
+    
+    
     def removeComponent(self, compId):
         """Removes the model with the given index in the `models` attribute from this mixture."""
         
@@ -400,6 +458,11 @@ class Model(object):
         """Writes the model data back to the file it was loaded from."""
         
         with open(self.filename, 'w') as f:
+            if self.formatVersion > 1:
+                f.write('{}\n'.format(self.type))
+                f.write(' '.join('{} {}'.format(k, '{str{' + v + '}str}' if utils.is_str(v) else v)
+                                 for k, v in self.parameters.items()) + '\n\n')
+        
             f.write('{}\n'.format(len(self.models)))
             for model in self.models:
                 f.write('{} {}\n'.format(len(model['parts']), model['bias']))
@@ -423,7 +486,11 @@ class Model(object):
         `cs` specifies the size of each cell in the HOG images.
         `padding` specifies the padding between the single HOG images.
         Returns the created PIL image, which will be of mode 'RGBA'.
+        Raises a TypeError if this model does not use HOG features.
         """
+        
+        if self.type != "HOG":
+            raise TypeError("Visualization is only available for HOG models (given: " + self.type + ")")
         
         images = []
         for comp in self.models:

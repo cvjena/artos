@@ -5,22 +5,16 @@
 #include <complex>
 #include <cassert>
 #include <cstdio>
-#include <stdint.h>
+#include <cstdint>
 #include <fftw3.h>
 #include "portable_endian.h"
-#include "FeatureExtractor.h"
-#include "ffld/JPEGImage.h"
+#include "FeaturePyramid.h"
+#include "JPEGImage.h"
 using namespace ARTOS;
 using namespace std;
 
 template<class Derived>
 static typename Derived::PlainObject fftshift(const Eigen::MatrixBase<Derived> &);
-
-StationaryBackground::StationaryBackground(const unsigned int numOffsets, const unsigned int numFeatures, const unsigned int cellSize)
-: mean(numFeatures), cov(numOffsets), offsets(numOffsets, 2), cellSize(cellSize)
-{
-    this->cov.setConstant(CovMatrix(numFeatures, numFeatures));
-}
 
 bool StationaryBackground::readFromFile(const string & filename)
 {
@@ -28,19 +22,36 @@ bool StationaryBackground::readFromFile(const string & filename)
     if (!file.is_open())
         return false;
     
-    // Read parameters (cell size, number of features, number of offsets) from file
-    uint32_t cs, nf, no;
-    file.read(reinterpret_cast<char*>(&cs), sizeof(uint32_t));
+    // Read parameters (file format version, cell size, number of features, number of offsets) from file
+    uint32_t formatVersion, csx, csy, nf, no;
+    file.read(reinterpret_cast<char*>(&formatVersion), sizeof(uint32_t));
+    formatVersion = le32toh(formatVersion);
+    if (formatVersion & 0xFFFFFF00 == ARTOS_BG_MAGIC)   // Check if first 24 bits of first integer correspond to magic number.
+        formatVersion = formatVersion & 0xFF;           // If so, the last 8 bits specify the file format version.
+    else                                                // Otherwise, this is the first format version, which did not have
+    {                                                   // a dedicated version field at all.
+        csx = csy = formatVersion;
+        formatVersion = 0;
+    }
+    if (formatVersion > 1)
+        return false;
+    
+    if (formatVersion >= 1)
+    {
+        file.read(reinterpret_cast<char*>(&csx), sizeof(uint32_t));
+        file.read(reinterpret_cast<char*>(&csy), sizeof(uint32_t));
+    }
     file.read(reinterpret_cast<char*>(&nf), sizeof(uint32_t));
     file.read(reinterpret_cast<char*>(&no), sizeof(uint32_t));
-    cs = le32toh(cs);
+    csx = le32toh(csx);
+    csy = le32toh(csy);
     nf = le32toh(nf);
     no = le32toh(no);
-    if (cs == 0 || nf == 0 || no == 0)
+    if (csx == 0 || csy == 0 || nf == 0 || no == 0)
         return false;
     
     // Initialize matrices and arrays
-    this->cellSize = cs;
+    this->cellSize = Size(csx, csy);
     this->mean.resize(nf);
     this->cov.resize(no);
     this->offsets.resize(no, Eigen::NoChange);
@@ -110,12 +121,16 @@ bool StationaryBackground::writeToFile(const string & filename)
     if (!file.is_open())
         return false;
     
-    // Write parameters (cell size, number of features, number of offsets)
-    uint32_t cs, nf, no;
-    cs = htole32(this->cellSize);
+    // Write parameters (file format version, cell size, number of features, number of offsets)
+    uint32_t formatVersion, csx, csy, nf, no;
+    formatVersion = htole32(ARTOS_BG_MAGIC | 1);
+    csx = htole32(this->cellSize.width);
+    csy = htole32(this->cellSize.height);
     nf = htole32(this->getNumFeatures());
     no = htole32(this->getNumOffsets());
-    file.write(reinterpret_cast<char*>(&cs), sizeof(uint32_t));
+    file.write(reinterpret_cast<char*>(&formatVersion), sizeof(uint32_t));
+    file.write(reinterpret_cast<char*>(&csx), sizeof(uint32_t));
+    file.write(reinterpret_cast<char*>(&csy), sizeof(uint32_t));
     file.write(reinterpret_cast<char*>(&nf), sizeof(uint32_t));
     file.write(reinterpret_cast<char*>(&no), sizeof(uint32_t));
     
@@ -125,7 +140,7 @@ bool StationaryBackground::writeToFile(const string & filename)
     // Write mean
     for (i = 0; i < this->getNumFeatures(); i++)
     {
-        buf = htole32(this->mean(i));
+        buf = htole32(static_cast<float>(this->mean(i)));
         file.write(buf_p, sizeof(float));
     }
     
@@ -134,7 +149,7 @@ bool StationaryBackground::writeToFile(const string & filename)
         for (j = 0; j < this->getNumFeatures(); j++)
             for (k = 0; k < this->getNumFeatures(); k++)
             {
-                buf = htole32(this->cov(i)(j,k));
+                buf = htole32(static_cast<float>(this->cov(i)(j,k)));
                 file.write(buf_p, sizeof(float));
             }
     
@@ -157,7 +172,7 @@ void StationaryBackground::clear()
     this->mean.resize(0);
     this->cov.resize(0);
     this->offsets.resize(0, 2);
-    this->cellSize = 0;
+    this->cellSize = Size();
 }
 
 StationaryBackground::CovMatrixMatrix StationaryBackground::computeCovariance(const int rows, const int cols)
@@ -199,21 +214,21 @@ StationaryBackground::CovMatrixMatrix StationaryBackground::computeCovariance(co
     return result;
 }
 
-StationaryBackground::Matrix StationaryBackground::computeFlattenedCovariance(const int rows, const int cols, unsigned int features)
+ScalarMatrix StationaryBackground::computeFlattenedCovariance(const int rows, const int cols, unsigned int features)
 {
     // Check if number of features is at least as large as the number of features in this background model
     unsigned int ourFeatures = this->getNumFeatures();
     if (features == 0)
         features = ourFeatures;
     else if (features < ourFeatures)
-        return Matrix();
+        return ScalarMatrix();
 
     CovMatrixMatrix cov = this->computeCovariance(rows, cols);
     if (cov.size() == 0)
-        return Matrix();
+        return ScalarMatrix();
     
     unsigned int n = cov.rows() * features;
-    Matrix flat(n, n);
+    ScalarMatrix flat(n, n);
     unsigned int i, j, k, l; // (i * features + j) gives the row, (k * features + l) the column of the flat matrix
     unsigned int p, q; // used for iterative access to the rows and columns of flat matrix to not evaluate the above expression every time
     for (i = 0, p = 0; i < cov.rows(); i++)
@@ -230,27 +245,27 @@ StationaryBackground::Matrix StationaryBackground::computeFlattenedCovariance(co
 void StationaryBackground::learnMean(ImageIterator & imgIt, const unsigned int numImages, ProgressCallback progressCB, void * cbData)
 {
     // Initialize member variables
-    this->cellSize = FeatureExtractor::cellSize;
+    this->cellSize = this->m_featureExtractor->cellSize();
     
     // Iterate over the images and compute the mean feature vector
-    Eigen::VectorXd mean = Eigen::VectorXd::Zero(FeatureExtractor::numRelevantFeatures);
+    Eigen::VectorXd mean = Eigen::VectorXd::Zero(this->m_featureExtractor->numRelevantFeatures());
     int i;
-    vector<FeatureExtractor::FeatureMatrix>::const_iterator levelIt;
+    vector<FeatureMatrix>::const_iterator levelIt;
     unsigned long long numSamples = 0;
     for (imgIt.rewind(); imgIt.ready() && (numImages == 0 || (unsigned int) imgIt < numImages); ++imgIt)
     {
         if (progressCB != NULL && numImages > 0 && !progressCB((unsigned int) imgIt, numImages, cbData))
             break;
-        FFLD::JPEGImage img = (*imgIt).getImage();
+        JPEGImage img = (*imgIt).getImage();
         if (!img.empty())
         {
-            FeaturePyramid pyra(img);
+            FeaturePyramid pyra(img, this->m_featureExtractor);
             // Loop over various scales
             for (levelIt = pyra.levels().begin(); levelIt != pyra.levels().end(); levelIt++)
             {
-                for (i = 0; i < levelIt->size(); i++)
-                    mean += Eigen::VectorXd((*levelIt)(i).head(mean.size()).cast<double>());
-                numSamples += levelIt->size();
+                for (i = 0; i < levelIt->numCells(); i++)
+                    mean += Eigen::VectorXd(levelIt->cell(i).head(mean.size()).cast<double>());
+                numSamples += levelIt->numCells();
             }
         }
     }
@@ -259,13 +274,14 @@ void StationaryBackground::learnMean(ImageIterator & imgIt, const unsigned int n
     mean /= static_cast<double>(numSamples);
     
     // Store computed mean
-    this->mean = mean.cast<float>();
+    this->mean = mean.cast<FeatureScalar>();
 }
 
 void StationaryBackground::learnCovariance(ImageIterator & imgIt, const unsigned int numImages, const unsigned int maxOffset,
                                            ProgressCallback progressCB, void * cbData)
 {
-    if (this->mean.size() < FeatureExtractor::numRelevantFeatures)
+    int numFeat = this->m_featureExtractor->numRelevantFeatures();
+    if (this->mean.size() < numFeat)
         return;
     
     // Local declarations and variables
@@ -274,7 +290,7 @@ void StationaryBackground::learnCovariance(ImageIterator & imgIt, const unsigned
     typedef Eigen::Matrix<complex<float>, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> MatrixXcf;
     int i, j, l, o, cx, cy, p1, p2;
     unsigned int minLevelSize = maxOffset * 2;
-    vector<FeatureExtractor::FeatureMatrix>::iterator levelIt;
+    vector<FeatureMatrix>::iterator levelIt;
     
     // Load wisdom for FFTW
     FILE * wisdom_file = fopen("wisdom.fftw", "r");
@@ -285,62 +301,62 @@ void StationaryBackground::learnCovariance(ImageIterator & imgIt, const unsigned
     }
     
     // Initialize member variables
-    this->cellSize = FeatureExtractor::cellSize;
+    this->cellSize = this->m_featureExtractor->cellSize();
     this->makeOffsetArray(maxOffset);
     
     // Iterate over the images and compute the autocorrelation function
     Eigen::Array< DoubleCovMatrix, Eigen::Dynamic, 1 > cov(this->offsets.rows());
-    cov.setConstant(DoubleCovMatrix::Zero(FeatureExtractor::numRelevantFeatures, FeatureExtractor::numRelevantFeatures));
+    cov.setConstant(DoubleCovMatrix::Zero(numFeat, numFeat));
     Eigen::Matrix<unsigned long long, Eigen::Dynamic, 1> numSamples(cov.size());
     numSamples.setZero();
     for (imgIt.rewind(); imgIt.ready() && (numImages == 0 || (unsigned int) imgIt < numImages); ++imgIt)
     {
         if (progressCB != NULL && numImages > 0 && !progressCB((unsigned int) imgIt, numImages, cbData))
             break;
-        FFLD::JPEGImage img = (*imgIt).getImage();
+        JPEGImage img = (*imgIt).getImage();
         if (!img.empty())
         {
-            FeaturePyramid pyra(img);
+            FeaturePyramid pyra(img, this->m_featureExtractor);
             // Subtract mean from all features
             #pragma omp parallel for private(l, i)
             for (l = 0; l < pyra.levels().size(); l++)
-                for (i = 0; i < pyra.levels()[l].size(); i++)
-                    pyra.levels()[l](i).head(FeatureExtractor::numRelevantFeatures) -= this->mean;
+                for (i = 0; i < pyra.levels()[l].numCells(); i++)
+                    pyra.levels()[l].cell(i).head(numFeat) -= this->mean;
             // Loop over various scales and compute covariances
             for (levelIt = pyra.levels().begin(); levelIt != pyra.levels().end(); levelIt++)
             {
                 // Initialize matrices for transformations and correlations
                 // (Some of them are just dummies for the planner, because we will use thread-local variables later on.)
-                MatrixXcf freq(levelIt->rows() * FeatureExtractor::numRelevantFeatures, levelIt->cols() / 2 + 1);
+                MatrixXcf freq(levelIt->rows() * numFeat, levelIt->cols() / 2 + 1);
                 MatrixXcf powerSpectrum(levelIt->rows(), freq.cols());
                 MatrixXf correlations(levelIt->rows(), levelIt->cols());
                 // Plan fourier transforms
                 fftwf_plan ft_forwards, ft_inverse;
                 {
-                    int size[2] = {levelIt->rows(), levelIt->cols()};
-                    FeatureExtractor::FeatureMatrix tmp(*levelIt);
+                    int size[2] = {static_cast<int>(levelIt->rows()), static_cast<int>(levelIt->cols())};
+                    FeatureMatrix tmp(*levelIt); // backup data of the level
                     ft_forwards = fftwf_plan_many_dft_r2c(
-                        2, size, FeatureExtractor::numRelevantFeatures,
-                        levelIt->data()->data(), NULL, FeatureExtractor::numFeatures, 1,
+                        2, size, numFeat,
+                        levelIt->raw(), NULL, levelIt->channels(), 1,
                         reinterpret_cast<fftwf_complex*>(freq.data()), NULL, 1, size[0] * (size[1] / 2 + 1), FFTW_ESTIMATE
                     );
                     ft_inverse = fftwf_plan_dft_c2r_2d(
                         size[0], size[1],
                         reinterpret_cast<fftwf_complex*>(powerSpectrum.data()), correlations.data(), FFTW_MEASURE
                     );
-                    *levelIt = tmp;
+                    *levelIt = tmp; // restore level, since FFTW may have changed it
                 }
                 //Compute covariances for each pair of levels using the power spectrum
                 fftwf_execute(ft_forwards);
                 cy = correlations.rows() / 2;
                 cx = correlations.cols() / 2;
                 #pragma omp parallel for private(p1, p2, o, i, j)
-                for (p1 = 0; p1 < FeatureExtractor::numRelevantFeatures; p1++)
+                for (p1 = 0; p1 < numFeat; p1++)
                 {
                     MatrixXcf conjLevel = freq.block(p1 * levelIt->rows(), 0, levelIt->rows(), freq.cols()).conjugate();
                     MatrixXcf powerSpect(levelIt->rows(), freq.cols());
                     MatrixXf corr(correlations.rows(), correlations.cols());
-                    for (p2 = 0; p2 < FeatureExtractor::numRelevantFeatures; p2++)
+                    for (p2 = 0; p2 < numFeat; p2++)
                     {
                         powerSpect = conjLevel.cwiseProduct(freq.block(p2 * levelIt->rows(), 0, levelIt->rows(), freq.cols()));
                         fftwf_execute_dft_c2r(ft_inverse, reinterpret_cast<fftwf_complex*>(powerSpect.data()), corr.data());
@@ -353,9 +369,9 @@ void StationaryBackground::learnCovariance(ImageIterator & imgIt, const unsigned
                             if (i >= 0 && j >= 0 && i < corr.rows() && j < corr.cols())
                             {
                                 cov(o)(p1, p2) += static_cast<double>(corr(i, j))
-                                                  / levelIt->size(); // division necessary, since FFTW computes an unnormalized DFT
+                                                  / levelIt->numCells(); // division necessary, since FFTW computes an unnormalized DFT
                                 if (p1 == 0 && p2 == 0)
-                                    numSamples(o) += levelIt->size();
+                                    numSamples(o) += levelIt->numCells();
                             }
                         }
                     }
@@ -388,42 +404,42 @@ void StationaryBackground::learnCovariance(ImageIterator & imgIt, const unsigned
 void StationaryBackground::learnCovariance_accurate(ImageIterator & imgIt, const unsigned int numImages, const unsigned int maxOffset,
                                                     ProgressCallback progressCB, void * cbData)
 {
-    if (this->mean.size() < FeatureExtractor::numRelevantFeatures)
+    int numFeat = this->m_featureExtractor->numRelevantFeatures();
+    if (this->mean.size() < numFeat)
         return;
 
     // Local declarations and variables
-    typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> DoubleCovMatrix;
-    typedef Eigen::Matrix<double, FeatureExtractor::numRelevantFeatures, 1> DoubleFeatureVector;
-    typedef Eigen::Matrix<DoubleFeatureVector, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> DoubleLevel;
+    typedef FeatureMatrix_<double> DoubleFeatureMatrix;
+    typedef DoubleFeatureMatrix::ScalarMatrix DoubleCovMatrix;
     int i, j, l, dx, dy, o, t, x1, x2, y1, y2;
-    vector<DoubleLevel> levels;
-    vector<DoubleLevel>::const_iterator dLevelIt;
+    vector<DoubleFeatureMatrix> levels;
+    vector<DoubleFeatureMatrix>::const_iterator dLevelIt;
     
     // Initialize member variables
-    this->cellSize = FeatureExtractor::cellSize;
+    this->cellSize = this->m_featureExtractor->cellSize();
     this->makeOffsetArray(maxOffset);
     
     // Iterate over the images and compute the autocorrelation function
     Eigen::Array< DoubleCovMatrix, Eigen::Dynamic, 1 > cov(this->offsets.rows());
-    cov.setConstant(DoubleCovMatrix::Zero(FeatureExtractor::numRelevantFeatures, FeatureExtractor::numRelevantFeatures));
+    cov.setConstant(DoubleCovMatrix::Zero(numFeat, numFeat));
     Eigen::Matrix<unsigned long long, Eigen::Dynamic, 1> numSamples(cov.size());
     numSamples.setZero();
     for (imgIt.rewind(); imgIt.ready() && (numImages == 0 || (unsigned int) imgIt < numImages); ++imgIt)
     {
         if (progressCB != NULL && numImages > 0 && !progressCB((unsigned int) imgIt, numImages, cbData))
             break;
-        FFLD::JPEGImage img = (*imgIt).getImage();
+        JPEGImage img = (*imgIt).getImage();
         if (!img.empty())
         {
-            FeaturePyramid pyra(img);
-            levels.resize(pyra.levels().size(), DoubleLevel());
+            FeaturePyramid pyra(img, this->m_featureExtractor);
+            levels.resize(pyra.levels().size(), DoubleFeatureMatrix());
             // Subtract mean from all features
             #pragma omp parallel for private(l, i)
             for (l = 0; l < pyra.levels().size(); l++)
             {
-                levels[l].resize(pyra.levels()[l].rows(), pyra.levels()[l].cols());
-                for (i = 0; i < levels[l].size(); i++)
-                    levels[l](i) = (pyra.levels()[l](i).head(FeatureExtractor::numRelevantFeatures) - this->mean).cast<double>();
+                levels[l].resize(pyra.levels()[l].rows(), pyra.levels()[l].cols(), numFeat);
+                for (i = 0; i < levels[l].numCells(); i++)
+                    levels[l].cell(i) = (pyra.levels()[l].cell(i).head(numFeat) - this->mean).cast<double>();
             }
             // Loop over various scales and compute covariances
             for (dLevelIt = levels.begin(); dLevelIt != levels.end(); dLevelIt++)
@@ -458,8 +474,8 @@ void StationaryBackground::learnCovariance_accurate(ImageIterator & imgIt, const
                     {
                         assert(y1 >= 0 && y2 < dLevelIt->rows() && x1 + dx >= 0 && x2 + dx < dLevelIt->cols());
                         t = (y2 - y1 + 1) * (x2 - x1 + 1);
-                        DoubleCovMatrix feat1(t, FeatureExtractor::numRelevantFeatures);
-                        DoubleCovMatrix feat2(t, FeatureExtractor::numRelevantFeatures);
+                        DoubleCovMatrix feat1(t, numFeat);
+                        DoubleCovMatrix feat2(t, numFeat);
                         for (i = y1, l = 0; i <= y2; i++)
                             for (j = x1; j <= x2; j++, l++)
                             {

@@ -188,18 +188,17 @@ class Detection(BoundingBox):
 
 class Detector(object):
 
-    def __init__(self, overlap = 0.5, padding = 12, interval = 10, debug=False):
+    def __init__(self, overlap = 0.5, interval = 10, debug=False):
         """Constructs and initializes a new detector with specific settings.
         
         overlap - Minimum overlap in non maxima suppression.
-        padding - Amount of zero padding in HOG cells. Must be greater or equal to half the greatest filter dimension.
         interval - Number of levels per octave in the HOG pyramid.
         """
         
         object.__init__(self)
         if (libartos is None):
             raise RuntimeError('Can not find libartos')
-        self.handle = libartos.create_detector(overlap, padding, interval, debug)
+        self.handle = libartos.create_detector(overlap, interval, debug)
 
 
     def __del__(self):

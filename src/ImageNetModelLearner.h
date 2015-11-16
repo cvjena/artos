@@ -37,12 +37,16 @@ public:
     ImageNetModelLearner() : ModelLearner(), m_repo(""), m_addedSynsets() { };
     
     /**
-    * Constructs a new ImageNetModelLearner for a given image repository with given background statistics.
+    * Constructs a new ImageNetModelLearner for a given image repository with a given feature extractor and
+    * given background statistics.
     *
     * @param[in] bg The stationary background statistics.
     *
     * @param[in] repo The image repository to take samples from.
     *
+    * @param[in] featureExtractor A pointer to the feature extractor to be used by the new model learner.
+    * If a NULL pointer is given, the default feature extractor will be used.
+    *
     * @param[in] loocv If set to true, *Leave-one-out-cross-validation* will be performed for threshold optimization.
     * This will increase memory usage, since the WHO features of all samples have to be stored for this, and will slow
     * down threshold optimization as well as the model learning step if only one WHO cluster is used. But it will guarantee
@@ -50,16 +54,22 @@ public:
     *
     * @param[in] verbose If set to true, debug and timing information will be printed to stderr.
     */
-    ImageNetModelLearner(const StationaryBackground & bg, const ImageRepository & repo, const bool loocv = true, const bool verbose = false)
-    : ModelLearner(bg, loocv, verbose), m_repo(repo), m_addedSynsets() { };
+    ImageNetModelLearner(const StationaryBackground & bg, const ImageRepository & repo,
+                         const std::shared_ptr<FeatureExtractor> & featureExtractor = nullptr,
+                         const bool loocv = true, const bool verbose = false)
+    : ModelLearner(bg, featureExtractor, loocv, verbose), m_repo(repo), m_addedSynsets() { };
     
     /**
-    * Constructs a new ImageNetModelLearner for a given image repository with given background statistics.
+    * Constructs a new ImageNetModelLearner for a given image repository with a given feature extractor and
+    * given background statistics.
     *
     * @param[in] bgFile Path to a file containing background statistics.
     *
     * @param[in] repoDirectory Path of the image repository directory.
     *
+    * @param[in] featureExtractor A pointer to the feature extractor to be used by the new model learner.
+    * If a NULL pointer is given, the default feature extractor will be used.
+    *
     * @param[in] loocv If set to true, *Leave-one-out-cross-validation* will be performed for threshold optimization.
     * This will increase memory usage, since the WHO features of all samples have to be stored for this, and will slow
     * down threshold optimization as well as the model learning step if only one WHO cluster is used. But it will guarantee
@@ -67,8 +77,10 @@ public:
     *
     * @param[in] verbose If set to true, debug and timing information will be printed to stderr.
     */
-    ImageNetModelLearner(const std::string & bgFile, const std::string & repoDirectory, const bool loocv = true, const bool verbose = false)
-    : ModelLearner(bgFile, loocv, verbose), m_repo(repoDirectory), m_addedSynsets() { };
+    ImageNetModelLearner(const std::string & bgFile, const std::string & repoDirectory,
+                         const std::shared_ptr<FeatureExtractor> & featureExtractor = nullptr,
+                         const bool loocv = true, const bool verbose = false)
+    : ModelLearner(bgFile, featureExtractor, loocv, verbose), m_repo(repoDirectory), m_addedSynsets() { };
     
     /**
     * @return A reference to the image repository used by this learner.
@@ -96,7 +108,7 @@ public:
     
     /**
     * Resets this learner to it's initial state and makes it forget all learned models, thresholds and added samples.
-    * Only the given background statistics and the image repository will be left intact.
+    * Only the given background statistics, the feature extractor and the image repository will be left intact.
     */
     virtual void reset();
     

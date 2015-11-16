@@ -6,7 +6,9 @@ using namespace std;
 string trim(string str)
 {
     size_t pos = str.find_first_not_of(" \r\n\t");
-    if (pos > 0 && pos != string::npos)
+    if (pos == string::npos)
+        return "";
+    else if (pos > 0)
         str = str.substr(pos);
     pos = str.find_last_not_of(" \r\n\t");
     if (pos < str.length() - 1 && pos != string::npos)
