@@ -33,6 +33,9 @@ namespace ARTOS
 * Any parameters supported by a feature extractor should be added to the m_intParams, m_scalarParams or m_stringParams
 * map with their default values then the feature extractor is constructed.
 *
+* Some feature extractors may require that some of their parameters are set first before they may be used. If those
+* parameters have not been set yet, any method of that feature extractor may throw a UseBeforeSetupException.
+*
 * @author Bjoern Barz <bjoern.barz@uni-jena.de>
 */
 class FeatureExtractor

@@ -73,6 +73,20 @@ public:
 
 
 /**
+* @brief A method has been called on an oject which has not been completely set up yet.
+*/
+class UseBeforeSetupException : public Exception
+{
+
+public:
+
+    UseBeforeSetupException() : Exception("Called a method on an object which has not been completely set up.") {};
+    UseBeforeSetupException(const std::string & what) : Exception(what) {};
+
+};
+
+
+/**
 * @brief The deserialization of a string or stream has failed due to invalid data.
 */
 class DeserializationException : public Exception

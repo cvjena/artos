@@ -44,35 +44,35 @@ public:
     * @return Returns the unique identifier of this kind of feature extractor. That type specifier
     * must consist of alphanumeric characters + dashes + underscores only.
     */
-    virtual const char * type() const { return "HOG"; };
+    virtual const char * type() const override { return "HOG"; };
     
     /**
     * @return Human-readable name of this feature extractor.
     */
-    virtual const char * name() const { return "HOG (Histograms of Oriented Gradients)"; };
+    virtual const char * name() const override { return "HOG (Histograms of Oriented Gradients)"; };
     
     /**
     * @return Returns the number of features this feature extractor extracts from each cell.
     */
-    virtual int numFeatures() const { return 32; };
+    virtual int numFeatures() const override { return 32; };
     
     /**
     * @return Returns the number of relevant features per cell (for instance, the last dimension
     * may be a truncation dimension and always set to 0 and, thus, not relevant).
     */
-    virtual int numRelevantFeatures() const { return 31; };
+    virtual int numRelevantFeatures() const override { return 31; };
     
     /**
     * @return Returns the size of the cells used by this feature extractor in x and y direction.
     */
-    virtual Size cellSize() const { return this->m_cellSize; };
+    virtual Size cellSize() const override { return this->m_cellSize; };
     
     /**
     * @return Returns true if this feature extractors implements the extract() method with explicit
     * cell size specification which differs from the default cell size reported by cellSize().
     * If this method returns true, the 3-parameter version of extract() should not throw an UnsupportedException.
     */
-    virtual bool supportsVariableCellSize() const { return true; };
+    virtual bool supportsVariableCellSize() const override { return true; };
     
     /**
     * Computes HOG features for a given image.
@@ -82,7 +82,7 @@ public:
     * @param[out] feat Destination matrix to store the extracted features in.
     * It will be resized to fit the number of cells in the given image.
     */
-    virtual void extract(const JPEGImage & img, FeatureMatrix & feat) const
+    virtual void extract(const JPEGImage & img, FeatureMatrix & feat) const override
     { this->extract(img, feat, this->cellSize()); };
     
     /**
@@ -99,7 +99,7 @@ public:
     *
     * @param[in] cellSize The size of the feature cells.
     */
-    virtual void extract(const JPEGImage & img, FeatureMatrix & feat, const Size & cellSize) const;
+    virtual void extract(const JPEGImage & img, FeatureMatrix & feat, const Size & cellSize) const override;
     
     /**
     * Transforms a feature matrix into a feature representation of the horizontally flipped image.
@@ -113,7 +113,7 @@ public:
     * @param[out] flipped Destination matrix to store the features of the horizontally flipped image in.
     * It will be resized to the same size as feat.
     */
-    virtual void flip(const FeatureMatrix & feat, FeatureMatrix & flipped) const;
+    virtual void flip(const FeatureMatrix & feat, FeatureMatrix & flipped) const override;
     
     /**
     * Changes the value of an integer parameter specific to the concrete feature extraction method.
@@ -124,7 +124,7 @@ public:
     *
     * @throws std::invalid_argument The given value is not allowed for the given parameter.
     */
-    virtual void setParam(const std::string & paramName, int32_t val);
+    virtual void setParam(const std::string & paramName, int32_t val) override;
     
     /**
     * Proposes an optimal size of a model for images with given sizes.
@@ -139,7 +139,7 @@ public:
     * @return Returns a proposal for the size of a model for images with the given sizes.
     * The size must be specified in cells.
     */
-    virtual Size computeOptimalModelSize(const std::vector<Size> & sizes, const Size & maxSize = Size()) const;
+    virtual Size computeOptimalModelSize(const std::vector<Size> & sizes, const Size & maxSize = Size()) const override;
 
 
 public:
