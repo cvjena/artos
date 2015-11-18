@@ -148,6 +148,12 @@ class _LibARTOS(object):
         self.add_models = prototype(('add_models', self._lib), paramflags)
         self.add_models.errcheck = self._errcheck_common
         
+        # num_feature_extractors_in_detector function
+        prototype = CFUNCTYPE(c_int, c_uint)
+        paramflags = ((1, 'detector'), )
+        self.num_feature_extractors_in_detector = prototype(('num_feature_extractors_in_detector', self._lib), paramflags)
+        self.num_feature_extractors_in_detector.errcheck = self._errcheck_num_fe
+        
         # detect_file_jpeg function
         prototype = CFUNCTYPE(c_int, c_uint, c_char_p, FlatDetection_p, c_uint_p)
         paramflags = (1, 'detector'), (1, 'imagefile'), (1, 'detection_buf'), (1, 'detection_buf_size')
@@ -322,8 +328,15 @@ class _LibARTOS(object):
     
     @staticmethod
     def _errcheck_create_learner(result, func, args):
+        if (result < 0):
+            raise LibARTOSException(LEARN_RES_INVALID_BG_FILE)
+        return args
+    
+    
+    @staticmethod
+    def _errcheck_num_fe(result, func, args):
         if (result == 0):
-            raise LibARTOSException(LEARN_RES_INVALID_BG_FILE);
+            raise LibARTOSException(RES_INVALID_HANDLE)
         return args
 
 

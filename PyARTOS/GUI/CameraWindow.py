@@ -155,6 +155,10 @@ class CameraWindow(Tkinter.Toplevel):
                         for m in models:
                             self.detector.addModel(utils.classnameFromFilename(m), m, 0.8)
                         self.numModels = len(models)
+                    if self.detector.differentFeatureExtractors() > 1:
+                        self.warnMsg.set('Warning: Your models use different feature extractors, which will slow down detection.')
+                    else:
+                        self.warnMsg.set('')
                 except Exception as e:
                     tkMessageBox.showerror(title = 'Detector initialization failed', message = 'Could not initialize detector:\n{!s}'.format(e))
                     self.detector = None
@@ -274,6 +278,10 @@ class CameraWindow(Tkinter.Toplevel):
         self.frmDetection = DetectionFrame(self.frmCtrl, colorMap = self.colorMap)
         self.frmDetection.pack(side = 'top', fill = 'both', expand = True, pady = (0, 20))
         
+        # Label for warning messages:
+        self.lblWarning = ttk.Label(self.frmCtrl, textvariable = self.warnMsg, foreground = '#A00000', wraplength = 200)
+        self.lblWarning.pack(side = 'top', fill = 'x')
+        
         # Buttons for device selection:
         self.deviceButtons = []
         self.deviceButtons.append(ttk.Button(self.frmCtrl, text = 'Stop', command = lambda: self.changeDevice(-1)))
@@ -332,6 +340,7 @@ class CameraWindow(Tkinter.Toplevel):
         # Create slave widgets
         self.modelDir = Tkinter.StringVar(master = self, value = config.get('libartos', 'model_dir'))
         self.fpsText = Tkinter.StringVar(master = self, value = 'No device opened')
+        self.warnMsg = Tkinter.StringVar(master = self, value = '')
         self._createWidgets()
         # Autostart
         if (len(self.devices) > 0):
@@ -363,6 +372,7 @@ class CameraWindow(Tkinter.Toplevel):
                 # __del__ method prevents the garbage collector from freeing them:
                 del self.modelDir
                 del self.fpsText
+                del self.warnMsg
                 del self.lblVideo._img
             except:
                 pass

@@ -242,6 +242,16 @@ class Detector(object):
         """
         
         return libartos.add_models(self.handle, utils.str2bytes(listfile))
+    
+    
+    def differentFeatureExtractors(self):
+        """Returns the number of different feature extractors among those used by the models added to this detector.
+        
+        Though mixing models which use different feature extractors is possible, it is not recommended, since a separate
+        feature pyramid would have to be built for every feature extractor, which will slow down detection significantly.
+        """
+        
+        return libartos.num_feature_extractors_in_detector(self.handle)
 
 
     def detect(self, img, limit = 3):

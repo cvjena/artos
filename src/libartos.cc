@@ -68,6 +68,14 @@ int add_models(const unsigned int detector, const char * modellistfile)
         return ARTOS_RES_INVALID_HANDLE;
 }
 
+int num_feature_extractors_in_detector(const unsigned int detector)
+{
+    if (is_valid_detector_handle(detector))
+        return detectors[detector - 1]->differentFeatureExtractors();
+    else
+        return -1;
+}
+
 int detect_file_jpeg(const unsigned int detector,
                              const char * imagefile,
                              FlatDetection * detection_buf, unsigned int * detection_buf_size)

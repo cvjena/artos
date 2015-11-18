@@ -117,6 +117,15 @@ int add_model(const unsigned int detector, const char * classname, const char * 
 int add_models(const unsigned int detector, const char * modellistfile);
 
 /**
+* Returns the number of different feature extractors among those used by the models added to a detector instance.
+* @param[in] detector The handle of the detector instance obtained by create_detector().
+* @return Returns the number of different feature extractors or -1 if the given detector handle is invalid.
+* @note Though mixing models which use different feature extractors is possible, it is not recommended, since a separate
+*       feature pyramid would have to be built for every feature extractor, which will slow down detection significantly.
+*/
+int num_feature_extractors_in_detector(const unsigned int detector);
+
+/**
 * Detects objects in a JPEG image file which match one of the models added before using add_model() or add_models().
 * @param[in] detector The handle of the detector instance obtained by create_detector().
 * @param[in] imagefile The filename of the JPEG image.
