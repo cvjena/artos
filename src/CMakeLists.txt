@@ -18,9 +18,9 @@ ENDIF()
 
 
 #### Build options ####
-OPTION(CACHE_POSITIVES "Keep positive samples in RAM to save time." ON)
+OPTION(ARTOS_CACHE_POSITIVES "Keep positive samples in RAM to save time." ON)
 
-IF(NOT CACHE_POSITIVES)
+IF(NOT ARTOS_CACHE_POSITIVES)
   ADD_DEFINITIONS(-DNO_CACHE_POSITIVES)
 ENDIF()
 
@@ -31,11 +31,11 @@ ENDIF()
 
 
 #### Build static library for image repository access ####
-IF(NOT IMAGE_REPOSITORY_SRC)
-  SET(IMAGE_REPOSITORY_SRC "ImageNet" CACHE STRING "Subdirectory with source files for image repository access.")
+IF(NOT ARTOS_IMAGE_REPOSITORY_SRC)
+  SET(ARTOS_IMAGE_REPOSITORY_SRC "ImageNet" CACHE STRING "Subdirectory with source files for image repository access.")
 ENDIF()
-INCLUDE_DIRECTORIES("${PROJECT_SOURCE_DIR}" "${PROJECT_SOURCE_DIR}/${IMAGE_REPOSITORY_SRC}")
-ADD_SUBDIRECTORY(${IMAGE_REPOSITORY_SRC})
+INCLUDE_DIRECTORIES("${PROJECT_SOURCE_DIR}" "${PROJECT_SOURCE_DIR}/${ARTOS_IMAGE_REPOSITORY_SRC}")
+ADD_SUBDIRECTORY(${ARTOS_IMAGE_REPOSITORY_SRC})
 # Add compiler flags to build static libraries as place-independent code (pic),
 # so that it can be linked to our shared ARTOS library.
 if(UNIX)
