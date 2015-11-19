@@ -19,7 +19,15 @@ shared_ptr<FeatureExtractor> FeatureExtractor::dfltFeatureExtractor = nullptr;
 
 static shared_ptr<FeatureExtractor> createHOGFeatureExtractor() { return make_shared<HOGFeatureExtractor>(); };
 
+#ifdef ARTOS_ENABLE_CAFFE
+#include "CaffeFeatureExtractor.h"
+static shared_ptr<FeatureExtractor> createCaffeFeatureExtractor() { return make_shared<CaffeFeatureExtractor>(); };
+#endif
+
 map<string, shared_ptr<FeatureExtractor> (*)()> FeatureExtractor::featureExtractorFactories {
+#ifdef ARTOS_ENABLE_CAFFE
+    { "Caffe", createCaffeFeatureExtractor },
+#endif
     { "HOG", createHOGFeatureExtractor } // the name specified here must correspond to the return value of type()
 };
 
