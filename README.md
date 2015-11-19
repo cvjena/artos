@@ -105,8 +105,8 @@ If you would like to use image features extracted from a layer of a Convolutiona
 and install *[Caffe][5]* first (use a commit from November 2015 or later). Build instructions for Caffe can be found [here][6].
 
 After that, use CMake to configure ARTOS and set `ARTOS_USE_CAFFE` to `ON`. If Caffe is not located inside your ARTOS build
-directory, you have to set `Caffe_DIR` to point to the build directory of Caffe. Finally, run `make` to build ARTOS with
-Caffe support.
+directory and could not be detected automatically, you have to set `Caffe_DIR` to point to the build directory of Caffe.
+Finally, run `make` to build ARTOS with Caffe support.
 
 Note that the default feature extractor will still be HOG. You have to switch to Caffe from your application explicitly.
 
