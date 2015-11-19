@@ -58,7 +58,7 @@ SET(SOURCES DPMDetection.cc FeatureExtractor.cc FeaturePyramid.cc HOGFeatureExtr
 ModelLearnerBase.cc ModelLearner.cc ImageNetModelLearner.cc Mixture.cc Model.cc ModelEvaluator.cc
 Object.cc Patchwork.cc Random.cc Rectangle.cc Scene.cc StationaryBackground.cc
 blf.cc harmony_search.cc sysutils.cc strutils.cc timingtools.cc)
-ADD_LIBRARY(artos SHARED ${SOURCES} libartos.cc)
+ADD_LIBRARY(artos SHARED ${SOURCES} ${SOURCES_CAFFE} libartos.cc)
 SET_TARGET_PROPERTIES(artos PROPERTIES VERSION ${BUILD_VERSION} SOVERSION ${API_VERSION})
 
 # Link sub-libraries

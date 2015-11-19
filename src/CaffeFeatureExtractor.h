@@ -63,7 +63,7 @@ public:
     /**
     * @return Human-readable name of this feature extractor.
     */
-    virtual const char * name() const override { "CNN Features (Caffe)" };
+    virtual const char * name() const override { "CNN Features (Caffe)"; };
 
     /**
     * @return Returns the number of features this feature extractor extracts from each cell.
@@ -146,7 +146,7 @@ public:
 
 protected:
 
-    std::shared_ptr< Caffe::Net<float> > m_net; /**< The network. */
+    std::shared_ptr< caffe::Net<float> > m_net; /**< The network. */
     cv::Scalar m_mean; /**< Image mean. */
     int m_lastLayer; /**< Index of the last convolutional layer in the network before the fully connected network. */
     int m_numChannels; /**< Number of input channels of the network. */
@@ -180,7 +180,7 @@ protected:
     /**
     * Wraps a cv::Mat object around each channel of the input layer and adds those wrappers to @p input_channels.
     */
-    void wrapInputLayers(std::vector<cv::Mat> & input_channels);
+    void wrapInputLayers(std::vector<cv::Mat> & input_channels) const;
     
     /**
     * Preprocesses a given image and stores the result in given channels of the input layer.
@@ -190,13 +190,13 @@ protected:
     * @param[out] input_channels Vector of cv::Mat objects which will retrieve the data of each channel
     * of the preprocessed image.
     */
-    void preprocess(const JPEGImage & img, std::vector<cv::Mat> & input_channels);
+    void preprocess(const JPEGImage & img, std::vector<cv::Mat> & input_channels) const;
     
     /**
     * Cache of networks which have already been loaded to be used by different feature extractor instances.
     * Their key is a pair of the protobuf filename and the weights filename.
     */
-    static std::map< std::pair<std::string, std::string>, std::shared_ptr< Caffe::Net<float> > > netPool;
+    static std::map< std::pair<std::string, std::string>, std::shared_ptr< caffe::Net<float> > > netPool;
 
 };
 

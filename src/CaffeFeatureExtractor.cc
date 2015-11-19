@@ -5,16 +5,17 @@
 #include <sstream>
 #include <iostream>
 using namespace ARTOS;
-using namespace Caffe;
+using namespace caffe;
 using namespace std;
 
 
-map< pair<string, string>, shared_ptr< Net<float> > > CaffeFeatureExtractor::netPool;
+std::map< std::pair<std::string, std::string>, std::shared_ptr< caffe::Net<float> > > CaffeFeatureExtractor::netPool;
 
 
 CaffeFeatureExtractor::CaffeFeatureExtractor() : m_net(nullptr), m_mean(0)
 {
     Caffe::set_mode(Caffe::CPU);
+    ::google::InitGoogleLogging("CaffeFeatureExtractor");
     this->m_stringParams["netFile"] = "";
     this->m_stringParams["weightsFile"] = "";
     this->m_stringParams["meanFile"] = "";
@@ -41,11 +42,11 @@ int CaffeFeatureExtractor::numFeatures() const
     if (!this->m_net)
         throw UseBeforeSetupException("netFile and weightsFile have to be set before CaffeFeatureExtractor may be used.");
     
-    return this->m_net->blobs()[this->m_layerIndex]->channels();
+    return this->m_net->blob_by_name(this->m_net->layer_names()[this->m_layerIndex])->channels();
 }
 
 
-int CaffeFeatureExtractor::cellSize() const
+Size CaffeFeatureExtractor::cellSize() const
 {
     if (!this->m_net)
         throw UseBeforeSetupException("netFile and weightsFile have to be set before CaffeFeatureExtractor may be used.");
@@ -54,7 +55,7 @@ int CaffeFeatureExtractor::cellSize() const
 }
 
 
-int CaffeFeatureExtractor::borderSize() const
+Size CaffeFeatureExtractor::borderSize() const
 {
     if (!this->m_net)
         throw UseBeforeSetupException("netFile and weightsFile have to be set before CaffeFeatureExtractor may be used.");
@@ -99,10 +100,13 @@ void CaffeFeatureExtractor::extract(const JPEGImage & img, FeatureMatrix & feat)
     #pragma omp critical
     {
     Blob<float> * input_layer = this->m_net->input_blobs()[0];
-    input_layer->Reshape(1, this->m_numChannels, img.height(), img.width());
-    // Forward dimension change to all convolutional layers
-    for (int i = 0; i <= this->m_lastLayer; i++)
-        this->m_net->layers()[i]->Reshape(this->m_net->bottom_vecs()[i], this->m_net->top_vecs()[i]);
+    if (input_layer->num() != 1 || input_layer->height() != img.height() || input_layer->width() != img.width())
+    {
+        input_layer->Reshape(1, this->m_numChannels, img.height(), img.width());
+        // Forward dimension change to all convolutional layers
+        for (int i = 0; i <= this->m_lastLayer; i++)
+            this->m_net->layers()[i]->Reshape(this->m_net->bottom_vecs()[i], this->m_net->top_vecs()[i]);
+    }
 
     // Create cv::Mat wrapper around input layer
     vector<cv::Mat> input_channels;
@@ -115,7 +119,7 @@ void CaffeFeatureExtractor::extract(const JPEGImage & img, FeatureMatrix & feat)
     this->m_net->ForwardTo(this->m_layerIndex);
 
     // Extract features from the given layer
-    const shared_ptr< Blob<float> > feature_layer = this->m_net->blobs()[this->m_layerIndex];
+    const boost::shared_ptr< Blob<float> > feature_layer = this->m_net->blob_by_name(this->m_net->layer_names()[this->m_layerIndex]);
     int w = feature_layer->width(), h = feature_layer->height();
     feat.resize(h, w, feature_layer->channels());
     const float * feature_data = feature_layer->cpu_data();
@@ -130,28 +134,31 @@ void CaffeFeatureExtractor::extract(const JPEGImage & img, FeatureMatrix & feat)
 }
 
 
-void CaffeFeatureExtractor::wrapInputLayers(vector<cv::Mat> & input_channels)
+void CaffeFeatureExtractor::wrapInputLayers(vector<cv::Mat> & input_channels) const
 {
-    Blob<float> * input_layer = this->net_->input_blobs()[0];
+    Blob<float> * input_layer = this->m_net->input_blobs()[0];
     int width = input_layer->width(), height = input_layer->height();
     float * input_data = input_layer->mutable_cpu_data();
     for (int i = 0; i < input_layer->channels(); ++i)
     {
-        cv::Mat channel(height, width, CV_32FC1, input_data);
-        input_channels.push_back(channel);
+        input_channels.push_back(cv::Mat(height, width, CV_32FC1, input_data));
         input_data += width * height;
     }
 }
 
 
-void CaffeFeatureExtractor::preprocess(const JPEGImage & img, vector<cv::Mat> & input_channels)
+void CaffeFeatureExtractor::preprocess(const JPEGImage & img, vector<cv::Mat> & input_channels) const
 {
     // Image should never have a depth differing from 3 or 1
     if (img.depth() != 3 && img.depth() != 1)
         throw std::invalid_argument("Images must either be RGB or grayscale for CNN feature extraction.");
     
     // Convert the input image to the input image format of the network
-    const cv::Mat cvImg(img.height(), img.width(), (img.depth() == 3) ? CV_8UC3 : CV_8UC1, img.bits());
+    const cv::Mat cvImg(
+        img.height(), img.width(),
+        (img.depth() == 3) ? CV_8UC3 : CV_8UC1,
+        reinterpret_cast<void*>(const_cast<uint8_t*>(img.bits()))
+    );
     cv::Mat sample;
     if (cvImg.channels() == 3 && this->m_numChannels == 1)
         cv::cvtColor(cvImg, sample, CV_RGB2GRAY);
@@ -197,7 +204,7 @@ void CaffeFeatureExtractor::loadNetwork()
                 if (!ReadProtoFromTextFile(netFile, &param))
                     throw std::invalid_argument("Could not load network structure from " + netFile);
                 UpgradeNetAsNeeded(netFile, &param);
-                param.mutable_state()->set_phase(phase);
+                param.mutable_state()->set_phase(TEST);
                 this->m_net.reset(new Net<float>(param));
             }
             
@@ -206,6 +213,7 @@ void CaffeFeatureExtractor::loadNetwork()
                 NetParameter param;
                 if (!ReadProtoFromBinaryFile(weightsFile, &param))
                     throw std::invalid_argument("Could not load pre-trained network weights from " + weightsFile);
+                UpgradeNetAsNeeded(weightsFile, &param);
                 this->m_net->CopyTrainedLayersFrom(param);
             }
             
@@ -274,11 +282,14 @@ void CaffeFeatureExtractor::loadLayerInfo()
 {
     if (!this->m_net)
         return;
-    
+   
+    // Find layer 
+    string layerName;
     if (this->m_stringParams["layerName"].empty())
     {
         this->m_stringParams["layerName"] = this->m_net->layer_names()[this->m_lastLayer];
         this->m_layerIndex = this->m_lastLayer;
+        layerName = this->m_net->layer_names()[this->m_layerIndex];
     }
     else
     {
@@ -291,12 +302,80 @@ void CaffeFeatureExtractor::loadLayerInfo()
     }
     
     // Determine cell size and border size
-    const shared_ptr< Blob<float> > layer = this->m_net->blobs()[this->m_layerIndex];
-    Blob<float> * inputLayer = this->m_net->input_blobs()[0];
-    this->m_cellSize = Size(inputLayer->width() / layer->width(), inputLayer->height() / layer->height());
-    this->m_borderSize = (Size(inputLayer->width(), inputLayer->height()) - this->m_cellSize) / 2;
-    
-    cerr << "Layer: " << this->m_net->layer_names()[this->m_layerIndex] << ", features: " << layer->channels()
-         << ", cellSize: " << this->m_cellSize.width << "x" << this->m_cellSize.height
-         << ", borderSize: " << this->m_borderSize.width << "x" << this->m_borderSize.height << endl;
+    this->m_cellSize = Size(1, 1);
+    this->m_borderSize = Size(0, 0);
+    for (int l = 0; l <= this->m_layerIndex; l++)
+    {
+        const LayerParameter & layerParam = this->m_net->layers()[l]->layer_param();
+        if (layerParam.has_convolution_param())
+        {
+            const ConvolutionParameter cp = layerParam.convolution_param();
+            
+            if (cp.stride_size() > 0)
+                this->m_cellSize *= Size(cp.stride(0));
+            else
+            {
+                if (cp.has_stride_w())
+                    this->m_cellSize.width *= cp.stride_w();
+                if (cp.has_stride_h())
+                    this->m_cellSize.height *= cp.stride_h();
+            }
+            
+            if (cp.kernel_size_size() > 0)
+                this->m_borderSize += Size(cp.kernel_size(0)) / 2;
+            else
+            {
+                if (cp.has_kernel_w())
+                    this->m_borderSize.width += cp.kernel_w() / 2;
+                if (cp.has_kernel_h())
+                    this->m_borderSize.height += cp.kernel_h() / 2;
+            }
+            
+            if (cp.pad_size() > 0)
+                this->m_borderSize -= Size(cp.pad(0));
+            else
+            {
+                if (cp.has_pad_w())
+                    this->m_borderSize.width -= cp.pad_w();
+                if (cp.has_pad_h())
+                    this->m_borderSize.height -= cp.pad_h();
+            }
+            
+        }
+        else if (layerParam.has_pooling_param())
+        {
+            const PoolingParameter pp = layerParam.pooling_param();
+            
+            if (pp.has_stride())
+                this->m_cellSize *= Size(pp.stride());
+            else
+            {
+                if (pp.has_stride_w())
+                    this->m_cellSize.width *= pp.stride_w();
+                if (pp.has_stride_h())
+                    this->m_cellSize.height *= pp.stride_h();
+            }
+            
+            if (pp.has_kernel_size())
+                this->m_borderSize += Size(pp.kernel_size()) / 2;
+            else
+            {
+                if (pp.has_kernel_w())
+                    this->m_borderSize.width += pp.kernel_w() / 2;
+                if (pp.has_kernel_h())
+                    this->m_borderSize.height += pp.kernel_h() / 2;
+            }
+            
+            if (pp.has_pad())
+                this->m_borderSize -= Size(pp.pad());
+            else
+            {
+                if (pp.has_pad_w())
+                    this->m_borderSize.width -= pp.pad_w();
+                if (pp.has_pad_h())
+                    this->m_borderSize.height -= pp.pad_h();
+            }
+            
+        }
+    }
 }
