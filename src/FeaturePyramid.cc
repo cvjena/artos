@@ -144,7 +144,7 @@ void FeaturePyramid::buildLevelsPatchworked(const JPEGImage & image)
     const Size borderSize = this->m_featureExtractor->borderSize();
     
     vector<PatchworkRectangle> rectangles;
-    vector<bool> isPadded(this->m_scales.size(), false);
+    vector<Size> paddingPerLevel(this->m_scales.size(), Size(0,0));
     rectangles.reserve(this->m_scales.size());
     Size scaledSize;
     for (i = 0; i < this->m_scales.size(); i++)
@@ -153,8 +153,21 @@ void FeaturePyramid::buildLevelsPatchworked(const JPEGImage & image)
         if (scaledSize.width + padding.width < maxSize.width && scaledSize.height + padding.height < maxSize.height)
         {
             // Add padding at the right/bottom
-            isPadded[i] = true;
-            scaledSize += padding;
+            paddingPerLevel[i] = padding;
+            
+            // Align with cell size
+            Size overhang = scaledSize + paddingPerLevel[i];
+            overhang = Size(
+                overhang.width % this->m_featureExtractor->cellSize().width,
+                overhang.height % this->m_featureExtractor->cellSize().height
+            );
+            if (overhang.width > 0)
+                paddingPerLevel[i].width += this->m_featureExtractor->cellSize().width - overhang.width;
+            if (overhang.height > 0)
+                paddingPerLevel[i].height += this->m_featureExtractor->cellSize().height - overhang.height;
+            paddingPerLevel[i] = min(paddingPerLevel[i], maxSize - scaledSize);
+            
+            scaledSize += paddingPerLevel[i];
         }
         rectangles.push_back(PatchworkRectangle(scaledSize.width, scaledSize.height));
     }
@@ -167,16 +180,20 @@ void FeaturePyramid::buildLevelsPatchworked(const JPEGImage & image)
     vector<JPEGImage> planes;
     planes.reserve(numPlanes);
     for (i = 0; i < numPlanes; i++)
+    {
         planes.push_back(JPEGImage(maxSize.width, maxSize.height, image.depth()));
+        planes.back().toMatrix().setZero();
+    }
     
-    double scale;
     #pragma omp parallel for private(i)
     for (i = 0; i < rectangles.size(); i++)
     {
         PatchworkRectangle & rect = rectangles[i];
-        scale = this->m_scales[i];
-        FeatureMatrix_<uint8_t> scaled = (scale != 1.0) ? image.resize(image.width() * scale + 0.5, image.height() * scale + 0.5).toMatrix() : image.toMatrix();
-        planes[rect.plane()].toMatrix().data().block(rect.y(), rect.x() * scaled.channels(), scaled.rows(), scaled.cols() * scaled.channels()) = scaled.data();
+        assert(rect.plane() >= 0 && rect.plane() < planes.size());
+        assert(rect.x() % this->m_featureExtractor->cellSize().width == 0 && rect.y() % this->m_featureExtractor->cellSize().height == 0);
+        double scale = this->m_scales[i];
+        JPEGImage scaled = (scale != 1.0) ? image.resize(image.width() * scale + 0.5, image.height() * scale + 0.5) : image;
+        planes[rect.plane()].toMatrix().data().block(rect.y(), rect.x() * scaled.depth(), scaled.height(), scaled.width() * scaled.depth()) = scaled.toMatrix().data();
     }
     
     // Run feature extractor over planes
@@ -190,16 +207,17 @@ void FeaturePyramid::buildLevelsPatchworked(const JPEGImage & image)
     this->m_levels.resize(this->m_scales.size());
     for (i = 0; i < rectangles.size(); i++)
     {
-        this->m_levels[i].resize(
-            rectangles[i].height() - 2 * borderSize.height - ((isPadded[i]) ? padding.height : 0),
-            rectangles[i].width() - 2 * borderSize.width - ((isPadded[i]) ? padding.width : 0),
-            features[0].channels()
-        );
-        this->m_levels[i].data() = features[rectangles[i].plane()].data().block(
-            rectangles[i].y(),
-            rectangles[i].x() * this->m_levels[i].channels(),
-            this->m_levels[i].rows(),
-            this->m_levels[i].cols() * this->m_levels[i].channels()
+        PatchworkRectangle & rect = rectangles[i];
+        FeatureMatrix & level = this->m_levels[i];
+        Size levelSize = this->m_featureExtractor->pixelsToCells(Size(rect.width(), rect.height()) - paddingPerLevel[i]);
+        Size levelCoords = this->m_featureExtractor->pixelCoordsToCells(Size(rect.x(), rect.y()));
+        
+        level.resize(levelSize.height, levelSize.width, features[0].channels());
+        level.data() = features[rect.plane()].data().block(
+            levelCoords.height,
+            levelCoords.width * level.channels(),
+            level.rows(),
+            level.cols() * level.channels()
         );
     }
 }
