@@ -4,6 +4,8 @@ Provides the ModelLearner class on the one hand, which can be used to learn WHO 
 from ImageNet, from file or from PIL.Image.Image objects.
 On the other hand, this module contains the ModelManager and Model classes, which can be used to list,
 modify and visualize the learned models.
+Methods for learning of background statistics and modifying the default feature extractor used or learning
+can be found here as well.
 """
 
 
@@ -701,3 +703,128 @@ class ModelManager(object):
         if not os.path.isabs(model):
             model = os.path.join(os.path.dirname(self.filename), model)
         return Model(model) if os.path.isfile(model) else None
+
+
+
+class FeatureExtractor(object):
+    """Represents a feature extractor used by libartos."""
+    
+    def __init__(self, type = None):
+        """Initializes a feature extractor.
+        
+        type - The type specifier of the feature extractor. If set to `None`, the new object will represent the
+               default feature extractor.
+        """
+        
+        if not type:
+            info = artos_wrapper.FeatureExtractorInfo()
+            libartos.feature_extractor_get_info(info)
+            self._type = utils.bytes2str(info.type)
+            self._name = utils.bytes2str(info.name)
+        else:
+            featureExtractors = self.__class__.listFeatureExtractors()
+            if type not in featureExtractors:
+                raise artos_wrapper.LibARTOSException(artos_wrapper.SETTINGS_RES_UNKNOWN_FEATURE_EXTRACTOR)
+            self._type = type
+            self._name = featureExtractors[type]
+        self._params = {}
+    
+    
+    @property
+    def type(self):
+        """The type specifier of this feature extractor."""
+        return self._type
+    
+    
+    @property
+    def name(self):
+        """The human-readable name of this feature extractor."""
+        return self._name
+    
+    
+    @property
+    def isDefault(self):
+        """True if this feature extractor is the current default feature extractor."""
+        return self.type == self.__class__().type
+    
+    
+    def setAsDefault(self):
+        """Install this feature extractor as the default feature extractor used by libartos."""
+        
+        libartos.change_feature_extractor(utils.str2bytes(self.type))
+        for k, v in self._params.items():
+            self.setParam(k, v)
+    
+    
+    def getParams(self):
+        """Retrieves all parameters supported by this feature extractor along with their values.
+        
+        Returns a dictionary whose keys are parameter names and whose values are the values of the
+        respective parameter.
+        If this feature extractor is the current default feature extractor, its current values will
+        be specified, otherwise the default values are used.
+        """
+        
+        if len(self._params) == 0:
+        
+            getParams = (lambda buf, bufSize: libartos.feature_extractor_list_params(buf, bufSize)) \
+                        if self.isDefault \
+                        else (lambda buf, bufSize: libartos.list_feature_extractor_params(utils.str2bytes(self.type), buf, bufSize))
+            numParams = ctypes.c_uint()
+            getParams(None, numParams)
+            paramBuf = (artos_wrapper.FeatureExtractorParameter * numParams.value)()
+            getParams(paramBuf, numParams)
+            
+            for i in range(numParams.value):
+                val = None
+                try:
+                    if paramBuf[i].type == artos_wrapper.PARAM_TYPE_INT:
+                        val = paramBuf[i].val.intVal
+                    elif paramBuf[i].type == artos_wrapper.PARAM_TYPE_SCALAR:
+                        val = paramBuf[i].val.scalarVal
+                    elif paramBuf[i].type == artos_wrapper.PARAM_TYPE_STRING:
+                        val = utils.bytes2str(paramBuf[i].val.stringVal)
+                except:
+                    pass
+                self._params[utils.bytes2str(paramBuf[i].name)] = val
+        
+        return self._params
+    
+    
+    def setParam(self, name, value):
+        """Changes to value of a parameter of this feature extractor.
+        
+        name - The name of the parameter to be set.
+        value - The value of the parameter to be set. The type if the parameter will be inferred
+                from the type of the value which may be int, float or str.
+        """
+        
+        if value is None:
+            return
+        
+        if self.isDefault:
+            if isinstance(value, int):
+                libartos.feature_extractor_set_int_param(utils.str2bytes(name), value)
+            elif isinstance(value, float):
+                libartos.feature_extractor_set_scalar_param(utils.str2bytes(name), value)
+            elif utils.is_str(value):
+                libartos.feature_extractor_set_string_param(utils.str2bytes(name), utils.str2bytes(value))
+        
+        self.getParams()
+        self._params[name] = value
+    
+    
+    @staticmethod
+    def listFeatureExtractors():
+        """Lists all available feature extraction methods.
+        
+        Returns: A dictionary with the type specifiers of the feature extractors as keys and their
+                 human-readable names as values.
+        """
+        
+        numFE = ctypes.c_uint()
+        libartos.list_feature_extractors(None, numFE)
+        info = (artos_wrapper.FeatureExtractorInfo * numFE.value)()
+        libartos.list_feature_extractors(info, numFE)
+        return dict((utils.bytes2str(info[i].type), utils.bytes2str(info[i].name)) for i in range(numFE.value))
+
