@@ -126,11 +126,18 @@ public:
     virtual bool supportsVariableCellSize() const { return false; };
     
     /**
-    * @return Returns true if it is considered reasonable to process feature extraction of multiple
+    * Specifies if it is considered reasonable to process feature extraction of multiple
     * scales of an image by patchworking them together, so that multiple scales are processed at
     * once on a single plane, which will have the size of the largest scale.
     * The patchworkPadding() reported by the feature extractor will be used as padding between images
     * on the same plane.
+    *
+    * There are only very few cases there patchwork feature extraction is actually beneficial.
+    * It should not be used careless, since the black padding between the images on a patchwork plane
+    * may lead to artifacts.
+    *
+    * @return Returns true if this feature extractor should be applied to patchworks for processing
+    * of multiple scales of an image.
     */
     virtual bool patchworkProcessing() const { return false; };
     
@@ -138,7 +145,7 @@ public:
     * Specifies the amount of padding which should be added between images on the same plane when
     * features are extracted using patchworking (see patchworkProcessing()).
     *
-    * @return Returns the amount of padding to add between two images.
+    * @return Returns the amount of padding in pixels to add between two images.
     */
     virtual Size patchworkPadding() const { return Size(); };
 
@@ -163,7 +170,7 @@ public:
     */
     virtual Size pixelsToCells(const Size & pixels) const
     {
-        return (pixels - this->borderSize()) / (this->cellSize() * 2);
+        return (pixels - this->borderSize() * 2) / this->cellSize();
     };
 
     /**

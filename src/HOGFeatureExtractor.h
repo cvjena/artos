@@ -75,6 +75,18 @@ public:
     virtual bool supportsVariableCellSize() const override { return true; };
     
     /**
+    * Converts a width and height given in pixels to cells.
+    *
+    * @param[in] pixels The size given in pixels.
+    *
+    * @return Returns the corresponding size in cells.
+    */
+    virtual Size pixelsToCells(const Size & pixels) const override
+    {
+        return (pixels - this->borderSize() * 2 + this->cellSize() / 2) / this->cellSize();
+    };
+    
+    /**
     * Computes HOG features for a given image.
     *
     * @param[in] img The image to compute HOG features for.

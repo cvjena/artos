@@ -131,11 +131,15 @@ public:
     
     /**
     * @return Returns a FeatureMatrix object wrapping the data of this image.
+    * @note Since the returned FeatureMatrix wraps the data of this image, using it after
+    *       the destruction of this JPEGImage object will result in a segmentation fault.
     */
     FeatureMatrix_<uint8_t> toMatrix();
     
     /**
     * @return Returns a constant FeatureMatrix object wrapping the data of this image.
+    * @note Since the returned FeatureMatrix wraps the data of this image, using it after
+    *       the destruction of this JPEGImage object will result in a segmentation fault.
     */
     const FeatureMatrix_<uint8_t> toMatrix() const;
     
