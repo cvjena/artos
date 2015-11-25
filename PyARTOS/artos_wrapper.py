@@ -328,14 +328,14 @@ class _LibARTOS(object):
     
     @staticmethod
     def _errcheck_create_learner(result, func, args):
-        if (result < 0):
+        if (result == 0):
             raise LibARTOSException(LEARN_RES_INVALID_BG_FILE)
         return args
     
     
     @staticmethod
     def _errcheck_num_fe(result, func, args):
-        if (result == 0):
+        if (result < 0):
             raise LibARTOSException(RES_INVALID_HANDLE)
         return args
 
