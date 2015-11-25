@@ -256,6 +256,13 @@ public:
     * Number of pixels per cell in each dimension used for training this background statistics.
     */
     Size cellSize;
+    
+    /**
+    * Indicates if enough data for learning all offsets was available during learnCovariance().
+    * If the product of cellSize and maxOffset is larger than the maximum size of the images available for
+    * learning, some offsets may be missing.
+    */
+    bool learnedAllOffsets;
 
 
 protected:

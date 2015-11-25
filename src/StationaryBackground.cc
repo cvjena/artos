@@ -385,12 +385,16 @@ void StationaryBackground::learnCovariance(ImageIterator & imgIt, const unsigned
         progressCB(numImages, numImages, cbData);
     
     // Normalize and store computed autocorrelation function
+    this->learnedAllOffsets = true;
     this->cov.resize(cov.size());
     for (o = 0; o < cov.size(); o++)
         if (numSamples(o) > 0)
             this->cov(o) = (cov(o) / static_cast<double>(numSamples(o))).cast<float>();
         else
+        {
             this->cov(o) = CovMatrix::Zero(numFeat, numFeat);
+            this->learnedAllOffsets = false;
+        }
     
     // Save FFTW wisdom
     wisdom_file = fopen("wisdom.fftw", "w");
@@ -493,12 +497,16 @@ void StationaryBackground::learnCovariance_accurate(ImageIterator & imgIt, const
         progressCB(numImages, numImages, cbData);
     
     // Normalize and store computed autocorrelation function
+    this->learnedAllOffsets = true;
     this->cov.resize(cov.size());
     for (o = 0; o < cov.size(); o++)
         if (numSamples(o) > 0)
             this->cov(o) = (cov(o) / static_cast<double>(numSamples(o))).cast<float>();
         else
+        {
             this->cov(o) = CovMatrix::Zero(numFeat, numFeat);
+            this->learnedAllOffsets = false;
+        }
 }
 
 void StationaryBackground::makeOffsetArray(const unsigned int maxOffset)
