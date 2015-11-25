@@ -122,7 +122,7 @@ bool ModelLearner::learn_init()
 {
     this->m_normFactors.clear();
     return (ModelLearnerBase::learn_init() && !this->m_bg.empty()
-            && this->m_bg.cellSize.width == this->m_featureExtractor->cellSize().width
+            && this->m_bg.cellSize == this->m_featureExtractor->cellSize()
             && this->m_bg.getNumFeatures() <= this->m_featureExtractor->numFeatures());
 }
 

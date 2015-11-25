@@ -167,6 +167,9 @@ public:
     */
     virtual FeatureMatrix_ & operator=(const FeatureMatrix_ & other)
     {
+        if (this == &other)
+            return *this;
+        
         this->resize(other.m_rows, other.m_cols, other.m_channels);
         if (this->numEl() > 0)
             std::memcpy(reinterpret_cast<void*>(this->m_data_p), reinterpret_cast<const void*>(other.m_data_p), sizeof(Scalar) * this->numEl());
@@ -180,6 +183,9 @@ public:
     */
     virtual FeatureMatrix_ & operator=(FeatureMatrix_ && other)
     {
+        if (this == &other)
+            return *this;
+        
         if (this->m_allocated)
             delete[] this->m_data_p;
         

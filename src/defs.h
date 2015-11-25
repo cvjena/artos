@@ -44,14 +44,14 @@ struct Size
     Size operator/(int s) const { return Size(this->width / s, this->height / s); };
     Size operator/(const Size & s) const { return Size(this->width / s.width, this->height / s.height); };
     
-    Size & operator+=(int s) { this->width += s; this->height += s; };
-    Size & operator+=(const Size & s) { this->width += s.width; this->height += s.height; };
-    Size & operator-=(int s) { this->width -= s; this->height -= s; };
-    Size & operator-=(const Size & s) { this->width -= s.width; this->height -= s.height; };
-    Size & operator*=(int s) { this->width *= s; this->height *= s; };
-    Size & operator*=(const Size & s) { this->width *= s.width; this->height *= s.height; };
-    Size & operator/=(int s) { this->width /= s; this->height /= s; };
-    Size & operator/=(const Size & s) { this->width /= s.width; this->height /= s.height; };
+    Size & operator+=(int s) { this->width += s; this->height += s; return *this; };
+    Size & operator+=(const Size & s) { this->width += s.width; this->height += s.height; return *this; };
+    Size & operator-=(int s) { this->width -= s; this->height -= s; return *this; };
+    Size & operator-=(const Size & s) { this->width -= s.width; this->height -= s.height; return *this; };
+    Size & operator*=(int s) { this->width *= s; this->height *= s; return *this; };
+    Size & operator*=(const Size & s) { this->width *= s.width; this->height *= s.height; return *this; };
+    Size & operator/=(int s) { this->width /= s; this->height /= s; return *this; };
+    Size & operator/=(const Size & s) { this->width /= s.width; this->height /= s.height; return *this; };
     
     bool operator==(const Size & s) const { return (this->width == s.width && this->height == s.height); };
     bool operator!=(const Size & s) const { return !(*this == s); };
