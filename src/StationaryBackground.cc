@@ -390,7 +390,7 @@ void StationaryBackground::learnCovariance(ImageIterator & imgIt, const unsigned
         if (numSamples(o) > 0)
             this->cov(o) = (cov(o) / static_cast<double>(numSamples(o))).cast<float>();
         else
-            this->cov(o).setZero();
+            this->cov(o) = CovMatrix::Zero(numFeat, numFeat);
     
     // Save FFTW wisdom
     wisdom_file = fopen("wisdom.fftw", "w");
@@ -497,6 +497,8 @@ void StationaryBackground::learnCovariance_accurate(ImageIterator & imgIt, const
     for (o = 0; o < cov.size(); o++)
         if (numSamples(o) > 0)
             this->cov(o) = (cov(o) / static_cast<double>(numSamples(o))).cast<float>();
+        else
+            this->cov(o) = CovMatrix::Zero(numFeat, numFeat);
 }
 
 void StationaryBackground::makeOffsetArray(const unsigned int maxOffset)
