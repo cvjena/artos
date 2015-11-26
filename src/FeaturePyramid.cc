@@ -102,7 +102,8 @@ void FeaturePyramid::buildLevels(const JPEGImage & image)
     this->m_levels.resize(this->m_scales.size());
     
     int i;
-    #pragma omp parallel for private(i)
+    bool threadSafe = this->m_featureExtractor->supportsMultiThread();
+    #pragma omp parallel for private(i) if(threadSafe)
     for (i = 0; i < this->m_scales.size(); ++i)
     {
         double scale = this->m_scales[i];
@@ -197,8 +198,9 @@ void FeaturePyramid::buildLevelsPatchworked(const JPEGImage & image)
     }
     
     // Run feature extractor over planes
+    bool threadSafe = this->m_featureExtractor->supportsMultiThread();
     vector<FeatureMatrix> features(numPlanes);
-    #pragma omp parallel for private(i)
+    #pragma omp parallel for private(i) if(threadSafe)
     for (i = 0; i < numPlanes; i++)
         this->m_featureExtractor->extract(planes[i], features[i]);
     planes.clear();

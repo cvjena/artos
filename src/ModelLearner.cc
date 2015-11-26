@@ -134,6 +134,7 @@ void ModelLearner::m_learn(Eigen::VectorXi & aspectClusterAssignment, vector<int
     const unsigned int numFeatures = this->m_featureExtractor->numFeatures();
     const unsigned int numAspectClusters = samplesPerAspectCluster.size();
     const Size bs = this->m_featureExtractor->borderSize();
+    bool threadSafeFeatureExtraction = this->m_featureExtractor->supportsMultiThread();
     vector< pair<unsigned int, unsigned int> > sampleIndices;
     sampleIndices.reserve(this->m_samples.size());
     vector<Sample>::iterator sample;
@@ -284,7 +285,7 @@ void ModelLearner::m_learn(Eigen::VectorXi & aspectClusterAssignment, vector<int
             // Extract HOG features of each sample, centre, whiten and store them
             ScalarMatrix hogFeatures(samplesPerAspectCluster[c], posVector.size());
             ScalarMatrix whoFeatures(samplesPerAspectCluster[c], posVector.size());
-            #pragma omp parallel for private(i,s,t,bbox,whoStorage,hog)
+            #pragma omp parallel for private(i,s,t,bbox,whoStorage,hog) if(threadSafeFeatureExtraction)
             for (i = 0; i < this->m_samples.size(); i++)
             {
                 s = sampleIndices[i].first;
