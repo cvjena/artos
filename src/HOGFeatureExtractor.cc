@@ -70,7 +70,7 @@ void HOGFeatureExtractor::setParam(const std::string & paramName, int32_t val)
 Size HOGFeatureExtractor::computeOptimalModelSize(const vector<Size> & sizes, const Size & maxSize) const
 {
     // Some shortcuts
-    Size ms = max(maxSize, this->pixelsToCells(this->maxImageSize()));
+    Size ms = min(maxSize, this->pixelsToCells(this->maxImageSize()));
     int csx = this->cellSize().width, csy = this->cellSize().height,
         msx = ms.width, msy = ms.height;
     

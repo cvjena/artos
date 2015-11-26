@@ -238,7 +238,7 @@ ScalarMatrix StationaryBackground::computeFlattenedCovariance(const int rows, co
                     flat(p, q) = (j < ourFeatures && l < ourFeatures) ? cov(i, k)(j, l) : 0.0f;
     
     // Make sure the returned matrix is close to symmetric
-    assert((flat - flat.transpose()).cwiseAbs().sum() < 1e-5);
+    assert((flat - flat.transpose()).cwiseAbs().maxCoeff() < 1e-5);
     return (flat + flat.transpose()) / 2;
 }
 
