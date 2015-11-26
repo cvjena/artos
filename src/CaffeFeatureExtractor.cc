@@ -103,8 +103,6 @@ void CaffeFeatureExtractor::extract(const JPEGImage & img, FeatureMatrix & feat)
     if (!this->m_net)
         throw UseBeforeSetupException("netFile and weightsFile have to be set before CaffeFeatureExtractor may be used.");
     
-    #pragma omp critical
-    {
     Blob<float> * input_layer = this->m_net->input_blobs()[0];
     if (input_layer->num() != 1 || input_layer->height() != img.height() || input_layer->width() != img.width())
     {
@@ -135,7 +133,6 @@ void CaffeFeatureExtractor::extract(const JPEGImage & img, FeatureMatrix & feat)
             feature_data, h, w
         ).cast<FeatureScalar>();
         feature_data += w * h;
-    }
     }
 }
 

@@ -93,6 +93,11 @@ public:
     virtual Size maxImageSize() const override { return Size(this->getIntParam("maxImgSize")); };
     
     /**
+    * @return Returns true if it is safe to call extract() in parallel from multiple threads.
+    */
+    virtual bool supportsMultiThread() const { return false; };
+    
+    /**
     * @return Returns true if it is considered reasonable to process feature extraction of multiple
     * scales of an image by patchworking them together, so that multiple scales are processed at
     * once on a single plane, which will have the size of the largest scale.
