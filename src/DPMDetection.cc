@@ -181,6 +181,7 @@ int DPMDetection::detect ( const JPEGImage & image, vector<Detection> & detectio
         return ARTOS_DETECT_RES_NO_MODELS;
 
     int errcode;
+    unsigned int minLevelSize = min(5, this->minModelSize().min());
     
     // Separate detection for every unique feature extractor
     for (unsigned int feIndex = 0; feIndex < this->featureExtractors.size(); feIndex++)
@@ -190,7 +191,7 @@ int DPMDetection::detect ( const JPEGImage & image, vector<Detection> & detectio
         if (this->verbose)
             start();
 
-        FeaturePyramid pyramid(image, this->featureExtractors[feIndex], this->interval);
+        FeaturePyramid pyramid(image, this->featureExtractors[feIndex], this->interval, minLevelSize);
 
         if (pyramid.empty())
         {
@@ -412,7 +413,7 @@ int DPMDetection::detectMax ( const JPEGImage & image, Detection & detection )
 int DPMDetection::initPatchwork(unsigned int rows, unsigned int cols, unsigned int numFeatures)
 {
     // Initialize the Patchwork class (only when necessary)
-    const Size maxFilterSize = this->maxModelSize();
+    const Size maxFilterSize = this->maxModelSize(); // the Mixture class will add padding according to the filter size
     int w = (rows + maxFilterSize.height + 2 + 15) & ~15;
     int h = (cols + maxFilterSize.width + 2 + 15) & ~15;
     if ( w > Patchwork::MaxCols() || h > Patchwork::MaxRows() || numFeatures != Patchwork::NumFeatures() )
