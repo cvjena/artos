@@ -198,6 +198,11 @@ protected:
     */
     static std::map< std::pair<std::string, std::string>, std::shared_ptr< caffe::Net<float> > > netPool;
 
+
+private:
+
+    static bool initializedGLog;
+
 };
 
 }

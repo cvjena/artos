@@ -11,11 +11,17 @@ using namespace std;
 
 std::map< std::pair<std::string, std::string>, std::shared_ptr< caffe::Net<float> > > CaffeFeatureExtractor::netPool;
 
+bool CaffeFeatureExtractor::initializedGLog = false;
+
 
 CaffeFeatureExtractor::CaffeFeatureExtractor() : m_net(nullptr), m_mean(0)
 {
     Caffe::set_mode(Caffe::CPU);
-    ::google::InitGoogleLogging("CaffeFeatureExtractor");
+    if (!CaffeFeatureExtractor::initializedGLog)
+    {
+        ::google::InitGoogleLogging("CaffeFeatureExtractor");
+        CaffeFeatureExtractor::initializedGLog = true;
+    }
     this->m_stringParams["netFile"] = "";
     this->m_stringParams["weightsFile"] = "";
     this->m_stringParams["meanFile"] = "";
