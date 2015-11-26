@@ -51,7 +51,7 @@ FeaturePyramid::FeaturePyramid(const JPEGImage & image, const shared_ptr<Feature
     
     // Begin with scales smaller than the size of the original image if the feature extractor requires this
     const Size maxImgSize = this->m_featureExtractor->maxImageSize();
-    const int minScale = interval * max(0, static_cast<int>(max(
+    const int minScale = max(0, static_cast<int>(max(
         (maxImgSize.width > 0) ? ceil(log(2 * image.width() / static_cast<double>(maxImgSize.width)) / log(2.0) * interval) : 0,
         (maxImgSize.height > 0) ? ceil(log(2 * image.height() / static_cast<double>(maxImgSize.height)) / log(2.0) * interval) : 0
     )));

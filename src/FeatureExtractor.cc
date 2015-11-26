@@ -131,8 +131,6 @@ Size FeatureExtractor::computeOptimalModelSize(const vector<Size> & sizes, const
         );
         if (scale > 1)          // larger dimension exceeds maxSize
             area /= scale;      // -> scale it to match maxSize
-        else if (scale < 0.25)  // larger dimension is rather small
-            area *= 4;          // -> double it
     }
     
     // Calculate model size in cells
