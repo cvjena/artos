@@ -128,10 +128,15 @@ Size FeatureExtractor::computeOptimalModelSize(const vector<Size> & sizes, const
     partial_sort(areas.begin(), areas.begin() + areaInd + 1, areas.end());
     int area = areas[areaInd];
     
-    // Ensure that feature areas are neither too big nor too small
+    // Ensure that feature areas are not too small (at least 2 cells in each dimension)
+    float scale = min(area / (aspect * 4.0f), (area * aspect) / 4.0f);
+    if (scale < 1)
+        area /= scale;
+    
+    // Ensure that feature areas are not too big
     if (msx > 0 || msy > 0)
     {
-        float scale = max(
+        scale = max(
             (msx > 0) ? area / (aspect * msx * msx * csx * csx) : 0,
             (msy > 0) ? (area * aspect) / (msy * msy * csy * csy) : 0
         );
