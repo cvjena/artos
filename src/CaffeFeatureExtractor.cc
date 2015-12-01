@@ -257,7 +257,7 @@ void CaffeFeatureExtractor::loadMean()
         /* Convert from BlobProto to Blob<float> */
         Blob<float> mean_blob;
         mean_blob.FromProto(blob_proto);
-        if (this->m_numChannels > 0 && mean_blob.channels() != this->m_numChannels)
+        if (this->m_net && mean_blob.channels() != this->m_numChannels)
             throw std::invalid_argument("Number of channels of mean file doesn't match input layer.");
 
         /* The format of the mean file is planar 32-bit float BGR or grayscale. */
