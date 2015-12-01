@@ -3,7 +3,6 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <algorithm>
 #include <sstream>
-#include <iostream>
 using namespace ARTOS;
 using namespace caffe;
 using namespace std;
@@ -168,7 +167,7 @@ void CaffeFeatureExtractor::preprocess(const JPEGImage & img, vector<cv::Mat> & 
     else if (cvImg.channels() == 1 && this->m_numChannels == 3)
         cv::cvtColor(cvImg, sample, CV_GRAY2BGR);
     else
-        sample = cvImg;
+        cv::cvtColor(cvImg, sample, CV_RGB2BGR);
 
     cv::Mat sample_float;
     if (this->m_numChannels == 3)
