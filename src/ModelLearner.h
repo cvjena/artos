@@ -246,17 +246,19 @@ protected:
     * @return True if some models could be learned, false if learning failed completely.
     *
     * @note Background statistics must have been set and some samples must have been added before calling learn().
+    *
+    * @return Returns ARTOS_RES_OK if learning has been successful or an error code otherwise.
     */
-    virtual void m_learn(Eigen::VectorXi & aspectClusterAssignment, std::vector<int> & samplesPerAspectCluster, std::vector<Size> & cellNumbers,
-                         const unsigned int maxWHOClusters, ProgressCallback progressCB, void * cbData);
+    virtual int m_learn(Eigen::VectorXi & aspectClusterAssignment, std::vector<int> & samplesPerAspectCluster, std::vector<Size> & cellNumbers,
+                        const unsigned int maxWHOClusters, ProgressCallback progressCB, void * cbData);
     
     
     /**
     * Called by learn() before anything is done to initialize the model learner.
     *
-    * @return Returns true if learning may be performed or false if the model learner is not ready.
+    * @return Returns ARTOS_RES_OK if learning may be performed or an error code if the model learner is not ready.
     */
-    virtual bool learn_init();
+    virtual int learn_init();
     
     
     /**

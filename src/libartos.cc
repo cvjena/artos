@@ -191,8 +191,9 @@ int learn_imagenet(const char * repo_directory, const char * synset_id, const ch
     if (learner.addPositiveSamplesFromSynset(synset) == 0)
         return ARTOS_IMGREPO_RES_EXTRACTION_FAILED;
     progParams.overall_step++;
-    if (!learner.learn(max_aspect_clusters, max_who_clusters, (progress_cb != NULL) ? &populate_progress : NULL, reinterpret_cast<void*>(&progParams)))
-        return ARTOS_LEARN_RES_FAILED;
+    int res = learner.learn(max_aspect_clusters, max_who_clusters, (progress_cb != NULL) ? &populate_progress : NULL, reinterpret_cast<void*>(&progParams));
+    if (res != ARTOS_RES_OK)
+        return res;
     if (th_opt_mode != ARTOS_THOPT_NONE)
     {
         progParams.overall_step++;
@@ -249,8 +250,9 @@ int learn_files_jpeg(const char ** imagefiles, const unsigned int num_imagefiles
     progParams.overall_step++;
     
     // Learn model
-    if (!learner.learn(max_aspect_clusters, max_who_clusters, (progress_cb != NULL) ? &populate_progress : NULL, reinterpret_cast<void*>(&progParams)))
-        return ARTOS_LEARN_RES_FAILED;
+    int res = learner.learn(max_aspect_clusters, max_who_clusters, (progress_cb != NULL) ? &populate_progress : NULL, reinterpret_cast<void*>(&progParams));
+    if (res != ARTOS_RES_OK)
+        return res;
     if (th_opt_mode != ARTOS_THOPT_NONE)
     {
         progParams.overall_step++;
@@ -339,7 +341,7 @@ int learner_run(const unsigned int learner, const unsigned int max_aspect_cluste
         return ARTOS_LEARN_RES_NO_SAMPLES;
     ProgressCallback progressCB = (progress_cb != NULL) ? &progress_proxy : NULL;
     void * cbData = (progress_cb != NULL) ? reinterpret_cast<void*>(progress_cb) : NULL;
-    return (l->learn(max_aspect_clusters, max_who_clusters, progressCB, cbData)) ? ARTOS_RES_OK : ARTOS_LEARN_RES_FAILED;
+    return l->learn(max_aspect_clusters, max_who_clusters, progressCB, cbData);
 }
 
 int learner_optimize_th(const unsigned int learner, const unsigned int max_positive, const unsigned int num_negative, progress_cb_t progress_cb)

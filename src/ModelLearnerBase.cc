@@ -173,18 +173,21 @@ void ModelLearnerBase::initSampleFromSynsetImage(Sample & s)
 }
 
 
-bool ModelLearnerBase::learn_init()
+int ModelLearnerBase::learn_init()
 {
     this->m_models.clear();
     this->m_thresholds.clear();
-    return (!this->m_samples.empty());
+    if (this->m_samples.empty())
+        return ARTOS_LEARN_RES_NO_SAMPLES;
+    return ARTOS_RES_OK;
 }
 
 
-bool ModelLearnerBase::learn(const unsigned int maxAspectClusters, const unsigned int maxFeatureClusters, ProgressCallback progressCB, void * cbData)
+int ModelLearnerBase::learn(const unsigned int maxAspectClusters, const unsigned int maxFeatureClusters, ProgressCallback progressCB, void * cbData)
 {
-    if (!this->learn_init())
-        return false;
+    int res = this->learn_init();
+    if (res != ARTOS_RES_OK)
+        return res;
     
     int i, c;
     vector<Sample>::iterator sample;
@@ -232,18 +235,20 @@ bool ModelLearnerBase::learn(const unsigned int maxAspectClusters, const unsigne
         cerr << "Computed optimal cell numbers in " << stop() << " ms." << endl;
     
     // Perform actual learning in derived class
-    this->m_learn(aspectClusterAssignment, samplesPerAspectCluster, cellNumbers, maxFeatureClusters, progressCB, cbData);
+    res = this->m_learn(aspectClusterAssignment, samplesPerAspectCluster, cellNumbers, maxFeatureClusters, progressCB, cbData);
+    if (res != ARTOS_RES_OK)
+        return res;
     
     // Determine number of samples per cluster
     this->m_clusterSizes.assign(this->m_models.size(), 0);
     if (this->m_models.size() == 0)
-        return false;
+        return ARTOS_LEARN_RES_FAILED;
     for (sample = this->m_samples.begin(); sample != this->m_samples.end(); sample++)
         for (i = 0; i < sample->modelAssoc.size(); i++)
             if (sample->modelAssoc[i] < this->m_clusterSizes.size())
                 this->m_clusterSizes[sample->modelAssoc[i]]++;
     
-    return true;
+    return ARTOS_RES_OK;
     
 }
 
