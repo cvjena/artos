@@ -107,7 +107,7 @@ void CaffeFeatureExtractor::extract(const JPEGImage & img, FeatureMatrix & feat)
     {
         input_layer->Reshape(1, this->m_numChannels, img.height(), img.width());
         // Forward dimension change to all convolutional layers
-        for (int i = 0; i <= this->m_lastLayer; i++)
+        for (int i = 0; i <= this->m_layerIndex; i++)
             this->m_net->layers()[i]->Reshape(this->m_net->bottom_vecs()[i], this->m_net->top_vecs()[i]);
     }
 
