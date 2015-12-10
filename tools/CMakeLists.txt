@@ -1,0 +1,12 @@
+# This file will be included from the main CMakeLists.txt in the src directory
+
+CMAKE_MINIMUM_REQUIRED(VERSION 2.6.2)
+
+PROJECT(ARTOS)
+
+FILE(GLOB TOOLS_CPP "*.cc" "*.cpp")
+FOREACH(CPP_FILE ${TOOLS_CPP})
+    GET_FILENAME_COMPONENT(TOOL_NAME ${CPP_FILE} NAME_WE)
+    ADD_EXECUTABLE(${TOOL_NAME} ${CPP_FILE})
+    TARGET_LINK_LIBRARIES(${TOOL_NAME} artos)
+ENDFOREACH()
