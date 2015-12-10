@@ -33,7 +33,6 @@ int main(int argc, char * argv[])
     unsigned int numImages = (argc >= 4) ? strtoul(argv[3], NULL, 0) : 0;
     unsigned int maxOffset = (argc >= 5) ? strtoul(argv[4], NULL, 0) : 0;
     bool accurate = (argc >= 6) ? static_cast<bool>(strtoul(argv[5], NULL, 0)) : false;
-    string layerName = "";
     if (numImages == 0)
         numImages = 1000;
     if (maxOffset == 0)
