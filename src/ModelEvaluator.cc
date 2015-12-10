@@ -61,6 +61,26 @@ pair<float, float> ModelEvaluator::getMaxFMeasure(const unsigned int modelIndex,
 }
 
 
+float ModelEvaluator::getFMeasureAt(const float threshold, const unsigned int modelIndex, const float b) const
+{
+    float fMeasure = 0;
+    if (modelIndex >= 0 && modelIndex < this->m_results.size())
+    {
+        const vector<TestResult> & results = this->m_results[modelIndex];
+        int i;
+        for (i = 0; i < results.size() - 1 && results[i].threshold < threshold; i++);
+        
+        // Calculate F-measure by evaluating ((1 + b²) * TP) / (b² * NP + TP + FP),
+        // where TP is the number of true positives, FP is the number of false positives
+        // and NP is the total number of positive samples.
+        const float b2 = (b > 0) ? b * b : 1;
+        const float b12 = 1 + b2;
+        fMeasure = (b12 * results[i].tp) / (b2 * results[i].np + results[i].tp + results[i].fp);
+    }
+    return fMeasure;
+}
+
+
 float ModelEvaluator::computeAveragePrecision(const unsigned int modelIndex) const
 {
     float ap = 0.0;
@@ -101,7 +121,7 @@ void ModelEvaluator::testModels(const vector<Sample*> & positive, unsigned int m
         for (unsigned int modelIndex = 0; modelIndex < this->getNumModels(); modelIndex++)
         {
             // Determine minimum and maximum detection score
-            float minScore = numeric_limits<float>::max(), maxScore = numeric_limits<float>::min();
+            float minScore = numeric_limits<float>::max(), maxScore = numeric_limits<float>::lowest();
             for (detIt = detections->begin(); detIt != detections->end(); detIt++)
                 if (detIt->second.modelIndex == modelIndex)
                 {
@@ -136,8 +156,8 @@ void ModelEvaluator::testModels(const vector<Sample*> & positive, unsigned int m
                             if (detected(sampleIndex).size() == 0)
                                 detected(sampleIndex) = Eigen::Array<bool, 1, Eigen::Dynamic>::Constant(1, sample->bboxes().size(), false);
                             // Treat as true positive if detection area overlaps with bounding box
-                            // by at least 50%
-                            Intersector intersect(detIt->second);
+                            // by at `overlap`
+                            Intersector intersect(detIt->second, this->overlap);
                             for (bboxIndex = 0; bboxIndex < sample->bboxes().size(); bboxIndex++)
                                 if (!detected(sampleIndex)(bboxIndex)
                                         && sample->modelAssoc[bboxIndex] == detIt->second.modelIndex
@@ -220,8 +240,8 @@ vector<float> ModelEvaluator::searchOptimalThresholdCombination(
                 {
                     isPositive = false;
                     // Treat as true positive if detection area overlaps with bounding box
-                    // by at least 50%
-                    Intersector intersect(detIt->second);
+                    // by at least `overlap`
+                    Intersector intersect(detIt->second, this->overlap);
                     for (bboxIndex = 0; bboxIndex < sample->bboxes().size(); bboxIndex++)
                         if (intersect(sample->bboxes()[bboxIndex]))
                         {
@@ -268,7 +288,7 @@ vector<unsigned int> ModelEvaluator::runDetector(SampleDetectionsVector & detect
     
     // Set detection thresholds to a minimal value
     for (map<string, double>::iterator it = this->thresholds.begin(); it != this->thresholds.end(); it++)
-        it->second = -100.0;
+        it->second = numeric_limits<double>::lowest();
     
     // Set up parameters for progress callback
     unsigned int totalNumSamples, numSamplesProcessed = 0;

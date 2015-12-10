@@ -45,12 +45,15 @@ public:
     /**
     * Initializes a ModelEvaluator. Multiple models can be added later on using addModel() or addModels().
     *
-    * @param[in] overlap Minimum overlap in non maxima suppression.
+    * @param[in] overlap Minimum overlap for considering two bounding boxes as equivalent (used for non-maxima
+    * suppression and for classifying a detection as true or false positive).
     *
     * @param[in] interval Number of levels per octave in the HOG pyramid.
+    *
+    * @param[in] verbose If set to true, debug and timing information will be logged to stderr.
     */
-    ModelEvaluator(double overlap = 0.5, int interval = 10)
-    : DPMDetection(false, overlap, interval), m_results() { }; 
+    ModelEvaluator(double overlap = 0.5, int interval = 10, bool verbose = false)
+    : DPMDetection(verbose, overlap, interval), m_results() { }; 
 
     /** 
     * Initializes the ModelEvaluator and loads a single model from disk.  
@@ -59,12 +62,15 @@ public:
     *
     * @param[in] modelfile The filename of the model to load.
     *
-    * @param[in] overlap Minimum overlap in non maxima suppression.
+    * @param[in] overlap Minimum overlap for considering two bounding boxes as equivalent (used for non-maxima
+    * suppression and for classifying a detection as true or false positive)
     *
     * @param[in] interval Number of levels per octave in the HOG pyramid.
+    *
+    * @param[in] verbose If set to true, debug and timing information will be logged to stderr.
     */
-    ModelEvaluator(const std::string & modelfile, double overlap = 0.5, int interval = 10)
-    : DPMDetection(modelfile, -100.0, false, overlap, interval), m_results() { }; 
+    ModelEvaluator(const std::string & modelfile, double overlap = 0.5, int interval = 10, bool verbose = false)
+    : DPMDetection(modelfile, 0.0, verbose, overlap, interval), m_results() { }; 
     
     /** 
     * Initializes the ModelEvaluator and adds a single model.
@@ -73,12 +79,15 @@ public:
     *
     * @param[in] model The model to be added as Mixture object.
     *
-    * @param[in] overlap Minimum overlap in non maxima suppression.
+    * @param[in] overlap Minimum overlap for considering two bounding boxes as equivalent (used for non-maxima
+    * suppression and for classifying a detection as true or false positive)
     *
     * @param[in] interval Number of levels per octave in the HOG pyramid.
+    *
+    * @param[in] verbose If set to true, debug and timing information will be logged to stderr.
     */
-    ModelEvaluator(const Mixture & model, double overlap = 0.5, int interval = 10)
-    : DPMDetection(model, -100.0, false, overlap, interval), m_results() { };
+    ModelEvaluator(const Mixture & model, double overlap = 0.5, int interval = 10, bool verbose = false)
+    : DPMDetection(model, 0.0, verbose, overlap, interval), m_results() { };
     
     /** 
     * Initializes the ModelEvaluator and adds a single model.
@@ -87,12 +96,15 @@ public:
     *
     * @param[in] model The model to be added as Mixture object, whose contents will be moved.
     *
-    * @param[in] overlap Minimum overlap in non maxima suppression.
+    * @param[in] overlap Minimum overlap for considering two bounding boxes as equivalent
+    * (used for non-maxima suppression and for classifying a detection as true or false positive)
     *
     * @param[in] interval Number of levels per octave in the HOG pyramid.
+    *
+    * @param[in] verbose If set to true, debug and timing information will be logged to stderr.
     */
-    ModelEvaluator(Mixture && model, double overlap = 0.5, int interval = 10)
-    : DPMDetection(std::move(model), -100.0, false, overlap, interval), m_results() { }; 
+    ModelEvaluator(Mixture && model, double overlap = 0.5, int interval = 10, bool verbose = false)
+    : DPMDetection(std::move(model), 0.0, verbose, overlap, interval), m_results() { }; 
     
     /**
     * Returns a reference to a vector with TestResult objects for a specific model computed by testModels().
@@ -137,7 +149,24 @@ public:
     *
     * @return Pair of threshold and F-measure value.
     */
-    std::pair<float, float> getMaxFMeasure(const unsigned int modelIndex, const float b = 1.0f) const;
+    std::pair<float, float> getMaxFMeasure(const unsigned int modelIndex = 0, const float b = 1.0f) const;
+    
+    /**
+    * Computes the F-measure of a specific model at a specific threshold based on the test results.
+    *
+    * @see calculateFMeasures()
+    *
+    * @param[in] threshold The threshold to retrieve the F-measure value for.
+    *
+    * @param[in] modelIndex The index of the model to retrieve the F-measure value for.
+    *
+    * @param[in] b The b parameter for F-measure calculation. This is used to weight precision against recall.
+    * A value of 2 will rate recall twice as much as precision and a value of 0.5 will put more emphasis on
+    * precision than on recall, for example. b must be greater than 0.
+    *
+    * @return Returns the F-measure of the given model at the given threshold.
+    */
+    float getFMeasureAt(const float threshold, const unsigned int modelIndex = 0, const float b = 1.0f) const;
     
     /**
     * Computes the *interpolated average precision* for one of the tested models based on the test results.

@@ -3,10 +3,11 @@
 #include <cstring>
 #include <vector>
 #include <map>
-#include "DPMDetection.h"
+#include "ModelEvaluator.h"
 #include "ImageNetModelLearner.h"
 #include "ImageRepository.h"
 #include "StationaryBackground.h"
+#include "Scene.h"
 #include "sysutils.h"
 using namespace std;
 using namespace ARTOS;
@@ -17,7 +18,9 @@ using namespace ARTOS;
 //-------------------------------------------------------------------
 
 
-vector<DPMDetection*> detectors;
+vector<ModelEvaluator*> detectors;
+map< unsigned int, vector<Sample*> > eval_positive_samples;
+map< unsigned int, vector<JPEGImage> > eval_negative_samples;
 
 int detect_jpeg(const unsigned int detector, const JPEGImage & img, FlatDetection * detection_buf, unsigned int * detection_buf_size);
 void write_results_to_buffer(const vector<Detection> & detections, FlatDetection * detection_buf, unsigned int * detection_buf_size);
@@ -26,10 +29,10 @@ bool is_valid_detector_handle(const unsigned int detector);
 
 unsigned int create_detector(const double overlap, const int interval, const bool debug)
 {
-    DPMDetection * newDetector = 0;
+    ModelEvaluator * newDetector = 0;
     try
     {
-        newDetector = new DPMDetection(debug, overlap, interval);
+        newDetector = new ModelEvaluator(overlap, interval, debug);
         detectors.push_back(newDetector);
         return detectors.size(); // return handle of the new detector
     }
@@ -48,6 +51,10 @@ void destroy_detector(const unsigned int detector)
         {
             delete detectors[detector - 1];
             detectors[detector - 1] = NULL;
+            for (vector<Sample*>::iterator sample = eval_positive_samples[detector].begin(); sample != eval_positive_samples[detector].end(); sample++)
+                delete *sample;
+            eval_positive_samples.erase(detector);
+            eval_negative_samples.erase(detector);
         }
         catch (exception e) { }
 }
@@ -191,7 +198,12 @@ int learn_imagenet(const char * repo_directory, const char * synset_id, const ch
     if (learner.addPositiveSamplesFromSynset(synset) == 0)
         return ARTOS_IMGREPO_RES_EXTRACTION_FAILED;
     progParams.overall_step++;
-    int res = learner.learn(max_aspect_clusters, max_who_clusters, (progress_cb != NULL) ? &populate_progress : NULL, reinterpret_cast<void*>(&progParams));
+    int res;
+    try {
+        res = learner.learn(max_aspect_clusters, max_who_clusters, (progress_cb != NULL) ? &populate_progress : NULL, reinterpret_cast<void*>(&progParams));
+    } catch (const UseBeforeSetupException & e) {
+        res = ARTOS_LEARN_RES_FEATURE_EXTRACTOR_NOT_READY;
+    }
     if (res != ARTOS_RES_OK)
         return res;
     if (th_opt_mode != ARTOS_THOPT_NONE)
@@ -250,7 +262,12 @@ int learn_files_jpeg(const char ** imagefiles, const unsigned int num_imagefiles
     progParams.overall_step++;
     
     // Learn model
-    int res = learner.learn(max_aspect_clusters, max_who_clusters, (progress_cb != NULL) ? &populate_progress : NULL, reinterpret_cast<void*>(&progParams));
+    int res;
+    try {
+        res = learner.learn(max_aspect_clusters, max_who_clusters, (progress_cb != NULL) ? &populate_progress : NULL, reinterpret_cast<void*>(&progParams));
+    } catch (const UseBeforeSetupException & e) {
+        res = ARTOS_LEARN_RES_FEATURE_EXTRACTOR_NOT_READY;
+    }
     if (res != ARTOS_RES_OK)
         return res;
     if (th_opt_mode != ARTOS_THOPT_NONE)
@@ -341,7 +358,13 @@ int learner_run(const unsigned int learner, const unsigned int max_aspect_cluste
         return ARTOS_LEARN_RES_NO_SAMPLES;
     ProgressCallback progressCB = (progress_cb != NULL) ? &progress_proxy : NULL;
     void * cbData = (progress_cb != NULL) ? reinterpret_cast<void*>(progress_cb) : NULL;
-    return l->learn(max_aspect_clusters, max_who_clusters, progressCB, cbData);
+    int res;
+    try {
+        res = l->learn(max_aspect_clusters, max_who_clusters, progressCB, cbData);
+    } catch (const UseBeforeSetupException & e) {
+        res = ARTOS_LEARN_RES_FEATURE_EXTRACTOR_NOT_READY;
+    }
+    return res;
 }
 
 int learner_optimize_th(const unsigned int learner, const unsigned int max_positive, const unsigned int num_negative, progress_cb_t progress_cb)
@@ -427,7 +450,11 @@ int learn_bg(const char * repo_directory, const char * bg_file,
     
     // Learn background statistics
     StationaryBackground bg;
-    bg.learnMean(imgIt, num_images, (progress_cb != NULL) ? &populate_progress : NULL, reinterpret_cast<void*>(&progParams));
+    try {
+        bg.learnMean(imgIt, num_images, (progress_cb != NULL) ? &populate_progress : NULL, reinterpret_cast<void*>(&progParams));
+    } catch (const UseBeforeSetupException & e) {
+        return ARTOS_LEARN_RES_FEATURE_EXTRACTOR_NOT_READY;
+    }
     if (progParams.aborted)
         return ARTOS_RES_ABORTED;
     progParams.overall_step++;
@@ -440,6 +467,275 @@ int learn_bg(const char * repo_directory, const char * bg_file,
     if (progress_cb != NULL)
         progress_cb(progParams.overall_steps_total, progParams.overall_steps_total, 0, 0);
     return (bg.writeToFile(bg_file)) ? ARTOS_RES_OK : ARTOS_RES_FILE_ACCESS_DENIED;
+}
+
+
+
+//--------------------------------------------------------------------
+//---------------------------- Evaluation ----------------------------
+//--------------------------------------------------------------------
+
+int evaluator_add_samples_from_synset(const unsigned int detector, const char * repo_directory, const char * synset_id,
+                                      const unsigned int num_negative)
+{
+    // Check detector handle
+    if (!is_valid_detector_handle(detector))
+        return ARTOS_RES_INVALID_HANDLE;
+    
+    // Check image repository
+    if (!ImageRepository::hasRepositoryStructure(repo_directory))
+        return ARTOS_IMGREPO_RES_INVALID_REPOSITORY;
+    ImageRepository repo(repo_directory);
+    
+    // Search synset
+    Synset synset = repo.getSynset(synset_id);
+    if (synset.id.empty())
+        return ARTOS_IMGREPO_RES_SYNSET_NOT_FOUND;
+
+    // Extract positive samples
+    vector<Sample*> & positives = eval_positive_samples[detector];
+    for (SynsetImageIterator imgIt = synset.getImageIterator(false); imgIt.ready(); ++imgIt)
+    {
+        SynsetImage simg = *imgIt;
+        JPEGImage & img = simg.getImage();
+        if (!img.empty())
+        {
+            Sample * s = new Sample();
+            s->m_simg = simg;
+            if (simg.loadBoundingBoxes())
+                s->m_bboxes = simg.bboxes;
+            else
+                s->m_bboxes.assign(1, ARTOS::Rectangle(0, 0, img.width(), img.height()));
+            s->modelAssoc.assign(s->bboxes().size(), 0);
+            s->data = NULL;
+            positives.push_back(s);
+        }
+    }
+    
+    // Extract negative samples
+    if (num_negative > 0)
+    {
+        vector<JPEGImage> & negatives = eval_negative_samples[detector];
+        for (SynsetIterator synsetIt = repo.getSynsetIterator(); synsetIt.ready(); ++synsetIt)
+        {
+            Synset negSynset = *synsetIt;
+            if (negSynset.id != synset.id)
+                for (SynsetImageIterator imgIt = negSynset.getImageIterator(); imgIt.ready(); ++imgIt)
+                {
+                    SynsetImage simg = *imgIt;
+                    JPEGImage & img = simg.getImage();
+                    if (!img.empty())
+                        negatives.push_back(img);
+                }
+        }
+    }
+    
+    return ARTOS_RES_OK;
+}
+
+int evaluator_add_positive_file(const unsigned int detector, const char * imagefile, const char * annotation_file)
+{
+    if (!is_valid_detector_handle(detector))
+        return ARTOS_RES_INVALID_HANDLE;
+    
+    // Load image
+    JPEGImage img(imagefile);
+    if (img.empty())
+        return ARTOS_DETECT_RES_INVALID_IMG_DATA;
+    
+    // Load annotations
+    Scene scene(annotation_file);
+    if (scene.empty())
+        return ARTOS_DETECT_RES_INVALID_ANNOTATIONS;
+    double scale = static_cast<double>(scene.width()) / img.width();
+    
+    // Set up sample
+    Sample * s = new Sample();
+    for (vector<Object>::const_iterator objIt = scene.objects().begin(); objIt != scene.objects().end(); objIt++)
+    {
+        Rectangle bbox = objIt->bndbox();
+        bbox.setX(round(bbox.x() * scale));
+        bbox.setY(round(bbox.y() * scale));
+        bbox.setWidth(round(bbox.width() * scale));
+        bbox.setHeight(round(bbox.height() * scale));
+        if (bbox.x() > 0 && bbox.y() > 0 && bbox.x() < img.width() && bbox.y() < img.height() && bbox.width() > 0 && bbox.height() > 0)
+            s->m_bboxes.push_back(bbox);
+    }
+    s->m_img = move(img);
+    s->modelAssoc.assign(s->bboxes().size(), 0);
+    s->data = NULL;
+    eval_positive_samples[detector].push_back(s);
+    
+    return ARTOS_RES_OK;
+}
+
+int evaluator_add_positive_jpeg(const unsigned int detector, const JPEGImage & img, const FlatBoundingBox * bboxes, const unsigned int num_bboxes)
+{
+    if (!is_valid_detector_handle(detector))
+        return ARTOS_RES_INVALID_HANDLE;
+    if (img.empty())
+        return ARTOS_DETECT_RES_INVALID_IMG_DATA;
+    
+    Sample * s = new Sample();
+    s->m_img = img;
+    if (bboxes != NULL && num_bboxes > 0)
+    {
+        for (const FlatBoundingBox * flat_bbox = bboxes; flat_bbox < bboxes + num_bboxes; flat_bbox++)
+            s->m_bboxes.push_back(Rectangle(flat_bbox->left, flat_bbox->top, flat_bbox->width, flat_bbox->height));
+    }
+    else
+        s->m_bboxes.assign(1, ARTOS::Rectangle(0, 0, img.width(), img.height()));
+    s->modelAssoc.assign(s->bboxes().size(), 0);
+    s->data = NULL;
+    eval_positive_samples[detector].push_back(s);
+    
+    return ARTOS_RES_OK;
+}
+
+int evaluator_add_positive_file_jpeg(const unsigned int detector, const char * imagefile, const FlatBoundingBox * bboxes, const unsigned int num_bboxes)
+{
+    return evaluator_add_positive_jpeg(detector, JPEGImage(imagefile), bboxes, num_bboxes);
+}
+
+int evaluator_add_positive_raw(const unsigned int detector,
+                               const unsigned char * img_data, const unsigned int img_width, const unsigned int img_height, const bool grayscale,
+                               const FlatBoundingBox * bboxes, const unsigned int num_bboxes)
+{
+    return evaluator_add_positive_jpeg(detector, JPEGImage(img_width, img_height, (grayscale) ? 1 : 3, img_data), bboxes, num_bboxes);
+}
+
+int evaluator_add_negative_file_jpeg(const unsigned int detector, const char * imagefile)
+{
+    if (!is_valid_detector_handle(detector))
+        return ARTOS_RES_INVALID_HANDLE;
+    
+    JPEGImage img(imagefile);
+    if (img.empty())
+        return ARTOS_DETECT_RES_INVALID_IMG_DATA;
+    
+    eval_negative_samples[detector].push_back(move(img));
+    return ARTOS_RES_OK;
+}
+
+int evaluator_add_negative_raw(const unsigned int detector,
+                               const unsigned char * img_data, const unsigned int img_width, const unsigned int img_height, const bool grayscale)
+{
+    if (!is_valid_detector_handle(detector))
+        return ARTOS_RES_INVALID_HANDLE;
+    
+    JPEGImage img(img_width, img_height, (grayscale) ? 1 : 3, img_data);
+    if (img.empty())
+        return ARTOS_DETECT_RES_INVALID_IMG_DATA;
+    
+    eval_negative_samples[detector].push_back(move(img));
+    return ARTOS_RES_OK;
+}
+
+int evaluator_run(const unsigned int detector, const unsigned int granularity, progress_cb_t progress_cb)
+{
+    if (!is_valid_detector_handle(detector))
+        return ARTOS_RES_INVALID_HANDLE;
+    
+    ModelEvaluator * det = detectors[detector - 1];
+    if (det->getNumModels() == 0)
+        return ARTOS_DETECT_RES_NO_MODELS;
+    if (det->getNumModels() > 1)
+        return ARTOS_DETECT_RES_TOO_MANY_MODELS;
+    if (eval_positive_samples[detector].empty())
+        return ARTOS_DETECT_RES_NO_IMAGES;
+    
+    ProgressCallback progressCB = (progress_cb != NULL) ? &progress_proxy : NULL;
+    void * cbData = (progress_cb != NULL) ? reinterpret_cast<void*>(progress_cb) : NULL;
+    det->testModels(
+        eval_positive_samples[detector], 0,
+        (!eval_negative_samples[detector].empty()) ? &eval_negative_samples[detector] : NULL,
+        granularity, progressCB, cbData
+    );
+    return ARTOS_RES_OK;
+}
+
+int evaluator_get_raw_results(const unsigned int detector, RawTestResult * result_buf, unsigned int * result_buf_size)
+{
+    if (!is_valid_detector_handle(detector))
+        return ARTOS_RES_INVALID_HANDLE;
+    
+    ModelEvaluator * det = detectors[detector - 1];
+    const vector<ModelEvaluator::TestResult> & results = det->getResults();
+    if (result_buf)
+    {
+        RawTestResult * result = result_buf;
+        unsigned int i;
+        for (i = 0; i < *result_buf_size && i < results.size(); i++, result++)
+        {
+            result->threshold = results[i].threshold;
+            result->tp = results[i].tp;
+            result->fp = results[i].fp;
+            result->np = results[i].np;
+        }
+        *result_buf_size = i;
+    }
+    else
+        *result_buf_size = results.size();
+    
+    return (results.empty()) ? ARTOS_DETECT_RES_NO_RESULTS : ARTOS_RES_OK;
+}
+
+int evaluator_get_max_fmeasure(const unsigned int detector, float * fmeasure, float * threshold)
+{
+    if (!is_valid_detector_handle(detector))
+        return ARTOS_RES_INVALID_HANDLE;
+    
+    ModelEvaluator * det = detectors[detector - 1];
+    if (det->getResults().empty())
+        return ARTOS_DETECT_RES_NO_RESULTS;
+    
+    pair<float, float> fm = det->getMaxFMeasure();
+    if (fmeasure)
+        *fmeasure = fm.second;
+    if (threshold)
+        *threshold = fm.first;
+    return ARTOS_RES_OK;
+}
+
+int evaluator_get_fmeasure_at(const unsigned int detector, const float threshold, float * fmeasure)
+{
+    if (!is_valid_detector_handle(detector))
+        return ARTOS_RES_INVALID_HANDLE;
+    
+    ModelEvaluator * det = detectors[detector - 1];
+    if (det->getResults().empty())
+        return ARTOS_DETECT_RES_NO_RESULTS;
+    
+    if (fmeasure)
+        *fmeasure = det->getFMeasureAt(threshold);
+    return ARTOS_RES_OK;
+}
+
+int evaluator_get_ap(const unsigned int detector, float * ap)
+{
+    if (!is_valid_detector_handle(detector))
+        return ARTOS_RES_INVALID_HANDLE;
+    
+    ModelEvaluator * det = detectors[detector - 1];
+    if (det->getResults().empty())
+        return ARTOS_DETECT_RES_NO_RESULTS;
+    
+    if (ap)
+        *ap = det->computeAveragePrecision();
+    return ARTOS_RES_OK;
+}
+
+int evaluator_dump_results(const unsigned int detector, const char * dump_file)
+{
+    if (!is_valid_detector_handle(detector))
+        return ARTOS_RES_INVALID_HANDLE;
+    
+    ModelEvaluator * det = detectors[detector - 1];
+    if (det->getResults().empty())
+        return ARTOS_DETECT_RES_NO_RESULTS;
+    
+    return (det->dumpTestResults(dump_file, -1, true, ModelEvaluator::PRECISION | ModelEvaluator::RECALL | ModelEvaluator::FMEASURE))
+           ? ARTOS_RES_OK : ARTOS_RES_FILE_ACCESS_DENIED;
 }
 
 

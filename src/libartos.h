@@ -27,6 +27,11 @@
 * available feature extractors (which currently consists of HOG only) and `list_feature_extractor_params`
 * enumerates all parameters supported by a specific feature extractor.
 *
+* To evaluate the performance of a model on test data, a detector using the model has to be created first.
+* Then, positive and (optionally) negative samples have to be added using the `evaluator_add_*` functions.
+* After running the detector of all the samples by calling `evaluator_run`, the test results may be retrieved
+* in several formats using the `evaluator_get_*` functions.
+*
 * The **ImageNet interface** provides functionality for searching synsets and extracting whole images
 * as well as samples of objects from them to disk. In-memory extraction as provided by the object-oriented
 * interface, `ImageRepository` and it's related classes, is not supported in this C-style library interface.  
@@ -52,6 +57,9 @@ extern "C"
 //-------------------
 //     Detection
 //-------------------
+
+/** @name Detection */
+/** @{ */
 
 /**
 * Holds information about a detection on an image, such as the name of the detected class, the ID of the
@@ -93,6 +101,9 @@ void destroy_detector(const unsigned int detector);
 * @return Returns `ARTOS_RES_OK` on success or one of the following error codes on failure:
 *           - `ARTOS_RES_INVALID_HANDLE`
 *           - `ARTOS_DETECT_RES_INVALID_MODEL_FILE`
+*           - `ARTOS_SETTINGS_RES_UNKNOWN_FEATURE_EXTRACTOR`
+*           - `ARTOS_SETTINGS_RES_UNKNOWN_PARAMETER` (unknown feature extractor parameter specified in the model file)
+*           - `ARTOS_SETTINGS_RES_INVALID_PARAMETER_VALUE` (invalid feature extractor parameter value specified in the model file)
 */
 int add_model(const unsigned int detector, const char * classname, const char * modelfile, const double threshold, const char * synset_id = 0);
 
@@ -167,10 +178,15 @@ int detect_raw(const unsigned int detector,
                        const unsigned char * img_data, const unsigned int img_width, const unsigned int img_height, const bool grayscale,
                        FlatDetection * detection_buf, unsigned int * detection_buf_size);
 
+/** @} */
+
 
 //------------------
 //     Learning
 //------------------
+
+/** @name Learning */
+/** @{ */
 
 /**
 * A simple bounding box around an object on an image.
@@ -224,6 +240,7 @@ typedef bool (*overall_progress_cb_t)(unsigned int, unsigned int, unsigned int, 
 *                   - `ARTOS_IMGREPO_RES_EXTRACTION_FAILED`
 *                   - `ARTOS_LEARN_RES_FAILED`
 *                   - `ARTOS_LEARN_RES_INVALID_BG_FILE`
+*                   - `ARTOS_LEARN_RES_FEATURE_EXTRACTOR_NOT_READY` (if the feature extractor has not been configured properly)
 *                   - `ARTOS_RES_FILE_ACCESS_DENIED` (if could not write model file)
 * @note Due to clustering, the result of the learning process may be multiple models which will be combined in the same
 *       model file as mixture components. The maximum number of components is given by `max_aspect_clusters * max_who_clusters`.
@@ -268,6 +285,7 @@ int learn_imagenet(const char * repo_directory, const char * synset_id, const ch
 * @return Returns `ARTOS_RES_OK` on success or one of the following error codes on failure:
 *                   - `ARTOS_LEARN_RES_FAILED`
 *                   - `ARTOS_LEARN_RES_INVALID_BG_FILE`
+*                   - `ARTOS_LEARN_RES_FEATURE_EXTRACTOR_NOT_READY` (if the feature extractor has not been configured properly)
 *                   - `ARTOS_RES_FILE_ACCESS_DENIED` (if could not write model file)
 * @note Due to clustering, the result of the learning process may be multiple models which will be combined in the same
 *       model file as mixture components. The maximum number of components is given by `max_aspect_clusters * max_who_clusters`.
@@ -371,7 +389,8 @@ int learner_add_raw(const unsigned int learner,
 * @return Returns `ARTOS_RES_OK` on success or one of the following error codes on failure:
 *                   - `ARTOS_RES_INVALID_HANDLE`
 *                   - `ARTOS_LEARN_RES_NO_SAMPLES`
-*                   - `ARTOS_LEARN_RES_FAILEd`
+*                   - `ARTOS_LEARN_RES_FEATURE_EXTRACTOR_NOT_READY` (if the feature extractor has not been configured properly)
+*                   - `ARTOS_LEARN_RES_FAILED`
 */
 int learner_run(const unsigned int learner, const unsigned int max_aspect_clusters = 2, const unsigned int max_who_clusters = 3,
                 progress_cb_t progress_cb = 0);
@@ -419,6 +438,8 @@ int learner_save(const unsigned int learner, const char * modelfile, const bool 
 */
 int learner_reset(const unsigned int learner);
 
+/** @} */
+
 
 //-------------------------------
 //     Background Statistics
@@ -450,7 +471,8 @@ int learner_reset(const unsigned int learner);
 *                                     model, e. g. from 20% to 19%). 
 * @return Returns `ARTOS_RES_OK` on success or one of the following error codes on failure:
 *                   - `ARTOS_IMGREPO_RES_INVALID_REPOSITORY` (if the given directory doesn't point to a valid image repository)
-*                   - `ARTOS_RES_FILE_ACCESS_DENIED` (if could not bg file)
+*                   - `ARTOS_LEARN_RES_FEATURE_EXTRACTOR_NOT_READY` (if the feature extractor has not been configured properly)
+*                   - `ARTOS_RES_FILE_ACCESS_DENIED` (if could not open bg file for writing)
 *                   - `ARTOS_RES_ABORT` (if aborted by callback)
 */
 int learn_bg(const char * repo_directory, const char * bg_file,
@@ -458,9 +480,211 @@ int learn_bg(const char * repo_directory, const char * bg_file,
              const bool accurate_autocorrelation = false);
 
 
+//--------------------
+//     Evaluation
+//--------------------
+
+/** @name Evaluation */
+/** @{ */
+
+/**
+* Basic performance measures for a specific model using a specific threshold.
+*/
+typedef struct {
+    double threshold; /**< A detection threshold that rules the number of true and false positives. */
+    unsigned int tp; /**< Number of true positives using that threshold. */
+    unsigned int fp; /**< Number of false positives using that threshold. */
+    unsigned int np; /**< Total number of positive samples. */ 
+} RawTestResult;
+
+
+/**
+* Adds positive and (optionally) negative test samples from an image repository for evaluating the performance of models.
+* @param[in] detector The handle of the detector instance obtained by create_detector().
+* @param[in] repo_directory The path to the image repository.
+* @param[in] synset_id The ID of the synset.
+* @param[in] num_negative The number of negative samples to add from other synsets.
+* @return Returns `ARTOS_RES_OK` on success or one of the following error codes on failure:
+*           - `ARTOS_RES_INVALID_HANDLE` (if an invalid detector handle was given)
+*           - `ARTOS_IMGREPO_RES_INVALID_REPOSITORY`
+*           - `ARTOS_IMGREPO_RES_SYNSET_NOT_FOUND`
+*           - `ARTOS_IMGREPO_RES_EXTRACTION_FAILED`
+*/
+int evaluator_add_samples_from_synset(const unsigned int detector, const char * repo_directory, const char * synset_id,
+                                      const unsigned int num_negative = 0);
+
+/**
+* Adds a JPEG file as positive test sample for evaluating the performance of models.
+* @param[in] detector The handle of the detector instance obtained by create_detector().
+* @param[in] imagefile The filename of the JPEG image.
+* @param[out] annotation_file The filename of the XML file with the bounding box annotations of the image.
+* @return Returns `ARTOS_RES_OK` on success or one of the following error codes on failure:
+*           - `ARTOS_RES_INVALID_HANDLE` (if an invalid detector handle was given)
+*           - `ARTOS_DETECT_RES_INVALID_IMG_DATA` (image file could not be found or read)
+*           - `ARTOS_DETECT_RES_INVALID_ANNOTATIONS` (annotations file does not exist or is invalid)
+*/
+int evaluator_add_positive_file(const unsigned int detector, const char * imagefile, const char * annotation_file);
+
+/**
+* Adds a JPEG file as positive test sample for evaluating the performance of models.
+* @param[in] detector The handle of the detector instance obtained by create_detector().
+* @param[in] imagefile Path of the JPEG image file to be added.
+* @param[in] bboxes Pointer to an array of FlatBoundingBox structs giving the bounding box(es)
+*                   around the objects of interest on the given image. If this is set to NULL,
+*                   the entire image will be considered to show the object.
+* @param[in] num_bboxes Number of entries in the `bboxes` array. Is ignored, if `bboxes` is NULL.
+* @return Returns `ARTOS_RES_OK` on success or one of the following error codes on failure:
+*           - `ARTOS_RES_INVALID_HANDLE` (if an invalid detector handle was given)
+*           - `ARTOS_DETECT_RES_INVALID_IMG_DATA` (file could not be found or read)
+*/
+int evaluator_add_positive_file_jpeg(const unsigned int detector, const char * imagefile,
+                                     const FlatBoundingBox * bboxes = 0, const unsigned int num_bboxes = 1);
+
+/**
+* Adds an RGB or grayscale image given by raw pixel data in a buffer as positive test sample for evaluating the performance of models.
+* @param[in] detector The handle of the detector instance obtained by create_detector().
+* @param[in] img_data The pixel data of the image in row-major order. Row 0: R,G,B,R,G,B,...; Row 1: R,G,B,R,G,B,...; ...
+* @param[in] img_width The width of the image.
+* @param[in] img_height The height of the image.
+* @param[in] grayscale If set to true, a bit depth of 1 byte per pixel is assumed (intensity), otherwise bit depth is set to 3 (RGB).
+* @param[in] bboxes Pointer to an array of FlatBoundingBox structs giving the bounding box(es)
+*                   around the objects of interest on the given image. If this is set to NULL or
+*                   one of the given bounding boxes is empty (a rectangle with zero area), the entire
+*                   image will be considered to show the object.
+* @param[in] num_bboxes Number of entries in the `bboxes` array. Is ignored, if `bboxes` is NULL.
+* @return Returns `ARTOS_RES_OK` on success or one of the following error codes on failure:
+*           - `ARTOS_RES_INVALID_HANDLE` (if an invalid detector handle was given)
+*           - `ARTOS_DETECT_RES_INVALID_IMG_DATA` (file could not be found or read)
+*/
+int evaluator_add_positive_raw(const unsigned int detector,
+                    const unsigned char * img_data, const unsigned int img_width, const unsigned int img_height, const bool grayscale = false,
+                    const FlatBoundingBox * bboxes = 0, const unsigned int num_bboxes = 1);
+
+/**
+* Adds a JPEG file as negative test sample for evaluating the performance of models.
+* @param[in] detector The handle of the detector instance obtained by create_detector().
+* @param[in] imagefile Path of the JPEG image file to be added.
+* @return Returns `ARTOS_RES_OK` on success or one of the following error codes on failure:
+*           - `ARTOS_RES_INVALID_HANDLE` (if an invalid detector handle was given)
+*           - `ARTOS_DETECT_RES_INVALID_IMG_DATA` (file could not be found or read)
+*/
+int evaluator_add_negative_file_jpeg(const unsigned int detector, const char * imagefile);
+
+/**
+* Adds an RGB or grayscale image given by raw pixel data in a buffer as negative test sample for evaluating the performance of models.
+* @param[in] detector The handle of the detector instance obtained by create_detector().
+* @param[in] img_data The pixel data of the image in row-major order. Row 0: R,G,B,R,G,B,...; Row 1: R,G,B,R,G,B,...; ...
+* @param[in] img_width The width of the image.
+* @param[in] img_height The height of the image.
+* @param[in] grayscale If set to true, a bit depth of 1 byte per pixel is assumed (intensity), otherwise bit depth is set to 3 (RGB).
+* @return Returns `ARTOS_RES_OK` on success or one of the following error codes on failure:
+*           - `ARTOS_RES_INVALID_HANDLE` (if an invalid detector handle was given)
+*           - `ARTOS_DETECT_RES_INVALID_IMG_DATA` (file could not be found or read)
+*/
+int evaluator_add_negative_raw(const unsigned int detector,
+                    const unsigned char * img_data, const unsigned int img_width, const unsigned int img_height, const bool grayscale = false);
+
+/**
+* Runs a given detector over all positive and negative test samples added before using one of the
+* `evaluator_add_*` functions and collects performance data about true and false positive detections
+* at different thresholds. The results may be retrieved after that in different formats using the
+* `evaluator_get_*` functions.
+*
+* The `overlap` parameter specified for create_detector() will be used to decide if a detection has
+* enough overlap with the bounding box of an annotated object to be considered as true positive.
+*
+* Evaluating multiple models for the same class with one run is not supported at the moment. That means,
+* the detector passed to this function must have exactly one model.
+*
+* @param[in] detector The handle of the detector instance obtained by create_detector().
+* @param[in] granularity Specifies the "resolution" or "precision" of the threshold scale.
+*                        The distance from one threshold to the next one will be 1/granularity.
+* @param[in] progress_cb Optionally, a callback that is called after each run of the detector against a sample.
+*                        The first parameter to the callback will be the number of samples processed and the second
+*                        parameter will be the total number of samples to be processed. For example, the argument list
+*                        (5, 10) means that the optimization is half way done.  
+*                        The callback may return false to abort the operation. To continue, it must return true.
+* @return Returns `ARTOS_RES_OK` on success (even on user abort) or one of the following error codes on failure:
+*           - `ARTOS_RES_INVALID_HANDLE` (if an invalid detector handle was given)
+*           - `ARTOS_DETECT_RES_NO_MODELS` (if no models have been added to the detector yet)
+*           - `ARTOS_DETECT_RES_TOO_MANY_MODELS` (more than one model has been added to the detector)
+*           - `ARTOS_DETECT_RES_NO_IMAGES` (if no test samples have been added yet)
+* @note This function will change the thresholds of all models added to the given detector.
+*/
+int evaluator_run(const unsigned int detector, const unsigned int granularity = 100, progress_cb_t progress_cb = 0);
+
+/**
+* Retrieves the raw results of a run of a detector over an evaluation data set performed before using evaluator_run().
+* @param[in] detector The handle of the detector instance obtained by create_detector().
+* @param[out] result_buf A beforehand allocated array of RawTestResult structs, which will be filled up with information about
+*                        the performance of the specified model at different thresholds.
+* @param[in,out] result_buf_size The number of array slots allocated for `result_buf`. In turn, the number of actually written array
+*                                elements will be stored at this pointer's location. If `result_buf` is NULL, this will be set to the
+*                                number of available test results instead.
+* @return Returns `ARTOS_RES_OK` on success or one of the following error codes on failure:
+*           - `ARTOS_RES_INVALID_HANDLE` (if an invalid detector handle was given)
+*           - `ARTOS_DETECT_RES_NO_RESULTS` (if `evaluator_run` has not been called yet for the given detector)
+*/
+int evaluator_get_raw_results(const unsigned int detector, RawTestResult * result_buf, unsigned int * result_buf_size);
+
+/**
+* Calculates the maximum F-measure reached by a model during a run over an evaluation data set as well as the corresponding threshold.
+* @param[in] detector The handle of the detector instance obtained by create_detector().
+* @param[out] fmeasure A pointer which will receive the maximum F-measure reached by the specified model during the test run.
+* @param[out] threshold A pointer which will receive the threshold which the maximum F-measure is reached at.
+* @return Returns `ARTOS_RES_OK` on success or one of the following error codes on failure:
+*           - `ARTOS_RES_INVALID_HANDLE` (if an invalid detector handle was given)
+*           - `ARTOS_DETECT_RES_NO_RESULTS` (if `evaluator_run` has not been called yet for the given detector)
+*/
+int evaluator_get_max_fmeasure(const unsigned int detector, float * fmeasure, float * threshold = 0);
+
+/**
+* Calculates the F-measure reached by a model during a run over an evaluation data set at a specific threshold.
+* @param[in] detector The handle of the detector instance obtained by create_detector().
+* @param[in] threshold The threshold to compute the F-measure for.
+* @param[out] fmeasure A pointer which will receive the maximum F-measure reached by the specified model during the test run.
+* @return Returns `ARTOS_RES_OK` on success or one of the following error codes on failure:
+*           - `ARTOS_RES_INVALID_HANDLE` (if an invalid detector handle was given)
+*           - `ARTOS_DETECT_RES_NO_RESULTS` (if `evaluator_run` has not been called yet for the given detector)
+*/
+int evaluator_get_fmeasure_at(const unsigned int detector, const float threshold, float * fmeasure);
+
+/**
+* Computes the *interpolated average precision* scored by a model during a run over an evaluation data set.
+*
+* According to the rules of the *PASCAL VOC Challenge*, the interpolated average precision is defined as the
+* area under the *precision-recall curve* `p(r)` in the interval [0,1], where `p(r)` is the maximum precision
+* at all recall levels greater than or equal to `r`.
+*
+* @param[in] detector The handle of the detector instance obtained by create_detector().
+* @param[out] ap A pointer which will receive the average precision scored by the model during the test run.
+* @return Returns `ARTOS_RES_OK` on success or one of the following error codes on failure:
+*           - `ARTOS_RES_INVALID_HANDLE` (if an invalid detector handle was given)
+*           - `ARTOS_DETECT_RES_NO_RESULTS` (if `evaluator_run` has not been called yet for the given detector)
+*/
+int evaluator_get_ap(const unsigned int detector, float * ap);
+
+/**
+* Exports the results of evaluator_run() to a CSV file, which will contain the number of true positives, false positives,
+* total number of positives, precision, recall and F-measure for each threshold.
+* @param[in] detector The handle of the detector instance obtained by create_detector().
+* @param[in] dump_file The name of the file to write the test results to.
+* @return Returns `ARTOS_RES_OK` on success or one of the following error codes on failure:
+*           - `ARTOS_RES_INVALID_HANDLE` (if an invalid detector handle was given)
+*           - `ARTOS_DETECT_RES_NO_RESULTS` (if `evaluator_run` has not been called yet for the given detector)
+*           - `ARTOS_RES_FILE_ACCESS_DENIED`
+*/
+int evaluator_dump_results(const unsigned int detector, const char * dump_file);
+
+/** @} */
+
+
 //------------------------------------
 //     Feature Extractor Settings
 //------------------------------------
+
+/** @name Feature Extractor Settings */
+/** @{ */
 
 /**
 * Basic information about a feature extractor.
@@ -660,6 +884,8 @@ int extract_samples_from_synset(const char * repo_directory, const char * synset
 *                   - `ARTOS_RES_DIRECTORY_NOT_FOUND` (if `out_directory` does not exist)
 */
 int extract_mixed_images(const char * repo_directory, const char * out_directory, const unsigned int num_images, const unsigned int per_synset = 1);
+
+/** @} */
 
 
 #ifdef __cplusplus
