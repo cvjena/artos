@@ -37,11 +37,16 @@ DETECT_RES_INVALID_MODEL_FILE = -102
 DETECT_RES_INVALID_MODEL_LIST_FILE = -103
 DETECT_RES_NO_MODELS = -104
 DETECT_RES_INVALID_IMAGE = -105
+DETECT_RES_NO_IMAGES = -106
+DETECT_RES_NO_RESULTS = -107
+DETECT_RES_INVALID_ANNOTATIONS = -108
+DETECT_RES_TOO_MANY_MODELS = -109
 LEARN_RES_FAILED = -201
 LEARN_RES_INVALID_BG_FILE = -202
 LEARN_RES_INVALID_IMG_DATA = -203
 LEARN_RES_NO_SAMPLES = -204
 LEARN_RES_MODEL_NOT_LEARNED = -205
+LEARN_RES_FEATURE_EXTRACTOR_NOT_READY = -206
 IMGREPO_RES_INVALID_REPOSITORY = -301
 IMGREPO_RES_SYNSET_NOT_FOUND = -302
 IMGREPO_RES_EXTRACTION_FAILED = -303
@@ -68,6 +73,14 @@ class FlatBoundingBox(Structure):
                 ('top', c_uint),
                 ('width', c_uint),
                 ('height', c_uint)]
+
+
+# RawTestResult structure definition according to libartos.h
+class RawTestResult(Structure):
+    _fields_ = [('threshold', c_double),
+                ('tp', c_uint),
+                ('fp', c_uint),
+                ('np', c_uint)]
 
 
 # SynsetSearchResult structure definition according to libartos.h
@@ -110,6 +123,7 @@ c_uint_p = POINTER(c_uint)
 c_float_p = POINTER(c_float)
 FlatDetection_p = POINTER(FlatDetection)
 FlatBoundingBox_p = POINTER(FlatBoundingBox)
+RawTestResult_p = POINTER(RawTestResult)
 SynsetSearchResult_p = POINTER(SynsetSearchResult)
 FeatureExtractorInfo_p = POINTER(FeatureExtractorInfo)
 FeatureExtractorParameterValue_p = POINTER(FeatureExtractorParameterValue)
@@ -126,197 +140,282 @@ class _LibARTOS(object):
         self._lib = library
         
         # create_detector function
-        prototype = CFUNCTYPE(c_uint, c_double, c_int, c_bool)
-        paramflags = (1, 'overlap', 0.5), (1, 'interval', 10), (1, 'debug', False)
-        self.create_detector = prototype(('create_detector', self._lib), paramflags)
-        self.create_detector.errcheck = self._errcheck_create_detector
+        self._register_func('create_detector',
+            (c_uint, c_double, c_int, c_bool),
+            ((1, 'overlap', 0.5), (1, 'interval', 10), (1, 'debug', False)),
+            self._errcheck_create_detector
+        )
         
         # destroy_detector function
-        prototype = CFUNCTYPE(c_void_p, c_uint)
-        paramflags = (1, 'detector'),
-        self.destroy_detector = prototype(('destroy_detector', self._lib), paramflags)
+        self._register_func('destroy_detector',
+            (c_void_p, c_uint),
+            ((1, 'detector'),)
+        )
         
         # add_model function
-        prototype = CFUNCTYPE(c_int, c_uint, c_char_p, c_char_p, c_double, c_char_p)
-        paramflags = (1, 'detector'), (1, 'classname'), (1, 'modelfile'), (1, 'threshold'), (1, 'synset_id', None)
-        self.add_model = prototype(('add_model', self._lib), paramflags)
-        self.add_model.errcheck = self._errcheck_common
+        self._register_func('add_model',
+            (c_int, c_uint, c_char_p, c_char_p, c_double, c_char_p),
+            ((1, 'detector'), (1, 'classname'), (1, 'modelfile'), (1, 'threshold'), (1, 'synset_id', None))
+        )
         
         # add_models function
-        prototype = CFUNCTYPE(c_int, c_uint, c_char_p)
-        paramflags = (1, 'detector'), (1, 'modellistfile')
-        self.add_models = prototype(('add_models', self._lib), paramflags)
-        self.add_models.errcheck = self._errcheck_common
+        self._register_func('add_models',
+            (c_int, c_uint, c_char_p),
+            ((1, 'detector'), (1, 'modellistfile'))
+        )
         
         # num_feature_extractors_in_detector function
-        prototype = CFUNCTYPE(c_int, c_uint)
-        paramflags = ((1, 'detector'), )
-        self.num_feature_extractors_in_detector = prototype(('num_feature_extractors_in_detector', self._lib), paramflags)
-        self.num_feature_extractors_in_detector.errcheck = self._errcheck_num_fe
+        self._register_func('num_feature_extractors_in_detector',
+            (c_int, c_uint),
+            ((1, 'detector'), ),
+            self._errcheck_num_fe
+        )
         
         # detect_file_jpeg function
-        prototype = CFUNCTYPE(c_int, c_uint, c_char_p, FlatDetection_p, c_uint_p)
-        paramflags = (1, 'detector'), (1, 'imagefile'), (1, 'detection_buf'), (1, 'detection_buf_size')
-        self.detect_file_jpeg = prototype(('detect_file_jpeg', self._lib), paramflags)
-        self.detect_file_jpeg.errcheck = self._errcheck_common
+        self._register_func('detect_file_jpeg',
+            (c_int, c_uint, c_char_p, FlatDetection_p, c_uint_p),
+            ((1, 'detector'), (1, 'imagefile'), (1, 'detection_buf'), (1, 'detection_buf_size'))
+        )
         
         # detect_raw function
-        prototype = CFUNCTYPE(c_int, c_uint, c_ubyte_p, c_uint, c_uint, c_bool, FlatDetection_p, c_uint_p)
-        paramflags = (1, 'detector'), (1, 'img_data'), (1, 'img_width'), (1, 'img_height'), (1, 'grayscale'), (1, 'detection_buf'), (1, 'detection_buf_size')
-        self.detect_raw = prototype(('detect_raw', self._lib), paramflags)
-        self.detect_raw.errcheck = self._errcheck_common
+        self._register_func('detect_raw',
+            (c_int, c_uint, c_ubyte_p, c_uint, c_uint, c_bool, FlatDetection_p, c_uint_p),
+            ((1, 'detector'), (1, 'img_data'), (1, 'img_width'), (1, 'img_height'), (1, 'grayscale'),
+             (1, 'detection_buf'), (1, 'detection_buf_size'))
+        )
         
         # learn_imagenet function
-        prototype = CFUNCTYPE(c_int, c_char_p, c_char_p, c_char_p, c_char_p, c_bool, c_uint, c_uint, c_uint, c_uint, c_uint, overall_progress_cb_t, c_bool)
-        paramflags = (1, 'repo_directory'), (1, 'synset_id'), (1, 'bg_file'), (1, 'modelfile'), \
-                     (1, 'add', True), (1, 'max_aspect_clusters', 2), (1, 'max_who_clusters', 3), \
-                     (1, 'th_opt_num_positive', 0), (1, 'th_opt_num_negative', 0), (1, 'th_opt_mode', THOPT_LOOCV), \
-                     (1, 'progress_cb', None), (1, 'debug', False)
-        self.learn_imagenet = prototype(('learn_imagenet', self._lib), paramflags)
-        self.learn_imagenet.errcheck = self._errcheck_common
+        self._register_func('learn_imagenet',
+            (c_int, c_char_p, c_char_p, c_char_p, c_char_p, c_bool, c_uint, c_uint, c_uint, c_uint, c_uint, overall_progress_cb_t, c_bool),
+            ((1, 'repo_directory'), (1, 'synset_id'), (1, 'bg_file'), (1, 'modelfile'),
+             (1, 'add', True), (1, 'max_aspect_clusters', 2), (1, 'max_who_clusters', 3),
+             (1, 'th_opt_num_positive', 0), (1, 'th_opt_num_negative', 0), (1, 'th_opt_mode', THOPT_LOOCV),
+             (1, 'progress_cb', cast(None, progress_cb_t)), (1, 'debug', False))
+        )
         
         # learn_files_jpeg function
-        prototype = CFUNCTYPE(c_int, POINTER(c_char_p), c_uint, FlatBoundingBox_p, c_char_p, c_char_p, c_bool, c_uint, c_uint, c_uint, \
-                              overall_progress_cb_t, c_bool)
-        paramflags = (1, 'imagefiles'), (1, 'num_imagefiles'), (1, 'bounding_boxes'), (1, 'bg_file'), (1, 'modelfile'), \
-                     (1, 'add', True), (1, 'max_aspect_clusters', 2), (1, 'max_who_clusters', 3), (1, 'th_opt_mode', THOPT_LOOCV), \
-                     (1, 'progress_cb', None), (1, 'debug', False)
-        self.learn_files_jpeg = prototype(('learn_files_jpeg', self._lib), paramflags)
-        self.learn_files_jpeg.errcheck = self._errcheck_common
+        self._register_func('learn_files_jpeg',
+            (c_int, POINTER(c_char_p), c_uint, FlatBoundingBox_p, c_char_p, c_char_p, c_bool, c_uint, c_uint, c_uint, overall_progress_cb_t, c_bool),
+            ((1, 'imagefiles'), (1, 'num_imagefiles'), (1, 'bounding_boxes'), (1, 'bg_file'), (1, 'modelfile'),
+             (1, 'add', True), (1, 'max_aspect_clusters', 2), (1, 'max_who_clusters', 3), (1, 'th_opt_mode', THOPT_LOOCV),
+             (1, 'progress_cb', cast(None, progress_cb_t)), (1, 'debug', False))
+        )
         
         # create_learner function
-        prototype = CFUNCTYPE(c_uint, c_char_p, c_char_p, c_bool, c_bool)
-        paramflags = (1, 'bg_file'), (1, 'repo_directory', ''), (1, 'th_opt_loocv', True), (1, 'debug', False)
-        self.create_learner = prototype(('create_learner', self._lib), paramflags)
-        self.create_learner.errcheck = self._errcheck_create_learner
+        self._register_func('create_learner',
+            (c_uint, c_char_p, c_char_p, c_bool, c_bool),
+            ((1, 'bg_file'), (1, 'repo_directory', ''), (1, 'th_opt_loocv', True), (1, 'debug', False)),
+            self._errcheck_create_learner
+        )
         
         # destroy_learner function
-        prototype = CFUNCTYPE(c_void_p, c_uint)
-        paramflags = (1, 'learner'),
-        self.destroy_learner = prototype(('destroy_learner', self._lib), paramflags)
+        self._register_func('destroy_learner',
+            (c_void_p, c_uint),
+            ((1, 'learner'),)
+        )
         
         # learner_add_synset function
-        prototype = CFUNCTYPE(c_int, c_uint, c_char_p, c_uint)
-        paramflags = (1, 'learner'), (1, 'synset_id'), (1, 'max_samples', 0)
-        self.learner_add_synset = prototype(('learner_add_synset', self._lib), paramflags)
-        self.learner_add_synset.errcheck = self._errcheck_common
+        self._register_func('learner_add_synset',
+            (c_int, c_uint, c_char_p, c_uint),
+            ((1, 'learner'), (1, 'synset_id'), (1, 'max_samples', 0))
+        )
         
         # learner_add_file_jpeg function
-        prototype = CFUNCTYPE(c_int, c_uint, c_char_p, FlatBoundingBox_p, c_uint)
-        paramflags = (1, 'learner'), (1, 'imagefile'), (1, 'bboxes', None), (1, 'num_bboxes', 1)
-        self.learner_add_file_jpeg = prototype(('learner_add_file_jpeg', self._lib), paramflags)
-        self.learner_add_file_jpeg.errcheck = self._errcheck_common
+        self._register_func('learner_add_file_jpeg',
+            (c_int, c_uint, c_char_p, FlatBoundingBox_p, c_uint),
+            ((1, 'learner'), (1, 'imagefile'), (1, 'bboxes', None), (1, 'num_bboxes', 1))
+        )
         
         # learner_add_raw function
-        prototype = CFUNCTYPE(c_int, c_uint, c_ubyte_p, c_uint, c_uint, c_bool, FlatBoundingBox_p, c_uint)
-        paramflags = (1, 'learner'), (1, 'img_data'), (1, 'img_width'), (1, 'img_height'), (1, 'grayscale', False), \
-                     (1, 'bboxes', None), (1, 'num_bboxes', 1)
-        self.learner_add_raw = prototype(('learner_add_raw', self._lib), paramflags)
-        self.learner_add_raw.errcheck = self._errcheck_common
+        self._register_func('learner_add_raw',
+            (c_int, c_uint, c_ubyte_p, c_uint, c_uint, c_bool, FlatBoundingBox_p, c_uint),
+            ((1, 'learner'), (1, 'img_data'), (1, 'img_width'), (1, 'img_height'), (1, 'grayscale', False),
+             (1, 'bboxes', None), (1, 'num_bboxes', 1))
+        )
         
         # learner_run function
-        prototype = CFUNCTYPE(c_int, c_uint, c_uint, c_uint, progress_cb_t)
-        paramflags = (1, 'learner'), (1, 'max_aspect_clusters', 2), (1, 'max_who_clusters', 3), (1, 'progress_cb', None)
-        self.learner_run = prototype(('learner_run', self._lib), paramflags)
-        self.learner_run.errcheck = self._errcheck_common
+        self._register_func('learner_run',
+            (c_int, c_uint, c_uint, c_uint, progress_cb_t),
+            ((1, 'learner'), (1, 'max_aspect_clusters', 2), (1, 'max_who_clusters', 3), (1, 'progress_cb', cast(None, progress_cb_t)))
+        )
         
         # learner_optimize_th function
-        prototype = CFUNCTYPE(c_int, c_uint, c_uint, c_uint, progress_cb_t)
-        paramflags = (1, 'learner'), (1, 'max_positive', 0), (1, 'num_negative', 0), (1, 'progress_cb', None)
-        self.learner_optimize_th = prototype(('learner_optimize_th', self._lib), paramflags)
-        self.learner_optimize_th.errcheck = self._errcheck_common
+        self._register_func('learner_optimize_th',
+            (c_int, c_uint, c_uint, c_uint, progress_cb_t),
+            ((1, 'learner'), (1, 'max_positive', 0), (1, 'num_negative', 0), (1, 'progress_cb', cast(None, progress_cb_t)))
+        )
         
         # learner_save function
-        prototype = CFUNCTYPE(c_int, c_uint, c_char_p, c_bool)
-        paramflags = (1, 'learner'), (1, 'modelfile'), (1, 'add', True)
-        self.learner_save = prototype(('learner_save', self._lib), paramflags)
-        self.learner_save.errcheck = self._errcheck_common
+        self._register_func('learner_save',
+            (c_int, c_uint, c_char_p, c_bool),
+            ((1, 'learner'), (1, 'modelfile'), (1, 'add', True))
+        )
         
         # learner_reset function
-        prototype = CFUNCTYPE(c_int, c_uint)
-        paramflags = ((1, 'learner'), )
-        self.learner_reset = prototype(('learner_reset', self._lib), paramflags)
-        self.learner_reset.errcheck = self._errcheck_common
+        self._register_func('learner_reset',
+            (c_int, c_uint),
+            ((1, 'learner'), )
+        )
         
         # learn_bg function
-        prototype = CFUNCTYPE(c_int, c_char_p, c_char_p, c_uint, c_uint, overall_progress_cb_t, c_bool)
-        paramflags = (1, 'repo_directory'), (1, 'bg_file'), (1, 'num_images'), (1, 'max_offset', 19), (1, 'progress_cb', None), (1, 'accurate_autocorrelation', False)
-        self.learn_bg = prototype(('learn_bg', self._lib), paramflags)
-        self.learn_bg.errcheck = self._errcheck_common
+        self._register_func('learn_bg',
+            (c_int, c_char_p, c_char_p, c_uint, c_uint, overall_progress_cb_t, c_bool),
+            ((1, 'repo_directory'), (1, 'bg_file'), (1, 'num_images'), (1, 'max_offset', 19),
+             (1, 'progress_cb', cast(None, progress_cb_t)), (1, 'accurate_autocorrelation', False))
+        )
+        
+        # evaluator_add_samples_from_synset function
+        self._register_func('evaluator_add_samples_from_synset',
+            (c_int, c_uint, c_char_p, c_char_p, c_uint),
+            ((1, 'detector'), (1, 'repo_directory'), (1, 'synset_id'), (1, 'num_negative', 0))
+        )
+        
+        # evaluator_add_positive_file function
+        self._register_func('evaluator_add_positive_file',
+            (c_int, c_uint, c_char_p, c_char_p),
+            ((1, 'detector'), (1, 'imagefile'), (1, 'annotation_file'))
+        )
+        
+        # evaluator_add_positive_file_jpeg function
+        self._register_func('evaluator_add_positive_file_jpeg',
+            (c_int, c_uint, c_char_p, FlatBoundingBox_p, c_uint),
+            ((1, 'detector'), (1, 'imagefile'), (1, 'bboxes', None), (1, 'num_bboxes', 1))
+        )
+        
+        # evaluator_add_positive_raw function
+        self._register_func('evaluator_add_positive_raw',
+            (c_int, c_uint, c_ubyte_p, c_uint, c_uint, c_bool, FlatBoundingBox_p, c_uint),
+            ((1, 'detector'), (1, 'img_data'), (1, 'img_width'), (1, 'img_height'), (1, 'grayscale', False),
+             (1, 'bboxes', None), (1, 'num_bboxes', 1))
+        )
+        
+        # evaluator_add_negative_file_jpeg function
+        self._register_func('evaluator_add_negative_file_jpeg',
+            (c_int, c_uint, c_char_p),
+            ((1, 'detector'), (1, 'imagefile'))
+        )
+        
+        # evaluator_add_negative_raw function
+        self._register_func('evaluator_add_negative_raw',
+            (c_int, c_uint, c_ubyte_p, c_uint, c_uint, c_bool),
+            ((1, 'detector'), (1, 'img_data'), (1, 'img_width'), (1, 'img_height'), (1, 'grayscale', False))
+        )
+        
+        # evaluator_run function
+        self._register_func('evaluator_run',
+            (c_int, c_uint, c_uint, progress_cb_t),
+            ((1, 'detector'), (1, 'granularity', 100), (1, 'progress_cb', cast(None, progress_cb_t)))
+        )
+        
+        # evaluator_get_raw_results function
+        self._register_func('evaluator_get_raw_results',
+            (c_int, c_uint, RawTestResult_p, c_uint_p),
+            ((1, 'detector'), (1, 'result_buf'), (1, 'result_buf_size'))
+        )
+        
+        # evaluator_get_max_fmeasure function
+        self._register_func('evaluator_get_max_fmeasure',
+            (c_int, c_uint, c_float_p, c_float_p),
+            ((1, 'detector'), (1, 'fmeasure'), (1, 'threshold', None))
+        )
+        
+        # evaluator_get_fmeasure_at function
+        self._register_func('evaluator_get_fmeasure_at',
+            (c_int, c_uint, c_float, c_float_p),
+            ((1, 'detector'), (1, 'threshold'), (1, 'fmeasure'))
+        )
+        
+        # evaluator_get_ap function
+        self._register_func('evaluator_get_ap',
+            (c_int, c_uint, c_float_p),
+            ((1, 'detector'), (1, 'ap'))
+        )
+        
+        # evaluator_dump_results function
+        self._register_func('evaluator_dump_results',
+            (c_int, c_uint, c_char_p),
+            ((1, 'detector'), (1, 'dump_file'))
+        )
         
         # change_feature_extractor function
-        prototype = CFUNCTYPE(c_int, c_char_p)
-        paramflags = ((1, 'type'), )
-        self.change_feature_extractor = prototype(('change_feature_extractor', self._lib), paramflags)
-        self.change_feature_extractor.errcheck = self._errcheck_common
+        self._register_func('change_feature_extractor',
+            (c_int, c_char_p),
+            ((1, 'type'), )
+        )
         
         # feature_extractor_get_info function
-        prototype = CFUNCTYPE(c_int, FeatureExtractorInfo_p)
-        paramflags = ((1, 'info'), )
-        self.feature_extractor_get_info = prototype(('feature_extractor_get_info', self._lib), paramflags)
-        self.feature_extractor_get_info.errcheck = self._errcheck_common
+        self._register_func('feature_extractor_get_info',
+            (c_int, FeatureExtractorInfo_p),
+            ((1, 'info'), )
+        )
         
         # list_feature_extractors function
-        prototype = CFUNCTYPE(c_int, FeatureExtractorInfo_p, c_uint_p)
-        paramflags = (1, 'info_buf'), (1, 'info_buf_size')
-        self.list_feature_extractors = prototype(('list_feature_extractors', self._lib), paramflags)
-        self.list_feature_extractors.errcheck = self._errcheck_common
+        self._register_func('list_feature_extractors',
+            (c_int, FeatureExtractorInfo_p, c_uint_p),
+            ((1, 'info_buf'), (1, 'info_buf_size'))
+        )
         
         # list_feature_extractor_params function
-        prototype = CFUNCTYPE(c_int, c_char_p, FeatureExtractorParameter_p, c_uint_p)
-        paramflags = (1, 'type'), (1, 'param_buf'), (1, 'param_buf_size')
-        self.list_feature_extractor_params = prototype(('list_feature_extractor_params', self._lib), paramflags)
-        self.list_feature_extractor_params.errcheck = self._errcheck_common
+        self._register_func('list_feature_extractor_params',
+            (c_int, c_char_p, FeatureExtractorParameter_p, c_uint_p),
+            ((1, 'type'), (1, 'param_buf'), (1, 'param_buf_size'))
+        )
         
         # feature_extractor_list_params function
-        prototype = CFUNCTYPE(c_int, FeatureExtractorParameter_p, c_uint_p)
-        paramflags = (1, 'param_buf'), (1, 'param_buf_size')
-        self.feature_extractor_list_params = prototype(('feature_extractor_list_params', self._lib), paramflags)
-        self.feature_extractor_list_params.errcheck = self._errcheck_common
+        self._register_func('feature_extractor_list_params',
+            (c_int, FeatureExtractorParameter_p, c_uint_p),
+            ((1, 'param_buf'), (1, 'param_buf_size'))
+        )
         
         # feature_extractor_set_int_param function
-        prototype = CFUNCTYPE(c_int, c_char_p, c_int)
-        paramflags = (1, 'param_name'), (1, 'value')
-        self.feature_extractor_set_int_param = prototype(('feature_extractor_set_int_param', self._lib), paramflags)
-        self.feature_extractor_set_int_param.errcheck = self._errcheck_common
+        self._register_func('feature_extractor_set_int_param',
+            (c_int, c_char_p, c_int),
+            ((1, 'param_name'), (1, 'value'))
+        )
         
         # feature_extractor_set_scalar_param function
-        prototype = CFUNCTYPE(c_int, c_char_p, c_float)
-        paramflags = (1, 'param_name'), (1, 'value')
-        self.feature_extractor_set_scalar_param = prototype(('feature_extractor_set_scalar_param', self._lib), paramflags)
-        self.feature_extractor_set_scalar_param.errcheck = self._errcheck_common
+        self._register_func('feature_extractor_set_scalar_param',
+            (c_int, c_char_p, c_float),
+            ((1, 'param_name'), (1, 'value'))
+        )
         
         # feature_extractor_set_string_param function
-        prototype = CFUNCTYPE(c_int, c_char_p, c_char_p)
-        paramflags = (1, 'param_name'), (1, 'value')
-        self.feature_extractor_set_string_param = prototype(('feature_extractor_set_string_param', self._lib), paramflags)
-        self.feature_extractor_set_string_param.errcheck = self._errcheck_common
+        self._register_func('feature_extractor_set_string_param',
+            (c_int, c_char_p, c_char_p),
+            ((1, 'param_name'), (1, 'value'))
+        )
         
         # list_synsets function
-        prototype = CFUNCTYPE(c_int, c_char_p, SynsetSearchResult_p, c_uint_p)
-        paramflags = (1, 'repo_directory'), (1, 'synset_buf'), (1, 'synset_buf_size')
-        self.list_synsets = prototype(('list_synsets', self._lib), paramflags)
-        self.list_synsets.errcheck = self._errcheck_common
+        self._register_func('list_synsets',
+            (c_int, c_char_p, SynsetSearchResult_p, c_uint_p),
+            ((1, 'repo_directory'), (1, 'synset_buf'), (1, 'synset_buf_size'))
+        )
         
         # search_synsets function
-        prototype = CFUNCTYPE(c_int, c_char_p, c_char_p, SynsetSearchResult_p, c_uint_p)
-        paramflags = (1, 'repo_directory'), (1, 'phrase'), (1, 'result_buf'), (1, 'result_buf_size')
-        self.search_synsets = prototype(('search_synsets', self._lib), paramflags)
-        self.search_synsets.errcheck = self._errcheck_common
+        self._register_func('search_synsets',
+            (c_int, c_char_p, c_char_p, SynsetSearchResult_p, c_uint_p),
+            ((1, 'repo_directory'), (1, 'phrase'), (1, 'result_buf'), (1, 'result_buf_size'))
+        )
         
         # extract_images_from_synset and extract_samples_from_synset function
-        prototype = CFUNCTYPE(c_int, c_char_p, c_char_p, c_char_p, c_uint_p)
+        prototype = (c_int, c_char_p, c_char_p, c_char_p, c_uint_p)
         paramflags = (1, 'repo_directory'), (1, 'synset_id'), (1, 'out_directory'), (1, 'num_images')
-        self.extract_images_from_synset = prototype(('extract_images_from_synset', self._lib), paramflags)
-        self.extract_images_from_synset.errcheck = self._errcheck_common
-        self.extract_samples_from_synset = prototype(('extract_samples_from_synset', self._lib), paramflags)
-        self.extract_samples_from_synset.errcheck = self._errcheck_common
+        self._register_func('extract_images_from_synset', prototype, paramflags)
+        self._register_func('extract_samples_from_synset', prototype, paramflags)
         
         # extract_mixed_images function
-        prototype = CFUNCTYPE(c_int, c_char_p, c_char_p, c_uint, c_uint)
-        paramflags = (1, 'repo_directory'), (1, 'out_directory'), (1, 'num_images'), (1, 'per_synset', 1)
-        self.extract_mixed_images = prototype(('extract_mixed_images', self._lib), paramflags)
-        self.extract_mixed_images.errcheck = self._errcheck_common
+        self._register_func('extract_mixed_images',
+            (c_int, c_char_p, c_char_p, c_uint, c_uint),
+            ((1, 'repo_directory'), (1, 'out_directory'), (1, 'num_images'), (1, 'per_synset', 1))
+        )
+    
+    
+    def _register_func(self, funcName, paramtypes, paramflags, errcheck = None):
+        
+        prototype = CFUNCTYPE(*paramtypes)
+        self.__dict__[funcName] = prototype((funcName, self._lib), paramflags)
+        if (paramtypes[0] != c_void_p) or (errcheck is not None):
+            self.__dict__[funcName].errcheck = errcheck if errcheck is not None else self._errcheck_common
 
 
     @staticmethod
@@ -362,11 +461,16 @@ class LibARTOSException(Exception):
         DETECT_RES_INVALID_MODEL_LIST_FILE      : 'Model list file could not be read or parsed',
         DETECT_RES_NO_MODELS                    : 'Models must be added to the detector before detecting',
         DETECT_RES_INVALID_IMAGE                : 'Image could not be processed',
+        DETECT_RES_NO_IMAGES                    : 'No test samples have been added to the detector',
+        DETECT_RES_NO_RESULTS                   : 'The detector has not been run yet',
+        DETECT_RES_INVALID_ANNOTATIONS          : 'Invalid annotation file',
+        DETECT_RES_TOO_MANY_MODELS              : 'Evaluating multiple models at once is not supported',
         LEARN_RES_FAILED                        : 'Learning the model failed for some reason',
         LEARN_RES_INVALID_BG_FILE               : 'Given background statistics file is invalid',
         LEARN_RES_INVALID_IMG_DATA              : 'Invalid image',
         LEARN_RES_NO_SAMPLES                    : 'No positive sample has been added yet',
         LEARN_RES_MODEL_NOT_LEARNED             : 'No model has been learned yet',
+        LEARN_RES_FEATURE_EXTRACTOR_NOT_READY   : 'The feature extractor has not been set up properly',
         IMGREPO_RES_INVALID_REPOSITORY          : 'Given path doesn\'t point to a valid image repository',
         IMGREPO_RES_SYNSET_NOT_FOUND            : 'Synset not found',
         IMGREPO_RES_EXTRACTION_FAILED           : 'Could not extract images from synset. Please check your image repository and make sure, ' \

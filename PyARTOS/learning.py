@@ -124,24 +124,7 @@ class ModelLearner(object):
         # Add sample
         if isinstance(sample, Image.Image):
             # Convert image to plain RGB or grayscale
-            if (sample.mode in ('1', 'L')):
-                grayscale = True
-                if (sample.mode != 'L'):
-                    sample = sample.convert('L')
-            else:
-                grayscale = False
-                if (sample.mode != 'RGB'):
-                    sample = sample.convert('RGB')
-            # Copy raw image data into a buffer
-            numbytes = sample.size[0] * sample.size[1]
-            if not grayscale:
-                numbytes = numbytes * 3
-            try:
-                imgbytes = sample.tobytes()
-            except:
-                imgbytes = sample.tostring()
-            imgdata = ctypes.create_string_buffer(numbytes)
-            ctypes.memmove(imgdata, imgbytes, numbytes)
+            imgdata, grayscale = utils.img2buffer(sample)
             # Add sample
             libartos.learner_add_raw(self.handle, ctypes.cast(imgdata, artos_wrapper.c_ubyte_p), \
                                      sample.size[0], sample.size[1], grayscale, bboxes, numBBoxes)

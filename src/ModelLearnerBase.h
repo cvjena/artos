@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include "defs.h"
+#include "libartos_def.h"
 #include "FeatureExtractor.h"
 #include "SynsetImage.h"
 #include "JPEGImage.h"
@@ -177,10 +178,10 @@ public:
     *
     * @param[in] cbData Will be passed to the `progressCB` callback as third parameter.
     *
-    * @return True if some models could be learned, false if learning failed completely.
+    * @return Returns ARTOS_RES_OK if some models could be learned or an error code if learning failed completely.
     */
-    virtual bool learn(const unsigned int maxAspectClusters = 1, const unsigned int maxFeatureClusters = 1,
-                       ProgressCallback progressCB = NULL, void * cbData = NULL);
+    virtual int learn(const unsigned int maxAspectClusters = 1, const unsigned int maxFeatureClusters = 1,
+                      ProgressCallback progressCB = NULL, void * cbData = NULL);
     
     /**
     * Finds the optimal combination of thresholds for the models learned previously with learn() by testing them
@@ -264,17 +265,19 @@ protected:
     * The value returned by the callback will be ignored.
     *
     * @param[in] cbData Will be passed to the `progressCB` callback as third parameter.
+    *
+    * @return Returns ARTOS_RES_OK if learning has been successful, otherwise an error code will be returned.
     */
-    virtual void m_learn(Eigen::VectorXi & aspectClusterAssignment, std::vector<int> & samplesPerAspectCluster, std::vector<Size> & cellNumbers,
-                         const unsigned int maxFeatureClusters, ProgressCallback progressCB, void * cbData) =0;
+    virtual int m_learn(Eigen::VectorXi & aspectClusterAssignment, std::vector<int> & samplesPerAspectCluster, std::vector<Size> & cellNumbers,
+                        const unsigned int maxFeatureClusters, ProgressCallback progressCB, void * cbData) =0;
     
     
     /**
     * Called by learn() before anything is done to initialize the model learner.
     *
-    * @return Returns true if learning may be performed or false if the model learner is not ready.
+    * @return Returns ARTOS_RES_OK if learning may be performed or an error code if the model learner is not ready.
     */
-    virtual bool learn_init();
+    virtual int learn_init();
     
     
     /**

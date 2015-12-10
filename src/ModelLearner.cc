@@ -118,17 +118,21 @@ Size ModelLearner::maximumModelSize() const
 }
 
 
-bool ModelLearner::learn_init()
+int ModelLearner::learn_init()
 {
     this->m_normFactors.clear();
-    return (ModelLearnerBase::learn_init() && !this->m_bg.empty()
-            && this->m_bg.cellSize == this->m_featureExtractor->cellSize()
-            && this->m_bg.getNumFeatures() <= this->m_featureExtractor->numFeatures());
+    int res = ModelLearnerBase::learn_init();
+    if (res != ARTOS_RES_OK)
+        return res;
+    if (this->m_bg.empty() || this->m_bg.cellSize != this->m_featureExtractor->cellSize()
+            || this->m_bg.getNumFeatures() > this->m_featureExtractor->numFeatures())
+        return ARTOS_LEARN_RES_INVALID_BG_FILE;
+    return ARTOS_RES_OK;
 }
 
 
-void ModelLearner::m_learn(Eigen::VectorXi & aspectClusterAssignment, vector<int> & samplesPerAspectCluster, vector<Size> & cellNumbers,
-                           const unsigned int maxWHOClusters, ProgressCallback progressCB, void * cbData)
+int ModelLearner::m_learn(Eigen::VectorXi & aspectClusterAssignment, vector<int> & samplesPerAspectCluster, vector<Size> & cellNumbers,
+                          const unsigned int maxWHOClusters, ProgressCallback progressCB, void * cbData)
 {
     unsigned int c, i, j, s, t; // yes, we do need that much iteration variables
     const unsigned int numFeatures = this->m_featureExtractor->numFeatures();
@@ -396,6 +400,8 @@ void ModelLearner::m_learn(Eigen::VectorXi & aspectClusterAssignment, vector<int
         if (progressCB != NULL)
             progressCB(progressStep, progressTotal, cbData);
     }
+    
+    return ARTOS_RES_OK;
 }
 
 

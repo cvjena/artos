@@ -58,6 +58,16 @@ int DPMDetection::addModel ( const std::string & classname, const std::string & 
     Mixture * mixture = new Mixture();
     try {
         in >> (*mixture);
+    } catch (const UnknownFeatureExtractorException & e) {
+        if (this->verbose)
+            cerr << "Invalid model file: " << modelfile << " (" << e.what() << ")" << endl;
+        delete mixture;
+        return ARTOS_SETTINGS_RES_UNKNOWN_FEATURE_EXTRACTOR;
+    } catch (const UnknownParameterException & e) {
+        if (this->verbose)
+            cerr << "Invalid model file: " << modelfile << " (" << e.what() << ")" << endl;
+        delete mixture;
+        return ARTOS_SETTINGS_RES_UNKNOWN_PARAMETER;
     } catch (const Exception & e) {
         if (this->verbose)
             cerr << "Invalid model file: " << modelfile << " (" << e.what() << ")" << endl;
@@ -67,7 +77,7 @@ int DPMDetection::addModel ( const std::string & classname, const std::string & 
         if (this->verbose)
             cerr << "Invalid model file: " << modelfile << " (" << e.what() << ")" << endl;
         delete mixture;
-        return ARTOS_DETECT_RES_INVALID_MODEL_FILE;
+        return ARTOS_SETTINGS_RES_INVALID_PARAMETER_VALUE;
     }
 
     return this->addModelPointer(classname, mixture, threshold, synsetId);

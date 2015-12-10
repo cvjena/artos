@@ -277,24 +277,7 @@ class Detector(object):
         # Run detector
         if isinstance(img, Image.Image):
             # Convert image to plain RGB or grayscale
-            if (img.mode in ('1', 'L')):
-                grayscale = True
-                if (img.mode != 'L'):
-                    img = img.convert('L')
-            else:
-                grayscale = False
-                if (img.mode != 'RGB'):
-                    img = img.convert('RGB')
-            # Copy raw image data into a buffer
-            numbytes = img.size[0] * img.size[1]
-            if not grayscale:
-                numbytes = numbytes * 3
-            try:
-                imgbytes = img.tobytes()
-            except:
-                imgbytes = img.tostring()
-            imgdata = ctypes.create_string_buffer(numbytes)
-            ctypes.memmove(imgdata, imgbytes, numbytes)
+            imgdata, grayscale = utils.img2buffer(img)
             # Run detector
             libartos.detect_raw(self.handle, ctypes.cast(imgdata, artos_wrapper.c_ubyte_p), img.size[0], img.size[1], grayscale, buf, buf_size)
         else:
@@ -303,3 +286,164 @@ class Detector(object):
        
         # Convert detection results (buf_size is set to the actual number of detection results by the library)
         return [Detection.fromFlatDetection(buf[i]) for i in range(buf_size.value)]
+    
+    
+    def addEvaluationPositive(self, sample, boundingBoxes = None):
+        """Adds an image as positive test sample for evaluating the performance of the models added to the detector.
+        
+        sample - Either a PIL.Image.Image object or a path to a JPEG file. In the latter case, the image will be read
+                 directly by the library.
+        boundingBoxes - Either a Sequence with BoundingBox instances or (left, top, right, bottom) tuples, which
+                        specify the bounding boxes around the objects on the given image, or a path to an XML annotations
+                        file belonging to the image. In the latter case, the image must be given by filename too.
+                        If this is set to None or an empty sequence the entire image will be considered to show the object.
+        
+        If an error occurs, a LibARTOSException is thrown.
+        """
+        
+        if not (isinstance(sample, Image.Image) or utils.is_str(sample)):
+            raise TypeError('{0}.addEvaluationPositive expects argument sample to be either PIL.Image.Image or string'.format(self.__class__.__name__))
+        if utils.is_str(boundingBoxes) and (not utils.is_str(sample)):
+            raise TypeError('{0}.addEvaluationPositive expects image to be given by filename if annotation file is specified'.format(self.__class__.__name__))
+        if isinstance(boundingBoxes, BoundingBox):
+            boundingBoxes = (boundingBoxes,)
+        
+        # Convert bounding box sequence to FlatBoundingBox array
+        if (boundingBoxes is not None) and (not utils.is_str(boundingBoxes)) and (len(boundingBoxes) > 0):
+            bboxes = (artos_wrapper.FlatBoundingBox * len(boundingBoxes))()
+            for i, box in enumerate((BoundingBox(b) for b in boundingBoxes)):
+                bboxes[i] = artos_wrapper.FlatBoundingBox(left = box.left, top = box.top, width = box.width, height = box.height);
+            numBBoxes = len(bboxes)
+        else:
+            bboxes = None
+            numBBoxes = 0
+        
+        # Add sample
+        if utils.is_str(boundingBoxes):
+            # Treat sample and annotations as file name
+            libartos.evaluator_add_positive_file(self.handle, utils.str2bytes(sample), utils.str2bytes(boundingBoxes))
+        elif isinstance(sample, Image.Image):
+            # Convert image to plain RGB or grayscale
+            imgdata, grayscale = utils.img2buffer(sample)
+            libartos.evaluator_add_positive_raw(self.handle, ctypes.cast(imgdata, artos_wrapper.c_ubyte_p), \
+                                                sample.size[0], sample.size[1], grayscale, bboxes, numBBoxes)
+        else:
+            # Treat sample as file name
+            libartos.evaluator_add_positive_file_jpeg(self.handle, utils.str2bytes(sample), bboxes, numBBoxes)
+    
+    
+    def addEvaluationPositivesFromSynset(self, imageRepository, synsetId, numNegative = 0):
+        """Adds positive and (optionally) negative test samples from an image repository for evaluating the performance of models added to the detector.
+        
+        imageRepository - Path to the image repository or an imagenet.ImageRepository instance.
+        synsetId - The ID of the synset.
+        numNegative - The number of negative samples to add from other synsets.
+        
+        If an error occurs, a LibARTOSException is thrown.
+        """
+        
+        repoDirectory = imageRepository if utils.is_str(imageRepository) else imageRepository.repoDirectory
+        libartos.evaluator_add_samples_from_synset(self.handle, utils.str2bytes(repoDirectory), utils.str2bytes(synsetId), numNegative)
+    
+    
+    def addEvaluationNegative(self, sample):
+        """Adds an image as negative test sample for evaluating the performance of the models added to the detector.
+        
+        sample - Either a PIL.Image.Image object or a path to a JPEG file. In the latter case, the image will be read
+                 directly by the library.
+        
+        If an error occurs, a LibARTOSException is thrown.
+        """
+        
+        if not (isinstance(sample, Image.Image) or utils.is_str(sample)):
+            raise TypeError('{0}.addEvaluationNegative expects argument sample to be either PIL.Image.Image or string'.format(self.__class__.__name__))
+        
+        # Add sample
+        if isinstance(sample, Image.Image):
+            # Convert image to plain RGB or grayscale
+            imgdata, grayscale = utils.img2buffer(sample)
+            libartos.evaluator_add_negative_raw(self.handle, ctypes.cast(imgdata, artos_wrapper.c_ubyte_p), \
+                                                sample.size[0], sample.size[1], grayscale)
+        else:
+            # Treat sample as file name
+            libartos.evaluator_add_negative_file_jpeg(self.handle, utils.str2bytes(sample))
+    
+    
+    def evaluate(self, granularity = 100, progressCallback = None):
+        """Runs the detector over all positive and negative test samples.
+        
+        Runs the detector over all positive and negative test samples added before using addEvaluationPositive and
+        addEvaluationNegative and collects performance data about true and false positive detections at different
+        thresholds.
+        
+        The `overlap` parameter specified in the constructor will be used to decide if a detection has enough
+        overlap with the bounding box of an annotated object to be considered as true positive.
+        
+        Evaluating multiple models for the same class with one run is not supported at the moment. That means,
+        the detector must have exactly one model.
+        
+        granularity - Specifies the "resolution" or "precision" of the threshold scale.
+                      The distance from one threshold to the next one will be 1/granularity.
+        progressCallback - Optionally, a callback that is called after each run of the detector against a sample.
+                           The first parameter to the callback will be the number of samples processed and the second
+                           parameter will be the total number of samples to be processed. For example, the argument list
+                           (5, 10) means that the optimization is half way done.
+                           The callback may return false to abort the operation. To continue, it must return true.
+        
+        Returns: Returns a dictionary with the items 'ap' (Average Precision), 'maxFMeasure' (maximum F-measure) and
+                 'fmeasure' (F-measure at threshold 0).
+        
+        If an error occurs, a LibARTOSException is thrown.
+        """
+        
+        cb = artos_wrapper.progress_cb_t(progressCallback) if not progressCallback is None \
+             else ctypes.cast(None, artos_wrapper.progress_cb_t)
+        libartos.evaluator_run(self.handle, granularity, cb)
+        
+        results = dict()
+        try:
+            val = ctypes.c_float()
+            libartos.evaluator_get_ap(self.handle, val)
+            results['ap'] = val.value
+            libartos.evaluator_get_max_fmeasure(self.handle, val)
+            results['maxFMeasure'] = val.value
+            libartos.evaluator_get_fmeasure_at(self.handle, 0, val)
+            results['fmeasure'] = val.value
+        except:
+            pass
+        return results
+    
+    
+    def dumpEvaluationResults(self, dumpFile):
+        """Exports the results of evaluate() to a CSV file.
+        
+        Exports the results of evaluate() to a CSV file, which will contain the number of true positives, false positives,
+        total number of positives, precision, recall and F-measure for each threshold.
+        
+        dumpFile - The name of the file to write the test results to.
+        
+        If an error occurs, a LibARTOSException is thrown.
+        """
+        
+        libartos.evaluator_dump_results(self.handle, utils.str2bytes(dumpFile))
+    
+    
+    def getRawEvaluationResults(self):
+        """Retrieves the raw test results from the last call to evaluate().
+        
+        Returns: List of dictionaries with the items 'threshold', 'tp' (true positives), 'fp' (false positives)
+                 and 'np' (total number of positives).
+        
+        If an error occurs, a LibARTOSException is thrown.
+        """
+        
+        numResults = ctypes.c_uint()
+        libartos.evaluator_get_raw_results(self.handle, None, numResults)
+        result_buf = (artos_wrapper.RawTestResult * numResults.value)()
+        libartos.evaluator_get_raw_results(self.handle, result_buf, numResults)
+        return [{
+                'threshold' : result_buf[i].threshold,
+                'tp' : result_buf[i].tp,
+                'fp' : result_buf[i].fp,
+                'np' : result_buf[i].np
+            } for i in range(numResults.value)]

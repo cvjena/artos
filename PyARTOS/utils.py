@@ -1,6 +1,6 @@
 """Provides some common helper functions."""
 
-import math, re, os.path, sys, time
+import math, re, os.path, sys, time, ctypes
 try:
     from PIL import Image, ImageTk
 except:
@@ -124,6 +124,37 @@ def imgResizeCropped(img, size, filter = Image.ANTIALIAS):
     top = (result.size[1] - size[1]) // 2
     result = result.crop((left, top, left + size[0], top + size[1]))
     return result
+
+
+def img2buffer(img):
+    """Creates a raw ctypes string buffer containing the raw pixel data of a given image.
+    
+    img - The image to convert to raw pixel data.
+    
+    Returns: A tuple consisting of the string buffer and a boolean variable that indicates if
+             the image is a grayscale image (true) or an RGB image (false).
+    """
+    
+    # Convert image to plain RGB or grayscale
+    if (img.mode in ('1', 'L')):
+        grayscale = True
+        if (img.mode != 'L'):
+            img = img.convert('L')
+    else:
+        grayscale = False
+        if (img.mode != 'RGB'):
+            img = img.convert('RGB')
+    # Copy raw image data into a buffer
+    numbytes = img.size[0] * img.size[1]
+    if not grayscale:
+        numbytes = numbytes * 3
+    try:
+        imgbytes = img.tobytes()
+    except:
+        imgbytes = img.tostring()
+    imgdata = ctypes.create_string_buffer(numbytes)
+    ctypes.memmove(imgdata, imgbytes, numbytes)
+    return imgdata, grayscale
 
 
 
