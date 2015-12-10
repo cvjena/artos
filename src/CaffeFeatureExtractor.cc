@@ -8,18 +8,22 @@ using namespace caffe;
 using namespace std;
 
 
-std::map< std::pair<std::string, std::string>, std::shared_ptr< caffe::Net<float> > > CaffeFeatureExtractor::netPool;
+std::map< std::pair<std::string, std::string>, std::weak_ptr< caffe::Net<float> > > CaffeFeatureExtractor::netPool;
 
-bool CaffeFeatureExtractor::initializedGLog = false;
+bool CaffeFeatureExtractor::initializedCaffe = false;
 
 
 CaffeFeatureExtractor::CaffeFeatureExtractor() : m_net(nullptr), m_mean(0)
 {
-    Caffe::set_mode(Caffe::CPU);
-    if (!CaffeFeatureExtractor::initializedGLog)
+    if (!CaffeFeatureExtractor::initializedCaffe)
     {
+#ifdef CPU_ONLY
+        Caffe::set_mode(Caffe::CPU);
+#else
+        Caffe::set_mode(Caffe::GPU);
+#endif
         ::google::InitGoogleLogging("CaffeFeatureExtractor");
-        CaffeFeatureExtractor::initializedGLog = true;
+        CaffeFeatureExtractor::initializedCaffe = true;
     }
     this->m_stringParams["netFile"] = "";
     this->m_stringParams["weightsFile"] = "";
@@ -192,11 +196,8 @@ void CaffeFeatureExtractor::loadNetwork()
     {
         // Search for cached network
         auto cacheIt = CaffeFeatureExtractor::netPool.find(make_pair(netFile, weightsFile));
-        if (cacheIt != CaffeFeatureExtractor::netPool.end())
-        {
-            this->m_net = cacheIt->second;
+        if (cacheIt != CaffeFeatureExtractor::netPool.end() && (this->m_net = cacheIt->second.lock()))
             this->m_numChannels = this->m_net->input_blobs()[0]->channels();
-        }
         else
         {
         

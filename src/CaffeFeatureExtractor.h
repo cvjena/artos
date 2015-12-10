@@ -201,12 +201,12 @@ protected:
     * Cache of networks which have already been loaded to be used by different feature extractor instances.
     * Their key is a pair of the protobuf filename and the weights filename.
     */
-    static std::map< std::pair<std::string, std::string>, std::shared_ptr< caffe::Net<float> > > netPool;
+    static std::map< std::pair<std::string, std::string>, std::weak_ptr< caffe::Net<float> > > netPool;
 
 
 private:
 
-    static bool initializedGLog;
+    static bool initializedCaffe;
 
 };
 
