@@ -2,6 +2,7 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <algorithm>
+#include <fstream>
 #include <sstream>
 using namespace ARTOS;
 using namespace caffe;
@@ -28,6 +29,7 @@ CaffeFeatureExtractor::CaffeFeatureExtractor() : m_net(nullptr), m_mean(0)
     this->m_stringParams["netFile"] = "";
     this->m_stringParams["weightsFile"] = "";
     this->m_stringParams["meanFile"] = "";
+    this->m_stringParams["scalesFile"] = "";
     this->m_stringParams["layerName"] = "";
     this->m_intParams["maxImgSize"] = 0;
 };
@@ -96,6 +98,8 @@ void CaffeFeatureExtractor::setParam(const string & paramName, const std::string
     }
     else if (paramName == "meanFile")
         this->loadMean();
+    else if (paramName == "scalesFile")
+        this->loadScales();
     else if (paramName == "layerName")
         this->loadLayerInfo();
 }
@@ -137,6 +141,10 @@ void CaffeFeatureExtractor::extract(const JPEGImage & img, FeatureMatrix & feat)
         ).cast<FeatureScalar>();
         feature_data += w * h;
     }
+    
+    // Scale features
+    if (this->m_scales.size() == feat.channels())
+        feat /= this->m_scales;
 }
 
 
@@ -239,6 +247,7 @@ void CaffeFeatureExtractor::loadNetwork()
             ++this->m_lastLayer;
         
         this->loadLayerInfo();
+        this->loadScales();
     }
 }
 
@@ -277,6 +286,35 @@ void CaffeFeatureExtractor::loadMean()
 
         /* Compute the global mean pixel value per channel. */
         this->m_mean = cv::mean(mean);
+    }
+}
+
+
+void CaffeFeatureExtractor::loadScales()
+{
+    this->m_scales = FeatureCell();
+    string scalesFilename = this->getStringParam("scalesFile");
+
+    if (this->m_net && !scalesFilename.empty())
+    {
+        FeatureCell scales(this->numFeatures());
+        
+        ifstream scalesFile(scalesFilename);
+        if (!scalesFile.is_open())
+            throw std::invalid_argument("Scales file could not be loaded: " + scalesFilename);
+        
+        for (FeatureCell::Index i = 0; i < scales.size(); i++)
+        {
+            if (scalesFile.eof())
+                throw std::invalid_argument("Wrong number of channels in scales file: " + scalesFilename);
+            scalesFile >> scales(i);
+            if (scalesFile.bad())
+                throw std::invalid_argument("Scales file could not be read: " + scalesFilename);
+            else if (scalesFile.fail())
+                throw std::invalid_argument("Invalid scales file: " + scalesFilename);
+        }
+        
+        this->m_scales = scales;
     }
 }
 

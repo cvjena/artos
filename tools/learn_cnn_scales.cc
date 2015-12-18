@@ -18,18 +18,18 @@ int main(int argc, char * argv[])
     }
     
     // Check repository
-    if (!ImageRepository::hasRepositoryStructure(argv[2]))
+    if (!ImageRepository::hasRepositoryStructure(argv[5]))
     {
         cout << "Invalid image repository." << endl;
         return 1;
     }
-    MixedImageIterator imgIt(argv[2], 1);
+    MixedImageIterator imgIt(argv[5], 1);
     
     // Get parameters
     unsigned int numImages = (argc >= 7) ? strtoul(argv[6], NULL, 0) : 0;
     if (numImages == 0)
         numImages = 1000;
-    string netFile(argv[3]), weightsFile(argv[4]), meanFile(argv[5]), layerName = "";
+    string netFile(argv[2]), weightsFile(argv[3]), meanFile(argv[4]), layerName = "";
     if (argc >= 8)
         layerName = argv[7];
     

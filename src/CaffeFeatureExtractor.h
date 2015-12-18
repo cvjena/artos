@@ -17,6 +17,9 @@ namespace ARTOS
 *     - *weightsFile* (`string`) - path to the file with the pre-trained weights for the network.
 *     - *meanFile* (`string`) - path to a mean image file which has to be subtracted from each
 *       sample before propagating it through the network.
+*     - *scalesFile* (`string`) - path to a text file with the maximum value of each unscaled feature
+*       channel, computed over several images in advance. If specified, the features extracted from the
+*       CNN will be scaled to [-1,1].
 *     - *layerName* (`string`) - the name of the layer in the network to extract features from.
 *     - *maxImgSize* (`int`) - maximum size of input images (may be limited to save time and memory).
 *       0 means no limit.
@@ -153,6 +156,7 @@ protected:
 
     std::shared_ptr< caffe::Net<float> > m_net; /**< The network. */
     cv::Scalar m_mean; /**< Image mean. */
+    FeatureCell m_scales; /**< Maxima of each unscaled feature channel, computed over several images in advance. */
     int m_lastLayer; /**< Index of the last convolutional layer in the network before the fully connected network. */
     int m_numChannels; /**< Number of input channels of the network. */
     int m_layerIndex; /**< Index of the layer to extract features from. */
@@ -173,6 +177,14 @@ protected:
     * @throws std::invalid_argument The mean file could not be loaded.
     */
     void loadMean();
+
+    /**
+    * Tries to load the maxima of each unscaled feature channel from the file
+    * specified in the parameter "meanFile".
+    *
+    * @throws std::invalid_argument The mean file could not be loaded.
+    */
+    void loadScales();
     
     /**
     * Caches information about the layer specified in the parameter "layerName" if the net has already been loaded

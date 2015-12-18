@@ -576,6 +576,64 @@ public:
         return *this;
     };
 
+    /**
+    * Multiplies the values of all channels in this FeatureMatrix with a scalar factor
+    * depending on the channel.
+    *
+    * @param[in] cell Feature vector with the scalar factors to multiply each channel with.
+    *
+    * @returns Returns a reference to the new matrix which forms the product.
+    */
+    FeatureMatrix_ operator*(const Cell & cell) const
+    {
+        FeatureMatrix_ prod(*this);
+        return prod *= cell;
+    };
+
+    /**
+    * Multiplies the values of all channels in this FeatureMatrix with a scalar factor
+    * depending on the channel.
+    *
+    * @param[in] cell Feature vector with the scalar factors to multiply each channel with.
+    *
+    * @returns Returns a reference to this FeatureMatrix.
+    */
+    FeatureMatrix_ & operator*=(const Cell & cell)
+    {
+        assert(cell.size() == this->m_channels);
+        this->m_data.array().rowwise() *= cell.colwise().replicate(this->m_cols).transpose().array();
+        return *this;
+    };
+
+    /**
+    * Divides the values of all channels in this FeatureMatrix by a scalar factor
+    * depending on the channel.
+    *
+    * @param[in] cell Feature vector with the scalar factors to divide each channel by.
+    *
+    * @returns Returns a reference to the new matrix which forms the quotient.
+    */
+    FeatureMatrix_ operator/(const Cell & cell) const
+    {
+        FeatureMatrix_ quot(*this);
+        return quot /= cell;
+    };
+
+    /**
+    * Divides the values of all channels in this FeatureMatrix by a scalar factor
+    * depending on the channel.
+    *
+    * @param[in] cell Feature vector with the scalar factors to divide each channel by.
+    *
+    * @returns Returns a reference to this FeatureMatrix.
+    */
+    FeatureMatrix_ & operator/=(const Cell & cell)
+    {
+        assert(cell.size() == this->m_channels);
+        this->m_data.array().rowwise() /= cell.colwise().replicate(this->m_cols).transpose().array();
+        return *this;
+    };
+
 
 protected:
     
