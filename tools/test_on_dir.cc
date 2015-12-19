@@ -1,3 +1,15 @@
+/**
+* @file
+* This is an example on how to use the `libartos` `C++`-API for evaluating the
+* performance of a specific model on data stored in a given directory.
+*
+* This could also be done using the `C`-API in analogy to the respective example
+* in `test_on_synset.cc`.
+*
+* @author Bjoern Barz <bjoern.barz@uni-jena.de>
+*/
+
+
 #include <iostream>
 #include <string>
 #include <vector>

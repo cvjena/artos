@@ -1,3 +1,12 @@
+/**
+* @file
+* This example demonstrates how to extract Whitened HOG (WHO) features
+* from images using the `libartos` `C++`-API.
+*
+* @author Bjoern Barz <bjoern.barz@uni-jena.de>
+*/
+
+
 #include <iostream>
 #include <fstream>
 #include "StationaryBackground.h"

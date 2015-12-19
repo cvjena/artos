@@ -1,3 +1,11 @@
+/**
+* @file
+* This example demonstrates how to extract HOG features from images
+* using the `libartos` `C++`-API.
+*
+* @author Bjoern Barz <bjoern.barz@uni-jena.de>
+*/
+
 #include <iostream>
 #include <fstream>
 #include "JPEGImage.h"
