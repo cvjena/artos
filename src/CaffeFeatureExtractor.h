@@ -16,7 +16,8 @@ namespace ARTOS
 *     - *netFile* (`string`) - path to the protobuf file specifying the network structure.
 *     - *weightsFile* (`string`) - path to the file with the pre-trained weights for the network.
 *     - *meanFile* (`string`) - path to a mean image file which has to be subtracted from each
-*       sample before propagating it through the network.
+*       sample before propagating it through the network. This may be either a binaryproto file with a
+*       mean image or a plain text file with 3 values, one for each channel.
 *     - *scalesFile* (`string`) - path to a text file with the maximum value of each unscaled feature
 *       channel, computed over several images in advance. If specified, the features extracted from the
 *       CNN will be scaled to [-1,1].

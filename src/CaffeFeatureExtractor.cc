@@ -259,33 +259,49 @@ void CaffeFeatureExtractor::loadMean()
     
     if (!meanFile.empty())
     {
+        // Try to read binaryproto as mean image
         BlobProto blob_proto;
-        if (!ReadProtoFromBinaryFile(meanFile.c_str(), &blob_proto))
-            throw std::invalid_argument("Mean file could not be loaded: " + meanFile);
-
-        /* Convert from BlobProto to Blob<float> */
-        Blob<float> mean_blob;
-        mean_blob.FromProto(blob_proto);
-        if (this->m_net && mean_blob.channels() != this->m_numChannels)
-            throw std::invalid_argument("Number of channels of mean file doesn't match input layer.");
-
-        /* The format of the mean file is planar 32-bit float BGR or grayscale. */
-        vector<cv::Mat> channels;
-        float * data = mean_blob.mutable_cpu_data();
-        for (int i = 0; i < mean_blob.channels(); ++i)
+        if (ReadProtoFromBinaryFile(meanFile.c_str(), &blob_proto))
         {
-            /* Extract an individual channel. */
-            cv::Mat channel(mean_blob.height(), mean_blob.width(), CV_32FC1, data);
-            channels.push_back(channel);
-            data += mean_blob.height() * mean_blob.width();
+
+            /* Convert from BlobProto to Blob<float> */
+            Blob<float> mean_blob;
+            mean_blob.FromProto(blob_proto);
+            if (this->m_net && mean_blob.channels() != this->m_numChannels)
+                throw std::invalid_argument("Number of channels of mean file doesn't match input layer.");
+
+            /* The format of the mean file is planar 32-bit float BGR or grayscale. */
+            vector<cv::Mat> channels;
+            float * data = mean_blob.mutable_cpu_data();
+            for (int i = 0; i < mean_blob.channels(); ++i)
+            {
+                /* Extract an individual channel. */
+                cv::Mat channel(mean_blob.height(), mean_blob.width(), CV_32FC1, data);
+                channels.push_back(channel);
+                data += mean_blob.height() * mean_blob.width();
+            }
+
+            /* Merge the separate channels into a single image. */
+            cv::Mat mean;
+            cv::merge(channels, mean);
+
+            /* Compute the global mean pixel value per channel. */
+            this->m_mean = cv::mean(mean);
+        
         }
-
-        /* Merge the separate channels into a single image. */
-        cv::Mat mean;
-        cv::merge(channels, mean);
-
-        /* Compute the global mean pixel value per channel. */
-        this->m_mean = cv::mean(mean);
+        else
+        {
+            
+            // Try to read mean channel values from text file
+            ifstream mFile(meanFile);
+            float dummy;
+            if (!mFile.is_open())
+                throw std::invalid_argument("Mean file could not be loaded: " + meanFile);
+            mFile >> this->m_mean[0] >> this->m_mean[1] >> this->m_mean[2];
+            if (mFile.fail() || (mFile >> dummy))
+                throw std::invalid_argument("Mean file could not be loaded: " + meanFile);
+            
+        }
     }
 }
 
