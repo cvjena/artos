@@ -53,7 +53,7 @@ int CaffeFeatureExtractor::numFeatures() const
     if (!this->m_net)
         throw UseBeforeSetupException("netFile and weightsFile have to be set before CaffeFeatureExtractor may be used.");
     
-    return this->m_net->blob_by_name(this->m_net->layer_names()[this->m_layerIndex])->channels();
+    return this->m_net->top_vecs()[this->m_layerIndex][0]->channels();
 }
 
 
@@ -86,7 +86,7 @@ void CaffeFeatureExtractor::setParam(const string & paramName, int32_t val)
 
 void CaffeFeatureExtractor::setParam(const string & paramName, const std::string & val)
 {
-    if (paramName == "layerName" && this->m_net && !this->m_net->has_blob(val))
+    if (paramName == "layerName" && this->m_net && !this->m_net->has_layer(val))
         throw std::invalid_argument("CNN layer not found: " + val);
     
     FeatureExtractor::setParam(paramName, val);
@@ -130,7 +130,7 @@ void CaffeFeatureExtractor::extract(const JPEGImage & img, FeatureMatrix & feat)
     this->m_net->ForwardTo(this->m_layerIndex);
 
     // Extract features from the given layer
-    const boost::shared_ptr< Blob<float> > feature_layer = this->m_net->blob_by_name(this->m_net->layer_names()[this->m_layerIndex]);
+    const Blob<float> * feature_layer = this->m_net->top_vecs()[this->m_layerIndex][0];
     int w = feature_layer->width(), h = feature_layer->height();
     feat.resize(h, w, feature_layer->channels());
     const float * feature_data = feature_layer->cpu_data();
