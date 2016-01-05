@@ -66,6 +66,7 @@ class ModelWidget(ttk.Frame):
         self.synsetText = Tkinter.StringVar(self)
         self.modelNumText = Tkinter.StringVar(self)
         self.thresholdText = Tkinter.StringVar(self)
+        self.selectedVar = Tkinter.BooleanVar(self, False)
         self.bind('<Destroy>', self.onDestroy, True)
         self._createWidgets()
         self.modelIndex = modelIndex
@@ -85,17 +86,21 @@ class ModelWidget(ttk.Frame):
         
         # Info labels
         self.lblClassname = ttk.Label(self, textvariable = self.classnameText, font = 'TkDefaultFont 12 bold')
-        self.lblClassname.grid(column = 1, row = 0, sticky = W, pady = (8,0))
+        self.lblClassname.grid(column = 2, row = 0, sticky = W, pady = (8,0))
         self.lblSynset = ttk.Label(self, textvariable = self.synsetText)
-        self.lblSynset.grid(column = 1, row = 1, sticky = W, pady = (0,8))
+        self.lblSynset.grid(column = 2, row = 1, sticky = W, pady = (0,8))
         self.lblModelNum = ttk.Label(self, textvariable = self.modelNumText)
-        self.lblModelNum.grid(column = 1, row = 2, sticky = W, pady = 2)
+        self.lblModelNum.grid(column = 2, row = 2, sticky = W, pady = 2)
         self.lblThreshold = ttk.Label(self, textvariable = self.thresholdText)
-        self.lblThreshold.grid(column = 1, row = 3, sticky = W, pady = (2, 8))
+        self.lblThreshold.grid(column = 2, row = 3, sticky = W, pady = (2, 8))
+        
+        # Selection checkbox
+        self.chkSelected = ttk.Checkbutton(self, variable = self.selectedVar, command = self._cw.onModelSelect, takefocus = False)
+        self.chkSelected.grid(column = 0, row = 0, rowspan = 4)
         
         # Control buttons
         self.frmButtons = ttk.Frame(self)
-        self.frmButtons.grid(column = 2, row = 0, rowspan = 4, pady = 8)
+        self.frmButtons.grid(column = 3, row = 0, rowspan = 4, pady = 8)
         self.ctrlBtns = {
             'inspect'   : { 'pos' : 0, 'btn': ttk.Button(self.frmButtons, text = 'Inspect', command = self.showInspector) },
             'adapt'     : { 'pos' : 1, 'btn': ttk.Button(self.frmButtons, text = 'Adapt', command = self.adaptModel) },
@@ -111,10 +116,10 @@ class ModelWidget(ttk.Frame):
         # Thumbnail labels
         self.thumbLabels = []
         self.frmThumbs = ttk.Frame(self)
-        self.frmThumbs.grid(column = 0, row = 0, rowspan = 4, sticky = W)
+        self.frmThumbs.grid(column = 1, row = 0, rowspan = 4, sticky = W)
         
-        self.columnconfigure(0, minsize = self.thumbNum[0] * (self.thumbSize[0] + 8) + 10)
-        self.columnconfigure(1, weight = 1)
+        self.columnconfigure(1, minsize = self.thumbNum[0] * (self.thumbSize[0] + 8) + 10)
+        self.columnconfigure(2, weight = 1)
         
         self.frames = (self.frmButtons, self.frmThumbs)
         self.labels = (self.lblClassname, self.lblSynset, self.lblModelNum, self.lblThreshold)
@@ -129,6 +134,7 @@ class ModelWidget(ttk.Frame):
                 del self.synsetText
                 del self.modelNumText
                 del self.thresholdText
+                del self.selectedVar
                 for lbl in self.thumbLabels:
                     del lbl._img
             except:
@@ -168,6 +174,7 @@ class ModelWidget(ttk.Frame):
         for l in self.labels + tuple(self.thumbLabels):
             l['foreground'] = fgcolor
             l['background'] = bgcolor
+        self.chkSelected['style'] = 'Model.TCheckbutton' if not model['disabled'] else 'Disabled.Model.TCheckbutton'
     
     
     def _updateThumbnails(self):
@@ -194,6 +201,18 @@ class ModelWidget(ttk.Frame):
                     except:
                         pass
             self._curThumbsForSynset = synsetId
+    
+    
+    def isSelected(self, newState = None):
+        """Returns True if the checkbox belonging to the model is turned on.
+        
+        If newState is set, the state of the checkbox will be changed.
+        """
+        
+        if newState is not None:
+            self.selectedVar.set(newState)
+            self._cw.onModelSelect(self)
+        return self.selectedVar.get()
     
     
     def askThreshold(self):
@@ -391,13 +410,17 @@ class CatalogueWindow(Tkinter.Toplevel):
         s = ttk.Style(self.master)
         s.configure("WhiteFrame.TFrame", background = '#ffffff')
         s.configure("Model.TFrame", background = '#ffffff', relief = 'solid')
+        s.configure("Model.TCheckbutton", background = '#ffffff', highlightthickness = 0)
         s.configure("Disabled.Model.TFrame", background = '#dadada')
+        s.configure("Disabled.Model.TCheckbutton", background = '#dadada')
         s.configure("Disabled.WhiteFrame.TFrame", background = '#dadada')
         s.configure("Container.TFrame", relief = 'solid')
+        s.configure("SelectAllBar.TFrame", background = '#dadada')
+        s.configure("SelectAllBar.TCheckbutton", background = '#dadada')
         
         # Frame containing models canvas and scrollbar (see below):
         self.frmModelsContainer = ttk.Frame(self, style = 'Container.TFrame')
-        self.frmModelsContainer.grid(column = 0, row = 1, columnspan = 4, sticky = (N,S,E,W))
+        self.frmModelsContainer.grid(column = 0, row = 2, columnspan = 4, sticky = (N,S,E,W))
         
         # Scrollable canvas encapsulating the models frame and associated scrollbar:
         self.cnvModels = Tkinter.Canvas(self.frmModelsContainer, borderwidth = 0, highlightthickness = 0, insertwidth = 0, background = '#ffffff');
@@ -424,9 +447,35 @@ class CatalogueWindow(Tkinter.Toplevel):
         self.btnModelDir = ttk.Button(self, text = '...', width = 3, command = self.selectModelDir)
         self.btnModelDir.grid(column = 3, row = 0, padx = (0,8))
         
+        # Checkbox for (de-)selecting all models at once:
+        self.frmSelectAll = ttk.Frame(self, style = 'SelectAllBar.TFrame')
+        self.sepSelectAll = ttk.Separator(self.frmSelectAll, orient = 'horizontal')
+        self.sepSelectAll.pack(side = 'top', fill = 'x')
+        self.chkSelectAll = ttk.Checkbutton(self.frmSelectAll,
+            text = 'Select all models',
+            variable = self.allModelsSelected,
+            command = self.onSelectAllChange,
+            style = 'SelectAllBar.TCheckbutton'
+        )
+        self.chkSelectAll.pack(side = 'top', fill = 'x', padx = 1, pady = 0)
+        self.frmSelectAll.grid(column = 0, row = 1, columnspan = 4, sticky = (W,E))
+        
+        # Buttons for manipulating multiple selected models at once:
+        self.frmSelectionBtns = ttk.Frame(self)
+        self.frmSelectionBtns.grid(column = 0, row = 3, columnspan = 2, sticky = (W,E), pady = 8)
+        self.btnSetThSelected = ttk.Button(self.frmSelectionBtns, text = 'Set Threshold', command = self.changeSelectedThreshold)
+        self.btnSetThSelected.pack(side = 'left', padx = 4, fill = 'y')
+        self.btnDisableSelected = ttk.Button(self.frmSelectionBtns, text = 'Disable', command = self.disableSelectedModels)
+        self.btnDisableSelected.pack(side = 'left', padx = 4, fill = 'y')
+        self.btnEnableSelected = ttk.Button(self.frmSelectionBtns, text = 'Enable', command = self.enableSelectedModels)
+        self.btnEnableSelected.pack(side = 'left', padx = 4, fill = 'y')
+        self.btnDeleteSelected = ttk.Button(self.frmSelectionBtns, text = 'Delete', command = self.deleteSelectedModels)
+        self.btnDeleteSelected.pack(side = 'left', padx = 4, fill = 'y')
+        self.frmSelectionBtns.grid_remove()
+        
         # Buttons for learning new models and background statistics:
         self.frmLearnBtns = ttk.Frame(self)
-        self.frmLearnBtns.grid(column = 0, row = 2, columnspan = 2, sticky = (W,E), pady = 8)
+        self.frmLearnBtns.grid(column = 0, row = 3, columnspan = 2, sticky = (W,E), pady = 8)
         self.btnLearnImageNet = ttk.Button(self.frmLearnBtns, text = 'Learn ImageNet model', state = 'disabled', command = self.openLearnImageNetDialog)
         self.btnLearnImageNet._img = ImageTk.PhotoImage(Image.open(os.path.join(utils.basedir, 'GUI', 'gfx', 'imagenet.png')))
         self.btnLearnImageNet["image"] = self.btnLearnImageNet._img
@@ -442,14 +491,14 @@ class CatalogueWindow(Tkinter.Toplevel):
         
         # Close button:
         self.btnClose = ttk.Button(self, text = 'Close', command = self.destroy)
-        self.btnClose.grid(column = 2, row = 2, columnspan = 2, sticky = (E,N,S), padx = 8, pady = 8)
+        self.btnClose.grid(column = 2, row = 3, columnspan = 2, sticky = (E,N,S), padx = 8, pady = 8)
         
         self.modelWidgets = []
         
         # Let the model directory entry and the models frame gain additional space when the window is resized:
         self.columnconfigure(1, weight = 1)
         self.columnconfigure(2, weight = 1)
-        self.rowconfigure(1, weight = 1)
+        self.rowconfigure(2, weight = 1)
     
     
     def onCnvModelsConfigure(self, evt):
@@ -464,6 +513,7 @@ class CatalogueWindow(Tkinter.Toplevel):
     
     def onModelDirChange(self, *args):
         """Callback for re-loading the model list whenever the model directory is changed."""
+        
         dir = self.modelDir.get()
         if os.path.isdir(dir) and ((self.modelManager is None) or (dir != os.path.dirname(self.modelManager.filename))):
             self.modelManager = learning.ModelManager(os.path.join(dir, 'models.list'))
@@ -471,6 +521,93 @@ class CatalogueWindow(Tkinter.Toplevel):
             self.btnLearnImageNet['state'] = 'normal'
             self.btnLearnInSitu['state'] = 'normal'
             self.btnLearnBG['state'] = 'normal'
+    
+    
+    def onModelSelect(self, *args):
+        """Callback for showing and hiding selection controls whenever the selection state of a model changes."""
+        
+        numSelected = sum(1 for w in self.modelWidgets if w.isSelected())
+        
+        if (numSelected > 0) and (self.numSelectedModels == 0):
+            self.frmLearnBtns.grid_remove()
+            self.frmSelectionBtns.grid()
+        elif (numSelected == 0) and (self.numSelectedModels > 0):
+            self.frmSelectionBtns.grid_remove()
+            self.frmLearnBtns.grid()
+        
+        self.numSelectedModels = numSelected
+        if numSelected == 0:
+            self.allModelsSelected.set(False)
+        elif numSelected == len(self.modelWidgets):
+            self.allModelsSelected.set(True)
+        else:
+            self.chkSelectAll.state(['alternate'])
+    
+    
+    def onSelectAllChange(self, *args):
+        """Callback for selecting or de-selecting all models at once."""
+        self.selectAllModels(self.allModelsSelected.get())
+    
+    
+    def selectAllModels(self, selected = True):
+        """Changes the selection state of all models."""
+        for w in self.modelWidgets:
+            w.isSelected(selected)
+    
+    
+    def changeSelectedThreshold(self, *args):
+        """Asks the user for a threshold to be set for all selected models."""
+        
+        new = tkSimpleDialog.askfloat(
+            title = 'Set Threshold',
+            prompt = 'Threshold for the models:'
+        )
+        if not new is None:
+            for w in self.modelWidgets:
+                if w.isSelected():
+                    self.modelManager.models[w.modelIndex]['threshold'] = new
+                    w.thresholdText.set('Threshold: {}'.format(new))
+            self.modelManager.save()
+            self.selectAllModels(False)
+    
+    
+    def enableSelectedModels(self, *args):
+        """Enables all selected models."""
+        
+        for w in self.modelWidgets:
+            if w.isSelected():
+                self.modelManager.models[w.modelIndex]['disabled'] = False
+                w._updateModel()
+        self.modelManager.save()
+        self.selectAllModels(False)
+    
+    
+    def disableSelectedModels(self, *args):
+        """Disables all selected models."""
+        
+        for w in self.modelWidgets:
+            if w.isSelected():
+                self.modelManager.models[w.modelIndex]['disabled'] = True
+                w._updateModel()
+        self.modelManager.save()
+        self.selectAllModels(False)
+    
+    
+    def deleteSelectedModels(self, *args):
+        """Deletes all selected model files from disk and removes them from the list file.
+        
+        The user will be prompted to confirm this action.
+        """
+        
+        if tkMessageBox.askokcancel(
+                title = 'Delete Models',
+                message = 'You\'re going to delete {} model files from disk irreversibly.'.format(self.numSelectedModels),
+                icon = tkMessageBox.WARNING):
+            indices = sorted((w.modelIndex for w in self.modelWidgets if w.isSelected()), reverse = True)
+            for index in indices:
+                self.modelManager.deleteModel(index)
+            self.refreshModels()
+            self.selectAllModels(False)
 
 
     def __init__(self, master = None):
@@ -481,10 +618,12 @@ class CatalogueWindow(Tkinter.Toplevel):
             pass
         self.title('Model Catalogue')
         self.minsize(600, 320)
-        self.geometry('600x600')
+        self.geometry('600x640')
         self.bind('<Destroy>', self.onDestroy, True)
         self.modelManager = None
         self.modelDir = Tkinter.StringVar(master = self)
+        self.allModelsSelected = Tkinter.BooleanVar(master = self, value = False)
+        self.numSelectedModels = 0
         self._createWidgets()
         self.modelDir.trace('w', self.onModelDirChange)
         self.modelDir.set(config.get('libartos', 'model_dir'))
@@ -501,6 +640,7 @@ class CatalogueWindow(Tkinter.Toplevel):
                 # Break reference cycles of TCL variables, because their
                 # __del__ method prevents the garbage collector from freeing them:
                 del self.modelDir
+                del self.allModelsSelected
             except:
                 pass
 

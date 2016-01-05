@@ -161,10 +161,7 @@ public:
     *
     * @return Returns the corresponding size in pixels.
     */
-    virtual Size cellsToPixels(const Size & cells) const
-    {
-        return cells * this->cellSize() + this->borderSize() * 2;
-    };
+    virtual Size cellsToPixels(const Size & cells) const;
     
     /**
     * Converts a width and height given in pixels to cells.
@@ -173,10 +170,7 @@ public:
     *
     * @return Returns the corresponding size in cells.
     */
-    virtual Size pixelsToCells(const Size & pixels) const
-    {
-        return (pixels - this->borderSize() * 2) / this->cellSize();
-    };
+    virtual Size pixelsToCells(const Size & pixels) const;
 
     /**
     * Converts coordinates given in cells to pixel coordinates.
@@ -185,10 +179,7 @@ public:
     *
     * @return Returns the corresponding pixel coordinates.
     */
-    virtual Size cellCoordsToPixels(const Size & cells) const
-    {
-        return cells * this->cellSize() + this->borderSize();
-    };
+    virtual Size cellCoordsToPixels(const Size & cells) const;
     
     /**
     * Converts coordinates given in pixels to cell coordinates.
@@ -197,10 +188,7 @@ public:
     *
     * @return Returns the corresponding cell coordinates.
     */
-    virtual Size pixelCoordsToCells(const Size & pixels) const
-    {
-        return (pixels - this->borderSize()) / this->cellSize();
-    };
+    virtual Size pixelCoordsToCells(const Size & pixels) const;
     
     /**
     * Computes features for a given image.

@@ -1,3 +1,14 @@
+/**
+* @file
+* This tool learns stationary background statistics for the default
+* feature extractor (usually HOG), which can be used to learn WHO models.
+*
+* The equivalent function in the `PyARTOS` python API is `PyARTOS.learning.learnBGStatistics()`.
+*
+* @author Bjoern Barz <bjoern.barz@uni-jena.de>
+*/
+
+
 #include <iostream>
 #include <algorithm>
 #include <chrono>

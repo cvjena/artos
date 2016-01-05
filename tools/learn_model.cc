@@ -1,3 +1,14 @@
+/**
+* @file
+* This example illustrates the usage of the `libartos` `C`-API for learning a
+* object detection model with data from an image repository.
+* 
+* It's just a single function call!
+*
+* @author Bjoern Barz <bjoern.barz@uni-jena.de>
+*/
+
+
 #include <iostream>
 #include <cstdlib>
 #include "libartos.h"
