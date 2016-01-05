@@ -67,7 +67,7 @@ public:
     /**
     * @return Human-readable name of this feature extractor.
     */
-    virtual const char * name() const override { "CNN Features (Caffe)"; };
+    virtual const char * name() const override;
 
     /**
     * @return Returns the number of features this feature extractor extracts from each cell.
@@ -94,12 +94,12 @@ public:
     * can be processed by this feature extractor. If any dimension is 0, the size of the image
     * along that dimension does not need to be limited.
     */
-    virtual Size maxImageSize() const override { return Size(this->getIntParam("maxImgSize")); };
+    virtual Size maxImageSize() const override;
     
     /**
     * @return Returns true if it is safe to call extract() in parallel from multiple threads.
     */
-    virtual bool supportsMultiThread() const { return false; };
+    virtual bool supportsMultiThread() const override;
     
     /**
     * @return Returns true if it is considered reasonable to process feature extraction of multiple
@@ -108,7 +108,7 @@ public:
     * The patchworkPadding() reported by the feature extractor will be used as padding between images
     * on the same plane.
     */
-    virtual bool patchworkProcessing() const override { return false; };
+    virtual bool patchworkProcessing() const override;
     
     /**
     * Specifies the amount of padding which should be added between images on the same plane when
@@ -116,7 +116,16 @@ public:
     *
     * @return Returns the amount of padding to add between two images.
     */
-    virtual Size patchworkPadding() const override { return this->borderSize(); };
+    virtual Size patchworkPadding() const override;
+    
+    /**
+    * Converts a width and height given in pixels to cells.
+    *
+    * @param[in] pixels The size given in pixels.
+    *
+    * @return Returns the corresponding size in cells.
+    */
+    virtual Size pixelsToCells(const Size & pixels) const override;
     
     /**
     * Computes features for a given image.
@@ -164,20 +173,30 @@ protected:
     Size m_cellSize; /**< Cell size derived from the network structure. */
     Size m_borderSize; /**< Border size derived from the network structure. */
     
+    enum class LayerType { OTHER, CONV, POOL };
+    
+    struct LayerParams
+    {
+        LayerType layerType;
+        Size kernelSize;
+        Size padding;
+        Size stride;
+    };
+    
     /**
     * Tries to load the network using the current parameters of this feature extractor.
     * Nothing will be done if the parameters are not yet set up.
     *
     * @throws std::invalid_argument All required parameters have been set up, but the network could not be loaded.
     */
-    void loadNetwork();
+    virtual void loadNetwork();
     
     /**
     * Tries to load the image mean from the file specified in the parameter "meanFile".
     *
     * @throws std::invalid_argument The mean file could not be loaded.
     */
-    void loadMean();
+    virtual void loadMean();
 
     /**
     * Tries to load the maxima of each unscaled feature channel from the file
@@ -185,7 +204,7 @@ protected:
     *
     * @throws std::invalid_argument The mean file could not be loaded.
     */
-    void loadScales();
+    virtual void loadScales();
     
     /**
     * Caches information about the layer specified in the parameter "layerName" if the net has already been loaded
@@ -193,7 +212,18 @@ protected:
     *
     * If the specified layer could not be found, the last convolutional layer in the network will be used.
     */
-    void loadLayerInfo();
+    virtual void loadLayerInfo();
+    
+    /**
+    * Retrieves some relevant parameters of a given layer.
+    *
+    * @param[in] layerIndex The index of the layer.
+    *
+    * @param[out] params A LayerParams struct which will retrieve the parameters of the layer.
+    * If any parameter is missing for the given layer or the layer is neither a convolutional or pooling layer,
+    * the respective parameters will be set to their default values.
+    */
+    virtual void getLayerParams(int layerIndex, LayerParams & params) const;
     
     /**
     * Wraps a cv::Mat object around each channel of the input layer and adds those wrappers to @p input_channels.
@@ -208,7 +238,7 @@ protected:
     * @param[out] input_channels Vector of cv::Mat objects which will retrieve the data of each channel
     * of the preprocessed image.
     */
-    void preprocess(const JPEGImage & img, std::vector<cv::Mat> & input_channels) const;
+    virtual void preprocess(const JPEGImage & img, std::vector<cv::Mat> & input_channels) const;
     
     /**
     * Cache of networks which have already been loaded to be used by different feature extractor instances.

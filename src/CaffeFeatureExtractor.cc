@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <fstream>
 #include <sstream>
+#include <cassert>
 using namespace ARTOS;
 using namespace caffe;
 using namespace std;
@@ -48,6 +49,12 @@ CaffeFeatureExtractor::CaffeFeatureExtractor(const string & netFile, const strin
 };
 
 
+const char * CaffeFeatureExtractor::name() const
+{
+    return "CNN Features (Caffe)";
+}
+
+
 int CaffeFeatureExtractor::numFeatures() const
 {
     if (!this->m_net)
@@ -72,6 +79,66 @@ Size CaffeFeatureExtractor::borderSize() const
         throw UseBeforeSetupException("netFile and weightsFile have to be set before CaffeFeatureExtractor may be used.");
     
     return this->m_borderSize;
+}
+
+
+Size CaffeFeatureExtractor::maxImageSize() const
+{
+    return Size(this->getIntParam("maxImgSize"));
+}
+
+
+bool CaffeFeatureExtractor::supportsMultiThread() const
+{
+    return false;
+}
+
+
+bool CaffeFeatureExtractor::patchworkProcessing() const
+{
+    return false;
+}
+
+
+Size CaffeFeatureExtractor::patchworkPadding() const
+{
+    return this->borderSize();
+}
+
+
+Size CaffeFeatureExtractor::pixelsToCells(const Size & pixels) const
+{
+    Size cells = pixels;
+    LayerParams layerParams;
+    for (int l = 0; l <= this->m_layerIndex; l++)
+    {
+        this->getLayerParams(l, layerParams);
+        
+        switch (layerParams.layerType)
+        {
+            case LayerType::CONV:
+                // According to Caffe::ConvolutionLayer::compute_output_shape()
+                cells = (cells + 2 * layerParams.padding - layerParams.kernelSize) / layerParams.stride + 1;
+                break;
+            
+            case LayerType::POOL:
+                // According to Caffe::PoolingLayer::Reshape()
+                Size prevSize = cells;
+                cells.width = static_cast<int>(ceil(static_cast<float>(cells.width + 2 * layerParams.padding.width - layerParams.kernelSize.width)
+                                / layerParams.stride.width)) + 1;
+                cells.height = static_cast<int>(ceil(static_cast<float>(cells.height + 2 * layerParams.padding.height - layerParams.kernelSize.height)
+                                / layerParams.stride.height)) + 1;
+                if (layerParams.padding.width || layerParams.padding.height)
+                {
+                    if ((cells.width - 1) * layerParams.stride.width >= prevSize.width + layerParams.padding.width)
+                        cells.width--;
+                    if ((cells.height - 1) * layerParams.stride.height >= prevSize.height + layerParams.padding.height)
+                        cells.height--;
+                }
+                break;
+        }
+    }
+    return cells;
 }
 
 
@@ -132,6 +199,7 @@ void CaffeFeatureExtractor::extract(const JPEGImage & img, FeatureMatrix & feat)
     // Extract features from the given layer
     const Blob<float> * feature_layer = this->m_net->top_vecs()[this->m_layerIndex][0];
     int w = feature_layer->width(), h = feature_layer->height();
+    assert(Size(w, h) == this->cellsToPixels(Size(img.width(), img.height())));
     feat.resize(h, w, feature_layer->channels());
     const float * feature_data = feature_layer->cpu_data();
     for (int c = 0; c < feature_layer->channels(); c++)
@@ -361,78 +429,101 @@ void CaffeFeatureExtractor::loadLayerInfo()
     // Determine cell size and border size
     this->m_cellSize = Size(1, 1);
     this->m_borderSize = Size(0, 0);
+    LayerParams layerParams;
     for (int l = 0; l <= this->m_layerIndex; l++)
     {
-        const LayerParameter & layerParam = this->m_net->layers()[l]->layer_param();
-        if (layerParam.has_convolution_param())
+        this->getLayerParams(l, layerParams);
+        this->m_cellSize *= layerParams.stride;
+        this->m_borderSize += layerParams.kernelSize / 2;
+        this->m_borderSize -= layerParams.padding;
+    }
+}
+
+
+void CaffeFeatureExtractor::getLayerParams(int layerIndex, CaffeFeatureExtractor::LayerParams & params) const
+{
+    // Initialize to default values
+    params.layerType = LayerType::OTHER;
+    params.kernelSize = Size(1);
+    params.padding = Size(0);
+    params.stride = Size(1);
+    
+    // Retrieve parameters
+    const LayerParameter & layerParam = this->m_net->layers()[layerIndex]->layer_param();
+    if (layerParam.has_convolution_param())
+    {
+        // Handle convolutional parameters
+        const ConvolutionParameter cp = layerParam.convolution_param();
+        
+        params.layerType = LayerType::CONV;
+        
+        if (cp.kernel_size_size() > 0)
+            params.kernelSize = Size(cp.kernel_size(0));
+        else
         {
-            const ConvolutionParameter cp = layerParam.convolution_param();
-            
-            if (cp.stride_size() > 0)
-                this->m_cellSize *= Size(cp.stride(0));
-            else
-            {
-                if (cp.has_stride_w())
-                    this->m_cellSize.width *= cp.stride_w();
-                if (cp.has_stride_h())
-                    this->m_cellSize.height *= cp.stride_h();
-            }
-            
-            if (cp.kernel_size_size() > 0)
-                this->m_borderSize += Size(cp.kernel_size(0)) / 2;
-            else
-            {
-                if (cp.has_kernel_w())
-                    this->m_borderSize.width += cp.kernel_w() / 2;
-                if (cp.has_kernel_h())
-                    this->m_borderSize.height += cp.kernel_h() / 2;
-            }
-            
-            if (cp.pad_size() > 0)
-                this->m_borderSize -= Size(cp.pad(0));
-            else
-            {
-                if (cp.has_pad_w())
-                    this->m_borderSize.width -= cp.pad_w();
-                if (cp.has_pad_h())
-                    this->m_borderSize.height -= cp.pad_h();
-            }
-            
+            if (cp.has_kernel_w())
+                params.kernelSize.width = cp.kernel_w();
+            if (cp.has_kernel_h())
+                params.kernelSize.height = cp.kernel_h();
         }
-        else if (layerParam.has_pooling_param())
+        
+        if (cp.pad_size() > 0)
+            params.padding = Size(cp.pad(0));
+        else
         {
-            const PoolingParameter pp = layerParam.pooling_param();
-            
-            if (pp.has_stride())
-                this->m_cellSize *= Size(pp.stride());
-            else
-            {
-                if (pp.has_stride_w())
-                    this->m_cellSize.width *= pp.stride_w();
-                if (pp.has_stride_h())
-                    this->m_cellSize.height *= pp.stride_h();
-            }
-            
-            if (pp.has_kernel_size())
-                this->m_borderSize += Size(pp.kernel_size()) / 2;
-            else
-            {
-                if (pp.has_kernel_w())
-                    this->m_borderSize.width += pp.kernel_w() / 2;
-                if (pp.has_kernel_h())
-                    this->m_borderSize.height += pp.kernel_h() / 2;
-            }
-            
-            if (pp.has_pad())
-                this->m_borderSize -= Size(pp.pad());
-            else
-            {
-                if (pp.has_pad_w())
-                    this->m_borderSize.width -= pp.pad_w();
-                if (pp.has_pad_h())
-                    this->m_borderSize.height -= pp.pad_h();
-            }
-            
+            if (cp.has_pad_w())
+                params.padding.width = cp.pad_w();
+            if (cp.has_pad_h())
+                params.padding.height = cp.pad_h();
         }
+        
+        if (cp.stride_size() > 0)
+            params.stride = Size(cp.stride(0));
+        else
+        {
+            if (cp.has_stride_w())
+                params.stride.width = cp.stride_w();
+            if (cp.has_stride_h())
+                params.stride.height = cp.stride_h();
+        }
+        
+    }
+    else if (layerParam.has_pooling_param())
+    {
+        // Handle pooling parameters
+        const PoolingParameter pp = layerParam.pooling_param();
+        
+        params.layerType = LayerType::POOL;
+        
+        if (pp.has_kernel_size())
+            params.kernelSize = Size(pp.kernel_size());
+        else
+        {
+            if (pp.has_kernel_w())
+                params.kernelSize.width = pp.kernel_w();
+            if (pp.has_kernel_h())
+                params.kernelSize.height = pp.kernel_h();
+        }
+        
+        if (pp.has_pad())
+            params.padding = Size(pp.pad());
+        else
+        {
+            if (pp.has_pad_w())
+                params.padding.width = pp.pad_w();
+            if (pp.has_pad_h())
+                params.padding.height = pp.pad_h();
+        }
+        
+        if (pp.has_stride())
+            params.stride = Size(pp.stride());
+        else
+        {
+            if (pp.has_stride_w())
+                params.stride.width = pp.stride_w();
+            if (pp.has_stride_h())
+                params.stride.height = pp.stride_h();
+        }
+        
     }
 }
