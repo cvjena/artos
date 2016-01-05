@@ -30,6 +30,30 @@ map<string, shared_ptr<FeatureExtractor> (*)()> FeatureExtractor::featureExtract
 /////////////////////////////////////////////////////////////
 
 
+Size FeatureExtractor::cellsToPixels(const Size & cells) const
+{
+    return cells * this->cellSize() + this->borderSize() * 2;
+}
+
+
+Size FeatureExtractor::pixelsToCells(const Size & pixels) const
+{
+    return (pixels - this->borderSize() * 2) / this->cellSize();
+}
+
+
+Size FeatureExtractor::cellCoordsToPixels(const Size & cells) const
+{
+    return cells * this->cellSize() + this->borderSize();
+}
+
+
+Size FeatureExtractor::pixelCoordsToCells(const Size & pixels) const
+{
+    return (pixels - this->borderSize()) / this->cellSize();
+}
+
+
 int32_t FeatureExtractor::getIntParam(const string & paramName) const
 {
     auto it = this->m_intParams.find(paramName);

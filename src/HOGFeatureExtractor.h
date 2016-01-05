@@ -49,30 +49,30 @@ public:
     /**
     * @return Human-readable name of this feature extractor.
     */
-    virtual const char * name() const override { return "HOG (Histograms of Oriented Gradients)"; };
+    virtual const char * name() const override;
     
     /**
     * @return Returns the number of features this feature extractor extracts from each cell.
     */
-    virtual int numFeatures() const override { return 32; };
+    virtual int numFeatures() const override;
     
     /**
     * @return Returns the number of relevant features per cell (for instance, the last dimension
     * may be a truncation dimension and always set to 0 and, thus, not relevant).
     */
-    virtual int numRelevantFeatures() const override { return 31; };
+    virtual int numRelevantFeatures() const override;
     
     /**
     * @return Returns the size of the cells used by this feature extractor in x and y direction.
     */
-    virtual Size cellSize() const override { return this->m_cellSize; };
+    virtual Size cellSize() const override;
     
     /**
     * @return Returns true if this feature extractors implements the extract() method with explicit
     * cell size specification which differs from the default cell size reported by cellSize().
     * If this method returns true, the 3-parameter version of extract() should not throw an UnsupportedException.
     */
-    virtual bool supportsVariableCellSize() const override { return true; };
+    virtual bool supportsVariableCellSize() const override;
     
     /**
     * Converts a width and height given in pixels to cells.
@@ -81,10 +81,7 @@ public:
     *
     * @return Returns the corresponding size in cells.
     */
-    virtual Size pixelsToCells(const Size & pixels) const override
-    {
-        return (pixels - this->borderSize() * 2 + this->cellSize() / 2) / this->cellSize();
-    };
+    virtual Size pixelsToCells(const Size & pixels) const override;
     
     /**
     * Computes HOG features for a given image.

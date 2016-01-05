@@ -22,6 +22,42 @@ HOGFeatureExtractor::HOGFeatureExtractor(const Size & cellSize)
 };
 
 
+const char * HOGFeatureExtractor::name() const
+{
+    return "HOG (Histograms of Oriented Gradients)";
+}
+
+
+int HOGFeatureExtractor::numFeatures() const
+{
+    return 32;
+}
+
+
+int HOGFeatureExtractor::numRelevantFeatures() const
+{
+    return 31;
+}
+
+
+Size HOGFeatureExtractor::cellSize() const
+{
+    return this->m_cellSize;
+}
+
+
+bool HOGFeatureExtractor::supportsVariableCellSize() const
+{
+    return true;
+}
+
+
+Size HOGFeatureExtractor::pixelsToCells(const Size & pixels) const
+{
+    return (pixels - this->borderSize() * 2 + this->cellSize() / 2) / this->cellSize();
+}
+
+
 void HOGFeatureExtractor::extract(const JPEGImage & img, FeatureMatrix & feat, const Size & cellSize) const
 {
     HOGFeatureExtractor::HOG(img, feat, Size(1, 1), (cellSize.width > 0 && cellSize.height > 0) ? cellSize : this->cellSize());
