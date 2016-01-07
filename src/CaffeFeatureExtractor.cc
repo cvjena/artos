@@ -106,6 +106,28 @@ Size CaffeFeatureExtractor::patchworkPadding() const
 }
 
 
+Size CaffeFeatureExtractor::cellsToPixels(const Size & cells) const
+{
+    // Initial estimate
+    Size pixels = FeatureExtractor::cellsToPixels(cells);
+    
+    // Adjustment
+    Size adjustment = this->cellSize();
+    Size c = this->pixelsToCells(pixels);
+    while (c != cells)
+    {
+        adjustment = max(Size(1), adjustment / 2);
+        if (c.width != cells.width)
+            pixels.width += adjustment.width * ((c.width < cells.width) ? 1 : -1);
+        if (c.height != cells.height)
+            pixels.height += adjustment.height * ((c.height < cells.height) ? 1 : -1);
+        c = this->pixelsToCells(pixels);
+    }
+    
+    return pixels;
+}
+
+
 Size CaffeFeatureExtractor::pixelsToCells(const Size & pixels) const
 {
     Size cells = pixels;
@@ -118,7 +140,7 @@ Size CaffeFeatureExtractor::pixelsToCells(const Size & pixels) const
         {
             case LayerType::CONV:
                 // According to Caffe::ConvolutionLayer::compute_output_shape()
-                cells = (cells + 2 * layerParams.padding - layerParams.kernelSize) / layerParams.stride + 1;
+                cells = (cells + layerParams.padding * 2 - layerParams.kernelSize) / layerParams.stride + 1;
                 break;
             
             case LayerType::POOL:
@@ -199,7 +221,7 @@ void CaffeFeatureExtractor::extract(const JPEGImage & img, FeatureMatrix & feat)
     // Extract features from the given layer
     const Blob<float> * feature_layer = this->m_net->top_vecs()[this->m_layerIndex][0];
     int w = feature_layer->width(), h = feature_layer->height();
-    assert(Size(w, h) == this->cellsToPixels(Size(img.width(), img.height())));
+    assert(Size(w, h) == this->pixelsToCells(Size(img.width(), img.height())));
     feat.resize(h, w, feature_layer->channels());
     const float * feature_data = feature_layer->cpu_data();
     for (int c = 0; c < feature_layer->channels(); c++)

@@ -119,6 +119,15 @@ public:
     virtual Size patchworkPadding() const override;
     
     /**
+    * Converts a width and height given in cells to pixels.
+    *
+    * @param[in] cells The size given in cells.
+    *
+    * @return Returns the corresponding size in pixels.
+    */
+    virtual Size cellsToPixels(const Size & cells) const override;
+    
+    /**
     * Converts a width and height given in pixels to cells.
     *
     * @param[in] pixels The size given in pixels.
