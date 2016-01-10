@@ -132,11 +132,11 @@ void Patchwork::convolve(const vector<Filter> & filters,
     // slower if they do not hold
     const int cacheSize = 32768; // Assume L1 cache of 32K
     const int fragmentsSize = (nbPlanes + 1) * NumFeat_ * sizeof(Scalar); // Assume nbPlanes < nbFilters
-    const int step = min(cacheSize / fragmentsSize,
+    const int step = max(1, min(cacheSize / fragmentsSize,
 #ifdef _OPENMP
-                         MaxRows_ * HalfCols_ / omp_get_max_threads());
+                         MaxRows_ * HalfCols_ / omp_get_max_threads()));
 #else
-                         MaxRows_ * HalfCols_);
+                         MaxRows_ * HalfCols_));
 #endif
     
 #pragma omp parallel for private(i,j,k,l)
