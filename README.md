@@ -69,11 +69,14 @@ The following Python modules are required:
           - Packages: *python3-imaging* and *python3-imaging-tk*
           - Inofficial Pillow binaries: http://www.lfd.uci.edu/~gohlke/pythonlibs/#pillow
 
-- At least one of the following modules used for accessing video devices:
+- For live camera detection and taking in-situ training images, at least one of the following
+  modules is required to access video devices:
       - Unix:
           - **python-opencv**
           - **pygame**: http://www.pygame.org/download.shtml
       - Windows: **VideoCapture** (>= 0.9-5): http://videocapture.sourceforge.net/
+
+- (Optional) **matplotlib** (for plotting recall-precision graphs after model evaluation)
 
 Note that neither *python-opencv* nor *VideoCapture* are available for Python 3 until now (May 2014).  
 Anyway, adding support for a new or another video capturing module can be done easily by adding a new camera abstraction class
