@@ -157,6 +157,30 @@ def img2buffer(img):
     return imgdata, grayscale
 
 
+def figure2img(fig, w, h):
+    """Converts a matplotlib figure to PIL.Image.Image instance.
+    
+    fig - The matplotlib figure.
+    w - The width of the resulting image.
+    h - The height of the resulting image.
+    """
+    
+    dpi = fig.get_dpi()
+    fig.set_size_inches(float(w) / dpi, float(h) / dpi)
+    fig.tight_layout()
+    fig.canvas.draw()
+    w, h = fig.canvas.get_width_height()
+    buf_argb = fig.canvas.tostring_argb()
+    # canvas.tostring_argb returns pixmap in ARGB mode. Roll the alpha channel to have it in RGBA mode:
+    if isinstance(buf_argb, str):
+        # Python 2
+        buf_rgba = ''.join(buf_argb[i+j] for i in range(0, 4*w*h, 4) for j in (1,2,3,0))
+    else:
+        # Python 3
+        buf_rgba = bytes(buf_argb[i+j] for i in range(0, 4*w*h, 4) for j in (1,2,3,0))
+    return Image.frombytes('RGBA', (w, h), buf_rgba)
+
+
 
 class Timer(object):
     """A timer used to measure the execution time of (multiple runs of) a code snippet."""

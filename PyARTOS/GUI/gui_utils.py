@@ -3,13 +3,18 @@
 try:
     # Python 3
     import tkinter as Tkinter
+    from tkinter import N, E, S, W
     from tkinter import ttk
 except:
     # Python 2
     import Tkinter
+    from Tkinter import N, E, S, W
     import ttk
 
 import threading
+from PIL import ImageTk
+
+from .. import utils
 
 
 
@@ -63,7 +68,7 @@ class Dialog(Tkinter.Toplevel):
     CENTER_ON_SCREEN = 'center_screen'
     
     
-    def __init__(self, master = None, parent = None, align = NO_ALIGNMENT):
+    def __init__(self, master = None, parent = None, align = NO_ALIGNMENT, **kwargs):
         """Creates a new dialog window.
         
         master - The parent widget.
@@ -73,7 +78,7 @@ class Dialog(Tkinter.Toplevel):
                 NO_ALIGNMENT, CENTER_ON_PARENT, CENTER_ON_SCREEN
         """
         
-        Tkinter.Toplevel.__init__(self, master)
+        Tkinter.Toplevel.__init__(self, master, **kwargs)
         self.focusWidget = None
         if not parent is None:
             self.transient(parent)
@@ -135,6 +140,7 @@ class ProgressWindow(Dialog):
         
         master - The parent widget.
         overallProcessDescription - Text to display above the overall progress bar.
+                                    Set this to None to hide the overall progress bar.
         subProcessDescriptions - Sequence with descriptions of each sub-process to display above the sub-progress bar.
         windowTitle - The title of the window.
         abortable - Specifies if the user may cancel the operation. If he does so, the progress callbacks of this
@@ -170,15 +176,19 @@ class ProgressWindow(Dialog):
     
     
     def _createWidgets(self):
-        self.lblOverallProgress = ttk.Label(self, text = self.overallProcessDescription)
+        self.lblOverallProgress = ttk.Label(self, text = self.overallProcessDescription if self.overallProcessDescription is not None else '')
         self.lblSubProgress     = ttk.Label(self, textvariable = self.subDescriptionVar)
         self.overallProgressBar = ttk.Progressbar(self, orient = Tkinter.HORIZONTAL, mode = 'indeterminate', variable = self.overallProgress, maximum = 40)
         self.subProgressBar     = ttk.Progressbar(self, orient = Tkinter.HORIZONTAL, mode = 'indeterminate', variable = self.subProgress, maximum = 40)
-        self.lblOverallProgress.pack(side = 'top', padx = 12, pady = (12, 0), fill = 'x', expand = True)
-        self.overallProgressBar.pack(side = 'top', padx = 12, pady = (0, 12), fill = 'x', expand = True)
+        initialPad = 12
+        if self.overallProcessDescription is not None:
+            self.lblOverallProgress.pack(side = 'top', padx = 12, pady = (initialPad, 0), fill = 'x', expand = True)
+            self.overallProgressBar.pack(side = 'top', padx = 12, pady = (0, 12), fill = 'x', expand = True)
+            initialPad = 0
         if len(self.subProcessDescriptions) > 0:
-            self.lblSubProgress.pack(side = 'top', padx = 12, pady = 0, fill = 'x', expand = True)
-        self.subProgressBar.pack(side = 'top', padx = 12, pady = (0, 12), fill = 'x', expand = True)
+            self.lblSubProgress.pack(side = 'top', padx = 12, pady = (initialPad, 0), fill = 'x', expand = True)
+            initialPad = 0
+        self.subProgressBar.pack(side = 'top', padx = 12, pady = (initialPad, 12), fill = 'x', expand = True)
         if self.abortable:
             self.btnAbort = ttk.Button(self, text = 'Abort', command = self.abort)
             self.btnAbort.pack(side = 'top', pady = (0, 12))
@@ -297,3 +307,134 @@ class ProgressWindow(Dialog):
         
         if self.threadedCallbacks:
             self.afterId = self.after(500, self._updateValues)
+
+
+
+class SearchSynsetWidget(ttk.LabelFrame):
+    """A label frame with a text entry and a list box for searching and selecting a synset."""
+    
+    
+    def __init__(self, master, repository, padding = 8, **kwargs):
+        """Creates a new SearchSynsetWidget.
+        
+        master - The parent widget.
+        repository - The ImageRepository instance to be used by this widget.
+        padding - The amount of padding between the components inside the widget.
+        """
+        
+        ttk.LabelFrame.__init__(self, master, padding = padding, **kwargs)
+        self.padding = padding
+        self.repo = repository
+        self.synsetSearchVar = Tkinter.StringVar(self)
+        self._synsetSearchAfterId = None
+        self.bind('<Destroy>', self.onDestroy, True)
+        self._createWidgets()
+    
+    
+    def onDestroy(self, evt):
+        if (evt.widget is self):
+            try:
+                # Break reference cycles of TCL variables, because their
+                # __del__ method prevents the garbage collector from freeing them:
+                del self.synsetSearchVar
+                for lbl in self.synsetThumbLabels:
+                    try:
+                        del lbl._img
+                    except:
+                        pass
+            except:
+                pass
+    
+    
+    def _createWidgets(self):
+        
+        self.lblSynsetSearch = ttk.Label(self, text = 'Search synset by keywords:')
+        self.entrSynset = ttk.Entry(self, textvariable = self.synsetSearchVar, exportselection = False)
+        self.scrSynsets = ttk.Scrollbar(self, orient = Tkinter.VERTICAL)
+        self.lbxSynsets = Tkinter.Listbox(self, height = 10, activestyle = 'dotbox', exportselection = False, yscrollcommand = self.scrSynsets.set)
+        self.scrSynsets['command'] = self.lbxSynsets.yview
+        self.synsetThumbLabels = [ttk.Label(self) for i in range(4)]
+        
+        self.lblSynsetSearch.grid(column = 0, row = 0, columnspan = 3, sticky = (W,E))
+        self.entrSynset.grid(column = 0, row = 1, columnspan = 3, sticky = (W,E), pady = (0, self.padding))
+        self.lbxSynsets.grid(column = 0, row = 2, rowspan = len(self.synsetThumbLabels), sticky = (N,E,S,W))
+        self.scrSynsets.grid(column = 1, row = 2, rowspan = len(self.synsetThumbLabels), sticky = (N,S))
+        for i, lbl in enumerate(self.synsetThumbLabels):
+            lbl.grid(column = 2, row = 2 + i)
+        
+        self.columnconfigure(0, weight = 1)
+        self.rowconfigure(2, weight = 1)
+        self.rowconfigure((2,3,4,5), minsize = 52)
+        
+        self.synsetSearchVar.trace('w', self._onSynsetSearchChange)
+        self.lbxSynsets.bind('<<ListboxSelect>>', self._onSynsetSelect, True)
+        self.searchSynset()
+    
+    
+    def _onSynsetSearchChange(self, *args):
+        """Callback triggered whenever the synset search entry changes. Will wait a few seconds and then perform the search."""
+        
+        if not self._synsetSearchAfterId is None:
+            self.after_cancel(self._synsetSearchAfterId)
+        self._synsetSearchAfterId = self.after(400, self.searchSynset)
+    
+    
+    def _onSynsetSelect(self, *args):
+        """Callback triggered whenever the user selects a synset.
+        
+        Updates the thumbnails giving a preview of the synset and triggers the SynsetSelect or SynsetDeselect event.
+        """
+        
+        selection = self.lbxSynsets.curselection()
+        if selection:
+            synsetId, _, description = self.lbxSynsets.get(selection).split(None, 2)
+            
+            # Update thumbnails
+            try:
+                imgs = self.repo.getImagesFromSynset(synsetId, len(self.synsetThumbLabels))
+                for lbl, img in zip(self.synsetThumbLabels, imgs):
+                    thumb = utils.imgResizeCropped(img, (48, 48))
+                    lbl._img = ImageTk.PhotoImage(thumb)
+                    lbl['image'] = lbl._img
+            except:
+                for lbl in self.synsetThumbLabels:
+                    lbl['image'] = ''
+            
+            # Trigger event
+            self.event_generate('<<SynsetSelect>>')
+        
+        else:
+            for lbl in self.synsetThumbLabels:
+                lbl['image'] = ''
+            self.event_generate('<<SynsetDeselect>>')
+    
+    
+    def searchSynset(self):
+        """Searches for synsets matching the keywords in the synset search entry and updates the synset list with the results."""
+        
+        phrase = self.synsetSearchVar.get().strip()
+        synsets = self.repo.listSynsets() if phrase == '' else self.repo.searchSynsets(phrase, 40)
+        synsetStrings = tuple(map(lambda l: '{}  -  {}'.format(l[0], l[1]), synsets))
+        for lbl in self.synsetThumbLabels:
+            lbl['image'] = ''
+        self.lbxSynsets.selection_clear(0, Tkinter.END)
+        self.lbxSynsets.delete(0, Tkinter.END)
+        self.lbxSynsets.insert(Tkinter.END, *synsetStrings)
+        if len(synsets) == 1:
+            self.lbxSynsets.selection_set(0)
+            self._onSynsetSelect()
+    
+    
+    def selectedSynset(self):
+        """Returns the currently selected synset.
+        
+        Returns a tuple with the ID and the description of the selected synset.
+        If no synset is selected, None will be returned.
+        """
+        
+        selection = self.lbxSynsets.curselection()
+        if selection:
+            synsetId, _, description = self.lbxSynsets.get(selection).split(None, 2)
+            return (synsetId, description)
+        else:
+            return None

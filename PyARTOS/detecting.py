@@ -188,7 +188,7 @@ class Detection(BoundingBox):
 
 class Detector(object):
 
-    def __init__(self, overlap = 0.5, interval = 10, debug=False):
+    def __init__(self, overlap = 0.5, interval = 10, debug = False):
         """Constructs and initializes a new detector with specific settings.
         
         overlap - Minimum overlap in non maxima suppression.
@@ -208,7 +208,7 @@ class Detector(object):
             pass
 
 
-    def addModel(self, classname, modelfile, threshold, synsetId = ''):
+    def addModel(self, classname, modelfile, threshold = 0.0, synsetId = ''):
         """Adds a model to the detection stack.
         
         classname - The name of the class ('bicycle' for example). It is used to name the objects detected in an image.
@@ -288,6 +288,20 @@ class Detector(object):
         return [Detection.fromFlatDetection(buf[i]) for i in range(buf_size.value)]
     
     
+    def addEvaluationSamplesFromSynset(self, imageRepository, synsetId, numNegative = 0):
+        """Adds positive and (optionally) negative test samples from an image repository for evaluating the performance of models added to the detector.
+        
+        imageRepository - Path to the image repository or an imagenet.ImageRepository instance.
+        synsetId - The ID of the synset.
+        numNegative - The number of negative samples to add from other synsets.
+        
+        If an error occurs, a LibARTOSException is thrown.
+        """
+        
+        repoDirectory = imageRepository if utils.is_str(imageRepository) else imageRepository.repoDirectory
+        libartos.evaluator_add_samples_from_synset(self.handle, utils.str2bytes(repoDirectory), utils.str2bytes(synsetId), numNegative)
+    
+    
     def addEvaluationPositive(self, sample, boundingBoxes = None):
         """Adds an image as positive test sample for evaluating the performance of the models added to the detector.
         
@@ -330,20 +344,6 @@ class Detector(object):
         else:
             # Treat sample as file name
             libartos.evaluator_add_positive_file_jpeg(self.handle, utils.str2bytes(sample), bboxes, numBBoxes)
-    
-    
-    def addEvaluationPositivesFromSynset(self, imageRepository, synsetId, numNegative = 0):
-        """Adds positive and (optionally) negative test samples from an image repository for evaluating the performance of models added to the detector.
-        
-        imageRepository - Path to the image repository or an imagenet.ImageRepository instance.
-        synsetId - The ID of the synset.
-        numNegative - The number of negative samples to add from other synsets.
-        
-        If an error occurs, a LibARTOSException is thrown.
-        """
-        
-        repoDirectory = imageRepository if utils.is_str(imageRepository) else imageRepository.repoDirectory
-        libartos.evaluator_add_samples_from_synset(self.handle, utils.str2bytes(repoDirectory), utils.str2bytes(synsetId), numNegative)
     
     
     def addEvaluationNegative(self, sample):

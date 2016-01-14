@@ -27,6 +27,7 @@ except:
 from . import gui_utils
 from .. import utils, learning
 from .AnnotationDialog import AnnotationDialog
+from .Evaluation import EvaluationDialog
 from ..imagenet import ImageRepository
 from ..config import config
 
@@ -103,15 +104,16 @@ class ModelWidget(ttk.Frame):
         self.frmButtons.grid(column = 3, row = 0, rowspan = 4, pady = 8)
         self.ctrlBtns = {
             'inspect'   : { 'pos' : 0, 'btn': ttk.Button(self.frmButtons, text = 'Inspect', command = self.showInspector) },
-            'adapt'     : { 'pos' : 1, 'btn': ttk.Button(self.frmButtons, text = 'Adapt', command = self.adaptModel) },
-            'threshold' : { 'pos' : 2, 'btn': ttk.Button(self.frmButtons, text = 'Set Threshold', command = self.askThreshold) },
-            'rename'    : { 'pos' : 3, 'btn': ttk.Button(self.frmButtons, text = 'Rename', command = self.renameModel) },
-            'disable'   : { 'pos' : 4, 'btn': ttk.Button(self.frmButtons, text = 'Disable', command = self.toggleDisabled) },
-            'delete'    : { 'pos' : 5, 'btn': ttk.Button(self.frmButtons, text = 'Delete', command = self.deleteModel) }
+            'evaluate'  : { 'pos' : 1, 'btn': ttk.Button(self.frmButtons, text = 'Evaluate', command = self.showEvaluationDialog) },
+            'adapt'     : { 'pos' : 2, 'btn': ttk.Button(self.frmButtons, text = 'Adapt', command = self.adaptModel) },
+            'threshold' : { 'pos' : 4, 'btn': ttk.Button(self.frmButtons, text = 'Set Threshold', command = self.askThreshold) },
+            'rename'    : { 'pos' : 5, 'btn': ttk.Button(self.frmButtons, text = 'Rename', command = self.renameModel) },
+            'disable'   : { 'pos' : 6, 'btn': ttk.Button(self.frmButtons, text = 'Disable', command = self.toggleDisabled) },
+            'delete'    : { 'pos' : 7, 'btn': ttk.Button(self.frmButtons, text = 'Delete', command = self.deleteModel) }
         }
         for b in self.ctrlBtns:
             pos = self.ctrlBtns[b]['pos']
-            self.ctrlBtns[b]['btn'].grid(column = pos // 3, row = pos % 3, padx = 4, pady = 4, sticky = (W,E))
+            self.ctrlBtns[b]['btn'].grid(column = pos // 4, row = pos % 4, padx = 4, pady = 4, sticky = (W,E))
         
         # Thumbnail labels
         self.thumbLabels = []
@@ -238,6 +240,15 @@ class ModelWidget(ttk.Frame):
             inspector = HOGInspector(self, model)
             inspector.grab_set() # make it a modal dialog
             self.wait_window(inspector)
+    
+    
+    def showEvaluationDialog(self):
+        """Opens an EvaluationDialog for evaluating the performance of the model on some test samples."""
+        
+        self._cw._evalDlg = EvaluationDialog(
+            [(self._cw.modelManager.getModelPath(self.modelIndex), (self._cw.modelManager.models[self.modelIndex]['classname']))],
+            master = self, parent = self._cw
+        )
     
     
     def adaptModel(self):
@@ -415,8 +426,9 @@ class CatalogueWindow(Tkinter.Toplevel):
         s.configure("Disabled.Model.TCheckbutton", background = '#dadada')
         s.configure("Disabled.WhiteFrame.TFrame", background = '#dadada')
         s.configure("Container.TFrame", relief = 'solid')
-        s.configure("SelectAllBar.TFrame", background = '#dadada')
-        s.configure("SelectAllBar.TCheckbutton", background = '#dadada')
+        s.configure("SelectBar.TFrame", background = '#dadada')
+        s.configure("SelectBar.TCheckbutton", background = '#dadada')
+        s.configure("SelectBar.TButton", font = 'TkDefaultFont 8', padding = '1 0')
         
         # Frame containing models canvas and scrollbar (see below):
         self.frmModelsContainer = ttk.Frame(self, style = 'Container.TFrame')
@@ -447,31 +459,29 @@ class CatalogueWindow(Tkinter.Toplevel):
         self.btnModelDir = ttk.Button(self, text = '...', width = 3, command = self.selectModelDir)
         self.btnModelDir.grid(column = 3, row = 0, padx = (0,8))
         
-        # Checkbox for (de-)selecting all models at once:
-        self.frmSelectAll = ttk.Frame(self, style = 'SelectAllBar.TFrame')
-        self.sepSelectAll = ttk.Separator(self.frmSelectAll, orient = 'horizontal')
+        # Checkbox and buttons for manipulating multiple selected models at once:
+        self.frmSelectionBtns = ttk.Frame(self, style = 'SelectBar.TFrame')
+        self.sepSelectAll = ttk.Separator(self.frmSelectionBtns, orient = 'horizontal')
         self.sepSelectAll.pack(side = 'top', fill = 'x')
-        self.chkSelectAll = ttk.Checkbutton(self.frmSelectAll,
+        self.chkSelectAll = ttk.Checkbutton(self.frmSelectionBtns,
             text = 'Select all models',
             variable = self.allModelsSelected,
             command = self.onSelectAllChange,
-            style = 'SelectAllBar.TCheckbutton'
+            style = 'SelectBar.TCheckbutton'
         )
-        self.chkSelectAll.pack(side = 'top', fill = 'x', padx = 1, pady = 0)
-        self.frmSelectAll.grid(column = 0, row = 1, columnspan = 4, sticky = (W,E))
-        
-        # Buttons for manipulating multiple selected models at once:
-        self.frmSelectionBtns = ttk.Frame(self)
-        self.frmSelectionBtns.grid(column = 0, row = 3, columnspan = 2, sticky = (W,E), pady = 8)
+        self.chkSelectAll.pack(side = 'left', padx = 1)
+        self.btnEvalSelected = ttk.Button(self.frmSelectionBtns, text = 'Evaluate', command = self.evaluateSelectedModels)
         self.btnSetThSelected = ttk.Button(self.frmSelectionBtns, text = 'Set Threshold', command = self.changeSelectedThreshold)
-        self.btnSetThSelected.pack(side = 'left', padx = 4, fill = 'y')
         self.btnDisableSelected = ttk.Button(self.frmSelectionBtns, text = 'Disable', command = self.disableSelectedModels)
-        self.btnDisableSelected.pack(side = 'left', padx = 4, fill = 'y')
         self.btnEnableSelected = ttk.Button(self.frmSelectionBtns, text = 'Enable', command = self.enableSelectedModels)
-        self.btnEnableSelected.pack(side = 'left', padx = 4, fill = 'y')
         self.btnDeleteSelected = ttk.Button(self.frmSelectionBtns, text = 'Delete', command = self.deleteSelectedModels)
-        self.btnDeleteSelected.pack(side = 'left', padx = 4, fill = 'y')
-        self.frmSelectionBtns.grid_remove()
+        self.selectionButtons = [self.btnEvalSelected, self.btnSetThSelected, self.btnDisableSelected, self.btnEnableSelected, self.btnDeleteSelected]
+        for i in range(len(self.selectionButtons) - 1, -1, -1):
+            btn = self.selectionButtons[i]
+            btn['style'] = 'SelectBar.TButton'
+            btn['state'] = 'disabled'
+            btn.pack(side = 'right', padx = 2, pady = (2,3))
+        self.frmSelectionBtns.grid(column = 0, row = 1, columnspan = 4, sticky = (W,E))
         
         # Buttons for learning new models and background statistics:
         self.frmLearnBtns = ttk.Frame(self)
@@ -526,19 +536,12 @@ class CatalogueWindow(Tkinter.Toplevel):
     def onModelSelect(self, *args):
         """Callback for showing and hiding selection controls whenever the selection state of a model changes."""
         
-        numSelected = sum(1 for w in self.modelWidgets if w.isSelected())
-        
-        if (numSelected > 0) and (self.numSelectedModels == 0):
-            self.frmLearnBtns.grid_remove()
-            self.frmSelectionBtns.grid()
-        elif (numSelected == 0) and (self.numSelectedModels > 0):
-            self.frmSelectionBtns.grid_remove()
-            self.frmLearnBtns.grid()
-        
-        self.numSelectedModels = numSelected
-        if numSelected == 0:
+        self.numSelectedModels = sum(1 for w in self.modelWidgets if w.isSelected())
+        for btn in self.selectionButtons:
+            btn['state'] = 'disabled' if self.numSelectedModels == 0 else 'normal'
+        if self.numSelectedModels == 0:
             self.allModelsSelected.set(False)
-        elif numSelected == len(self.modelWidgets):
+        elif self.numSelectedModels == len(self.modelWidgets):
             self.allModelsSelected.set(True)
         else:
             self.chkSelectAll.state(['alternate'])
@@ -553,6 +556,15 @@ class CatalogueWindow(Tkinter.Toplevel):
         """Changes the selection state of all models."""
         for w in self.modelWidgets:
             w.isSelected(selected)
+    
+    
+    def evaluateSelectedModels(self, *args):
+        """Shows a dialog for evaluating the selected models."""
+        self._evalDlg = EvaluationDialog(
+            [(self.modelManager.getModelPath(w.modelIndex), (self.modelManager.models[w.modelIndex]['classname'])) \
+            for w in self.modelWidgets if w.isSelected()],
+            master = self, parent = self
+        )
     
     
     def changeSelectedThreshold(self, *args):
@@ -690,10 +702,8 @@ class LearnDialog(gui_utils.Dialog):
             self.thOptMaxNegVar = Tkinter.IntVar(self, value = 20)
             self.thOptFullPosVar = Tkinter.BooleanVar(self, value = False if self.mode == self.__class__.MODE_IMAGENET else True)
             self.thOptSkipVar = Tkinter.BooleanVar(self, value = False)
-            self.synsetSearchVar = Tkinter.StringVar(self)
             self.imageSourceModeVar = Tkinter.StringVar(self, value = 'camera')
             self.imgDirVar = Tkinter.StringVar(self)
-            self._synsetSearchAfterId = None
             self._lastAutomaticClassname = ''
             self.bind('<Destroy>', self.onDestroy, True)
             self._createWidgets()
@@ -711,14 +721,8 @@ class LearnDialog(gui_utils.Dialog):
                 del self.thOptMaxNegVar
                 del self.thOptFullPosVar
                 del self.thOptSkipVar
-                del self.synsetSearchVar
                 del self.imageSourceModeVar
                 del self.imgDirVar
-                for lbl in self.synsetThumbLabels:
-                    try:
-                        del lbl._img
-                    except:
-                        pass
             except:
                 pass
     
@@ -737,27 +741,10 @@ class LearnDialog(gui_utils.Dialog):
         
         if self.mode == self.__class__.MODE_IMAGENET:
             # Synset search field and list box
-            self.frmSynsetSearch = ttk.Labelframe(self, text = 'Synset', padding = padding)
+            self.frmSynsetSearch = gui_utils.SearchSynsetWidget(self, self.repo, text = 'Synset', padding = padding)
             self.frmSynsetSearch.grid(column = 0, row = 1, columnspan = 2, sticky = (W,E), padx = padding, pady = (padding, 0))
-            self.lblSynsetSearch = ttk.Label(self.frmSynsetSearch, text = 'Search synset by keywords:')
-            self.entrSynset = ttk.Entry(self.frmSynsetSearch, textvariable = self.synsetSearchVar, exportselection = False)
-            self.scrSynsets = ttk.Scrollbar(self.frmSynsetSearch, orient = Tkinter.VERTICAL)
-            self.lbxSynsets = Tkinter.Listbox(self.frmSynsetSearch, height = 10, activestyle = 'dotbox', exportselection = False, yscrollcommand = self.scrSynsets.set)
-            self.scrSynsets['command'] = self.lbxSynsets.yview
-            self.synsetThumbLabels = [ttk.Label(self.frmSynsetSearch) for i in range(4)]
-            self.lblSynsetSearch.grid(column = 0, row = 0, columnspan = 3, sticky = (W,E))
-            self.entrSynset.grid(column = 0, row = 1, columnspan = 3, sticky = (W,E), pady = (0, padding))
-            self.lbxSynsets.grid(column = 0, row = 2, rowspan = len(self.synsetThumbLabels), sticky = (N,E,S,W))
-            self.scrSynsets.grid(column = 1, row = 2, rowspan = len(self.synsetThumbLabels), sticky = (N,S))
-            for i, lbl in enumerate(self.synsetThumbLabels):
-                lbl.grid(column = 2, row = 2 + i)
-            self.frmSynsetSearch.columnconfigure(0, weight = 1)
-            self.frmSynsetSearch.rowconfigure(2, weight = 1)
-            self.frmSynsetSearch.rowconfigure((2,3,4,5), minsize = 52)
-            self.focusWidget = self.entrSynset
-            self.synsetSearchVar.trace('w', self._onSynsetSearchChange)
-            self.lbxSynsets.bind('<<ListboxSelect>>', self._onSynsetSelect, True)
-            self.searchSynset()
+            self.frmSynsetSearch.bind('<<SynsetSelect>>', self._onSynsetSelect)
+            self.focusWidget = self.frmSynsetSearch.entrSynset
         elif self.mode == self.__class__.MODE_INSITU:
             # Mode and image directory select
             self.frmImageSource = ttk.Labelframe(self, text = 'Images', padding = padding)
@@ -840,62 +827,18 @@ class LearnDialog(gui_utils.Dialog):
         else:
             self.lblThOptMaxPosValue['text'] = str(self.thOptMaxPosVar.get())
         self.lblThOptMaxNegValue['text'] = str(self.thOptMaxNegVar.get())
-        
-    
-    
-    def _onSynsetSearchChange(self, *args):
-        """Callback triggered whenever the synset search entry changes. Will wait a few seconds and then perform the search."""
-        
-        if not self._synsetSearchAfterId is None:
-            self.after_cancel(self._synsetSearchAfterId)
-        self._synsetSearchAfterId = self.after(400, self.searchSynset)
     
     
     def _onSynsetSelect(self, *args):
         """Callback triggered whenever the user selects a synset.
         
-        Will guess the class name if the user hasn't specified one yet and updates the thumbnails giving a preview of the synset.
+        Will guess the class name if the user hasn't specified one yet.
         """
         
-        selection = self.lbxSynsets.curselection()
-        if selection:
-            synsetId, _, description = self.lbxSynsets.get(selection).split(None, 2)
-        
-            # Guess class name
-            if self.classnameVar.get().strip() in ('', self._lastAutomaticClassname):
-                self._lastAutomaticClassname = description.split(',', 1)[0].strip().title()
-                self.classnameVar.set(self._lastAutomaticClassname)
-            
-            # Update thumbnails
-            try:
-                imgs = self.repo.getImagesFromSynset(synsetId, len(self.synsetThumbLabels))
-                for lbl, img in zip(self.synsetThumbLabels, imgs):
-                    thumb = utils.imgResizeCropped(img, (48, 48))
-                    lbl._img = ImageTk.PhotoImage(thumb)
-                    lbl['image'] = lbl._img
-            except:
-                for lbl in self.synsetThumbLabels:
-                    lbl['image'] = ''
-        
-        else:
-            for lbl in self.synsetThumbLabels:
-                lbl['image'] = ''
-    
-    
-    def searchSynset(self):
-        """Searches for synsets matching the keywords in the synset search entry and updates the synset list with the results."""
-        
-        phrase = self.synsetSearchVar.get().strip()
-        synsets = self.repo.listSynsets() if phrase == '' else self.repo.searchSynsets(phrase, 40)
-        synsetStrings = tuple(map(lambda l: '{}  -  {}'.format(l[0], l[1]), synsets))
-        for lbl in self.synsetThumbLabels:
-            lbl['image'] = ''
-        self.lbxSynsets.selection_clear(0, Tkinter.END)
-        self.lbxSynsets.delete(0, Tkinter.END)
-        self.lbxSynsets.insert(Tkinter.END, *synsetStrings)
-        if len(synsets) == 1:
-            self.lbxSynsets.selection_set(0)
-            self._onSynsetSelect()
+        selection = self.frmSynsetSearch.selectedSynset()
+        if (selection is not None) and (self.classnameVar.get().strip() in ('', self._lastAutomaticClassname)):
+            self._lastAutomaticClassname = selection[1].split(',', 1)[0].strip().title()
+            self.classnameVar.set(self._lastAutomaticClassname)
     
     
     def selectImageDir(self):
@@ -915,9 +858,9 @@ class LearnDialog(gui_utils.Dialog):
         if classname or self.adapt:
             if self.mode == self.__class__.MODE_IMAGENET:
         
-                selection = self.lbxSynsets.curselection()
+                selection = self.frmSynsetSearch.selectedSynset()
                 if selection:
-                    synsetId = self.lbxSynsets.get(selection).split(None, 1)[0]
+                    synsetId = selection[0]
                     if self.adapt:
                         modelfile = self.adapt
                     else:
