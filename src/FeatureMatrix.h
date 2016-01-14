@@ -39,7 +39,6 @@ public:
     typedef Eigen::Matrix<Scalar, Eigen::Dynamic, 1> Cell; /**< Feature vector type of a single cell. */
     
     typedef Eigen::Matrix<Scalar, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> ScalarMatrix; /**< A matrix of scalar values. */
-    typedef Eigen::Matrix<Scalar, Eigen::Dynamic, Eigen::Dynamic, Eigen::ColMajor> ScalarMatrixCM; /**< A matrix of scalar values in column-major order. */
     
     typedef Eigen::Map< ScalarMatrix, 0, Eigen::Stride<Eigen::Dynamic, Eigen::Dynamic> > ChannelMap;
     typedef Eigen::Map< const ScalarMatrix, 0, Eigen::Stride<Eigen::Dynamic, Eigen::Dynamic> > ConstChannelMap;
@@ -433,17 +432,17 @@ public:
     * Provides a view on this matrix as as a vector of cells, i.e. each row in the resulting matrix
     * represents a cell.
     *
-    * @return Returns a Eigen::Map object with as many rows as this matrix has channels and rows*cols columns.
+    * @return Returns a Eigen::Map object with as many columns as this matrix has channels and rows*cols rows.
     */
-    Eigen::Map<ScalarMatrixCM> asCellMatrix() { return Eigen::Map<ScalarMatrixCM>(this->m_data_p, this->channels(), this->numCells()); };
+    Eigen::Map<ScalarMatrix> asCellMatrix() { return Eigen::Map<ScalarMatrix>(this->m_data_p, this->numCells(), this->channels()); };
     
     /**
     * Provides a view on this matrix as as a vector of cells, i.e. each row in the resulting matrix
     * represents a cell.
     *
-    * @return Returns a constant Eigen::Map object with as many rows as this matrix has channels and rows*cols columns.
+    * @return Returns a constant Eigen::Map object with as many columns as this matrix has channels and rows*cols rows.
     */
-    Eigen::Map<const ScalarMatrixCM> asCellMatrix() const { return Eigen::Map<const ScalarMatrixCM>(this->m_data_p, this->channels(), this->numCells()); };
+    Eigen::Map<const ScalarMatrix> asCellMatrix() const { return Eigen::Map<const ScalarMatrix>(this->m_data_p, this->numCells(), this->channels()); };
     
     /**
     * Returns an Eigen::Map object wrapping a single cell of this feature matrix.
@@ -561,7 +560,7 @@ public:
     FeatureMatrix_ & operator+=(const Cell & cell)
     {
         assert(cell.size() == this->m_channels);
-        this->m_data.rowwise() += cell.colwise().replicate(this->m_cols).transpose();
+        this->asCellMatrix().rowwise() += cell.transpose();
         return *this;
     };
     
@@ -589,7 +588,7 @@ public:
     FeatureMatrix_ & operator-=(const Cell & cell)
     {
         assert(cell.size() == this->m_channels);
-        this->m_data.rowwise() -= cell.colwise().replicate(this->m_cols).transpose();
+        this->asCellMatrix().rowwise() -= cell.transpose();
         return *this;
     };
 
@@ -618,7 +617,7 @@ public:
     FeatureMatrix_ & operator*=(const Cell & cell)
     {
         assert(cell.size() == this->m_channels);
-        this->m_data.array().rowwise() *= cell.colwise().replicate(this->m_cols).transpose().array();
+        this->asCellMatrix().array().rowwise() *= cell.transpose().array();
         return *this;
     };
 
@@ -647,7 +646,7 @@ public:
     FeatureMatrix_ & operator/=(const Cell & cell)
     {
         assert(cell.size() == this->m_channels);
-        this->m_data.array().rowwise() /= cell.colwise().replicate(this->m_cols).transpose().array();
+        this->asCellMatrix().array().rowwise() /= cell.transpose().array();
         return *this;
     };
 
