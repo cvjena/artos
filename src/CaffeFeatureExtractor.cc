@@ -4,7 +4,9 @@
 #include <algorithm>
 #include <fstream>
 #include <sstream>
+#include <cstdint>
 #include <cassert>
+#include "portable_endian.h"
 using namespace ARTOS;
 using namespace caffe;
 using namespace std;
@@ -31,6 +33,7 @@ CaffeFeatureExtractor::CaffeFeatureExtractor() : m_net(nullptr), m_mean(0)
     this->m_stringParams["weightsFile"] = "";
     this->m_stringParams["meanFile"] = "";
     this->m_stringParams["scalesFile"] = "";
+    this->m_stringParams["pcaFile"] = "";
     this->m_stringParams["layerName"] = "";
     this->m_intParams["maxImgSize"] = 0;
 };
@@ -189,6 +192,8 @@ void CaffeFeatureExtractor::setParam(const string & paramName, const std::string
         this->loadMean();
     else if (paramName == "scalesFile")
         this->loadScales();
+    else if (paramName == "pcaFile")
+        this->loadPCAParams();
     else if (paramName == "layerName")
         this->loadLayerInfo();
 }
@@ -235,6 +240,15 @@ void CaffeFeatureExtractor::extract(const JPEGImage & img, FeatureMatrix & feat)
     // Scale features
     if (this->m_scales.size() == feat.channels())
         feat /= this->m_scales;
+    
+    // Apply dimensionality reduction
+    if (this->m_pcaMean.size() == feat.channels())
+    {
+        FeatureMatrix reducedFeat(feat.rows(), feat.cols(), this->m_pcaTransform.cols());
+        feat -= this->m_pcaMean;
+        reducedFeat.asCellMatrix().noalias() = feat.asCellMatrix() * this->m_pcaTransform;
+        feat = move(reducedFeat);
+    }
 }
 
 
@@ -338,6 +352,7 @@ void CaffeFeatureExtractor::loadNetwork()
         
         this->loadLayerInfo();
         this->loadScales();
+        this->loadPCAParams();
     }
 }
 
@@ -421,6 +436,60 @@ void CaffeFeatureExtractor::loadScales()
         }
         
         this->m_scales = scales;
+    }
+}
+
+
+void CaffeFeatureExtractor::loadPCAParams()
+{
+    this->m_pcaMean = FeatureCell(0);
+    this->m_pcaTransform = ScalarMatrix(0, 0);
+    string pcaFilename = this->getStringParam("pcaFile");
+    
+    if (this->m_net && !pcaFilename.empty())
+    {
+        ifstream pcaFile(pcaFilename, ios_base::in | ios_base::binary);
+        if (!pcaFile.is_open())
+            throw std::invalid_argument("PCA file could not be loaded: " + pcaFilename);
+        
+        // Read metadata
+        uint32_t numRows, numCols;
+        pcaFile.read(reinterpret_cast<char*>(&numRows), sizeof(uint32_t));
+        pcaFile.read(reinterpret_cast<char*>(&numCols), sizeof(uint32_t));
+        numRows = le32toh(numRows);
+        numCols = le32toh(numCols);
+        if (numRows != this->numFeatures())
+            throw std::invalid_argument("Wrong number of features in PCA file: " + pcaFilename);
+        if (numCols > numRows)
+            throw std::invalid_argument("Reduced is larger than original dimensionality in PCA file: " + pcaFilename);
+        
+        // Read mean
+        FeatureCell mean(numRows);
+        float buf;
+        for (FeatureCell::Index i = 0; i < numRows; i++)
+        {
+            if (pcaFile.eof())
+                throw std::invalid_argument("Unexpected end of PCA file while reading mean: " + pcaFilename);
+            pcaFile.read(reinterpret_cast<char*>(&buf), sizeof(float));
+            if (pcaFile.bad())
+                throw std::invalid_argument("PCA file could not be read: " + pcaFilename);
+            mean(i) = le32toh(buf);
+        }
+        
+        // Read transformation matrix
+        ScalarMatrix transform(numRows, numCols);
+        for (ScalarMatrix::Index i = 0; i < transform.size(); i++)
+        {
+            if (pcaFile.eof())
+                throw std::invalid_argument("Unexpected end of PCA file while reading matrix: " + pcaFilename);
+            pcaFile.read(reinterpret_cast<char*>(&buf), sizeof(float));
+            if (pcaFile.bad())
+                throw std::invalid_argument("PCA file could not be read: " + pcaFilename);
+            transform(i) = le32toh(buf);
+        }
+        
+        this->m_pcaMean = mean;
+        this->m_pcaTransform = transform;
     }
 }
 

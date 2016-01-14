@@ -21,6 +21,12 @@ namespace ARTOS
 *     - *scalesFile* (`string`) - path to a text file with the maximum value of each unscaled feature
 *       channel, computed over several images in advance. If specified, the features extracted from the
 *       CNN will be scaled to [-1,1].
+*     - *pcaFile* (`string`) - path to a binary file which contains a mean feature vector `m` and a
+*       matrix `A`used for dimensionality reduction. If specified, each feature cell `c  extracted from
+*       the CNN will be transformed to `c' = A^T * (c - m)`, after scaling has been applied.
+*       The binary file must start with two integers specifying the number of rows and columns of `A`,
+*       respectively. Those are followed by the coefficients of `m` and `A` (in row-major order), stored
+*       as floats.
 *     - *layerName* (`string`) - the name of the layer in the network to extract features from.
 *     - *maxImgSize* (`int`) - maximum size of input images (may be limited to save time and memory).
 *       0 means no limit.
@@ -176,6 +182,8 @@ protected:
     std::shared_ptr< caffe::Net<float> > m_net; /**< The network. */
     cv::Scalar m_mean; /**< Image mean. */
     FeatureCell m_scales; /**< Maxima of each unscaled feature channel, computed over several images in advance. */
+    FeatureCell m_pcaMean; /**< Mean of features extracted from the CNN, after scaling. Used for PCA. */
+    ScalarMatrix m_pcaTransform; /**< Matrix used for dimensionality reduction. */
     int m_lastLayer; /**< Index of the last convolutional layer in the network before the fully connected network. */
     int m_numChannels; /**< Number of input channels of the network. */
     int m_layerIndex; /**< Index of the layer to extract features from. */
@@ -214,6 +222,14 @@ protected:
     * @throws std::invalid_argument The mean file could not be loaded.
     */
     virtual void loadScales();
+    
+    /**
+    * Tries to load the mean feature vector and the transformation matrix for dimensionality reduction from the file
+    * specified in the parameter "pcaFile".
+    *
+    * @throws std::invalid_argument The PCA file could not be loaded.
+    */
+    virtual void loadPCAParams();
     
     /**
     * Caches information about the layer specified in the parameter "layerName" if the net has already been loaded

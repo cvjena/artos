@@ -55,10 +55,9 @@ int main(int argc, char * argv[])
     int i, lastProgress = -1;
     FeatureCell maxima = FeatureCell::Zero(fe->numFeatures());
     vector<FeatureMatrix>::const_iterator levelIt;
-    for (imgIt.rewind(); imgIt.ready() && (numImages == 0 || (unsigned int) imgIt < numImages); ++imgIt)
+    for (imgIt.rewind(); imgIt.ready() && (unsigned int) imgIt < numImages; ++imgIt)
     {
-        if (numImages > 0)
-            displayProgress((unsigned int) imgIt, numImages, &lastProgress);
+        displayProgress((unsigned int) imgIt, numImages, &lastProgress);
         JPEGImage img = (*imgIt).getImage();
         if (!img.empty())
         {
@@ -69,15 +68,14 @@ int main(int argc, char * argv[])
                     maxima = maxima.cwiseMax(levelIt->cell(i).cwiseAbs());
         }
     }
-    if (numImages > 0)
-        displayProgress(numImages, numImages, &lastProgress);
+    displayProgress(numImages, numImages, &lastProgress);
      
     // Save
     ofstream file(argv[1], ofstream::out | ofstream::trunc);
     if (!file.is_open())
     {
         cerr << "Could not open file: " << argv[1] << endl;
-        return false;
+        return 3;
     }
     file << maxima;
     file.close();
