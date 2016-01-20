@@ -442,8 +442,8 @@ void CaffeFeatureExtractor::loadScales()
 
 void CaffeFeatureExtractor::loadPCAParams()
 {
-    this->m_pcaMean = FeatureCell(0);
-    this->m_pcaTransform = ScalarMatrix(0, 0);
+    this->m_pcaMean = FeatureCell();
+    this->m_pcaTransform = ScalarMatrix();
     string pcaFilename = this->getStringParam("pcaFile");
     
     if (this->m_net && !pcaFilename.empty())

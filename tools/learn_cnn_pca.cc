@@ -70,7 +70,7 @@ int main(int argc, char * argv[])
     
     /* Iterate over the images and compute the mean feature vector */
     int lastProgress = -1;
-    FeatureMatrix_<double>::Cell mean = Eigen::VectorXd::Zero(fe->numFeatures());
+    FeatureMatrix_<double>::Cell mean = FeatureMatrix_<double>::Cell::Zero(fe->numFeatures());
     vector<FeatureMatrix>::const_iterator levelIt;
     unsigned long long numCells = 0;
     cout << "Computing mean..." << endl;
@@ -113,7 +113,8 @@ int main(int argc, char * argv[])
             // Loop over various scales
             for (levelIt = pyra.levels().begin(); levelIt != pyra.levels().end(); levelIt++)
             {
-                centered = *levelIt - mean;
+                centered = *levelIt;
+                centered -= mean;
                 cov += centered.asCellMatrix().transpose() * centered.asCellMatrix();
                 numCells += levelIt->numCells();
             }
