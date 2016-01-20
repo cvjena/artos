@@ -197,7 +197,7 @@ public:
     * The iterator will be rewound at the beginning of the process.
     *
     * @param[in] numImages Maximum number of images to learn from. If set to 0, all images provided by the
-    * iterator will be used (potentially dangerous when used with infinite iterators like MixedImageIterator!).
+    * iterator will be used (may take really, really long!).
     *
     * @param[in] maxOffset Maximum available offset in x or y direction of the autocorrelation function to be learned.
     * Determines the maximum size of the reconstructible covariance matrix, which will be `maxOffset + 1`.
@@ -229,7 +229,7 @@ public:
     * The iterator will be rewound at the beginning of the process.
     *
     * @param[in] numImages Maximum number of images to learn from. If set to 0, all images provided by the
-    * iterator will be used (potentially dangerous when used with infinite iterators like MixedImageIterator!).
+    * iterator will be used (may take really, really long!).
     *
     * @param[in] maxOffset Maximum available offset in x or y direction of the autocorrelation function to be learned.
     * Determines the maximum size of the reconstructible covariance matrix, which will be `maxOffset + 1`.

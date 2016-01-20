@@ -104,13 +104,15 @@ SynsetImage SynsetImageIterator::operator*()
 
 
 MixedImageIterator::MixedImageIterator(const std::string & aRepoDirectory, const unsigned int & aPerSynset)
-: ImageIterator(aRepoDirectory), m_currentSynset(0), m_posCurrent(0), m_perSynset(aPerSynset), m_run(0), m_foundAny(false)
+: ImageIterator(aRepoDirectory), m_numExhausted(0), m_currentSynset(0), m_posCurrent(0), m_perSynset(aPerSynset),
+  m_run(0), m_foundAny(false)
 {
     this->init();
 }
 
 MixedImageIterator::MixedImageIterator(const MixedImageIterator & other)
-: ImageIterator(other.m_repoDir), m_currentSynset(0), m_posCurrent(0), m_perSynset(other.m_perSynset), m_run(0), m_foundAny(false)
+: ImageIterator(other.m_repoDir), m_numExhausted(0), m_currentSynset(0), m_posCurrent(0), m_perSynset(other.m_perSynset),
+  m_run(0), m_foundAny(false)
 {
     this->init();
 }
@@ -118,6 +120,7 @@ MixedImageIterator::MixedImageIterator(const MixedImageIterator & other)
 void MixedImageIterator::init()
 {
     ImageRepository(this->m_repoDir).listSynsets(&this->m_synsets, NULL);
+    this->m_exhausted.assign(this->m_synsets.size(), false);
     if (this->m_perSynset == 0)
         this->m_perSynset = 1;
     // List files in first synset
@@ -127,7 +130,11 @@ void MixedImageIterator::init()
         if (!this->m_filenames.empty())
             this->m_foundAny = true;
         else
+        {
+            this->m_exhausted[this->m_currentSynset] = true;
+            this->m_numExhausted++;
             this->nextSynset();
+        }
     }
 }
 
@@ -138,17 +145,34 @@ void MixedImageIterator::nextSynset()
     {
         this->m_currentSynset = 0;
         this->m_run++;
-        if (!this->m_foundAny)
+        if (!this->m_foundAny || this->m_numExhausted >= this->m_synsets.size())
         {
             // There are no synsets. Stop here for not entering an endless loop.
             return;
         }
     }
     
-    this->listImagesInSynset(this->m_filenames, join_path(2, this->m_repoDir.c_str(), this->m_synsets[this->m_currentSynset].c_str()));
-    this->m_posCurrent = 0;
-    if (!this->m_filenames.empty())
-        this->m_foundAny = true;
+    if (!this->m_exhausted[this->m_currentSynset])
+    {
+        this->listImagesInSynset(this->m_filenames, join_path(2, this->m_repoDir.c_str(), this->m_synsets[this->m_currentSynset].c_str()));
+        this->m_posCurrent = 0;
+        if (!this->m_filenames.empty())
+        {
+            this->m_foundAny = true;
+            if (this->m_run * this->m_perSynset >= this->m_filenames.size())
+            {
+                this->m_exhausted[this->m_currentSynset] = true;
+                this->m_numExhausted++;
+                this->nextSynset();
+            }
+        }
+        else
+        {
+            this->m_exhausted[this->m_currentSynset] = true;
+            this->m_numExhausted++;
+            this->nextSynset();
+        }
+    }
     else
         this->nextSynset();
 }
@@ -158,8 +182,14 @@ MixedImageIterator & MixedImageIterator::operator++()
     if (this->ready())
     {
         this->m_posCurrent++;
-        // Move on to next synset if number of images per synset reached
-        if (this->m_posCurrent >= this->m_perSynset || this->m_posCurrent >= this->m_filenames.size())
+        // Move on to next synset if synset is exhausted or number of images per synset reached
+        if (this->m_run * this->m_perSynset + this->m_posCurrent >= this->m_filenames.size())
+        {
+            this->m_exhausted[this->m_currentSynset] = true;
+            this->m_numExhausted++;
+            this->nextSynset();
+        }
+        else if (this->m_posCurrent >= this->m_perSynset)
             this->nextSynset();
     }
     return *this;
@@ -197,8 +227,14 @@ string MixedImageIterator::extract(const string & outDirectory)
 
 void MixedImageIterator::rewind()
 {
+    this->m_numExhausted = 0;
     this->m_currentSynset = 0;
     this->m_posCurrent = 0;
     this->m_run = 0;
     this->init();
+}
+
+bool MixedImageIterator::ready() const
+{
+    return (this->m_foundAny && this->m_numExhausted < this->m_synsets.size());
 }
