@@ -133,15 +133,15 @@ void SynsetImageIterator::rewind()
 
 
 MixedImageIterator::MixedImageIterator(const std::string & aRepoDirectory, const unsigned int & aPerSynset)
-: ImageIterator(aRepoDirectory), m_currentSynset(0), m_lastSynset(""), m_lastFileName(""), m_lastFileOffset(0),
-  m_lastFileIndex(0), m_perSynset(aPerSynset), m_posCurrent(0), m_run(0), m_foundAny(false)
+: ImageIterator(aRepoDirectory), m_numExhausted(0), m_currentSynset(0), m_lastSynset(""), m_lastFileName(""),
+  m_lastFileOffset(0), m_lastFileIndex(0), m_perSynset(aPerSynset), m_posCurrent(0), m_run(0), m_foundAny(false)
 {
     this->init();
 }
 
 MixedImageIterator::MixedImageIterator(const MixedImageIterator & other)
-: ImageIterator(other.m_repoDir), m_currentSynset(0), m_lastSynset(""), m_lastFileName(""), m_lastFileOffset(0),
-  m_lastFileIndex(0), m_perSynset(other.m_perSynset), m_posCurrent(0), m_run(0), m_foundAny(false)
+: ImageIterator(other.m_repoDir), m_numExhausted(0), m_currentSynset(0), m_lastSynset(""), m_lastFileName(""),
+  m_lastFileOffset(0), m_lastFileIndex(0), m_perSynset(other.m_perSynset), m_posCurrent(0), m_run(0), m_foundAny(false)
 {
     this->init();
 }
@@ -149,6 +149,7 @@ MixedImageIterator::MixedImageIterator(const MixedImageIterator & other)
 void MixedImageIterator::init()
 {
     ImageRepository(this->m_repoDir).listSynsets(&this->m_synsets, NULL);
+    this->m_exhausted.assign(this->m_synsets.size(), false);
     if (this->m_perSynset == 0)
         this->m_perSynset = 1;
     // Open Tar archive of first synset
@@ -159,7 +160,11 @@ void MixedImageIterator::init()
         if (this->m_tar.isOpen())
             this->m_foundAny = true;
         else
+        {
+            this->m_exhausted[this->m_currentSynset] = true;
+            this->m_numExhausted++;
             this->nextSynset();
+        }
         ++(*this); // read first record
     }
 }
@@ -171,30 +176,42 @@ void MixedImageIterator::nextSynset()
     {
         this->m_currentSynset = 0;
         this->m_run++;
-        if (!this->m_foundAny)
+        if (!this->m_foundAny || this->m_numExhausted >= this->m_synsets.size())
         {
-            // There are no archives. Stop here for not entering an endless loop.
+            // There are no archives left. Stop here for not entering an endless loop.
             return;
         }
     }
     string tarFilename = this->m_synsets[this->m_currentSynset] + ".tar";
     this->m_tar.open(join_path(3, this->m_repoDir.c_str(), IMAGENET_IMAGE_DIR, tarFilename.c_str()));
-    if (this->m_tar.isOpen())
+    if (this->m_tar.isOpen() && !this->m_exhausted[this->m_currentSynset])
     {
         this->m_foundAny = true;
-        if (!this->m_tar.seekFile(this->m_run * this->m_perSynset))
-            this->m_tar.rewind();
-        this->m_posCurrent = 0;
+        if (this->m_tar.seekFile(this->m_run * this->m_perSynset))
+            this->m_posCurrent = 0;
+        else
+        {
+            this->m_exhausted[this->m_currentSynset] = true;
+            this->m_numExhausted++;
+            this->nextSynset();
+        }
     }
     else
+    {
+        if (!this->m_exhausted[this->m_currentSynset])
+        {
+            this->m_exhausted[this->m_currentSynset] = true;
+            this->m_numExhausted++;
+        }
         this->nextSynset();
+    }
 }
 
 MixedImageIterator & MixedImageIterator::operator++()
 {
     if (this->ready())
     {
-        // Move on to next synset of number of images per synset reached
+        // Move on to next synset if number of images per synset reached
         if (this->m_posCurrent >= this->m_perSynset)
             this->nextSynset();
         
@@ -215,6 +232,8 @@ MixedImageIterator & MixedImageIterator::operator++()
         else
         {
             // End of this synset reached - try next
+            this->m_exhausted[this->m_currentSynset] = true;
+            this->m_numExhausted++;
             this->nextSynset();
             ++(*this);
         }
@@ -264,9 +283,15 @@ string MixedImageIterator::extract(const string & outDirectory)
 
 void MixedImageIterator::rewind()
 {
+    this->m_numExhausted = 0;
     this->m_currentSynset = 0;
     this->m_pos = 0;
     this->m_posCurrent = 0;
     this->m_run = 0;
     this->init();
+}
+
+bool MixedImageIterator::ready() const
+{
+    return (this->m_synsets.size() > 0 && this->m_numExhausted < this->m_synsets.size() && this->m_tar.isOpen());
 }

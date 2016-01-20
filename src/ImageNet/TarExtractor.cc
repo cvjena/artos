@@ -250,8 +250,8 @@ bool TarExtractor::seekFile(const unsigned int fileIndex)
 
 void TarExtractor::rewind()
 {
-    this->m_tarfile.seekg(0);
     this->m_tarfile.clear();
+    this->m_tarfile.seekg(0);
     this->m_fileIndex = 0;
     this->m_eof = false;
 }

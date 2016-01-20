@@ -282,8 +282,7 @@ protected:
 *
 * The number of images taken from each synset can be specified. After that number has been extracted
 * from the first synset, the iterator will proceed with the second synset and so on. When the last
-* synset has been processed, the next bunch of images will be taken from the first. If a synset does
-* not contain any more images, the first images will be taken from it again. Thus, this iterator is endless.
+* synset has been processed, the next bunch of images will be taken from the first one.
 *
 * Can be used the following way, for example:
 *
@@ -352,13 +351,15 @@ public:
     * 
     * @return Returns true if at least one synset exists, otherwise false.
     */
-    virtual bool ready() const { return this->m_foundAny; };
+    virtual bool ready() const;
 
 
 protected:
 
     std::vector<std::string> m_synsets; /**< List of synset IDs. */
     std::vector<std::string> m_filenames; /**< List of filenames (without extension) in the current synset. */
+    std::vector<bool> m_exhausted; /**< Specifies if all images of a specific synset have been extracted. */
+    size_t m_numExhausted; /**< Number of synsets which all images have been extracted from. */
     size_t m_currentSynset; /**< The index of the currently opened synset in the m_synsets vector. */
     unsigned int m_posCurrent; /**< Number of images extracted or skipped from the currently opened synset. */
     unsigned int m_perSynset; /**< Number of images taken from each synset in a row. */
