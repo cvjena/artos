@@ -2,6 +2,7 @@
 #define ARTOS_CAFFEFEATUREEXTRACTOR_H
 
 #include "FeatureExtractor.h"
+#include <vector>
 #include <caffe/caffe.hpp>
 #include <opencv2/core/core.hpp>
 
@@ -28,6 +29,8 @@ namespace ARTOS
 *       respectively. Those are followed by the coefficients of `m` and `A` (in row-major order), stored
 *       as floats.
 *     - *layerName* (`string`) - the name of the layer in the network to extract features from.
+*       Features from multiple layers may be concatened by specifying the names of the layers as
+*       comma-separated list.
 *     - *maxImgSize* (`int`) - maximum size of input images (may be limited to save time and memory).
 *       0 means no limit.
 *
@@ -56,8 +59,9 @@ public:
     * @param[in] meanFile Optionally, path to a mean image file which has to be subtracted from each
     * sample before propagating it through the network.
     *
-    * @param[in] layerName The name of the layer in the network to extract features from. If an empty
-    * string is given, the last layer before the first fully connected layer will be selected.
+    * @param[in] layerName The name of the layer in the network to extract features from. Multiple layer
+    * names may be specified as comma-separated list. If an empty string is given, the last layer before
+    * the first fully connected layer will be selected.
     */
     CaffeFeatureExtractor(const std::string & netFile, const std::string & weightsFile,
                           const std::string & meanFile = "", const std::string & layerName = "");
@@ -186,9 +190,10 @@ protected:
     ScalarMatrix m_pcaTransform; /**< Matrix used for dimensionality reduction. */
     int m_lastLayer; /**< Index of the last convolutional layer in the network before the fully connected network. */
     int m_numChannels; /**< Number of input channels of the network. */
-    int m_layerIndex; /**< Index of the layer to extract features from. */
-    Size m_cellSize; /**< Cell size derived from the network structure. */
-    Size m_borderSize; /**< Border size derived from the network structure. */
+    int m_numOutputChannels; /**< Sum of the number of channels of all layers to extract features from. */
+    std::vector<int> m_layerIndices; /**< Indices of the layers to extract features from, in the order they appear in the net. */
+    std::vector<Size> m_cellSize; /**< Cell size derived from the network structure for each layer to extract features from, relative to the previous layer. */
+    std::vector<Size> m_borderSize; /**< Border size derived from the network structure for each layer to extract features from, relative to the previous layer. */
     
     enum class LayerType { OTHER, CONV, POOL };
     
@@ -232,10 +237,10 @@ protected:
     virtual void loadPCAParams();
     
     /**
-    * Caches information about the layer specified in the parameter "layerName" if the net has already been loaded
-    * and sets m_cellSize and m_borderSize accordingly.
+    * Caches information about the layer(s) specified in the parameter "layerName" if the net has already been loaded
+    * and sets m_layerIndices, m_cellSize and m_borderSize accordingly.
     *
-    * If the specified layer could not be found, the last convolutional layer in the network will be used.
+    * If none of the specified layers could be found, the last convolutional layer in the network will be used.
     */
     virtual void loadLayerInfo();
     

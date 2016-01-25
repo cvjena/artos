@@ -4,8 +4,10 @@
 #include <algorithm>
 #include <fstream>
 #include <sstream>
+#include <cmath>
 #include <cstdint>
 #include <cassert>
+#include "strutils.h"
 #include "portable_endian.h"
 using namespace ARTOS;
 using namespace caffe;
@@ -63,8 +65,7 @@ int CaffeFeatureExtractor::numFeatures() const
     if (!this->m_net)
         throw UseBeforeSetupException("netFile and weightsFile have to be set before CaffeFeatureExtractor may be used.");
     
-    int numFeat = this->m_net->top_vecs()[this->m_layerIndex][0]->channels();
-    return (this->m_pcaMean.size() == numFeat) ? this->m_pcaTransform.cols() : numFeat;
+    return (this->m_pcaMean.size() == this->m_numOutputChannels) ? this->m_pcaTransform.cols() : this->m_numOutputChannels;
 }
 
 
@@ -73,7 +74,7 @@ Size CaffeFeatureExtractor::cellSize() const
     if (!this->m_net)
         throw UseBeforeSetupException("netFile and weightsFile have to be set before CaffeFeatureExtractor may be used.");
     
-    return this->m_cellSize;
+    return this->m_cellSize.front();
 }
 
 
@@ -82,7 +83,7 @@ Size CaffeFeatureExtractor::borderSize() const
     if (!this->m_net)
         throw UseBeforeSetupException("netFile and weightsFile have to be set before CaffeFeatureExtractor may be used.");
     
-    return this->m_borderSize;
+    return this->m_borderSize.front();
 }
 
 
@@ -136,7 +137,7 @@ Size CaffeFeatureExtractor::pixelsToCells(const Size & pixels) const
 {
     Size cells = pixels;
     LayerParams layerParams;
-    for (int l = 0; l <= this->m_layerIndex; l++)
+    for (int l = 0; l <= this->m_layerIndices.front(); l++)
     {
         this->getLayerParams(l, layerParams);
         
@@ -179,8 +180,14 @@ void CaffeFeatureExtractor::setParam(const string & paramName, int32_t val)
 
 void CaffeFeatureExtractor::setParam(const string & paramName, const std::string & val)
 {
-    if (paramName == "layerName" && this->m_net && !this->m_net->has_layer(val))
-        throw std::invalid_argument("CNN layer not found: " + val);
+    if (paramName == "layerName" && this->m_net)
+    {
+        vector<string> layerNames;
+        splitString(val, ",;", layerNames);
+        for (const auto & layerName : layerNames)
+            if (!this->m_net->has_layer(layerName))
+                throw std::invalid_argument("CNN layer not found: " + layerName);
+    }
     
     FeatureExtractor::setParam(paramName, val);
     
@@ -210,7 +217,7 @@ void CaffeFeatureExtractor::extract(const JPEGImage & img, FeatureMatrix & feat)
     {
         input_layer->Reshape(1, this->m_numChannels, img.height(), img.width());
         // Forward dimension change to all convolutional layers
-        for (int i = 0; i <= this->m_layerIndex; i++)
+        for (int i = 0; i <= this->m_layerIndices.back(); i++)
             this->m_net->layers()[i]->Reshape(this->m_net->bottom_vecs()[i], this->m_net->top_vecs()[i]);
     }
 
@@ -221,22 +228,62 @@ void CaffeFeatureExtractor::extract(const JPEGImage & img, FeatureMatrix & feat)
     // Preprocess image and copy its channels to input_channels
     this->preprocess(img, input_channels);
 
-    // Forward the net until the last layer we need
-    this->m_net->ForwardTo(this->m_layerIndex);
-
-    // Extract features from the given layer
-    const Blob<float> * feature_layer = this->m_net->top_vecs()[this->m_layerIndex][0];
-    int w = feature_layer->width(), h = feature_layer->height();
-    assert(Size(w, h) == this->pixelsToCells(Size(img.width(), img.height())));
-    feat.resize(h, w, feature_layer->channels());
-    const float * feature_data = feature_layer->cpu_data();
-    for (int c = 0; c < feature_layer->channels(); c++)
+    // Extract features from the specified layers
+    int previousLayer = -1;
+    int channelOffset = 0;
+    for (int l = 0; l < this->m_layerIndices.size(); l++)
     {
-        feat.channel(c) = Eigen::Map< const Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> >(
-            feature_data, h, w
-        ).cast<FeatureScalar>();
-        feature_data += w * h;
+        const int layerIndex = this->m_layerIndices[l];
+    
+        // Forward the net to the current layer
+        this->m_net->ForwardFromTo(previousLayer + 1, layerIndex);
+
+        // Extract features from the current layer
+        const Blob<float> * feature_layer = this->m_net->top_vecs()[layerIndex][0];
+        int w = feature_layer->width(), h = feature_layer->height();
+        if (previousLayer < 0)
+        {
+            assert(Size(w, h) == this->pixelsToCells(Size(img.width(), img.height())));
+            feat.resize(h, w, this->m_numOutputChannels);
+        }
+        if (l == 0)
+        {
+            const float * feature_data = feature_layer->cpu_data();
+            for (int c = 0; c < feature_layer->channels(); c++)
+            {
+                feat.channel(c) = Eigen::Map< const Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> >(
+                    feature_data, h, w
+                ).cast<FeatureScalar>();
+                feature_data += w * h;
+            }
+        }
+        else
+        {
+            Size cellSize(1, 1), borderSize(0, 0);
+            for (int l2 = 1; l2 <= l; l2++)
+            {
+                cellSize *= this->m_cellSize[l2];
+                borderSize += this->m_borderSize[l2];
+            }
+            
+            int row, col, layerRow, layerCol, c;
+            for (row = 0; row < feat.rows(); row++)
+            {
+                layerRow = min(max(round((row - borderSize.height) / static_cast<float>(cellSize.height)), 0), h - 1);
+                for (col = 0; col < feat.cols(); col++)
+                {
+                    layerCol = min(max(round((col - borderSize.width) / static_cast<float>(cellSize.width)), 0), w - 1);
+                    for (c = 0; c < feature_layer->channels(); c++)
+                        feat(row, col, channelOffset + c) = feature_layer->data_at(0, c, layerRow, layerCol);
+                }
+            }
+        }
+        
+        channelOffset += feature_layer->channels();
+        previousLayer = layerIndex;
+    
     }
+    assert(channelOffset == this->m_numOutputChannels);
     
     // Scale features
     if (this->m_scales.size() == feat.channels())
@@ -500,34 +547,46 @@ void CaffeFeatureExtractor::loadLayerInfo()
     if (!this->m_net)
         return;
    
-    // Find layer 
-    string layerName;
+    // Find layers
+    this->m_layerIndices.clear();
     if (this->m_stringParams["layerName"].empty())
     {
         this->m_stringParams["layerName"] = this->m_net->layer_names()[this->m_lastLayer];
-        this->m_layerIndex = this->m_lastLayer;
-        layerName = this->m_net->layer_names()[this->m_layerIndex];
+        this->m_layerIndices.push_back(this->m_lastLayer);
     }
     else
     {
-        string layerName = this->m_stringParams["layerName"];
-        for (this->m_layerIndex = 0; this->m_layerIndex < this->m_lastLayer
-             && this->m_net->layer_names()[this->m_layerIndex] != layerName; ++this->m_layerIndex);
+        vector<string> layerNames;
+        splitString(this->m_stringParams["layerName"], ",;", layerNames);
+        for (int l = 0; l < this->m_lastLayer && this->m_layerIndices.size() < layerNames.size(); ++l)
+            if (find(layerNames.begin(), layerNames.end(), this->m_net->layer_names()[l]) != layerNames.end())
+                this->m_layerIndices.push_back(l);
         
-        if (this->m_layerIndex == this->m_lastLayer && this->m_net->layer_names()[this->m_layerIndex] != layerName)
-            throw runtime_error("CNN layer not found or behind fully-connected layer: " + layerName);
+        if (this->m_layerIndices.size() < layerNames.size())
+        {
+            if (layerNames.size() == 1)
+                throw runtime_error("CNN layer not found or behind fully-connected layer: " + layerNames.front());
+            else
+                throw runtime_error("Some of the specified CNN layers could not be found or are behind a fully-connected layer.");
+        }
     }
     
-    // Determine cell size and border size
-    this->m_cellSize = Size(1, 1);
-    this->m_borderSize = Size(0, 0);
+    // Determine number of channels, cell size and border size
+    this->m_numOutputChannels = 0;
+    this->m_cellSize.assign(this->m_layerIndices.size(), Size(1, 1));
+    this->m_borderSize.assign(this->m_layerIndices.size(), Size(0, 0));
+    int curLayer = 0;
     LayerParams layerParams;
-    for (int l = 0; l <= this->m_layerIndex; l++)
+    for (int l = 0; l <= this->m_layerIndices.back(); l++)
     {
         this->getLayerParams(l, layerParams);
-        this->m_cellSize *= layerParams.stride;
-        this->m_borderSize += layerParams.kernelSize / 2;
-        this->m_borderSize -= layerParams.padding;
+        this->m_cellSize[curLayer] *= layerParams.stride;
+        this->m_borderSize[curLayer] += (layerParams.kernelSize / 2) - layerParams.padding;
+        if (l == this->m_layerIndices[curLayer])
+        {
+            this->m_numOutputChannels += this->m_net->top_vecs()[l][0]->channels();
+            curLayer++;
+        }
     }
 }
 
