@@ -63,7 +63,8 @@ int CaffeFeatureExtractor::numFeatures() const
     if (!this->m_net)
         throw UseBeforeSetupException("netFile and weightsFile have to be set before CaffeFeatureExtractor may be used.");
     
-    return this->m_net->top_vecs()[this->m_layerIndex][0]->channels();
+    int numFeat = this->m_net->top_vecs()[this->m_layerIndex][0]->channels();
+    return (this->m_pcaMean.size() == numFeat) ? this->m_pcaTransform.cols() : numFeat;
 }
 
 
