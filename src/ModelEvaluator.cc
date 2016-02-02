@@ -156,11 +156,11 @@ void ModelEvaluator::testModels(const vector<Sample*> & positive, unsigned int m
                             if (detected(sampleIndex).size() == 0)
                                 detected(sampleIndex) = Eigen::Array<bool, 1, Eigen::Dynamic>::Constant(1, sample->bboxes().size(), false);
                             // Treat as true positive if detection area overlaps with bounding box
-                            // by at `overlap`
+                            // by at least `overlap`
                             Intersector intersect(detIt->second, this->overlap);
                             for (bboxIndex = 0; bboxIndex < sample->bboxes().size(); bboxIndex++)
                                 if (!detected(sampleIndex)(bboxIndex)
-                                        && sample->modelAssoc[bboxIndex] == detIt->second.modelIndex
+                                        && (sample->modelAssoc[bboxIndex] == detIt->second.modelIndex || sample->modelAssoc[bboxIndex] == Sample::noAssoc)
                                         && intersect(sample->bboxes()[bboxIndex]))
                                 {
                                     isPositive = true;
@@ -320,32 +320,33 @@ vector<unsigned int> ModelEvaluator::runDetector(SampleDetectionsVector & detect
     vector<Detection> sampleDetections;
     vector<Detection>::const_iterator detection;
     vector<unsigned int>::const_iterator modelAssocIt;
-    unsigned int modelAssocIndex;
+    unsigned int modelIndex, modelAssocIndex;
     bool needSample;
     for (int i = 0; i < positive.size() && (maxSamples == 0 || *(min_element(numPositive.begin(), numPositive.end())) < maxSamples); i++)
     {
         // Check if we need this sample at all
         needSample = false;
         for (modelAssocIt = positive[i]->modelAssoc.begin(); modelAssocIt != positive[i]->modelAssoc.end(); modelAssocIt++)
-            if (maxSamples == 0 || *modelAssocIt < numModels && numPositive[*modelAssocIt] < maxSamples)
+            if (maxSamples == 0 || (*modelAssocIt < numModels && numPositive[*modelAssocIt] < maxSamples) || *modelAssocIt == Sample::noAssoc)
                 needSample = true;
         if (!needSample)
             continue;
         for (modelAssocIt = positive[i]->modelAssoc.begin(), modelAssocIndex = 0; modelAssocIt != positive[i]->modelAssoc.end(); modelAssocIt++, modelAssocIndex++)
-            if (*modelAssocIt < numModels)
-            {
-                numPositive[*modelAssocIt] += 1;
-                if (looFunc != NULL) // Check for leave-one-out replacement
+            for (modelIndex = 0; modelIndex < numModels; modelIndex++)
+                if (*modelAssocIt == modelIndex || *modelAssocIt == Sample::noAssoc)
                 {
-                    replacement = looFunc(this->mixtures[classnames[*modelAssocIt]], positive[i], modelAssocIndex, numLeftOut[*modelAssocIt], looData);
-                    if (replacement != NULL && replacement != this->mixtures[classnames[*modelAssocIt]])
+                    numPositive[modelIndex] += 1;
+                    if (looFunc != NULL) // Check for leave-one-out replacement
                     {
-                        replacementModels.push_back(replacement);
-                        numLeftOut[*modelAssocIt]++;
-                        this->mixtures[classnames[*modelAssocIt]] = replacement;
+                        replacement = looFunc(this->mixtures[classnames[modelIndex]], positive[i], modelAssocIndex, numLeftOut[modelIndex], looData);
+                        if (replacement != NULL && replacement != this->mixtures[classnames[modelIndex]])
+                        {
+                            replacementModels.push_back(replacement);
+                            numLeftOut[modelIndex]++;
+                            this->mixtures[classnames[modelIndex]] = replacement;
+                        }
                     }
                 }
-            }
         // Run detector and store detections
         try
         {
@@ -355,8 +356,9 @@ vector<unsigned int> ModelEvaluator::runDetector(SampleDetectionsVector & detect
         {
             sampleDetections.clear();
             for (modelAssocIt = positive[i]->modelAssoc.begin(); modelAssocIt != positive[i]->modelAssoc.end(); modelAssocIt++)
-                if (*modelAssocIt < numModels)
-                    numPositive[*modelAssocIt] -= 1;
+                for (modelIndex = 0; modelIndex < numModels; modelIndex++)
+                    if (*modelAssocIt == modelIndex || *modelAssocIt == Sample::noAssoc)
+                        numPositive[modelIndex] -= 1;
         }
         for (detection = sampleDetections.begin(); detection != sampleDetections.end(); detection++)
             detections.push_back(pair<int, Detection>(i, *detection));

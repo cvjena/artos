@@ -69,6 +69,8 @@ struct Sample
     std::vector<unsigned int> modelAssoc; /**< Associates objects in bounding boxes with learned models. */
     void * data; /**< Arbitrary pointer to custom data associated with the sample. */
     
+    static const unsigned int noAssoc; /**< Special value for components of `modelAssoc`. */
+    
     Sample() = default;
     
     Sample(const Sample&) = default;

@@ -379,9 +379,6 @@ class Detector(object):
         The `overlap` parameter specified in the constructor will be used to decide if a detection has enough
         overlap with the bounding box of an annotated object to be considered as true positive.
         
-        Evaluating multiple models for the same class with one run is not supported at the moment. That means,
-        the detector must have exactly one model.
-        
         granularity - Specifies the "resolution" or "precision" of the threshold scale.
                       The distance from one threshold to the next one will be 1/granularity.
         progressCallback - Optionally, a callback that is called after each run of the detector against a sample.
@@ -390,8 +387,8 @@ class Detector(object):
                            (5, 10) means that the optimization is half way done.
                            The callback may return false to abort the operation. To continue, it must return true.
         
-        Returns: Returns a dictionary with the items 'ap' (Average Precision), 'maxFMeasure' (maximum F-measure) and
-                 'fmeasure' (F-measure at threshold 0).
+        Returns: Returns a list with one dictionary for each model added to the detector. The dictionaries will have the following
+                 items: 'ap' (Average Precision), 'maxFMeasure' (maximum F-measure) and 'fmeasure' (F-measure at threshold 0).
         
         If an error occurs, a LibARTOSException is thrown.
         """
@@ -400,17 +397,26 @@ class Detector(object):
              else ctypes.cast(None, artos_wrapper.progress_cb_t)
         libartos.evaluator_run(self.handle, granularity, cb)
         
-        results = dict()
-        try:
-            val = ctypes.c_float()
-            libartos.evaluator_get_ap(self.handle, val)
-            results['ap'] = val.value
-            libartos.evaluator_get_max_fmeasure(self.handle, val)
-            results['maxFMeasure'] = val.value
-            libartos.evaluator_get_fmeasure_at(self.handle, 0, val)
-            results['fmeasure'] = val.value
-        except:
-            pass
+        results = []
+        i = 0
+        while i >= 0:
+            try:
+                r = dict()
+                val = ctypes.c_float()
+                libartos.evaluator_get_ap(self.handle, val, i)
+                r['ap'] = val.value
+                libartos.evaluator_get_max_fmeasure(self.handle, val, None, i)
+                r['maxFMeasure'] = val.value
+                libartos.evaluator_get_fmeasure_at(self.handle, 0, val, i)
+                r['fmeasure'] = val.value
+                results.append(r)
+                i += 1
+            except artos_wrapper.LibARTOSException as e:
+                if e.errcode == artos_wrapper.RES_INDEX_OUT_OF_BOUNDS:
+                    i = -1
+                elif e.errcode != artos_wrapper.DETECT_RES_NO_RESULTS:
+                    raise
+        
         return results
     
     
@@ -419,6 +425,7 @@ class Detector(object):
         
         Exports the results of evaluate() to a CSV file, which will contain the number of true positives, false positives,
         total number of positives, precision, recall and F-measure for each threshold.
+        If multiple models have been added to the detector, the CSV file will contain an additional field for the name of the model.
         
         dumpFile - The name of the file to write the test results to.
         
@@ -428,22 +435,43 @@ class Detector(object):
         libartos.evaluator_dump_results(self.handle, utils.str2bytes(dumpFile))
     
     
-    def getRawEvaluationResults(self):
+    def getRawEvaluationResults(self, modelIndex = None):
         """Retrieves the raw test results from the last call to evaluate().
         
-        Returns: List of dictionaries with the items 'threshold', 'tp' (true positives), 'fp' (false positives)
-                 and 'np' (total number of positives).
+        If a specific model is given by it's index, the test results for that single model will be returned as
+        list of dictionaries with the items 'threshold', 'tp' (true positives), 'fp' (false positives) and
+        'np' (total number of positives).
+        
+        If no model is specified, a list of one such result list for each model added to the detector will be returned.
         
         If an error occurs, a LibARTOSException is thrown.
         """
         
-        numResults = ctypes.c_uint()
-        libartos.evaluator_get_raw_results(self.handle, None, numResults)
-        result_buf = (artos_wrapper.RawTestResult * numResults.value)()
-        libartos.evaluator_get_raw_results(self.handle, result_buf, numResults)
-        return [{
-                'threshold' : result_buf[i].threshold,
-                'tp' : result_buf[i].tp,
-                'fp' : result_buf[i].fp,
-                'np' : result_buf[i].np
-            } for i in range(numResults.value)]
+        def getResultsForModel(mi):
+        
+            numResults = ctypes.c_uint()
+            libartos.evaluator_get_raw_results(self.handle, None, numResults, mi)
+            result_buf = (artos_wrapper.RawTestResult * numResults.value)()
+            libartos.evaluator_get_raw_results(self.handle, result_buf, numResults, mi)
+            return [{
+                    'threshold' : result_buf[i].threshold,
+                    'tp' : result_buf[i].tp,
+                    'fp' : result_buf[i].fp,
+                    'np' : result_buf[i].np
+                } for i in range(numResults.value)]
+        
+        if (modelIndex is not None) and (modelIndex >= 0):
+            return getResultsForModel(modelIndex)
+        else:
+            results = []
+            i = 0
+            while i >= 0:
+                try:
+                    results.append(getResultsForModel(i))
+                    i += 1
+                except artos_wrapper.LibARTOSException as e:
+                    if e.errcode == artos_wrapper.RES_INDEX_OUT_OF_BOUNDS:
+                        i = -1
+                    else:
+                        raise
+            return results

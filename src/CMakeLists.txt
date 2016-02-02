@@ -47,7 +47,7 @@ endif(UNIX)
 #### Build ARTOS shared library ####
 
 # List files and set properties
-SET(SOURCES DPMDetection.cc FeatureExtractor.cc FeaturePyramid.cc HOGFeatureExtractor.cc JPEGImage.cc
+SET(SOURCES defs.cc DPMDetection.cc FeatureExtractor.cc FeaturePyramid.cc HOGFeatureExtractor.cc JPEGImage.cc
 ModelLearnerBase.cc ModelLearner.cc ImageNetModelLearner.cc Mixture.cc Model.cc ModelEvaluator.cc
 Object.cc Patchwork.cc Random.cc Rectangle.cc Scene.cc StationaryBackground.cc
 blf.cc harmony_search.cc sysutils.cc strutils.cc timingtools.cc)

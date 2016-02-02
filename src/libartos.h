@@ -593,9 +593,6 @@ int evaluator_add_negative_raw(const unsigned int detector,
 * The `overlap` parameter specified for create_detector() will be used to decide if a detection has
 * enough overlap with the bounding box of an annotated object to be considered as true positive.
 *
-* Evaluating multiple models for the same class with one run is not supported at the moment. That means,
-* the detector passed to this function must have exactly one model.
-*
 * @param[in] detector The handle of the detector instance obtained by create_detector().
 * @param[in] granularity Specifies the "resolution" or "precision" of the threshold scale.
 *                        The distance from one threshold to the next one will be 1/granularity.
@@ -607,7 +604,6 @@ int evaluator_add_negative_raw(const unsigned int detector,
 * @return Returns `ARTOS_RES_OK` on success (even on user abort) or one of the following error codes on failure:
 *           - `ARTOS_RES_INVALID_HANDLE` (if an invalid detector handle was given)
 *           - `ARTOS_DETECT_RES_NO_MODELS` (if no models have been added to the detector yet)
-*           - `ARTOS_DETECT_RES_TOO_MANY_MODELS` (more than one model has been added to the detector)
 *           - `ARTOS_DETECT_RES_NO_IMAGES` (if no test samples have been added yet)
 * @note This function will change the thresholds of all models added to the given detector.
 */
@@ -621,33 +617,39 @@ int evaluator_run(const unsigned int detector, const unsigned int granularity = 
 * @param[in,out] result_buf_size The number of array slots allocated for `result_buf`. In turn, the number of actually written array
 *                                elements will be stored at this pointer's location. If `result_buf` is NULL, this will be set to the
 *                                number of available test results instead.
+* @param[in] model_index The index of the model to retrieve test results for.
 * @return Returns `ARTOS_RES_OK` on success or one of the following error codes on failure:
 *           - `ARTOS_RES_INVALID_HANDLE` (if an invalid detector handle was given)
+*           - `ARTOS_RES_INDEX_OUT_OF_BOUNDS` (if the given `model_index` is out of bounds)
 *           - `ARTOS_DETECT_RES_NO_RESULTS` (if `evaluator_run` has not been called yet for the given detector)
 */
-int evaluator_get_raw_results(const unsigned int detector, RawTestResult * result_buf, unsigned int * result_buf_size);
+int evaluator_get_raw_results(const unsigned int detector, RawTestResult * result_buf, unsigned int * result_buf_size, const unsigned int model_index = 0);
 
 /**
 * Calculates the maximum F-measure reached by a model during a run over an evaluation data set as well as the corresponding threshold.
 * @param[in] detector The handle of the detector instance obtained by create_detector().
 * @param[out] fmeasure A pointer which will receive the maximum F-measure reached by the specified model during the test run.
 * @param[out] threshold A pointer which will receive the threshold which the maximum F-measure is reached at.
+* @param[in] model_index The index of the model in the detector stack.
 * @return Returns `ARTOS_RES_OK` on success or one of the following error codes on failure:
 *           - `ARTOS_RES_INVALID_HANDLE` (if an invalid detector handle was given)
+*           - `ARTOS_RES_INDEX_OUT_OF_BOUNDS` (if the given `model_index` is out of bounds)
 *           - `ARTOS_DETECT_RES_NO_RESULTS` (if `evaluator_run` has not been called yet for the given detector)
 */
-int evaluator_get_max_fmeasure(const unsigned int detector, float * fmeasure, float * threshold = 0);
+int evaluator_get_max_fmeasure(const unsigned int detector, float * fmeasure, float * threshold = 0, const unsigned int model_index = 0);
 
 /**
 * Calculates the F-measure reached by a model during a run over an evaluation data set at a specific threshold.
 * @param[in] detector The handle of the detector instance obtained by create_detector().
 * @param[in] threshold The threshold to compute the F-measure for.
 * @param[out] fmeasure A pointer which will receive the maximum F-measure reached by the specified model during the test run.
+* @param[in] model_index The index of the model to compute the F-measure for.
 * @return Returns `ARTOS_RES_OK` on success or one of the following error codes on failure:
 *           - `ARTOS_RES_INVALID_HANDLE` (if an invalid detector handle was given)
+*           - `ARTOS_RES_INDEX_OUT_OF_BOUNDS` (if the given `model_index` is out of bounds)
 *           - `ARTOS_DETECT_RES_NO_RESULTS` (if `evaluator_run` has not been called yet for the given detector)
 */
-int evaluator_get_fmeasure_at(const unsigned int detector, const float threshold, float * fmeasure);
+int evaluator_get_fmeasure_at(const unsigned int detector, const float threshold, float * fmeasure, const unsigned int model_index = 0);
 
 /**
 * Computes the *interpolated average precision* scored by a model during a run over an evaluation data set.
@@ -658,15 +660,18 @@ int evaluator_get_fmeasure_at(const unsigned int detector, const float threshold
 *
 * @param[in] detector The handle of the detector instance obtained by create_detector().
 * @param[out] ap A pointer which will receive the average precision scored by the model during the test run.
+* @param[in] model_index The index of the model compute the average precision for.
 * @return Returns `ARTOS_RES_OK` on success or one of the following error codes on failure:
 *           - `ARTOS_RES_INVALID_HANDLE` (if an invalid detector handle was given)
+*           - `ARTOS_RES_INDEX_OUT_OF_BOUNDS` (if the given `model_index` is out of bounds)
 *           - `ARTOS_DETECT_RES_NO_RESULTS` (if `evaluator_run` has not been called yet for the given detector)
 */
-int evaluator_get_ap(const unsigned int detector, float * ap);
+int evaluator_get_ap(const unsigned int detector, float * ap, const unsigned int model_index = 0);
 
 /**
 * Exports the results of evaluator_run() to a CSV file, which will contain the number of true positives, false positives,
-* total number of positives, precision, recall and F-measure for each threshold.
+* total number of positives, precision, recall and F-measure for each threshold. If multiple models have been added to the
+* detector, the CSV file will contain an additional field for the name of the model.
 * @param[in] detector The handle of the detector instance obtained by create_detector().
 * @param[in] dump_file The name of the file to write the test results to.
 * @return Returns `ARTOS_RES_OK` on success or one of the following error codes on failure:

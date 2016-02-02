@@ -506,7 +506,7 @@ int evaluator_add_samples_from_synset(const unsigned int detector, const char * 
                 s->m_bboxes = simg.bboxes;
             else
                 s->m_bboxes.assign(1, ARTOS::Rectangle(0, 0, img.width(), img.height()));
-            s->modelAssoc.assign(s->bboxes().size(), 0);
+            s->modelAssoc.assign(s->bboxes().size(), Sample::noAssoc);
             s->data = NULL;
             positives.push_back(s);
         }
@@ -562,7 +562,7 @@ int evaluator_add_positive_file(const unsigned int detector, const char * imagef
             s->m_bboxes.push_back(bbox);
     }
     s->m_img = move(img);
-    s->modelAssoc.assign(s->bboxes().size(), 0);
+    s->modelAssoc.assign(s->bboxes().size(), Sample::noAssoc);
     s->data = NULL;
     eval_positive_samples[detector].push_back(s);
     
@@ -585,7 +585,7 @@ int evaluator_add_positive_jpeg(const unsigned int detector, const JPEGImage & i
     }
     else
         s->m_bboxes.assign(1, ARTOS::Rectangle(0, 0, img.width(), img.height()));
-    s->modelAssoc.assign(s->bboxes().size(), 0);
+    s->modelAssoc.assign(s->bboxes().size(), Sample::noAssoc);
     s->data = NULL;
     eval_positive_samples[detector].push_back(s);
     
@@ -639,8 +639,6 @@ int evaluator_run(const unsigned int detector, const unsigned int granularity, p
     ModelEvaluator * det = detectors[detector - 1];
     if (det->getNumModels() == 0)
         return ARTOS_DETECT_RES_NO_MODELS;
-    if (det->getNumModels() > 1)
-        return ARTOS_DETECT_RES_TOO_MANY_MODELS;
     if (eval_positive_samples[detector].empty())
         return ARTOS_DETECT_RES_NO_IMAGES;
     
@@ -654,13 +652,16 @@ int evaluator_run(const unsigned int detector, const unsigned int granularity, p
     return ARTOS_RES_OK;
 }
 
-int evaluator_get_raw_results(const unsigned int detector, RawTestResult * result_buf, unsigned int * result_buf_size)
+int evaluator_get_raw_results(const unsigned int detector, RawTestResult * result_buf, unsigned int * result_buf_size, const unsigned int model_index)
 {
     if (!is_valid_detector_handle(detector))
         return ARTOS_RES_INVALID_HANDLE;
     
     ModelEvaluator * det = detectors[detector - 1];
-    const vector<ModelEvaluator::TestResult> & results = det->getResults();
+    if (model_index >= det->getNumModels())
+        return ARTOS_RES_INDEX_OUT_OF_BOUNDS;
+    
+    const vector<ModelEvaluator::TestResult> & results = det->getResults(model_index);
     if (result_buf)
     {
         RawTestResult * result = result_buf;
@@ -680,16 +681,18 @@ int evaluator_get_raw_results(const unsigned int detector, RawTestResult * resul
     return (results.empty()) ? ARTOS_DETECT_RES_NO_RESULTS : ARTOS_RES_OK;
 }
 
-int evaluator_get_max_fmeasure(const unsigned int detector, float * fmeasure, float * threshold)
+int evaluator_get_max_fmeasure(const unsigned int detector, float * fmeasure, float * threshold, const unsigned int model_index)
 {
     if (!is_valid_detector_handle(detector))
         return ARTOS_RES_INVALID_HANDLE;
     
     ModelEvaluator * det = detectors[detector - 1];
-    if (det->getResults().empty())
+    if (model_index >= det->getNumModels())
+        return ARTOS_RES_INDEX_OUT_OF_BOUNDS;
+    if (det->getResults(model_index).empty())
         return ARTOS_DETECT_RES_NO_RESULTS;
     
-    pair<float, float> fm = det->getMaxFMeasure();
+    pair<float, float> fm = det->getMaxFMeasure(model_index);
     if (fmeasure)
         *fmeasure = fm.second;
     if (threshold)
@@ -697,31 +700,35 @@ int evaluator_get_max_fmeasure(const unsigned int detector, float * fmeasure, fl
     return ARTOS_RES_OK;
 }
 
-int evaluator_get_fmeasure_at(const unsigned int detector, const float threshold, float * fmeasure)
+int evaluator_get_fmeasure_at(const unsigned int detector, const float threshold, float * fmeasure, const unsigned int model_index)
 {
     if (!is_valid_detector_handle(detector))
         return ARTOS_RES_INVALID_HANDLE;
     
     ModelEvaluator * det = detectors[detector - 1];
-    if (det->getResults().empty())
+    if (model_index >= det->getNumModels())
+        return ARTOS_RES_INDEX_OUT_OF_BOUNDS;
+    if (det->getResults(model_index).empty())
         return ARTOS_DETECT_RES_NO_RESULTS;
     
     if (fmeasure)
-        *fmeasure = det->getFMeasureAt(threshold);
+        *fmeasure = det->getFMeasureAt(threshold, model_index);
     return ARTOS_RES_OK;
 }
 
-int evaluator_get_ap(const unsigned int detector, float * ap)
+int evaluator_get_ap(const unsigned int detector, float * ap, const unsigned int model_index)
 {
     if (!is_valid_detector_handle(detector))
         return ARTOS_RES_INVALID_HANDLE;
     
     ModelEvaluator * det = detectors[detector - 1];
-    if (det->getResults().empty())
+    if (model_index >= det->getNumModels())
+        return ARTOS_RES_INDEX_OUT_OF_BOUNDS;
+    if (det->getResults(model_index).empty())
         return ARTOS_DETECT_RES_NO_RESULTS;
     
     if (ap)
-        *ap = det->computeAveragePrecision();
+        *ap = det->computeAveragePrecision(model_index);
     return ARTOS_RES_OK;
 }
 

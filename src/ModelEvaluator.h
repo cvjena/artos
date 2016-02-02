@@ -192,7 +192,9 @@ public:
     * @param[in] positive Vector with pointers to positive samples, given as Sample structures, which the
     * detector will be run against. The `modelAssoc` vector of those structures indicates, which one of the
     * models added to this evaluator (identified by it's index) is expected to detect that object.
-    * For all over models, that sample will be ignored.
+    * For all other models, that sample will be ignored.  
+    * If the `modelAssoc` entry for a specific object is set to `Sample::noAssoc`, it is considered relevant
+    * for all models.
     *
     * @param[in] maxSamples Maximum number of positive samples to test _each_ model against. Set this to 0 to run the
     * detector against all samples belonging to the respective model.
@@ -238,6 +240,9 @@ public:
     * @param[in] positive Vector with pointers to positive samples, given as Sample structures, which the
     * detector will be run against. The `modelAssoc` vector of those structures indicates, which one of the
     * models added to this evaluator (identified by it's index) is expected to detect that object.
+    * For all other models, that sample will be ignored.  
+    * If the `modelAssoc` entry for a specific object is set to `Sample::noAssoc`, it is considered relevant
+    * for all models.
     *
     * @param[in] maxSamples Maximum number of positive samples to test _each_ model against. Set this to 0 to run the
     * detector against all samples belonging to the respective model.
@@ -287,7 +292,9 @@ public:
     * @param[in] positive Vector with pointers to positive samples, given as Sample structures, which the
     * detector will be run against. The `modelAssoc` vector of those structures indicates, which one of the
     * models added to this evaluator (identified by it's index) is expected to detect that object.
-    * For all over models, that sample will be ignored.
+    * For all other models, that sample will be ignored.  
+    * If the `modelAssoc` entry for a specific object is set to `Sample::noAssoc`, it is considered relevant
+    * for all models.
     *
     * @param[in] maxSamples Maximum number of positive samples to test _each_ model against. Set this to 0 to run the
     * detector against all samples belonging to the respective model.
