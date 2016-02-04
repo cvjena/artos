@@ -432,7 +432,7 @@ class EvaluationVisualization(gui_utils.Dialog):
             maxPrecision = 0.0
             for result in raw_results:
                 p, r = float(result['tp']) / (result['tp'] + result['fp']), float(result['tp']) / result['np']
-                f1 = (2 * p * r) / (p + r)
+                f1 = (2 * p * r) / (p + r) if p + r > 0 else 0.0
                 maxPrecision = max(maxPrecision, p)
                 if (len(recall) == 0) or (r != recall[-1]) or ((len(recall) > 1) and (recall[-1] != recall[-2])):
                     precision.append(maxPrecision)
