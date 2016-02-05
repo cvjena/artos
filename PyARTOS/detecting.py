@@ -191,7 +191,7 @@ class Detector(object):
     def __init__(self, overlap = 0.5, interval = 10, debug = False):
         """Constructs and initializes a new detector with specific settings.
         
-        overlap - Minimum overlap in non maxima suppression.
+        overlap - Minimum overlap for non-maxima suppression.
         interval - Number of levels per octave in the HOG pyramid.
         """
         
@@ -369,7 +369,7 @@ class Detector(object):
             libartos.evaluator_add_negative_file_jpeg(self.handle, utils.str2bytes(sample))
     
     
-    def evaluate(self, granularity = 100, progressCallback = None):
+    def evaluate(self, granularity = 100, eqOverlap = 0.5, progressCallback = None):
         """Runs the detector over all positive and negative test samples.
         
         Runs the detector over all positive and negative test samples added before using addEvaluationPositive and
@@ -381,6 +381,9 @@ class Detector(object):
         
         granularity - Specifies the "resolution" or "precision" of the threshold scale.
                       The distance from one threshold to the next one will be 1/granularity.
+        eqOverlap - Minimum overlap for considering two bounding boxes as equivalent during evaluation (used to
+                    distinguish between true and false positives). This may be different from the value of the
+                    `overlap` parameter passed to the constructor, which is used for non-maxima suppression.
         progressCallback - Optionally, a callback that is called after each run of the detector against a sample.
                            The first parameter to the callback will be the number of samples processed and the second
                            parameter will be the total number of samples to be processed. For example, the argument list
@@ -395,7 +398,7 @@ class Detector(object):
         
         cb = artos_wrapper.progress_cb_t(progressCallback) if not progressCallback is None \
              else ctypes.cast(None, artos_wrapper.progress_cb_t)
-        libartos.evaluator_run(self.handle, granularity, cb)
+        libartos.evaluator_run(self.handle, granularity, eqOverlap, cb)
         
         results = []
         i = 0

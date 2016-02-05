@@ -78,7 +78,7 @@ typedef struct {
 
 /**
 * Creates a new detector instance.
-* @param[in] overlap Minimum overlap in non maxima suppression.
+* @param[in] overlap Minimum overlap for non-maxima suppression.
 * @param[in] interval Number of levels per octave in the feature pyramid.
 * @param[in] debug If this is set to true, debug and performance information will be printed to stderr.
 * @return Handle to the new detector instance or 0 if the memory for the instance could not be allocated.
@@ -590,12 +590,13 @@ int evaluator_add_negative_raw(const unsigned int detector,
 * at different thresholds. The results may be retrieved after that in different formats using the
 * `evaluator_get_*` functions.
 *
-* The `overlap` parameter specified for create_detector() will be used to decide if a detection has
-* enough overlap with the bounding box of an annotated object to be considered as true positive.
-*
 * @param[in] detector The handle of the detector instance obtained by create_detector().
 * @param[in] granularity Specifies the "resolution" or "precision" of the threshold scale.
 *                        The distance from one threshold to the next one will be 1/granularity.
+* @param[in] eq_overlap Minimum overlap for considering two bounding boxes as equivalent during evaluation
+*                       (used to distinguish between true and false positives). This may be different from the
+*                       value of the `overlap` parameter passed to `create_detector`, which is used for non-maxima
+*                       suppression.
 * @param[in] progress_cb Optionally, a callback that is called after each run of the detector against a sample.
 *                        The first parameter to the callback will be the number of samples processed and the second
 *                        parameter will be the total number of samples to be processed. For example, the argument list
@@ -607,7 +608,7 @@ int evaluator_add_negative_raw(const unsigned int detector,
 *           - `ARTOS_DETECT_RES_NO_IMAGES` (if no test samples have been added yet)
 * @note This function will change the thresholds of all models added to the given detector.
 */
-int evaluator_run(const unsigned int detector, const unsigned int granularity = 100, progress_cb_t progress_cb = 0);
+int evaluator_run(const unsigned int detector, const unsigned int granularity = 100, const double eq_overlap = 0.5, progress_cb_t progress_cb = 0);
 
 /**
 * Retrieves the raw results of a run of a detector over an evaluation data set performed before using evaluator_run().

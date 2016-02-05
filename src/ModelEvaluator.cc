@@ -157,7 +157,7 @@ void ModelEvaluator::testModels(const vector<Sample*> & positive, unsigned int m
                                 detected(sampleIndex) = Eigen::Array<bool, 1, Eigen::Dynamic>::Constant(1, sample->bboxes().size(), false);
                             // Treat as true positive if detection area overlaps with bounding box
                             // by at least `overlap`
-                            Intersector intersect(detIt->second, this->overlap);
+                            Intersector intersect(detIt->second, this->eqOverlap);
                             for (bboxIndex = 0; bboxIndex < sample->bboxes().size(); bboxIndex++)
                                 if (!detected(sampleIndex)(bboxIndex)
                                         && (sample->modelAssoc[bboxIndex] == detIt->second.modelIndex || sample->modelAssoc[bboxIndex] == Sample::noAssoc)
@@ -241,7 +241,7 @@ vector<float> ModelEvaluator::searchOptimalThresholdCombination(
                     isPositive = false;
                     // Treat as true positive if detection area overlaps with bounding box
                     // by at least `overlap`
-                    Intersector intersect(detIt->second, this->overlap);
+                    Intersector intersect(detIt->second, this->eqOverlap);
                     for (bboxIndex = 0; bboxIndex < sample->bboxes().size(); bboxIndex++)
                         if (intersect(sample->bboxes()[bboxIndex]))
                         {

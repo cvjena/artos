@@ -32,7 +32,7 @@ unsigned int create_detector(const double overlap, const int interval, const boo
     ModelEvaluator * newDetector = 0;
     try
     {
-        newDetector = new ModelEvaluator(overlap, interval, debug);
+        newDetector = new ModelEvaluator(overlap, overlap, interval, debug);
         detectors.push_back(newDetector);
         return detectors.size(); // return handle of the new detector
     }
@@ -631,7 +631,7 @@ int evaluator_add_negative_raw(const unsigned int detector,
     return ARTOS_RES_OK;
 }
 
-int evaluator_run(const unsigned int detector, const unsigned int granularity, progress_cb_t progress_cb)
+int evaluator_run(const unsigned int detector, const unsigned int granularity, const double eq_overlap, progress_cb_t progress_cb)
 {
     if (!is_valid_detector_handle(detector))
         return ARTOS_RES_INVALID_HANDLE;
@@ -644,6 +644,7 @@ int evaluator_run(const unsigned int detector, const unsigned int granularity, p
     
     ProgressCallback progressCB = (progress_cb != NULL) ? &progress_proxy : NULL;
     void * cbData = (progress_cb != NULL) ? reinterpret_cast<void*>(progress_cb) : NULL;
+    det->setEqOverlap(eq_overlap);
     det->testModels(
         eval_positive_samples[detector], 0,
         (!eval_negative_samples[detector].empty()) ? &eval_negative_samples[detector] : NULL,

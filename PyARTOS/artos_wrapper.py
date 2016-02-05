@@ -304,8 +304,8 @@ class _LibARTOS(object):
         
         # evaluator_run function
         self._register_func('evaluator_run',
-            (c_int, c_uint, c_uint, progress_cb_t),
-            ((1, 'detector'), (1, 'granularity', 100), (1, 'progress_cb', cast(None, progress_cb_t)))
+            (c_int, c_uint, c_uint, c_double, progress_cb_t),
+            ((1, 'detector'), (1, 'granularity', 100), (1, 'eq_overlap', 0.5), (1, 'progress_cb', cast(None, progress_cb_t)))
         )
         
         # evaluator_get_raw_results function
