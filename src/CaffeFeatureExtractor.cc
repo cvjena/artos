@@ -269,10 +269,10 @@ void CaffeFeatureExtractor::extract(const JPEGImage & img, FeatureMatrix & feat)
             int row, col, layerRow, layerCol, c;
             for (row = 0; row < feat.rows(); row++)
             {
-                layerRow = min(max(round((row - borderSize.height) / static_cast<float>(cellSize.height)), 0), h - 1);
+                layerRow = min(max(static_cast<int>(round((row - borderSize.height) / static_cast<float>(cellSize.height))), 0), h - 1);
                 for (col = 0; col < feat.cols(); col++)
                 {
-                    layerCol = min(max(round((col - borderSize.width) / static_cast<float>(cellSize.width)), 0), w - 1);
+                    layerCol = min(max(static_cast<int>(round((col - borderSize.width) / static_cast<float>(cellSize.width))), 0), w - 1);
                     for (c = 0; c < feature_layer->channels(); c++)
                         feat(row, col, channelOffset + c) = feature_layer->data_at(0, c, layerRow, layerCol);
                 }
