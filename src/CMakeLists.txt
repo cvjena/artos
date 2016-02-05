@@ -55,7 +55,7 @@ endif(UNIX)
 #### Build ARTOS shared library ####
 
 # List files and set properties
-SET(SOURCES DPMDetection.cc FeatureExtractor.cc FeaturePyramid.cc HOGFeatureExtractor.cc JPEGImage.cc
+SET(SOURCES defs.cc DPMDetection.cc FeatureExtractor.cc FeaturePyramid.cc HOGFeatureExtractor.cc JPEGImage.cc
 ModelLearnerBase.cc ModelLearner.cc ImageNetModelLearner.cc Mixture.cc Model.cc ModelEvaluator.cc
 Object.cc Patchwork.cc Random.cc Rectangle.cc Scene.cc StationaryBackground.cc
 blf.cc harmony_search.cc sysutils.cc strutils.cc timingtools.cc)
@@ -64,11 +64,11 @@ SET_TARGET_PROPERTIES(artos PROPERTIES VERSION ${BUILD_VERSION} SOVERSION ${API_
 
 # Link sub-libraries
 IF(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_GNUCC)
-    TARGET_LINK_LIBRARIES(artos PRIVATE -Wl,-whole-archive imagenet -Wl,-no-whole-archive)
+    TARGET_LINK_LIBRARIES(artos LINK_PRIVATE -Wl,-whole-archive imagenet -Wl,-no-whole-archive)
 ELSEIF("${CMAKE_SYSTEM}" MATCHES IRIX)
-    TARGET_LINK_LIBRARIES(artos PRIVATE -Wl,-all imagenet -Wl,-notall)
+    TARGET_LINK_LIBRARIES(artos LINK_PRIVATE -Wl,-all imagenet -Wl,-notall)
 ELSE()
-    TARGET_LINK_LIBRARIES(artos PRIVATE imagenet)
+    TARGET_LINK_LIBRARIES(artos LINK_PRIVATE imagenet)
 ENDIF()
 
 
@@ -89,18 +89,18 @@ IF(NOT FFTW3_INCLUDE_DIR OR NOT FFTW3_LIBRARIES)
   MESSAGE(FATAL_ERROR "Could not find fftw3.")
 ENDIF()
 INCLUDE_DIRECTORIES(${FFTW3_INCLUDE_DIR})
-TARGET_LINK_LIBRARIES(artos PUBLIC ${FFTW3_LIBRARIES})
+TARGET_LINK_LIBRARIES(artos LINK_PUBLIC ${FFTW3_LIBRARIES})
 
 FIND_PACKAGE(JPEG REQUIRED)
 IF(JPEG_FOUND)
   INCLUDE_DIRECTORIES(${JPEG_INCLUDE_DIR})
-  TARGET_LINK_LIBRARIES(artos PUBLIC ${JPEG_LIBRARIES})
+  TARGET_LINK_LIBRARIES(artos LINK_PUBLIC ${JPEG_LIBRARIES})
 ENDIF()
 
 FIND_PACKAGE(LibXml2 REQUIRED)
 IF(LIBXML2_FOUND)
   INCLUDE_DIRECTORIES(${LIBXML2_INCLUDE_DIR})
-  TARGET_LINK_LIBRARIES(artos PUBLIC ${LIBXML2_LIBRARIES})
+  TARGET_LINK_LIBRARIES(artos LINK_PUBLIC ${LIBXML2_LIBRARIES})
   ADD_DEFINITIONS(${LIBXML2_DEFINITIONS})
 ENDIF()
 

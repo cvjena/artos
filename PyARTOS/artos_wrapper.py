@@ -31,6 +31,7 @@ RES_DIRECTORY_NOT_FOUND = -2
 RES_FILE_NOT_FOUND = -3
 RES_FILE_ACCESS_DENIED = -4
 RES_ABORTED = -5
+RES_INDEX_OUT_OF_BOUNDS = -6
 RES_INTERNAL_ERROR = -999
 DETECT_RES_INVALID_IMG_DATA = -101
 DETECT_RES_INVALID_MODEL_FILE = -102
@@ -303,32 +304,32 @@ class _LibARTOS(object):
         
         # evaluator_run function
         self._register_func('evaluator_run',
-            (c_int, c_uint, c_uint, progress_cb_t),
-            ((1, 'detector'), (1, 'granularity', 100), (1, 'progress_cb', cast(None, progress_cb_t)))
+            (c_int, c_uint, c_uint, c_double, progress_cb_t),
+            ((1, 'detector'), (1, 'granularity', 100), (1, 'eq_overlap', 0.5), (1, 'progress_cb', cast(None, progress_cb_t)))
         )
         
         # evaluator_get_raw_results function
         self._register_func('evaluator_get_raw_results',
-            (c_int, c_uint, RawTestResult_p, c_uint_p),
-            ((1, 'detector'), (1, 'result_buf'), (1, 'result_buf_size'))
+            (c_int, c_uint, RawTestResult_p, c_uint_p, c_uint),
+            ((1, 'detector'), (1, 'result_buf'), (1, 'result_buf_size'), (1, 'model_index', 0))
         )
         
         # evaluator_get_max_fmeasure function
         self._register_func('evaluator_get_max_fmeasure',
-            (c_int, c_uint, c_float_p, c_float_p),
-            ((1, 'detector'), (1, 'fmeasure'), (1, 'threshold', None))
+            (c_int, c_uint, c_float_p, c_float_p, c_uint),
+            ((1, 'detector'), (1, 'fmeasure'), (1, 'threshold', None), (1, 'model_index', 0))
         )
         
         # evaluator_get_fmeasure_at function
         self._register_func('evaluator_get_fmeasure_at',
-            (c_int, c_uint, c_float, c_float_p),
-            ((1, 'detector'), (1, 'threshold'), (1, 'fmeasure'))
+            (c_int, c_uint, c_float, c_float_p, c_uint),
+            ((1, 'detector'), (1, 'threshold'), (1, 'fmeasure'), (1, 'model_index', 0))
         )
         
         # evaluator_get_ap function
         self._register_func('evaluator_get_ap',
-            (c_int, c_uint, c_float_p),
-            ((1, 'detector'), (1, 'ap'))
+            (c_int, c_uint, c_float_p, c_uint),
+            ((1, 'detector'), (1, 'ap'), (1, 'model_index', 0))
         )
         
         # evaluator_dump_results function
@@ -455,6 +456,7 @@ class LibARTOSException(Exception):
         RES_FILE_NOT_FOUND                      : 'File not found',
         RES_FILE_ACCESS_DENIED                  : 'Access to file denied',
         RES_ABORTED                             : 'Operation aborted by user',
+        RES_INDEX_OUT_OF_BOUNDS                 : 'Index out of bounds',
         RES_INTERNAL_ERROR                      : 'Internal error',
         DETECT_RES_INVALID_IMG_DATA             : 'Invalid image',
         DETECT_RES_INVALID_MODEL_FILE           : 'Model file could not be read or parsed',

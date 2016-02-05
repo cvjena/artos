@@ -210,71 +210,73 @@ class EvaluationDialog(gui_utils.Dialog):
         
         def _runThreaded(detector, *args, **kwargs):
             try:
-                detector.evaluate(*args, **kwargs)
+                r = detector.evaluate(*args, **kwargs)
             except Exception as e:
                 thread_var['error'] = e
         
         # Create progress dialog
-        progressDialog = gui_utils.ProgressWindow(master = self, parent = self, threadedCallbacks = True, abortable = True,
+        progressDialog = gui_utils.ProgressWindow(master = self, parent = self, threadedCallbacks = True, abortable = False,
                 windowTitle = 'Evaluating models' if len(self.models) > 1 else 'Evaluating model',
-                overallProcessDescription = 'Evaluating {} models'.format(len(self.models)) if len(self.models) > 1 else 'Evaluating model',
-                subProcessDescriptions = [modelname for modelfile, modelname in self.models]
+                overallProcessDescription = None,
+                subProcessDescriptions = ['Fetching samples...', 'Evaluating {} models...'.format(len(self.models)) if len(self.models) > 1 else 'Evaluating model...']
         )
         progressDialog.wait_visibility()
-        progressDialog.changeProgress(0, len(self.models))
+        progressDialog.changeProgress(0, 2)
         
         try:
-            for modelIndex, (modelfile, modelname) in enumerate(self.models):
             
-                # Create detector
-                detector = detecting.Detector()
+            # Create detector
+            detector = detecting.Detector()
+            for modelfile, modelname in self.models:
                 detector.addModel(modelname, modelfile)
-            
-                # Fetch samples
-                self.update()
-                if self.imageSourceVar.get() == 'dir':
-                    imgDir = self.imgDirVar.get()
-                    if imgDir == '':
-                        raise Exception('Please select a directory with positive test samples.')
-                    elif not os.path.isdir(imgDir):
-                        raise Exception('Image directory not found: ' + imgDir)
-                    samples = tuple(set(glob(os.path.join(imgDir, '*.jpg')))
-                                  | set(glob(os.path.join(imgDir, '*.jpeg')))
-                                  | set(glob(os.path.join(imgDir, '*.JPG')))
-                                  | set(glob(os.path.join(imgDir, '*.JPEG'))))
-                    if len(samples) == 0:
-                        raise Exception('The specified directory does not contain any JPEG image.')
-                    for sample in samples:
-                        base, ext = os.path.splitext(sample)
-                        if os.path.isfile(base + '.xml'):
-                            annotations = base + '.xml'
-                        elif os.path.isfile(base + '.XML'):
-                            annotations = base + '.XML'
+        
+            # Fetch samples
+            self.update()
+            if self.imageSourceVar.get() == 'dir':
+                imgDir = self.imgDirVar.get()
+                if imgDir == '':
+                    raise Exception('Please select a directory with positive test samples.')
+                elif not os.path.isdir(imgDir):
+                    raise Exception('Image directory not found: ' + imgDir)
+                samples = tuple(set(glob(os.path.join(imgDir, '*.jpg')))
+                              | set(glob(os.path.join(imgDir, '*.jpeg')))
+                              | set(glob(os.path.join(imgDir, '*.JPG')))
+                              | set(glob(os.path.join(imgDir, '*.JPEG'))))
+                if len(samples) == 0:
+                    raise Exception('The specified directory does not contain any JPEG image.')
+                for sample in samples:
+                    base, ext = os.path.splitext(sample)
+                    if os.path.isfile(base + '.xml'):
+                        annotations = base + '.xml'
+                    elif os.path.isfile(base + '.XML'):
+                        annotations = base + '.XML'
+                    else:
+                        if missingAnnotationChoice is None:
+                            missingAnnotationChoice = tkMessageBox.askyesno('Missing Annotations',
+                                'No annotation file has been found for some samples.\n' +
+                                'Would you like to treat the entire image as positive sample (yes) or ignore it (no)?')
+                        if missingAnnotationChoice:
+                            annotations = None
                         else:
-                            if missingAnnotationChoice is None:
-                                missingAnnotationChoice = tkMessageBox.askyesno('Missing Annotations',
-                                    'No annotation file has been found for some samples.\n' +
-                                    'Would you like to treat the entire image as positive sample (yes) or ignore it (no)?')
-                            if missingAnnotationChoice:
-                                annotations = None
-                            else:
-                                continue
-                        detector.addEvaluationPositive(sample, annotations)
-                else:
-                    synset = self.frmSynsetSearch.selectedSynset()
-                    if synset is None:
-                        raise Exception('Please select a synset with positive test samples.')
-                    thread = threading.Thread(
-                            target = _fetchSamplesThreaded,
-                            args = (detector, self.frmSynsetSearch.repo, synset[0], max(0, self.numNegativeVar.get()))
-                    )
-                    thread.start()
-                    while thread.is_alive():
-                        self.update()
-                        time.sleep(0.1)
-                    if thread_var['error'] is not None:
-                        raise thread_var['error']
-                
+                            continue
+                    detector.addEvaluationPositive(sample, annotations)
+            else:
+                synset = self.frmSynsetSearch.selectedSynset()
+                if synset is None:
+                    raise Exception('Please select a synset with positive test samples.')
+                thread = threading.Thread(
+                        target = _fetchSamplesThreaded,
+                        args = (detector, self.frmSynsetSearch.repo, synset[0], max(0, self.numNegativeVar.get()))
+                )
+                thread.start()
+                while thread.is_alive():
+                    self.update()
+                    time.sleep(0.1)
+                if thread_var['error'] is not None:
+                    raise thread_var['error']
+            
+            if progressDialog.changeProgress(1, 2):
+            
                 # Run detector
                 thread = threading.Thread(
                         target = _runThreaded,
@@ -288,13 +290,11 @@ class EvaluationDialog(gui_utils.Dialog):
                 if thread_var['error'] is not None:
                     raise thread_var['error']
                 
-                if not progressDialog.changeProgress(modelIndex + 1, len(self.models)):
-                    break
-                
-                results.append(detector.getRawEvaluationResults())
+                results = detector.getRawEvaluationResults()
         
         except Exception as err:
             progressDialog.destroy()
+            raise
             tkMessageBox.showerror(title = 'Error', message = str(err))
             return False
         
@@ -302,7 +302,7 @@ class EvaluationDialog(gui_utils.Dialog):
             return False
         
         # Display results
-        self.resultsDialog = EvaluationVisualization([(self.models[i][1], results[i]) for i in range(len(self.models))],
+        self.resultsDialog = EvaluationVisualization([(model[1], result) for model, result in zip(self.models, results)],
                 master = self.master, parent = self.parent)
         
         self.destroy()
@@ -432,7 +432,7 @@ class EvaluationVisualization(gui_utils.Dialog):
             maxPrecision = 0.0
             for result in raw_results:
                 p, r = float(result['tp']) / (result['tp'] + result['fp']), float(result['tp']) / result['np']
-                f1 = (2 * p * r) / (p + r)
+                f1 = (2 * p * r) / (p + r) if p + r > 0 else 0.0
                 maxPrecision = max(maxPrecision, p)
                 if (len(recall) == 0) or (r != recall[-1]) or ((len(recall) > 1) and (recall[-1] != recall[-2])):
                     precision.append(maxPrecision)

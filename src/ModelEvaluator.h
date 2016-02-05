@@ -45,66 +45,91 @@ public:
     /**
     * Initializes a ModelEvaluator. Multiple models can be added later on using addModel() or addModels().
     *
-    * @param[in] overlap Minimum overlap for considering two bounding boxes as equivalent (used for non-maxima
-    * suppression and for classifying a detection as true or false positive).
+    * @param[in] nmsOverlap Minimum overlap for considering two bounding boxes as equivalent during
+    * non-maxima suppression. Overlapping bounding boxes with a lower score will be removed.
+    *
+    * @param[in] eqOverlap Minimum overlap for considering two bounding boxes as equivalent during evaluation
+    * (used to distinguish between true and false positives).
     *
     * @param[in] interval Number of levels per octave in the HOG pyramid.
     *
     * @param[in] verbose If set to true, debug and timing information will be logged to stderr.
     */
-    ModelEvaluator(double overlap = 0.5, int interval = 10, bool verbose = false)
-    : DPMDetection(verbose, overlap, interval), m_results() { }; 
+    ModelEvaluator(double nmsOverlap = 0.5, double eqOverlap = 0.5, int interval = 10, bool verbose = false)
+    : DPMDetection(verbose, nmsOverlap, interval), eqOverlap(eqOverlap), m_results() { }; 
 
     /** 
     * Initializes the ModelEvaluator and loads a single model from disk.  
-    * This is equivalent to constructing the object with `ModelEvaluator(overlap, interval)`
+    * This is equivalent to constructing the object with `ModelEvaluator(nmsOverlap, eqOverlap, interval)`
     * and then calling `addModel("single", modelfile)`.
     *
     * @param[in] modelfile The filename of the model to load.
     *
-    * @param[in] overlap Minimum overlap for considering two bounding boxes as equivalent (used for non-maxima
-    * suppression and for classifying a detection as true or false positive)
+    * @param[in] nmsOverlap Minimum overlap for considering two bounding boxes as equivalent during
+    * non-maxima suppression. Overlapping bounding boxes with a lower score will be removed.
+    *
+    * @param[in] eqOverlap Minimum overlap for considering two bounding boxes as equivalent during evaluation
+    * (used to distinguish between true and false positives).
     *
     * @param[in] interval Number of levels per octave in the HOG pyramid.
     *
     * @param[in] verbose If set to true, debug and timing information will be logged to stderr.
     */
-    ModelEvaluator(const std::string & modelfile, double overlap = 0.5, int interval = 10, bool verbose = false)
-    : DPMDetection(modelfile, 0.0, verbose, overlap, interval), m_results() { }; 
+    ModelEvaluator(const std::string & modelfile, double nmsOverlap = 0.5, double eqOverlap = 0.5, int interval = 10, bool verbose = false)
+    : DPMDetection(modelfile, 0.0, verbose, nmsOverlap, interval), eqOverlap(eqOverlap), m_results() { }; 
     
     /** 
     * Initializes the ModelEvaluator and adds a single model.
-    * This is equivalent to constructing the object with `ModelEvaluator(overlap, interval)`
+    * This is equivalent to constructing the object with `ModelEvaluator(nmsOverlap, eqOverlap, interval)`
     * and then calling `addModel("single", model)`.
     *
     * @param[in] model The model to be added as Mixture object.
     *
-    * @param[in] overlap Minimum overlap for considering two bounding boxes as equivalent (used for non-maxima
-    * suppression and for classifying a detection as true or false positive)
+    * @param[in] nmsOverlap Minimum overlap for considering two bounding boxes as equivalent during
+    * non-maxima suppression. Overlapping bounding boxes with a lower score will be removed.
+    *
+    * @param[in] eqOverlap Minimum overlap for considering two bounding boxes as equivalent during evaluation
+    * (used to distinguish between true and false positives).
     *
     * @param[in] interval Number of levels per octave in the HOG pyramid.
     *
     * @param[in] verbose If set to true, debug and timing information will be logged to stderr.
     */
-    ModelEvaluator(const Mixture & model, double overlap = 0.5, int interval = 10, bool verbose = false)
-    : DPMDetection(model, 0.0, verbose, overlap, interval), m_results() { };
+    ModelEvaluator(const Mixture & model, double nmsOverlap = 0.5, double eqOverlap = 0.5, int interval = 10, bool verbose = false)
+    : DPMDetection(model, 0.0, verbose, nmsOverlap, interval), eqOverlap(eqOverlap), m_results() { };
     
     /** 
     * Initializes the ModelEvaluator and adds a single model.
-    * This is equivalent to constructing the object with `ModelEvaluator(overlap, interval)`
+    * This is equivalent to constructing the object with `ModelEvaluator(nmsOverlap, eqOverlap, interval)`
     * and then calling `addModel("single", model)`.
     *
     * @param[in] model The model to be added as Mixture object, whose contents will be moved.
     *
-    * @param[in] overlap Minimum overlap for considering two bounding boxes as equivalent
-    * (used for non-maxima suppression and for classifying a detection as true or false positive)
+    * @param[in] nmsOverlap Minimum overlap for considering two bounding boxes as equivalent during
+    * non-maxima suppression. Overlapping bounding boxes with a lower score will be removed.
+    *
+    * @param[in] eqOverlap Minimum overlap for considering two bounding boxes as equivalent during evaluation
+    * (used to distinguish between true and false positives).
     *
     * @param[in] interval Number of levels per octave in the HOG pyramid.
     *
     * @param[in] verbose If set to true, debug and timing information will be logged to stderr.
     */
-    ModelEvaluator(Mixture && model, double overlap = 0.5, int interval = 10, bool verbose = false)
-    : DPMDetection(std::move(model), 0.0, verbose, overlap, interval), m_results() { }; 
+    ModelEvaluator(Mixture && model, double nmsOverlap = 0.5, double eqOverlap = 0.5, int interval = 10, bool verbose = false)
+    : DPMDetection(std::move(model), 0.0, verbose, nmsOverlap, interval), eqOverlap(eqOverlap), m_results() { };
+    
+    /**
+    * @return Minimum overlap for considering two bounding boxes as equivalent during evaluation.
+    */
+    double getEqOverlap() const { return this->eqOverlap; };
+    
+    /**
+    * Changes the overlap threshold used for evaluation.
+    *
+    * @param[in] eqOverlap Minimum overlap for considering two bounding boxes as equivalent during evaluation
+    * (used to distinguish between true and false positives).
+    */
+    void setEqOverlap(double newEqOverlap) { this->eqOverlap = newEqOverlap; };
     
     /**
     * Returns a reference to a vector with TestResult objects for a specific model computed by testModels().
@@ -192,7 +217,9 @@ public:
     * @param[in] positive Vector with pointers to positive samples, given as Sample structures, which the
     * detector will be run against. The `modelAssoc` vector of those structures indicates, which one of the
     * models added to this evaluator (identified by it's index) is expected to detect that object.
-    * For all over models, that sample will be ignored.
+    * For all other models, that sample will be ignored.  
+    * If the `modelAssoc` entry for a specific object is set to `Sample::noAssoc`, it is considered relevant
+    * for all models.
     *
     * @param[in] maxSamples Maximum number of positive samples to test _each_ model against. Set this to 0 to run the
     * detector against all samples belonging to the respective model.
@@ -238,6 +265,9 @@ public:
     * @param[in] positive Vector with pointers to positive samples, given as Sample structures, which the
     * detector will be run against. The `modelAssoc` vector of those structures indicates, which one of the
     * models added to this evaluator (identified by it's index) is expected to detect that object.
+    * For all other models, that sample will be ignored.  
+    * If the `modelAssoc` entry for a specific object is set to `Sample::noAssoc`, it is considered relevant
+    * for all models.
     *
     * @param[in] maxSamples Maximum number of positive samples to test _each_ model against. Set this to 0 to run the
     * detector against all samples belonging to the respective model.
@@ -287,7 +317,9 @@ public:
     * @param[in] positive Vector with pointers to positive samples, given as Sample structures, which the
     * detector will be run against. The `modelAssoc` vector of those structures indicates, which one of the
     * models added to this evaluator (identified by it's index) is expected to detect that object.
-    * For all over models, that sample will be ignored.
+    * For all other models, that sample will be ignored.  
+    * If the `modelAssoc` entry for a specific object is set to `Sample::noAssoc`, it is considered relevant
+    * for all models.
     *
     * @param[in] maxSamples Maximum number of positive samples to test _each_ model against. Set this to 0 to run the
     * detector against all samples belonging to the respective model.
@@ -348,6 +380,7 @@ public:
 
 protected:
 
+    double eqOverlap; /**< Minimum overlap for considering two bounding boxes as equal. */
     std::vector< std::vector<TestResult> > m_results; /**< Test results for each model and each threshold. */
 
 };

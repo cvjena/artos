@@ -78,7 +78,7 @@ int main(int argc, char * argv[])
             return printError(res, detector);
         
         // Evaluate
-        res = evaluator_run(detector, 100, &displayProgress);
+        res = evaluator_run(detector, 100, 0.5, &displayProgress);
         if (res != ARTOS_RES_OK)
             return printError(res, detector);
         
