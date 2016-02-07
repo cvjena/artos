@@ -558,7 +558,7 @@ void CaffeFeatureExtractor::loadLayerInfo()
     {
         vector<string> layerNames;
         splitString(this->m_stringParams["layerName"], ",;", layerNames);
-        for (int l = 0; l < this->m_lastLayer && this->m_layerIndices.size() < layerNames.size(); ++l)
+        for (int l = 0; l <= this->m_lastLayer && this->m_layerIndices.size() < layerNames.size(); ++l)
             if (find(layerNames.begin(), layerNames.end(), this->m_net->layer_names()[l]) != layerNames.end())
                 this->m_layerIndices.push_back(l);
         
