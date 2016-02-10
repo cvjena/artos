@@ -137,6 +137,7 @@ public:
     * The patchworkPadding() reported by the feature extractor will be used as padding between images
     * on the same plane.
     *
+    * @note This feature is experimental.
     * There are only very few cases there patchwork feature extraction is actually beneficial.
     * It should not be used careless, since the black padding between the images on a patchwork plane
     * may lead to artifacts.
