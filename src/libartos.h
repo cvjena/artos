@@ -815,6 +815,26 @@ typedef struct {
 } SynsetSearchResult;
 
 /**
+* Sometimes one may want to detect which type of image repository is being used by ARTOS, i.e. which driver
+* has been compiled in. This function returns the type identifier of the image repository driver, which
+* in the case of ImageNet repositories is "ImageNet" and "ImageDirectories" in the case of plain directory
+* repositories.
+* @return Returns a pointer to a NUL-terminated string specifying the type of the built-in image repository driver.
+*/
+const char * get_image_repository_type();
+
+/**
+* Checks if a given directory is structured like an image repository.
+* @param[in] repo_directory The path to the repository directory to be checked.
+* @param[out] err_msg If the given directory is not a valid image repository, this pointer will be set to
+*                     a pointer to a NUL-terminated string containing an adequate error message.
+*                     If everything is fine, the pointer will be set to an empty string.
+* @return Returns false if the given directory is not an image repository directory.
+*         True is returned, if it *may* be one (it looks okay).
+*/
+bool check_repository_directory(const char * repo_directory, const char ** err_msg = 0);
+
+/**
 * Lists all synsets in the image repository at a given location.
 * @param[in] repo_directory The path to the repository directory.
 * @param[in] synset_buf A beforehand allocated buffer array of SynsetSearchResult structs, that will be filled up with the

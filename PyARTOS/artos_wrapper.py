@@ -386,6 +386,18 @@ class _LibARTOS(object):
             ((1, 'param_name'), (1, 'value'))
         )
         
+        # get_image_repository_type function
+        self._register_func('get_image_repository_type',
+            (c_char_p,),
+            ()
+        )
+        
+        # check_repository_directory function
+        self._register_func('check_repository_directory',
+            (c_bool, c_char_p, POINTER(c_char_p)),
+            ((1, 'repo_directory'), (1, 'err_msg', None))
+        )
+        
         # list_synsets function
         self._register_func('list_synsets',
             (c_int, c_char_p, SynsetSearchResult_p, c_uint_p),
@@ -415,7 +427,7 @@ class _LibARTOS(object):
         
         prototype = CFUNCTYPE(*paramtypes)
         self.__dict__[funcName] = prototype((funcName, self._lib), paramflags)
-        if (paramtypes[0] != c_void_p) or (errcheck is not None):
+        if (paramtypes[0] == c_int) or (errcheck is not None):
             self.__dict__[funcName].errcheck = errcheck if errcheck is not None else self._errcheck_common
 
 

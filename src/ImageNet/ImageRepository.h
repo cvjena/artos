@@ -38,29 +38,24 @@ public:
     /**
     * @param[in] repoDirectory The path to the repository directory.
     */
-    ImageRepository(const std::string & repoDirectory) : m_dir(repoDirectory), m_numSynsets(0) { };
+    ImageRepository(const std::string & repoDirectory);
     
     /**
     * Copy constructor.
     */
-    ImageRepository(const ImageRepository & other) : m_dir(other.m_dir), m_numSynsets(other.m_numSynsets) { };
+    ImageRepository(const ImageRepository & other);
     
     /**
     * @return Returns the path to the repository directory.
     */
-    std::string getRepoDirectory() const { return this->m_dir; };
+    std::string getRepoDirectory() const;
     
     /**
     * Returns the number of synsets in the synset list file.
     *
     * @note This value is cached after the first call to getNumSynsets() or listSynsets().
     */
-    size_t getNumSynsets() const
-    {
-        if (this->m_numSynsets == 0)
-            this->listSynsets(NULL, NULL);
-        return this->m_numSynsets;
-    };
+    size_t getNumSynsets() const;
     
     /**
     * Lists all synsets in this repository as specified in the synset list file.
@@ -94,7 +89,7 @@ public:
     *
     * @return Returns the new SynsetIterator instance.
     */
-    SynsetIterator getSynsetIterator() const { return SynsetIterator(this->m_dir); };
+    SynsetIterator getSynsetIterator() const;
     
     /**
     * Initializes a Synset instance for a given synset ID.
@@ -111,26 +106,37 @@ public:
     * 
     * @return Returns the new MixedImageIterator instance.
     */
-    MixedImageIterator getMixedIterator(const unsigned int perSynset = 1) const
-    {
-        return MixedImageIterator(this->m_dir, perSynset);
-    };
+    MixedImageIterator getMixedIterator(const unsigned int perSynset = 1) const;
 
 
     /**
     * Checks if a given directory is structured like an image repository. To be valid in terms of this function,
-    * the directory must contain the file 'synset_wordlist.txt' and the directories 'Images' and 'Annotation'.
+    * the directory must contain the file 'synset_wordlist.txt' and the directories 'Images' and 'Annotation',
+    * which must not be empty.
     *
-    * @note This function does not check if the synset list file is valid or the image directory contains
-    *       any synset archives at all. It is just a simple indicator, if a directory *could* contain an image
-    *       repository.
+    * @note This function does not check if the synset list file is valid. It is just a simple indicator, if
+    * a directory *could* contain an image repository.
     *
     * @param[in] directory Path to the directory to be checked.
+    *
+    * @param[out] errMsg If the given directory is not a valid image repository, this pointer will be set to
+    * a pointer to a NUL-terminated string containing an adequate error message.
+    * If everything is fine, the pointer will be set to an empty string.
     *
     * @return Returns false if the given directory is not an image repository directory.
     *         True is returned, if it *may* be one.
     */
-    static bool hasRepositoryStructure(const std::string & directory);
+    static bool hasRepositoryStructure(const std::string & directory, const char ** errMsg = NULL);
+    
+    
+    /**
+    * Sometimes one may want to detect which type of image repository is being used by ARTOS, i.e. which driver
+    * has been compiled in. This function returns the type identifier of the image repository driver, which
+    * in the case of ImageNet repositories is "ImageNet".
+    *
+    * @return Returns a pointer to a NUL-terminated string specifying the type of this image repository driver.
+    */
+    static const char * type();
 
 
 protected:

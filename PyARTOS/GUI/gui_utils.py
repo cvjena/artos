@@ -398,6 +398,8 @@ class SearchSynsetWidget(ttk.LabelFrame):
                     thumb = utils.imgResizeCropped(img, (48, 48))
                     lbl._img = ImageTk.PhotoImage(thumb)
                     lbl['image'] = lbl._img
+                for lbl in self.synsetThumbLabels[len(imgs):]:
+                    lbl['image'] = ''
             except:
                 for lbl in self.synsetThumbLabels:
                     lbl['image'] = ''

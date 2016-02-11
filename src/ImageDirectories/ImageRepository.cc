@@ -50,6 +50,30 @@ static float cmpSynsetDescriptions(const vector<string> & words1, const vector<s
 }
 
 
+ImageRepository::ImageRepository(const string & repoDirectory)
+: m_dir(repoDirectory), m_numSynsets(0)
+{ }
+
+
+ImageRepository::ImageRepository(const ImageRepository & other)
+: m_dir(other.m_dir), m_numSynsets(other.m_numSynsets)
+{ }
+
+
+string ImageRepository::getRepoDirectory() const
+{
+    return this->m_dir;
+}
+
+
+size_t ImageRepository::getNumSynsets() const
+{
+    if (this->m_numSynsets == 0)
+        this->listSynsets(NULL, NULL);
+    return this->m_numSynsets;
+}
+
+
 void ImageRepository::listSynsets(vector<string> * ids, vector<string> * descriptions) const
 {
     vector<string> directories;
@@ -98,13 +122,41 @@ void ImageRepository::searchSynsets(const string & phrase, vector<Synset> & resu
 }
 
 
+SynsetIterator ImageRepository::getSynsetIterator() const
+{
+    return SynsetIterator(this->m_dir);
+}
+
+
 Synset ImageRepository::getSynset(const string & synsetId) const
 {
     return (is_dir(join_path(2, this->m_dir.c_str(), synsetId.c_str()))) ? Synset(this->m_dir, synsetId, synsetId) : Synset();
 }
 
 
-bool ImageRepository::hasRepositoryStructure(const string & directory)
+MixedImageIterator ImageRepository::getMixedIterator(const unsigned int perSynset) const
 {
-    return is_dir(directory);
+    return MixedImageIterator(this->m_dir, perSynset);
+}
+
+
+bool ImageRepository::hasRepositoryStructure(const string & directory, const char ** errMsg)
+{
+    if (errMsg)
+        *errMsg = "";
+    
+    if (!is_dir(directory))
+    {
+        if (errMsg)
+            *errMsg = "The specified directory could not be found.";
+        return false;
+    }
+    
+    return true;
+}
+
+
+const char * ImageRepository::type()
+{
+    return "ImageDirectories";
 }

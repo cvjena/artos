@@ -905,6 +905,16 @@ int feature_extractor_set_string_param(const char * param_name, const char * val
 //------------------------------------------------------------------
 
 
+bool check_repository_directory(const char * repo_directory, const char ** err_msg)
+{
+    return ImageRepository::hasRepositoryStructure(repo_directory, err_msg);
+}
+
+const char * get_image_repository_type()
+{
+    return ImageRepository::type();
+}
+
 int list_synsets(const char * repo_directory, SynsetSearchResult * synset_buf, unsigned int * synset_buf_size)
 {
     if (!ImageRepository::hasRepositoryStructure(repo_directory))

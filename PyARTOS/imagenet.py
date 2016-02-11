@@ -85,19 +85,33 @@ class ImageRepository(object):
         num - The maximum number of images to extract.
         Returns: The extracted images as a list of PIL.Image.Image instances.
         
-        If the synset archive can not be found, an exception is thrown.
+        If the synset can not be found, an exception is thrown.
         """
         
         images = []
-        with tarfile.open(name = os.path.join(self._repoDirectory, 'Images', synsetId + '.tar'), mode = 'r') as tar:
-            extRE = re.compile(r'\.jpe?g$', re.I)
-            while (len(images) < num):
-                info = tar.next()
-                if info is None:
-                    break
-                if info.isfile() and extRE.search(info.name):
-                    images.append(Image.open(tar.extractfile(info)))
-                    images[-1].load() # force reading of the whole image from the archive
+        repoType = self.__class__.type()
+        
+        if repoType == 'ImageNet':
+            
+            with tarfile.open(name = os.path.join(self._repoDirectory, 'Images', synsetId + '.tar'), mode = 'r') as tar:
+                extRE = re.compile(r'\.jpe?g$', re.I)
+                while (len(images) < num):
+                    info = tar.next()
+                    if info is None:
+                        break
+                    if info.isfile() and extRE.search(info.name):
+                        images.append(Image.open(tar.extractfile(info)))
+                        images[-1].load() # force reading of the whole image from the archive
+            
+        elif repoType == 'ImageDirectories':
+            
+            files = [os.path.join(dir, fn) \
+                     for dir, subdirs, files in os.walk(os.path.join(self._repoDirectory, synsetId)) \
+                     for fn in files \
+                     if fn.lower().endswith('.jpg') or fn.lower().endswith('.jpeg')]
+            for fn in files[:num]:
+                images.append(Image.open(fn))
+        
         return images
     
     
@@ -105,24 +119,30 @@ class ImageRepository(object):
     def hasRepositoryStructure(dir):
         """Checks if a given directory looks like an image repository.
         
-        This function checks if the given directory contains the synset list file (synset_wordlist.txt)
-        and the directories 'Images' and 'Annotation'. Additionally, the 'Images' directory must contain
-        at least one tar file.
-        
         Returns a tuple with 2 values, the first one being a boolean value specifying if the given directory
         could be an image repository or not and if not, the second one is an error message telling what
         exactly is wrong with it.
         """
         
-        if not os.path.isdir(dir):
-            return False, 'The specified directory could not be found.'
-        elif not os.path.isfile(os.path.join(dir, 'synset_wordlist.txt')):
-            return False, 'Could not find synset_wordlist.txt'
-        elif not os.path.isdir(os.path.join(dir, 'Images')):
-            return False, 'Could not find "Images" subdirectory.'
-        elif not os.path.isdir(os.path.join(dir, 'Annotation')):
-            return False, 'Could not find "Annotation" subdirectory.'
-        elif len(glob(os.path.join(dir, 'Images', '*.tar'))) == 0:
-            return False, 'Could not find any synset image archive.'
+        if (libartos is None):
+            return False, 'Can not find libartos'
         else:
-            return True, ''
+            errMsg = ctypes.c_char_p()
+            res = libartos.check_repository_directory(utils.str2bytes(dir), ctypes.pointer(errMsg))
+            return res, utils.bytes2str(errMsg.value)
+    
+    
+    @staticmethod
+    def type():
+        """Returns the type identifier of the image repository driver built into ARTOS.
+        
+        Sometimes one may want to detect which type of image repository is being used by ARTOS,
+        i.e. which driver has been compiled in. This function returns the type identifier of the
+        image repository driver, which in the case of ImageNet repositories is "ImageNet" and
+        "ImageDirectories" in the case of plain directory repositories.
+        """
+        
+        if (libartos is None):
+            raise RuntimeError('Can not find libartos')
+        
+        return libartos.get_image_repository_type()

@@ -51,6 +51,30 @@ static float cmpSynsetDescriptions(const vector<string> & words1, const vector<s
 }
 
 
+ImageRepository::ImageRepository(const string & repoDirectory)
+: m_dir(repoDirectory), m_numSynsets(0)
+{ }
+
+
+ImageRepository::ImageRepository(const ImageRepository & other)
+: m_dir(other.m_dir), m_numSynsets(other.m_numSynsets)
+{ }
+
+
+string ImageRepository::getRepoDirectory() const
+{
+    return this->m_dir;
+}
+
+
+size_t ImageRepository::getNumSynsets() const
+{
+    if (this->m_numSynsets == 0)
+        this->listSynsets(NULL, NULL);
+    return this->m_numSynsets;
+}
+
+
 void ImageRepository::listSynsets(vector<string> * ids, vector<string> * descriptions) const
 {
     if (ids != NULL)
@@ -121,6 +145,12 @@ void ImageRepository::searchSynsets(const string & phrase, vector<Synset> & resu
 }
 
 
+SynsetIterator ImageRepository::getSynsetIterator() const
+{
+    return SynsetIterator(this->m_dir);
+}
+
+
 Synset ImageRepository::getSynset(const string & synsetId) const
 {
     Synset synset;
@@ -134,9 +164,59 @@ Synset ImageRepository::getSynset(const string & synsetId) const
 }
 
 
-bool ImageRepository::hasRepositoryStructure(const string & directory)
+MixedImageIterator ImageRepository::getMixedIterator(const unsigned int perSynset) const
 {
-    return (is_file(join_path(2, directory.c_str(), "synset_wordlist.txt").c_str())
-            && is_dir(join_path(2, directory.c_str(), IMAGENET_IMAGE_DIR).c_str())
-            && is_dir(join_path(2, directory.c_str(), IMAGENET_ANNOTATION_DIR).c_str()));
+    return MixedImageIterator(this->m_dir, perSynset);
+}
+
+
+bool ImageRepository::hasRepositoryStructure(const string & directory, const char ** errMsg)
+{
+    if (errMsg)
+        *errMsg = "";
+    
+    if (!is_dir(directory))
+    {
+        if (errMsg)
+            *errMsg = "The specified directory could not be found.";
+        return false;
+    }
+    
+    if (!is_file(join_path(2, directory.c_str(), "synset_wordlist.txt")))
+    {
+        if (errMsg)
+            *errMsg = "Could not find synset_wordlist.txt";
+        return false;
+    }
+    
+    if (!is_dir(join_path(2, directory.c_str(), IMAGENET_IMAGE_DIR)))
+    {
+        if (errMsg)
+            *errMsg = "Could not find " IMAGENET_IMAGE_DIR " subdirectory.";
+        return false;
+    }
+    
+    if (!is_dir(join_path(2, directory.c_str(), IMAGENET_ANNOTATION_DIR)))
+    {
+        if (errMsg)
+            *errMsg = "Could not find " IMAGENET_ANNOTATION_DIR " subdirectory.";
+        return false;
+    }
+    
+    vector<string> archives;
+    scandir(join_path(2, directory.c_str(), IMAGENET_IMAGE_DIR), archives, ftFile, "tar");
+    if (archives.empty())
+    {
+        if (errMsg)
+            *errMsg = "Could not find any synset image archive.";
+        return false;
+    }
+    
+    return true;
+}
+
+
+const char * ImageRepository::type()
+{
+    return "ImageNet";
 }
