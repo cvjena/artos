@@ -157,9 +157,9 @@ class ModelWidget(ttk.Frame):
             self.ctrlBtns['adapt']['btn']['state'] = 'disabled'
         else:
             if len(modelData.models) == 1:
-                self.modelNumText.set('1 model')
+                self.modelNumText.set('1 model ({})'.format(modelData.type))
             else:
-                self.modelNumText.set('{} models'.format(len(modelData.models)))
+                self.modelNumText.set('{} models ({})'.format(len(modelData.models), modelData.type))
             self.ctrlBtns['inspect']['btn']['state'] = 'normal'
             self.ctrlBtns['adapt']['btn']['state'] = 'normal'
         self.ctrlBtns['disable']['btn']['text'] = 'Enable' if model['disabled'] else 'Disable'
@@ -340,66 +340,8 @@ class CatalogueWindow(Tkinter.Toplevel):
     
     def openLearnBGDialog(self):
         """Shows a dialog for learning stationary background statistics."""
-        
-        from .. import artos_wrapper
-        # Check library
-        if artos_wrapper.libartos is None:
-            tkMessageBox.showerror(title = 'Library not found', message = 'libartos could not be found and loaded.')
-            return False
-        # Check model directory
-        modelDir = config.get('libartos', 'model_dir')
-        if not os.path.isdir(modelDir):
-            tkMessageBox.showerror(title = 'Model directory not found', message = 'The specified model directory does not exist.')
-            return False
-        # Check image repository
-        repoDir = config.get('ImageNet', 'repository_directory')
-        if (not repoDir) or (not ImageRepository.hasRepositoryStructure(repoDir)):
-            tkMessageBox.showerror(title = 'No image repository', message = 'The path of the image repository has not been specified or is invalid.\n' \
-                                   'Please go to the settings and specify the correct path to your local ImageNet copy, which has to be structured as' \
-                                   'described in the README file.')
-        
-        # Ask for number of images to learn from
-        numImages = tkSimpleDialog.askinteger('Learn background statistics',
-                        'Background statistics are the heart of Linear Discriminant Analysis (LDA) which ARTOS uses ' \
-                        'for model creation.\nComputing such statistics takes some time (a few seconds per image), ' \
-                        'but, fortunately, it has to be done just once.\n\n' \
-                        'For most purposes, the background statistics shipped with ARTOS should be sufficient. Anyway, if you ' \
-                        'wish to learn your own\nstatistics from ImageNet images, please enter the number of images to extract ' \
-                        'features from below.\n' \
-                        'Your existing bg.dat file in your model directory will be replaced with the new one, but you may restore it '\
-                        'by copying the original\nbg.dat file from the ARTOS root directory to your model directory.\n\n' \
-                        'Number of images to learn from:',
-                        initialvalue = 1000, minvalue = 1)
-        if not numImages is None:
-            # Learn
-            thread_var = { 'error' : None }
-        
-            def _learnThreaded(*args, **kwargs):
-                try:
-                    learning.learnBGStatistics(*args, **kwargs)
-                except Exception as e:
-                    thread_var['error'] = e
-            
-            progressDialog = gui_utils.ProgressWindow(master = self, parent = self, threadedCallbacks = True, abortable = True,
-                    windowTitle = 'Learning background statistics',
-                    overallProcessDescription = 'Learning background statistics from ImageNet images',
-                    subProcessDescriptions = ('Computing negative mean feature vector...', 'Computing stationary autocorrelation function...')
-            )
-            progressDialog.wait_visibility()
-            thread = threading.Thread(
-                    target = _learnThreaded,
-                    args = (repoDir, os.path.join(modelDir, 'bg.dat'), numImages),
-                    kwargs = { 'progressCallback' : progressDialog.changeProgress }
-            )
-            thread.start()
-            while thread.is_alive():
-                self.update()
-                time.sleep(0.1)
-            progressDialog.destroy()
-            if thread_var['error'] is None:
-                tkMessageBox.showinfo('Success', 'Background statistics have been learned and saved to your model directory.')
-            elif not (isinstance(thread_var['error'], artos_wrapper.LibARTOSException) and thread_var['error'].errcode == artos_wrapper.RES_ABORTED):
-                tkMessageBox.showerror(title = 'Exception', message = 'An error occurred:\n{!s}'.format(thread_var['error']))
+        if LearnBGDialog.check():
+            self.bgDialog = LearnBGDialog(self, self)
     
     
     def refreshModels(self):
@@ -808,11 +750,17 @@ class LearnDialog(gui_utils.Dialog):
         self.frmThOptSettings.columnconfigure((0,2), weight = 1, uniform = 1)
         self.frmThOptSettings.columnconfigure((1,3), minsize = 20, uniform = 2)
         
+        # Feature Extractor Settings
+        self.frmFeatureExtractor = gui_utils.FeatureExtractorSettingsWidget(self,
+                text = 'Feature Extractor', bgFileEntry = os.path.join(self.modelDir, 'bg.dat'), collapsed = True, padding = padding)
+        self.frmFeatureExtractor.grid(column = 0, row = 4, columnspan = 2, sticky = (W,E), padx = padding, pady = (padding, 0))
+        self.frmFeatureExtractor.bind('<<ControlsChange>>', self._updateSize, True)
+        
         # Buttons
         self.btnCancel = ttk.Button(self, text = 'Cancel', command = self.destroy)
         self.btnLearn = ttk.Button(self, text = 'Learn!' if not self.adapt else 'Adapt!', command = self.learn, default = 'active')
-        self.btnCancel.grid(column = 0, row = 4, sticky = W, padx = padding, pady = padding)
-        self.btnLearn.grid(column = 1, row = 4, sticky = E, padx = padding, pady = padding)
+        self.btnCancel.grid(column = 0, row = 5, sticky = W, padx = padding, pady = padding)
+        self.btnLearn.grid(column = 1, row = 5, sticky = E, padx = padding, pady = padding)
         
         self._updateScaleValues()
     
@@ -827,6 +775,12 @@ class LearnDialog(gui_utils.Dialog):
         else:
             self.lblThOptMaxPosValue['text'] = str(self.thOptMaxPosVar.get())
         self.lblThOptMaxNegValue['text'] = str(self.thOptMaxNegVar.get())
+    
+    
+    def _updateSize(self, *args):
+        """Adjusts the size of the dialogue when its contents have changed."""
+        
+        self.geometry('')
     
     
     def _onSynsetSelect(self, *args):
@@ -855,6 +809,13 @@ class LearnDialog(gui_utils.Dialog):
         
         modelfile = None
         classname = self.classnameVar.get().strip()
+        
+        try:
+            self.frmFeatureExtractor.getFeatureExtractor().setAsDefault()
+        except ValueError as e:
+            tkMessageBox.showerror(title = 'Invalid parameters specified', message = str(e))
+            return
+        
         if classname or self.adapt:
             if self.mode == self.__class__.MODE_IMAGENET:
         
@@ -878,7 +839,7 @@ class LearnDialog(gui_utils.Dialog):
                     progressDialog.wait_visibility()
                     self.thread = threading.Thread(
                             target = self._learnThreadedImageNet,
-                            args = (self.repo.repoDirectory, synsetId, os.path.join(self.modelDir, 'bg.dat'), modelfile),
+                            args = (self.repo.repoDirectory, synsetId, self.frmFeatureExtractor.getBgFile(), modelfile),
                             kwargs = {
                                 'maxAspectClusters' : self.maxAspectClustersVar.get(),
                                 'maxWHOClusters' : self.maxWHOClustersVar.get(),
@@ -962,7 +923,7 @@ class LearnDialog(gui_utils.Dialog):
                             target = self._learnThreadedInSitu,
                             kwargs = {
                                 'repoDirectory' : self.repo.repoDirectory,
-                                'bgFile' : os.path.join(self.modelDir, 'bg.dat'),
+                                'bgFile' : self.frmFeatureExtractor.getBgFile(),
                                 'modelfile' : modelfile,
                                 'samples' : samples,
                                 'bboxes' : bboxes,
@@ -1087,6 +1048,219 @@ class LearnDialog(gui_utils.Dialog):
                                    'Please go to the settings and specify the correct path to your local ImageNet copy, which has to be structured as' \
                                    'described in the README file.')
             return False
+        return True
+
+
+
+class LearnBGDialog(gui_utils.Dialog):
+    """A dialog for learning background statistics."""
+
+
+    def __init__(self, master, parent = None, align = gui_utils.Dialog.CENTER_ON_PARENT, **kwargs):
+        """Creates a new LearnBGDialog.
+        
+        master - The parent widget.
+        parent - If set to a widget, this window will turn into a modal dialog and `parent` will
+                 be it's parent window.
+        """
+        
+        gui_utils.Dialog.__init__(self, master, parent, align, **kwargs);
+        if not self.__class__.check():
+            self.destroy()
+        # Intialize window
+        self.title('Learn background statistics')
+        self.resizable(False, False)
+        self.bind('<Destroy>', self.onDestroy, True)
+        # Create slave widgets
+        modelDir = config.get('libartos', 'model_dir')
+        self.bgVar = Tkinter.StringVar(master = self, value = os.path.join(modelDir, 'bg.dat') if modelDir != '' else '')
+        self.numImagesVar = Tkinter.StringVar(master = self, value = '6000')
+        self.maxOffsetVar = Tkinter.StringVar(master = self, value = '19')
+        self._createWidgets()
+    
+    
+    def _createWidgets(self):
+        
+        # Label with help text
+        self.lblHelp = ttk.Label(self, text = 'Background statistics are the heart of Linear Discriminant Analysis (LDA) which ARTOS uses ' \
+                'for model creation.\nComputing such statistics takes some time (a few seconds per image), ' \
+                'but, fortunately, it has to be done just once.\n\n' \
+                'For most purposes, the background statistics shipped with ARTOS should be sufficient. Anyway, if you ' \
+                'want to use a\nfeature extractor different from HOG or just wish to learn your own statistics from ImageNet images,' \
+                'please enter the\nnumber of images to extract features from below.\n\n' \
+                'The maximum offset specified here also defines the maximum possible model size in cells, which is one cell larger\n' \
+                'than the maximum offset contained in the statistics.\n\n' \
+                'We suggest storing the learned background statistics in your model directory. You may restore the HOG statistics\n'\
+                'shipped with ARTOS by copying the original bg.dat file from the ARTOS root directory to your model directory.')
+        self.lblHelp.pack(side = 'top', fill = 'x', padx = 8, pady = 8)
+        
+        # Entries for BG file, number of images and maximum offset
+        self.frmSettings = ttk.Labelframe(self, text = 'Learning parameters', padding = 8)
+        self.frmSettings.pack(side = 'top', fill = 'x', padx = 8, pady = 8)
+        self.lblBgFile = ttk.Label(self.frmSettings, text = 'Background statistics file:')
+        self.entrBgFile = ttk.Entry(self.frmSettings, textvariable = self.bgVar)
+        self.btnBgFile = ttk.Button(self.frmSettings, text = '...', width = 3, command = self._selectBgFile)
+        self.lblNumImages = ttk.Label(self.frmSettings, text = 'Number of images to learn from:')
+        self.entrNumImages = Tkinter.Spinbox(self.frmSettings, textvariable = self.numImagesVar, from_ = 1, to = 1000000, increment = 100)
+        self.lblMaxOffset = ttk.Label(self.frmSettings, text = 'Maximum offset:')
+        self.entrMaxOffset = Tkinter.Spinbox(self.frmSettings, textvariable = self.maxOffsetVar, from_ = 3, to = 1000, increment = 1)
+        self.lblBgFile.grid(row = 0, column = 0, sticky = W, padx = (0, 8))
+        self.entrBgFile.grid(row = 0, column = 1, sticky = (W, E))
+        self.btnBgFile.grid(row = 0, column = 2, sticky = (W, E))
+        self.lblNumImages.grid(row = 1, column = 0, sticky = W, padx = (0, 8), pady = (8, 0))
+        self.entrNumImages.grid(row = 1, column = 1, columnspan = 2, pady = (8, 0), sticky = (W, E))
+        self.lblMaxOffset.grid(row = 2, column = 0, sticky = W, padx = (0, 8), pady = (8, 0))
+        self.entrMaxOffset.grid(row = 2, column = 1, columnspan = 2, pady = (8, 0), sticky = (W, E))
+        self.frmSettings.columnconfigure(1, weight = 1)
+        
+        # Feature extractor settings
+        self.frmFeatureExtractor = gui_utils.FeatureExtractorSettingsWidget(self, text = 'Feature Extractor')
+        self.frmFeatureExtractor.pack(side = 'top', fill = 'x', padx = 8)
+        self.frmFeatureExtractor.bind('<<ControlsChange>>', self._updateSize, True)
+        
+        # Buttons
+        self.btnCancel = ttk.Button(self, text = 'Cancel', command = self.destroy)
+        self.btnLearn = ttk.Button(self, text = 'Learn background statistics', command = self.learn)
+        self.btnCancel.pack(side = 'left', padx = 8, pady = 8)
+        self.btnLearn.pack(side = 'right', padx = 8, pady = 8)
+    
+    
+    def onDestroy(self, evt):
+        if (evt.widget is self):
+            try:
+                # Break reference cycles of TCL variables, because their
+                # __del__ method prevents the garbage collector from freeing them:
+                del self.bgVar
+                del self.numImagesVar
+            except:
+                pass
+    
+    
+    def learn(self):
+        """Learn background statistics with the settings from the dialog."""
+        
+        # Check BG file path
+        bgFile = self.bgVar.get().strip()
+        if bgFile == '':
+            tkMessageBox.showerror(title = 'No filename specified', message = 'Please specify a path for the new background statistics file.')
+            return
+        if not os.path.isdir(os.path.dirname(bgFile)):
+            tkMessageBox.showerror(title = 'Directory not found', message = 'The directory for the specified file does not exists.')
+            return
+        if os.path.isfile(bgFile) and (not tkMessageBox.askyesno(
+                title = 'File does already exist',
+                message = 'A file with the given name does already exist.\nDo you want to overwrite it?',
+                icon = tkMessageBox.WARNING)):
+            return
+        
+        # Check number of images
+        try:
+            numImages = int(self.numImagesVar.get())
+            if numImages <= 0:
+                raise ValueError()
+        except ValueError:
+            tkMessageBox.showerror(title = 'Invalid value', message = 'The specified number of images is not a valid positive integral number.')
+            return
+        
+        # Check maximum offset
+        try:
+            maxOffset = int(self.maxOffsetVar.get())
+            if maxOffset <= 0:
+                raise ValueError()
+        except ValueError:
+            tkMessageBox.showerror(title = 'Invalid value', message = 'The specified maximum offset is not a valid positive integral number.')
+            return
+        
+        # Check feature extractor settings
+        try:
+            fe = self.frmFeatureExtractor.getFeatureExtractor()
+        except ValueError as e:
+            tkMessageBox.showerror(title = 'Invalid feature extractor settings', message = str(e))
+            return
+        
+        # Learn
+        thread_var = { 'error' : None }
+        
+        def _learnThreaded(*args, **kwargs):
+            try:
+                learning.learnBGStatistics(*args, **kwargs)
+            except Exception as e:
+                thread_var['error'] = e
+        
+        progressDialog = gui_utils.ProgressWindow(master = self, parent = self, threadedCallbacks = True, abortable = True,
+                windowTitle = 'Learning background statistics',
+                overallProcessDescription = 'Learning background statistics from ImageNet images',
+                subProcessDescriptions = ('Computing negative mean feature vector...', 'Computing stationary autocorrelation function...')
+        )
+        progressDialog.wait_visibility()
+        
+        fe.setAsDefault()
+        thread = threading.Thread(
+                target = _learnThreaded,
+                args = (config.get('ImageNet', 'repository_directory'), bgFile),
+                kwargs = { 'numImages' : numImages, 'maxOffset' : maxOffset, 'progressCallback' : progressDialog.changeProgress }
+        )
+        thread.start()
+        while thread.is_alive():
+            self.update()
+            time.sleep(0.1)
+        progressDialog.destroy()
+        
+        if thread_var['error'] is None:
+            tkMessageBox.showinfo('Success', 'Background statistics have been learned successfully.')
+        elif not (isinstance(thread_var['error'], artos_wrapper.LibARTOSException) and thread_var['error'].errcode == artos_wrapper.RES_ABORTED):
+            tkMessageBox.showerror(title = 'Exception', message = 'An error occurred:\n{!s}'.format(thread_var['error']))
+        
+        self.destroy()
+    
+    
+    def _selectBgFile(self):
+        """Displays a file selection dialog for choosing the path of the learned statistics."""
+        
+        filename = tkFileDialog.asksaveasfilename(
+                parent = self,
+                title = 'Select path for background statistics',
+                filetypes = [('*.dat', '.dat .DAT'), ('All files', '.*')],
+                defaultextension = '.dat',
+                initialdir = os.path.dirname(self.bgVar.get()) if self.bgVar.get() != '' else ''
+        )
+        if (filename != ''):
+            try:
+                # To support non-ascii characters in paths with Python 2
+                if isinstance(filename, unicode):
+                    filename = utils.str2bytes(filename)
+            except:
+                pass
+            self.bgVar.set(filename)
+    
+    
+    def _updateSize(self, *args):
+        """Adjusts the size of the dialogue when its contents have changed."""
+        
+        self.geometry('')
+    
+    
+    @staticmethod
+    def check():
+        """Checks preliminary conditions for learning of background statistics.
+        
+        Returns True if all is set up properly and shows an error message otherwise.
+        """
+        
+        from .. import artos_wrapper
+        # Check library
+        if artos_wrapper.libartos is None:
+            tkMessageBox.showerror(title = 'Library not found', message = 'libartos could not be found and loaded.')
+            return False
+        
+        # Check image repository
+        repoDir = config.get('ImageNet', 'repository_directory')
+        if (not repoDir) or (not ImageRepository.hasRepositoryStructure(repoDir)):
+            tkMessageBox.showerror(title = 'No image repository', message = 'The path of the image repository has not been specified or is invalid.\n' \
+                                   'Please go to the settings and specify the correct path to your local ImageNet copy, which has to be structured as' \
+                                   'described in the README file.')
+            return False
+        
         return True
 
 

@@ -5,16 +5,18 @@ try:
     import tkinter as Tkinter
     from tkinter import N, E, S, W
     from tkinter import ttk
+    from tkinter import filedialog as tkFileDialog
 except:
     # Python 2
     import Tkinter
     from Tkinter import N, E, S, W
-    import ttk
+    import ttk, tkFileDialog
 
-import threading
+import os.path, re, threading
 from PIL import ImageTk
 
-from .. import utils
+from .. import utils, artos_wrapper
+from ..learning import FeatureExtractor
 
 
 
@@ -438,3 +440,303 @@ class SearchSynsetWidget(ttk.LabelFrame):
             return (synsetId, description)
         else:
             return None
+
+
+
+class FeatureExtractorSettingsWidget(ttk.LabelFrame):
+    """A label frame with controls for selecting a feature extractor and changing its settings.
+    
+    The current feature extractor may be retrieved via the `featureExtractor` property.
+    """
+    
+    
+    _feFormatStr = '{name} [{type}]'
+    
+    _typeRE = re.compile('\\[([^\\]]+)\\]$')
+    
+    
+    def __init__(self, master, featureExtractor = None, collapsed = False, bgFileEntry = False, padding = 8, **kwargs):
+        """Creates a new FeatureExtractorSettingsWidget.
+        
+        master - The parent widget.
+        featureExtractor - The default feature extractor to be selected initially, given either
+                           as `PyARTOS.learning.FeatureExtractor` instance or by its type.
+        collapsed - If set to True, only the name of the current feature extractor will be shown
+                    initially, along with a button for expanding the widget.
+        bgFileEntry - If set to True or a file path, an additional entry will be shown for selecting
+                      a file with background statistics.
+        padding - The amount of padding between the components inside the widget.
+        """
+        
+        ttk.LabelFrame.__init__(self, master, padding = padding, **kwargs)
+        self.padding = padding
+        self._featureExtractor = featureExtractor if (featureExtractor is not None) and isinstance(featureExtractor, FeatureExtractor) \
+                                else FeatureExtractor(featureExtractor)
+        
+        self.typeVar = Tkinter.StringVar(self, value = self.__class__._feFormatStr.format(type = self._featureExtractor.type, name = self._featureExtractor.name))
+        self.typeVar.trace('w', self._onTypeChanged)
+        self.bgVar = Tkinter.StringVar(self, value = bgFileEntry if utils.is_str(bgFileEntry) else '') if bgFileEntry else None
+        self.paramCtrls = []
+        
+        self._cbSpinboxInt = self.register(self._onSpinboxIntUpDown)
+        self._cbSpinboxFloat = self.register(self._onSpinboxFloatUpDown)
+        self._cbValidateInt = self.register(self._validateInt)
+        self._cbValidateFloat = self.register(self._validateFloat)
+        
+        self.bind('<Destroy>', self.onDestroy, True)
+        if collapsed:
+            self._createCollapsedWidgets()
+        else:
+            self._createWidgets()
+    
+    
+    def onDestroy(self, evt):
+        if (evt.widget is self):
+            try:
+                # Break reference cycles of TCL variables, because their
+                # __del__ method prevents the garbage collector from freeing them:
+                del self.typeVar
+                while len(self.paramCtrls) > 0:
+                    del self.paramCtrls[0]['var']
+                    del self.paramCtrls[0]['label']
+                    del self.paramCtrls[0]['widget']
+                    if 'extraWidget' in self.paramCtrls[0]:
+                        del self.paramCtrls[0]['extraWidget']
+            except:
+                pass
+    
+    
+    def _createWidgets(self):
+        
+        self.cbxType = ttk.Combobox(self, textvariable = self.typeVar, state = 'readonly',
+                values = tuple(self.__class__._feFormatStr.format(type = type, name = name) for type, name in FeatureExtractor.listFeatureExtractors().items()))
+        self.cbxType.grid(row = 0, column = 0, columnspan = 3, sticky = (W,E))
+        
+        if self.bgVar is not None:
+            self.lblBg = ttk.Label(self, text = 'Background statistics file:')
+            self.entrBg = ttk.Entry(self, textvariable = self.bgVar)
+            self.btnBg = ttk.Button(self, text = '...', width = 3, command = self._selectBgFile)
+        
+        self.columnconfigure(1, weight = 1)
+        self._updateParamWidgets()
+    
+    
+    def _createCollapsedWidgets(self):
+        
+        self.lblType = ttk.Label(self, text = self._featureExtractor.name)
+        self.btnExpand = ttk.Button(self, text = 'Settings', command = self.expand)
+        
+        self.lblType.pack(side = 'left')
+        self.btnExpand.pack(side = 'right')
+    
+    
+    def expand(self):
+        """Expands the widget if it has been created in collapsed state."""
+        
+        try:
+            self.lblType.destroy()
+            self.btnExpand.destroy()
+            del self.lblType
+            del self.btnExpand
+        except:
+            return
+        self._createWidgets()
+    
+    
+    def _onTypeChanged(self, *args):
+        """Callback for updating the parameter widgets when another feature extractor type is selected."""
+        
+        match = self.__class__._typeRE.search(self.typeVar.get())
+        if match and (self._featureExtractor.type != match.group(1)):
+            self._featureExtractor = FeatureExtractor(match.group(1))
+            self._updateParamWidgets()
+            self.event_generate('<<FeatureExtractorChange>>')
+    
+    
+    def _updateParamWidgets(self):
+        """Creates widgets for changing the parameters of the current feature extractor."""
+        
+        # Remove old widgets
+        for i in range(len(self.paramCtrls) - 1, -1, -1):
+            ctrls = self.paramCtrls[i]
+            ctrls['label'].grid_forget()
+            ctrls['label'].destroy()
+            ctrls['widget'].grid_forget()
+            ctrls['widget'].destroy()
+            del ctrls['var']
+            del ctrls['label']
+            del ctrls['widget']
+            if 'extraWidget' in ctrls:
+                ctrls['extraWidget'].grid_forget()
+                ctrls['extraWidget'].destroy()
+                del ctrls['extraWidget']
+        self.paramCtrls = []
+        if self.bgVar is not None:
+            self.lblBg.grid_forget()
+            self.entrBg.grid_forget()
+            self.btnBg.grid_forget()
+        
+        # Create new widgets
+        params = self._featureExtractor.getParams()
+        for i, (name, value) in enumerate(params.items()):
+            ctrl = { 'name' : name, 'type' : value.__class__, 'var' : Tkinter.StringVar(self, value = str(value)) }
+            ctrl['label'] = ttk.Label(self, text = name + ':')
+            if (ctrl['type'] == int) or (ctrl['type'] == float):
+                ctrl['widget'] = Tkinter.Spinbox(self, textvariable = ctrl['var'],
+                        command = (self._cbSpinboxInt if ctrl['type'] == int else self._cbSpinboxFloat, '%W', '%d'),
+                        validatecommand = (self._cbValidateInt if ctrl['type'] == int else self._cbValidateFloat, '%P'), validate = 'key')
+            else:
+                ctrl['widget'] = ttk.Entry(self, textvariable = ctrl['var'])
+                if (name.find('File') >= 0) or (name.find('file') >= 0):
+                    ctrl['extraWidget'] = ttk.Button(self, text = '...', width = 3, command = lambda: self._paramSelectFile(i))
+            
+            ctrl['widget']._index = i
+            ctrl['label'].grid(row = i + 1, column = 0, sticky = E, pady = (self.padding, 0))
+            ctrl['widget'].grid(row = i + 1, column = 1, columnspan = 1 if 'extraWidget' in ctrl else 2,
+                    sticky = (W, E), padx = (self.padding, 0), pady = (self.padding, 0))
+            if 'extraWidget' in ctrl:
+                ctrl['extraWidget'].grid(row = i + 1, column = 2, sticky = (W, E), pady = (self.padding, 0))
+            self.paramCtrls.append(ctrl)
+        if self.bgVar is not None:
+            row = len(params) + 1
+            self.lblBg.grid(row = row, column = 0, sticky = E, pady = (self.padding, 0))
+            self.entrBg.grid(row = row, column = 1, sticky = (W, E), padx = (self.padding, 0), pady = (self.padding, 0))
+            self.btnBg.grid(row = row, column = 2, sticky = (W, E), pady = (self.padding, 0))
+        
+        # Trigger event
+        self.event_generate('<<ControlsChange>>')
+    
+    
+    def _onSpinboxIntUpDown(self, widgetName, direction):
+        """Callback for changing the value of an integer spinbox when one of the arrow buttons is clicked."""
+        
+        inc = 1 if direction == 'up' else -1
+        widget = self.nametowidget(widgetName)
+        var = self.paramCtrls[widget._index]['var']
+        var.set(str(int(var.get()) + inc))
+    
+    
+    def _onSpinboxFloatUpDown(self, widgetName, direction):
+        """Callback for changing the value of a float spinbox when one of the arrow buttons is clicked."""
+        
+        inc = 1.0 if direction == 'up' else -1.0
+        widget = self.nametowidget(widgetName)
+        var = self.paramCtrls[widget._index]['var']
+        var.set(str(float(var.get()) + inc))
+    
+    
+    def _validateInt(self, value):
+        """Callback for validating input into an integer spinbox."""
+        
+        try:
+            int(value)
+            return True
+        except:
+            return False
+    
+    
+    def _validateFloat(self, value):
+        """Callback for validating input into a float spinbox."""
+        
+        try:
+            float(value)
+            return True
+        except:
+            return False
+    
+    
+    def _paramSelectFile(self, paramIndex):
+        """Displays a file selection dialog for setting the value of a string parameter."""
+        
+        ctrl = self.paramCtrls[paramIndex]
+        filename = tkFileDialog.askopenfilename(
+                parent = self,
+                title = 'Select file as value for {}'.format(ctrl['name']),
+                initialdir = os.path.dirname(ctrl['var'].get()) if ctrl['var'].get() != '' else ''
+        )
+        if (filename != ''):
+            try:
+                # To support non-ascii characters in paths with Python 2
+                if isinstance(filename, unicode):
+                    filename = utils.str2bytes(filename)
+            except:
+                pass
+            ctrl['var'].set(filename)
+    
+    
+    def _selectBgFile(self):
+        """Displays a file selection dialog for selecting the path of the background statistics file."""
+        
+        filename = tkFileDialog.askopenfilename(
+                parent = self,
+                title = 'Select background statistics',
+                filetypes = [('*.dat', '.dat .DAT'), ('All files', '.*')],
+                initialdir = os.path.dirname(self.getBgFile()) if self.getBgFile() != '' else ''
+        )
+        if (filename != ''):
+            try:
+                # To support non-ascii characters in paths with Python 2
+                if isinstance(filename, unicode):
+                    filename = utils.str2bytes(filename)
+            except:
+                pass
+            self.setBgFile(filename)
+    
+    
+    def getFeatureExtractor(self):
+        """Returns the current feature extractor after applying the specified settings to it.
+        
+        If some of the specified parameters are invalid, a ValueError will be raised.
+        """
+        
+        # Apply settings
+        for ctrl in self.paramCtrls:
+            try:
+                val = ctrl['type'](ctrl['var'].get())
+                self._featureExtractor.setParam(ctrl['name'], val)
+            except ValueError:
+                if ctrl['type'] == float:
+                    raise ValueError('{} must be a floating point number.'.format(ctrl['name']))
+                else:
+                    raise ValueError('{} must be an integral number.'.format(ctrl['name']))
+            except artos_wrapper.LibARTOSException as e:
+                if e.errcode == artos_wrapper.SETTINGS_RES_INVALID_PARAMETER_VALUE:
+                    raise ValueError('The value specified for parameter {} is invalid.'.format(ctrl['name']))
+                else:
+                    raise
+        
+        return self._featureExtractor
+    
+    
+    def setFeatureExtractor(self, fe):
+        
+        if not isinstance(fe, FeatureExtractor):
+            try:
+                fe = FeatureExtractor(fe)
+            except:
+                return
+        
+        self._featureExtractor = fe
+        self.typeVar.set(self.__class__._feFormatStr.format(type = fe.type, name = fe.name))
+        self._updateParamWidgets()
+    
+    
+    def getBgFile(self):
+        """Returns the current value of the background statistics file entry.
+        
+        If the `bgFileEntry` parameter of the constructor of this instance was set to False,
+        a RuntimeError will be raised.
+        """
+        
+        if self.bgVar is None:
+            raise RuntimeError('Tried to access bgFile though bgFileEntry was False.')
+        return self.bgVar.get()
+    
+    
+    def setBgFile(self, value):
+        
+        if self.bgVar is None:
+            raise RuntimeError('Tried to access bgFile though bgFileEntry was False.')
+        if not utils.is_str(value):
+            raise ValueError('bgFile must be a string.')
+        return self.bgVar.set(value)
