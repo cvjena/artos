@@ -211,7 +211,7 @@ void CaffeFeatureExtractor::extract(const JPEGImage & img, FeatureMatrix & feat)
 {
     if (!this->m_net)
         throw UseBeforeSetupException("netFile and weightsFile have to be set before CaffeFeatureExtractor may be used.");
-    
+
     Blob<float> * input_layer = this->m_net->input_blobs()[0];
     if (input_layer->num() != 1 || input_layer->height() != img.height() || input_layer->width() != img.width())
     {
@@ -246,12 +246,12 @@ void CaffeFeatureExtractor::extract(const JPEGImage & img, FeatureMatrix & feat)
             assert(Size(w, h) == this->pixelsToCells(Size(img.width(), img.height())));
             feat.resize(h, w, this->m_numOutputChannels);
         }
-        if (l == 0)
+        if (l == 0 || (h == feat.rows() && w == feat.cols()))
         {
             const float * feature_data = feature_layer->cpu_data();
             for (int c = 0; c < feature_layer->channels(); c++)
             {
-                feat.channel(c) = Eigen::Map< const Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> >(
+                feat.channel(channelOffset + c) = Eigen::Map< const Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> >(
                     feature_data, h, w
                 ).cast<FeatureScalar>();
                 feature_data += w * h;
@@ -259,23 +259,41 @@ void CaffeFeatureExtractor::extract(const JPEGImage & img, FeatureMatrix & feat)
         }
         else
         {
-            Size cellSize(1, 1), borderSize(0, 0);
+            // Determine cell and border size in relation to the first layer
+            Size cellSize(1, 1);
             for (int l2 = 1; l2 <= l; l2++)
-            {
                 cellSize *= this->m_cellSize[l2];
-                borderSize += this->m_borderSize[l2];
-            }
+            Size padding = max(Size(0, 0), Size(feat.cols(), feat.rows()) - Size(w, h) * cellSize);
+            Size border1 = padding / 2;
+            Size border2 = padding - border1;
             
-            int row, col, layerRow, layerCol, c;
-            for (row = 0; row < feat.rows(); row++)
+            // Extract features from this layer and scale them to the size of the first layer using nearest-neighbour interpolation
+            int c, row, col, featRow, featCol;
+            const float * feature_data = feature_layer->cpu_data();
+            for (c = 0; c < feature_layer->channels(); c++)
             {
-                layerRow = min(max(static_cast<int>(round((row - borderSize.height) / static_cast<float>(cellSize.height))), 0), h - 1);
-                for (col = 0; col < feat.cols(); col++)
+                auto chan = feat.channel(channelOffset + c);
+                for (row = 0; row < h; row++)
                 {
-                    layerCol = min(max(static_cast<int>(round((col - borderSize.width) / static_cast<float>(cellSize.width))), 0), w - 1);
-                    for (c = 0; c < feature_layer->channels(); c++)
-                        feat(row, col, channelOffset + c) = feature_layer->data_at(0, c, layerRow, layerCol);
+                    featRow = row * cellSize.height + border1.height;
+                    for (col = 0; col < w; col++, feature_data++)
+                    {
+                        featCol = col * cellSize.width + border1.width;
+                        if (featRow < feat.rows() && featCol < feat.cols())
+                            chan.block(featRow, featCol,
+                                       min(cellSize.height, static_cast<int>(feat.rows() - featRow)),
+                                       min(cellSize.width, static_cast<int>(feat.cols() - featCol))).setConstant(*feature_data);
+                    }
                 }
+                // Fill border
+                if (border1.width > 0)
+                    chan.leftCols(border1.width).colwise() = chan.col(border1.width);
+                if (border2.width > 0)
+                    chan.rightCols(border2.width).colwise() = chan.col(chan.cols() - border2.width - 1);
+                if (border1.height > 0)
+                    chan.topRows(border1.height).rowwise() = chan.row(border1.height);
+                if (border2.height > 0)
+                    chan.bottomRows(border2.height).rowwise() = chan.row(chan.rows() - border2.height - 1);
             }
         }
         
@@ -580,8 +598,8 @@ void CaffeFeatureExtractor::loadLayerInfo()
     for (int l = 0; l <= this->m_layerIndices.back(); l++)
     {
         this->getLayerParams(l, layerParams);
+        this->m_borderSize[curLayer] += ((layerParams.kernelSize / 2) - layerParams.padding) * this->m_cellSize[curLayer];
         this->m_cellSize[curLayer] *= layerParams.stride;
-        this->m_borderSize[curLayer] += (layerParams.kernelSize / 2) - layerParams.padding;
         if (l == this->m_layerIndices[curLayer])
         {
             this->m_numOutputChannels += this->m_net->top_vecs()[l][0]->channels();
