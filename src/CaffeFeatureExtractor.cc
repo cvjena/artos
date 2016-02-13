@@ -598,7 +598,7 @@ void CaffeFeatureExtractor::loadLayerInfo()
     for (int l = 0; l <= this->m_layerIndices.back(); l++)
     {
         this->getLayerParams(l, layerParams);
-        this->m_borderSize[curLayer] += ((layerParams.kernelSize / 2) - layerParams.padding) * this->m_cellSize[curLayer];
+        this->m_borderSize[curLayer] += (layerParams.kernelSize / 2) - layerParams.padding; // NOTE: not accurate
         this->m_cellSize[curLayer] *= layerParams.stride;
         if (l == this->m_layerIndices[curLayer])
         {
