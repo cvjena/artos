@@ -329,6 +329,8 @@ int DPMDetection::detectMax ( const JPEGImage & image, Detection & detection )
 {
     if ( mixtures.size() == 0 )
         return ARTOS_DETECT_RES_NO_MODELS;
+    
+    unsigned int minLevelSize = min(5, this->minModelSize().min());
 
     // Separate detection for every unique feature extractor
     for (unsigned int feIndex = 0; feIndex < this->featureExtractors.size(); feIndex++)
@@ -338,7 +340,7 @@ int DPMDetection::detectMax ( const JPEGImage & image, Detection & detection )
         if (this->verbose)
             start();
         
-        FeaturePyramid pyramid(image, this->featureExtractors[feIndex], this->interval);
+        FeaturePyramid pyramid(image, this->featureExtractors[feIndex], this->interval, minLevelSize);
 
         if (pyramid.empty())
         {
