@@ -51,11 +51,11 @@ int main(int argc, char * argv[])
         fe->setParam("weightsFile", weightsFile);
         if (!meanFile.empty())
             fe->setParam("meanFile", meanFile);
-        if (!scalesFile.empty())
-            fe->setParam("scalesFile", scalesFile);
         fe->setParam("maxImgSize", 1024);
         if (!layerName.empty())
             fe->setParam("layerName", layerName);
+        if (!scalesFile.empty())
+            fe->setParam("scalesFile", scalesFile);
     }
     catch (const Exception & e)
     {
