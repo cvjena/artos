@@ -25,8 +25,8 @@ The purpose of ARTOS is not limited to using those images in combination with cl
 models to other domains using in-situ images and applying them to detect objects in images and video streams.
 
 ARTOS consists of two parts: A library (*libartos*) which provides all the functionality mentioned above. It is implemented
-in C++, but exports the important functions with a C-style procedural interface in addition to allow usage of the library
-with a wide range of programming languages and environments.  
+in C++, but also exports the important functions with a C-style procedural interface to enable usage of the library with
+a wide range of programming languages and environments.  
 The other part is a Graphical User Interface (*PyARTOS*), written in Python, which allows performing the operations of ARTOS
 in a comfortable way.
 
