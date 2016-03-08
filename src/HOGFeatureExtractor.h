@@ -127,6 +127,8 @@ public:
     /**
     * Changes the value of an integer parameter specific to the concrete feature extraction method.
     *
+    * @param[in] paramName The name of the parameter to be set.
+    *
     * @param[in] val The new value for the parameter.
     *
     * @throws UnknownParameterException There is no string parameter with the given name.

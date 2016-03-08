@@ -1,0 +1,8 @@
+<map id="ARTOS::Mixture::cacheFilters" name="ARTOS::Mixture::cacheFilters">
+<area shape="rect" id="node2" href="$class_a_r_t_o_s_1_1_patchwork.html#ae46fa73a27a07f346836eb38805aa726" title="ARTOS::Patchwork::Transform\lFilter" alt="" coords="253,103,459,145"/>
+<area shape="rect" id="node7" href="$class_a_r_t_o_s_1_1_patchwork.html#a118268ca1f33611f9c80bd2d7855aaca" title="ARTOS::Patchwork::NumInits" alt="" coords="257,169,455,196"/>
+<area shape="rect" id="node3" href="$class_a_r_t_o_s_1_1_feature_matrix__.html#ad8f9005764b7bfd916f4134bff43683f" title="ARTOS::FeatureMatrix\l_::empty" alt="" coords="507,5,663,46"/>
+<area shape="rect" id="node4" href="$class_a_r_t_o_s_1_1_feature_matrix__.html#af099428b08a84387a406c6ee799d6f5e" title="ARTOS::FeatureMatrix\l_::rows" alt="" coords="507,70,663,111"/>
+<area shape="rect" id="node5" href="$class_a_r_t_o_s_1_1_feature_matrix__.html#af42771bea40f2ddb8e6ba1e607ecc17d" title="ARTOS::FeatureMatrix\l_::cols" alt="" coords="507,135,663,177"/>
+<area shape="rect" id="node6" href="$class_a_r_t_o_s_1_1_feature_matrix__.html#a8e6b584bf8a86b64718d0abb6d67ee1e" title="ARTOS::FeatureMatrix\l_::channels" alt="" coords="507,201,663,242"/>
+</map>

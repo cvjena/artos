@@ -7,6 +7,7 @@ var class_a_r_t_o_s_1_1_synset_iterator =
     [ "operator unsigned int", "class_a_r_t_o_s_1_1_synset_iterator.html#ac8a296e89c5f897729de2bb7a9640347", null ],
     [ "operator*", "class_a_r_t_o_s_1_1_synset_iterator.html#acf75167888b19e318f801db96600ca8a", null ],
     [ "operator++", "class_a_r_t_o_s_1_1_synset_iterator.html#a805c163697bb38cf8daa1d131b20499d", null ],
+    [ "operator=", "class_a_r_t_o_s_1_1_synset_iterator.html#acf09d2332b70853917893e37e8679ecf", null ],
     [ "pos", "class_a_r_t_o_s_1_1_synset_iterator.html#a1f0232d2b9ede3478a93603362736124", null ],
     [ "ready", "class_a_r_t_o_s_1_1_synset_iterator.html#ae96086bd598ecc34e59c6fcda311d1ca", null ],
     [ "m_lastLine", "class_a_r_t_o_s_1_1_synset_iterator.html#aafe64655c60ca56e6fe818d59c7e298b", null ],

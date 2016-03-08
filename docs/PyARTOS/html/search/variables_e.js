@@ -8,10 +8,15 @@ var searchData=
   ['score',['score',['../class_py_a_r_t_o_s_1_1detecting_1_1_detection.html#a2ca05808c9087ebab5d6ce1e25b71e60',1,'PyARTOS::detecting::Detection']]],
   ['scrmodels',['scrModels',['../class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_catalogue_window.html#a31946552949f8a7a181f37256bf8f4d9',1,'PyARTOS.GUI.ModelCatalogue.CatalogueWindow.scrModels()'],['../class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_h_o_g_inspector.html#a761679a879c413d2767057293ce76306',1,'PyARTOS.GUI.ModelCatalogue.HOGInspector.scrModels()']]],
   ['scrresults',['scrResults',['../class_py_a_r_t_o_s_1_1_g_u_i_1_1_batch_window_1_1_batch_window.html#a31c90a2bf8a717a0b661a6a153bcd45b',1,'PyARTOS::GUI::BatchWindow::BatchWindow']]],
-  ['scrsynsets',['scrSynsets',['../class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_learn_dialog.html#a085203f5a149499637f5dce9853b3bd7',1,'PyARTOS::GUI::ModelCatalogue::LearnDialog']]],
-  ['search_5fsynsets',['search_synsets',['../class_py_a_r_t_o_s_1_1artos__wrapper_1_1___lib_a_r_t_o_s.html#a9cb189679a11ed159c10700ef3e4ec90',1,'PyARTOS::artos_wrapper::_LibARTOS']]],
+  ['scrsynsets',['scrSynsets',['../class_py_a_r_t_o_s_1_1_g_u_i_1_1gui__utils_1_1_search_synset_widget.html#abd1b480ce6f123ced2d44c802fb075ec',1,'PyARTOS::GUI::gui_utils::SearchSynsetWidget']]],
   ['selecteddevice',['selectedDevice',['../class_py_a_r_t_o_s_1_1_g_u_i_1_1_camera_sampler_1_1_device_selection_dialog.html#a651dd6d1f013ad8e6047e02f8baee4b9',1,'PyARTOS::GUI::CameraSampler::DeviceSelectionDialog']]],
   ['selectedsynsetid',['selectedSynsetId',['../class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_learn_dialog.html#ab3ef2782851a6351c275bd39c56f3ab5',1,'PyARTOS::GUI::ModelCatalogue::LearnDialog']]],
+  ['selectedvar',['selectedVar',['../class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_model_widget.html#a1b9f9a1c62da134b042b50bf9bf0e04b',1,'PyARTOS::GUI::ModelCatalogue::ModelWidget']]],
+  ['selectionbuttons',['selectionButtons',['../class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_catalogue_window.html#a11a26f4dbc7267bf45711e9d7dde2415',1,'PyARTOS::GUI::ModelCatalogue::CatalogueWindow']]],
+  ['sepselectall',['sepSelectAll',['../class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_catalogue_window.html#ad4d6770da6c142bf9de8aff4ef35119f',1,'PyARTOS::GUI::ModelCatalogue::CatalogueWindow']]],
+  ['settings_5fres_5finvalid_5fparameter_5fvalue',['SETTINGS_RES_INVALID_PARAMETER_VALUE',['../namespace_py_a_r_t_o_s_1_1artos__wrapper.html#a84b3ba3de6b0110e50ad558625d6796c',1,'PyARTOS::artos_wrapper']]],
+  ['settings_5fres_5funknown_5ffeature_5fextractor',['SETTINGS_RES_UNKNOWN_FEATURE_EXTRACTOR',['../namespace_py_a_r_t_o_s_1_1artos__wrapper.html#a68f07723abf76b9f4cab79a543fe1101',1,'PyARTOS::artos_wrapper']]],
+  ['settings_5fres_5funknown_5fparameter',['SETTINGS_RES_UNKNOWN_PARAMETER',['../namespace_py_a_r_t_o_s_1_1artos__wrapper.html#a216ba6b16498a69ff7443a6604ab9296',1,'PyARTOS::artos_wrapper']]],
   ['status',['status',['../class_py_a_r_t_o_s_1_1_g_u_i_1_1_camera_sampler_1_1_camera_sample_dialog.html#aaf179620e3d33949e1451e5a4eabc055',1,'PyARTOS::GUI::CameraSampler::CameraSampleDialog']]],
   ['statustext',['statusText',['../class_py_a_r_t_o_s_1_1_g_u_i_1_1_batch_window_1_1_batch_window.html#ae114c11690cefaf28584c620809a7f0c',1,'PyARTOS::GUI::BatchWindow::BatchWindow']]],
   ['step',['step',['../class_py_a_r_t_o_s_1_1_g_u_i_1_1_setup_dialog_1_1_setup_dialog.html#a734768a6660307180b89583ac04487df',1,'PyARTOS::GUI::SetupDialog::SetupDialog']]],
@@ -24,7 +29,7 @@ var searchData=
   ['surface',['surface',['../class_py_a_r_t_o_s_1_1_camera_1_1_pygame_capture_1_1_capture.html#a4e8f34d9d47b5574454897beddb4e07f',1,'PyARTOS::Camera::PygameCapture::Capture']]],
   ['synsetid',['synsetId',['../class_py_a_r_t_o_s_1_1detecting_1_1_detection.html#a8016a462716fb01c93bc2596d0582207',1,'PyARTOS::detecting::Detection']]],
   ['synsetsearchresult_5fp',['SynsetSearchResult_p',['../namespace_py_a_r_t_o_s_1_1artos__wrapper.html#ad53a957a5f045e066776656363f08943',1,'PyARTOS::artos_wrapper']]],
-  ['synsetsearchvar',['synsetSearchVar',['../class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_learn_dialog.html#a21a19bfcefc1247c1f3501c8d4b84681',1,'PyARTOS::GUI::ModelCatalogue::LearnDialog']]],
+  ['synsetsearchvar',['synsetSearchVar',['../class_py_a_r_t_o_s_1_1_g_u_i_1_1gui__utils_1_1_search_synset_widget.html#aa4667c66470f3b8f5084f49e9b54ff66',1,'PyARTOS::GUI::gui_utils::SearchSynsetWidget']]],
   ['synsettext',['synsetText',['../class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_model_widget.html#a32429e2f6e04e6f4c14e127ae2179a76',1,'PyARTOS::GUI::ModelCatalogue::ModelWidget']]],
-  ['synsetthumblabels',['synsetThumbLabels',['../class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_learn_dialog.html#aec96540125fa6fd96f0b97f038dfffd9',1,'PyARTOS::GUI::ModelCatalogue::LearnDialog']]]
+  ['synsetthumblabels',['synsetThumbLabels',['../class_py_a_r_t_o_s_1_1_g_u_i_1_1gui__utils_1_1_search_synset_widget.html#a2bf9926fa3468c2a9f7665f0f03940ae',1,'PyARTOS::GUI::gui_utils::SearchSynsetWidget']]]
 ];

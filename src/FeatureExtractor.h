@@ -28,13 +28,13 @@ namespace ARTOS
 * This class also provides static methods for enumerating and creating feature extractors as well as changing the
 * default feature extractor used throughout ARTOS.
 *
-* If you want to implement your own feature extractor, derive it from this class and add it to the featureExtractors
-* map in FeatureExtractor.cc.  
-* Any parameters supported by a feature extractor should be added to the m_intParams, m_scalarParams or m_stringParams
+* If you want to implement your own feature extractor, derive it from this class and add it to the `featureExtractors`
+* map in `FeatureExtractor.cc`.  
+* Any parameters supported by a feature extractor should be added to the `m_intParams`, `m_scalarParams` or `m_stringParams`
 * map with their default values then the feature extractor is constructed.
 *
 * Some feature extractors may require that some of their parameters are set first before they may be used. If those
-* parameters have not been set yet, any method of that feature extractor may throw a UseBeforeSetupException.
+* parameters have not been set yet, any method of that feature extractor may throw a `UseBeforeSetupException`.
 *
 * @author Bjoern Barz <bjoern.barz@uni-jena.de>
 */
@@ -283,6 +283,8 @@ public:
     /**
     * Changes the value of an integer parameter specific to the concrete feature extraction method.
     *
+    * @param[in] paramName The name of the parameter to be set.
+    *
     * @param[in] val The new value for the parameter.
     *
     * @throws UnknownParameterException There is no string parameter with the given name.
@@ -294,6 +296,8 @@ public:
     /**
     * Changes the value of a parameter of type FeatureScalar specific to the concrete feature extraction method.
     *
+    * @param[in] paramName The name of the parameter to be set.
+    *
     * @param[in] val The new value for the parameter.
     *
     * @throws UnknownParameterException There is no parameter with type FeatureScalar and the given name.
@@ -304,6 +308,8 @@ public:
     
     /**
     * Changes the value of a string parameter specific to this algorithm.
+    *
+    * @param[in] paramName The name of the parameter to be set.
     *
     * @param[in] val The new value for the parameter.
     *

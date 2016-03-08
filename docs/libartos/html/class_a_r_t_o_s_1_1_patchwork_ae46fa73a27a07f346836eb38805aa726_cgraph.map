@@ -1,0 +1,6 @@
+<map id="ARTOS::Patchwork::TransformFilter" name="ARTOS::Patchwork::TransformFilter">
+<area shape="rect" id="node2" href="$class_a_r_t_o_s_1_1_feature_matrix__.html#ad8f9005764b7bfd916f4134bff43683f" title="ARTOS::FeatureMatrix\l_::empty" alt="" coords="259,5,415,46"/>
+<area shape="rect" id="node3" href="$class_a_r_t_o_s_1_1_feature_matrix__.html#af099428b08a84387a406c6ee799d6f5e" title="ARTOS::FeatureMatrix\l_::rows" alt="" coords="259,70,415,111"/>
+<area shape="rect" id="node4" href="$class_a_r_t_o_s_1_1_feature_matrix__.html#af42771bea40f2ddb8e6ba1e607ecc17d" title="ARTOS::FeatureMatrix\l_::cols" alt="" coords="259,135,415,177"/>
+<area shape="rect" id="node5" href="$class_a_r_t_o_s_1_1_feature_matrix__.html#a8e6b584bf8a86b64718d0abb6d67ee1e" title="ARTOS::FeatureMatrix\l_::channels" alt="" coords="259,201,415,242"/>
+</map>

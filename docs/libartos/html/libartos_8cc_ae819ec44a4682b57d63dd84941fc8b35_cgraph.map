@@ -1,4 +1,8 @@
 <map id="detect_jpeg" name="detect_jpeg">
-<area shape="rect" id="node2" href="$libartos_8cc.html#a9410497cc2ce4aa85415e175502a025b" title="is_valid_detector_handle" alt="" coords="144,5,309,32"/>
-<area shape="rect" id="node3" href="$libartos_8cc.html#a130ead863678478d5a2b947b0bda8304" title="write_results_to_buffer" alt="" coords="149,56,304,83"/>
+<area shape="rect" id="node2" href="$libartos_8cc.html#a9410497cc2ce4aa85415e175502a025b" title="is_valid_detector_handle" alt="" coords="157,5,323,32"/>
+<area shape="rect" id="node3" href="$class_a_r_t_o_s_1_1_j_p_e_g_image.html#a05e9c73c5a6721ad9410b696cad718b5" title="ARTOS::JPEGImage::empty" alt="" coords="145,56,335,83"/>
+<area shape="rect" id="node7" href="$libartos_8cc.html#a130ead863678478d5a2b947b0bda8304" title="write_results_to_buffer" alt="" coords="163,107,317,133"/>
+<area shape="rect" id="node4" href="$class_a_r_t_o_s_1_1_j_p_e_g_image.html#a6876061ad7198120040466d332a46bdc" title="ARTOS::JPEGImage::width" alt="" coords="387,5,573,32"/>
+<area shape="rect" id="node5" href="$class_a_r_t_o_s_1_1_j_p_e_g_image.html#aa8a99643896fd76976cb6b1629d69746" title="ARTOS::JPEGImage::height" alt="" coords="385,56,575,83"/>
+<area shape="rect" id="node6" href="$class_a_r_t_o_s_1_1_j_p_e_g_image.html#aed01a09f279c86cc1022d10f8a49204c" title="ARTOS::JPEGImage::depth" alt="" coords="387,107,573,133"/>
 </map>

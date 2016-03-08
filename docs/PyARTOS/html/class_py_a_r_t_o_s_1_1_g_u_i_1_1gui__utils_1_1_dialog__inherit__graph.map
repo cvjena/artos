@@ -1,7 +1,10 @@
 <map id="PyARTOS.GUI.gui_utils.Dialog" name="PyARTOS.GUI.gui_utils.Dialog">
-<area shape="rect" id="node3" href="$class_py_a_r_t_o_s_1_1_g_u_i_1_1_annotation_dialog_1_1_annotation_dialog.html" title="PyARTOS.GUI.AnnotationDialog.\lAnnotationDialog" alt="" coords="380,5,599,46"/>
-<area shape="rect" id="node4" href="$class_py_a_r_t_o_s_1_1_g_u_i_1_1_camera_sampler_1_1_camera_sample_dialog.html" title="PyARTOS.GUI.CameraSampler.\lCameraSampleDialog" alt="" coords="382,70,597,111"/>
-<area shape="rect" id="node5" href="$class_py_a_r_t_o_s_1_1_g_u_i_1_1_camera_sampler_1_1_device_selection_dialog.html" title="PyARTOS.GUI.CameraSampler.\lDeviceSelectionDialog" alt="" coords="382,135,597,177"/>
-<area shape="rect" id="node6" href="$class_py_a_r_t_o_s_1_1_g_u_i_1_1gui__utils_1_1_progress_window.html" title="PyARTOS.GUI.gui_utils.Progress\lWindow" alt="" coords="379,201,599,242"/>
-<area shape="rect" id="node7" href="$class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_learn_dialog.html" title="PyARTOS.GUI.ModelCatalogue.\lLearnDialog" alt="" coords="382,266,597,307"/>
+<area shape="rect" id="node3" href="$class_py_a_r_t_o_s_1_1_g_u_i_1_1_annotation_dialog_1_1_annotation_dialog.html" title="PyARTOS.GUI.AnnotationDialog.\lAnnotationDialog" alt="" coords="391,5,609,46"/>
+<area shape="rect" id="node4" href="$class_py_a_r_t_o_s_1_1_g_u_i_1_1_camera_sampler_1_1_camera_sample_dialog.html" title="PyARTOS.GUI.CameraSampler.\lCameraSampleDialog" alt="" coords="393,70,607,111"/>
+<area shape="rect" id="node5" href="$class_py_a_r_t_o_s_1_1_g_u_i_1_1_camera_sampler_1_1_device_selection_dialog.html" title="PyARTOS.GUI.CameraSampler.\lDeviceSelectionDialog" alt="" coords="393,135,607,177"/>
+<area shape="rect" id="node6" href="$class_py_a_r_t_o_s_1_1_g_u_i_1_1_evaluation_1_1_evaluation_dialog.html" title="PyARTOS.GUI.Evaluation.Evaluation\lDialog" alt="" coords="379,201,621,242"/>
+<area shape="rect" id="node7" href="$class_py_a_r_t_o_s_1_1_g_u_i_1_1_evaluation_1_1_evaluation_visualization.html" title="PyARTOS.GUI.Evaluation.Evaluation\lVisualization" alt="" coords="379,266,621,307"/>
+<area shape="rect" id="node8" href="$class_py_a_r_t_o_s_1_1_g_u_i_1_1gui__utils_1_1_progress_window.html" title="PyARTOS.GUI.gui_utils.Progress\lWindow" alt="" coords="390,331,610,373"/>
+<area shape="rect" id="node9" href="$class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_learn_b_g_dialog.html" title="PyARTOS.GUI.ModelCatalogue.\lLearnBGDialog" alt="" coords="393,397,607,438"/>
+<area shape="rect" id="node10" href="$class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_learn_dialog.html" title="PyARTOS.GUI.ModelCatalogue.\lLearnDialog" alt="" coords="393,462,607,503"/>
 </map>

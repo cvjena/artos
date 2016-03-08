@@ -5,6 +5,7 @@ var class_a_r_t_o_s_1_1_synset_image_iterator =
     [ "getSynsetId", "class_a_r_t_o_s_1_1_synset_image_iterator.html#a97305b44d8078c462f6922dfe07d2273", null ],
     [ "operator*", "class_a_r_t_o_s_1_1_synset_image_iterator.html#a4fcb4d7fec804cf392c84b940aa1065b", null ],
     [ "operator++", "class_a_r_t_o_s_1_1_synset_image_iterator.html#a480de3ba72b442a4238a53d16e48083a", null ],
+    [ "operator=", "class_a_r_t_o_s_1_1_synset_image_iterator.html#af3eeb0af70bbce779ee27d53171f9505", null ],
     [ "ready", "class_a_r_t_o_s_1_1_synset_image_iterator.html#ad2e6f2c22976ab109622db36c6151fe5", null ],
     [ "rewind", "class_a_r_t_o_s_1_1_synset_image_iterator.html#ab62c4aae8408404753d4b8f24426ee4e", null ],
     [ "m_bboxMode", "class_a_r_t_o_s_1_1_synset_image_iterator.html#acb3b3fe893b465fdf7f9f23ef5b1e2bc", null ],

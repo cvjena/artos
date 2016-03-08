@@ -1,8 +1,8 @@
 <map id="DPMDetection.h" name="DPMDetection.h">
-<area shape="rect" id="node2" href="$_d_p_m_detection_8cc.html" title="DPMDetection.cc" alt="" coords="5,80,131,107"/>
-<area shape="rect" id="node3" href="$libartos_8cc.html" title="libartos.cc" alt="" coords="156,80,237,107"/>
-<area shape="rect" id="node4" href="$_model_evaluator_8h.html" title="ModelEvaluator.h" alt="" coords="263,80,385,107"/>
-<area shape="rect" id="node5" href="$_model_evaluator_8cc.html" title="ModelEvaluator.cc" alt="" coords="111,155,240,181"/>
-<area shape="rect" id="node6" href="$_model_learner_8cc.html" title="ModelLearner.cc" alt="" coords="265,155,383,181"/>
-<area shape="rect" id="node7" href="$_model_learner_base_8cc.html" title="ModelLearnerBase.cc" alt="" coords="407,155,555,181"/>
+<area shape="rect" id="node2" href="$_d_p_m_detection_8cc.html" title="DPMDetection.cc" alt="" coords="39,80,165,107"/>
+<area shape="rect" id="node3" href="$_model_evaluator_8h.html" title="ModelEvaluator.h" alt="" coords="191,80,313,107"/>
+<area shape="rect" id="node4" href="$libartos_8cc.html" title="libartos.cc" alt="" coords="5,155,87,181"/>
+<area shape="rect" id="node5" href="$_model_evaluator_8cc.html" title="ModelEvaluator.cc" alt="" coords="112,155,241,181"/>
+<area shape="rect" id="node6" href="$_model_learner_8cc.html" title="ModelLearner.cc" alt="" coords="266,155,384,181"/>
+<area shape="rect" id="node7" href="$_model_learner_base_8cc.html" title="ModelLearnerBase.cc" alt="" coords="409,155,556,181"/>
 </map>

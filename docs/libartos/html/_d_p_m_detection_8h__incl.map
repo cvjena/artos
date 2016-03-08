@@ -1,3 +1,15 @@
 <map id="DPMDetection.h" name="DPMDetection.h">
-<area shape="rect" id="node4" href="$libartos__def_8h.html" title="libartos_def.h" alt="" coords="154,80,253,107"/>
+<area shape="rect" id="node4" href="$libartos__def_8h.html" title="libartos_def.h" alt="" coords="1156,80,1256,107"/>
+<area shape="rect" id="node5" href="$_mixture_8h.html" title="Mixture.h" alt="" coords="918,80,993,107"/>
+<area shape="rect" id="node17" href="$_j_p_e_g_image_8h.html" title="JPEGImage.h" alt="" coords="518,528,622,555"/>
+<area shape="rect" id="node30" href="$_patchwork_8h.html" title="Patchwork.h" alt="" coords="783,155,877,181"/>
+<area shape="rect" id="node6" href="$_model_8h.html" title="Model.h" alt="" coords="922,155,989,181"/>
+<area shape="rect" id="node7" href="$_feature_pyramid_8h.html" title="FeaturePyramid.h" alt="" coords="768,229,893,256"/>
+<area shape="rect" id="node8" href="$_feature_extractor_8h.html" title="FeatureExtractor.h" alt="" coords="717,304,846,331"/>
+<area shape="rect" id="node15" href="$defs_8h.html" title="defs.h" alt="" coords="282,379,340,405"/>
+<area shape="rect" id="node19" href="$_feature_matrix_8h.html" title="FeatureMatrix.h" alt="" coords="456,603,569,629"/>
+<area shape="rect" id="node27" href="$exceptions_8h.html" title="exceptions.h" alt="" coords="870,379,966,405"/>
+<area shape="rect" id="node23" href="$_rectangle_8h.html" title="Rectangle.h" alt="" coords="24,528,116,555"/>
+<area shape="rect" id="node25" href="$_synset_image_8h.html" title="SynsetImage.h" alt="" coords="243,453,353,480"/>
+<area shape="rect" id="node31" href="$blf_8h.html" title="blf.h" alt="" coords="19,453,65,480"/>
 </map>

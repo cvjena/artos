@@ -13,5 +13,7 @@ var searchData=
   ['thresholdtext',['thresholdText',['../class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_model_widget.html#a1c75dc96ef1b6fae6f9e7f3abe905abd',1,'PyARTOS::GUI::ModelCatalogue::ModelWidget']]],
   ['thumb',['thumb',['../class_py_a_r_t_o_s_1_1_g_u_i_1_1_batch_window_1_1_detection_frame.html#a4617ca6910725d0c2d725b1b6a7be6da',1,'PyARTOS::GUI::BatchWindow::DetectionFrame']]],
   ['thumblabels',['thumbLabels',['../class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_model_widget.html#ab2d8a38c0852b8b71afe5b77b9dad41c',1,'PyARTOS::GUI::ModelCatalogue::ModelWidget']]],
-  ['total',['total',['../class_py_a_r_t_o_s_1_1_g_u_i_1_1gui__utils_1_1_progress_window.html#ae7f569b26d6330509cf7b5d6abb97f1f',1,'PyARTOS::GUI::gui_utils::ProgressWindow']]]
+  ['total',['total',['../class_py_a_r_t_o_s_1_1_g_u_i_1_1gui__utils_1_1_progress_window.html#ae7f569b26d6330509cf7b5d6abb97f1f',1,'PyARTOS::GUI::gui_utils::ProgressWindow']]],
+  ['type',['type',['../class_py_a_r_t_o_s_1_1learning_1_1_model.html#ac6efb89d6faff1aec4fa7258253295a1',1,'PyARTOS.learning.Model.type()'],['../class_py_a_r_t_o_s_1_1learning_1_1_feature_extractor.html#af04ae0013964396de9bf53b28a17a4db',1,'PyARTOS.learning.FeatureExtractor.type()']]],
+  ['typevar',['typeVar',['../class_py_a_r_t_o_s_1_1_g_u_i_1_1gui__utils_1_1_feature_extractor_settings_widget.html#a5a2eda7a7d7a82beeb1832692c3bfa52',1,'PyARTOS::GUI::gui_utils::FeatureExtractorSettingsWidget']]]
 ];

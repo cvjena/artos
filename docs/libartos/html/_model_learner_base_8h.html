@@ -30,7 +30,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">ARTOS
-   &#160;<span id="projectnumber">1.2</span>
+   &#160;<span id="projectnumber">2.0</span>
    </div>
    <div id="projectbrief">Adaptive Real-Time Object Detection System</div>
   </td>
@@ -46,7 +46,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
-      <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li><a href="annotated.html"><span>Classes</span></a></li>
       <li class="current"><a href="files.html"><span>Files</span></a></li>
@@ -94,7 +93,7 @@ $(document).ready(function(){initNavTree('_model_learner_base_8h.html','');});
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(10)"><span class="SelectionMark">&#160;</span>Pages</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Friends</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(10)"><span class="SelectionMark">&#160;</span>Macros</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -114,15 +113,17 @@ $(document).ready(function(){initNavTree('_model_learner_base_8h.html','');});
 <div class="textblock"><code>#include &lt;string&gt;</code><br />
 <code>#include &lt;vector&gt;</code><br />
 <code>#include &quot;<a class="el" href="defs_8h_source.html">defs.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="libartos__def_8h_source.html">libartos_def.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="_feature_extractor_8h_source.html">FeatureExtractor.h</a>&quot;</code><br />
-<code>#include &quot;ffld/JPEGImage.h&quot;</code><br />
-<code>#include &quot;ffld/Rectangle.h&quot;</code><br />
+<code>#include &quot;<a class="el" href="_synset_image_8h_source.html">SynsetImage.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="_j_p_e_g_image_8h_source.html">JPEGImage.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="_rectangle_8h_source.html">Rectangle.h</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for ModelLearnerBase.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="_model_learner_base_8h__incl.png" border="0" usemap="#_model_learner_base_8h" alt=""/></div>
 <map name="_model_learner_base_8h" id="_model_learner_base_8h">
-<area shape="rect" id="node4" href="defs_8h.html" title="defs.h" alt="" coords="273,80,330,107"/><area shape="rect" id="node10" href="_feature_extractor_8h.html" title="FeatureExtractor.h" alt="" coords="561,80,690,107"/><area shape="rect" id="node11" href="_h_o_g_feature_extractor_8h.html" title="HOGFeatureExtractor.h" alt="" coords="697,155,856,181"/></map>
+<area shape="rect" id="node4" href="defs_8h.html" title="defs.h" alt="" coords="333,155,391,181"/><area shape="rect" id="node6" href="_j_p_e_g_image_8h.html" title="JPEGImage.h" alt="" coords="437,304,541,331"/><area shape="rect" id="node14" href="_rectangle_8h.html" title="Rectangle.h" alt="" coords="5,304,96,331"/><area shape="rect" id="node16" href="_synset_image_8h.html" title="SynsetImage.h" alt="" coords="99,229,209,256"/><area shape="rect" id="node18" href="libartos__def_8h.html" title="libartos_def.h" alt="" coords="931,80,1031,107"/><area shape="rect" id="node19" href="_feature_extractor_8h.html" title="FeatureExtractor.h" alt="" coords="777,80,907,107"/><area shape="rect" id="node9" href="_feature_matrix_8h.html" title="FeatureMatrix.h" alt="" coords="879,379,992,405"/><area shape="rect" id="node24" href="exceptions_8h.html" title="exceptions.h" alt="" coords="752,155,848,181"/></map>
 </div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
@@ -138,8 +139,6 @@ This graph shows which files directly or indirectly include this file:</div>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_a_r_t_o_s_1_1_model_learner_base.html">ARTOS::ModelLearnerBase</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_a_r_t_o_s_1_1_model_learner_base_1_1_size.html">ARTOS::ModelLearnerBase::Size</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
 Namespaces</h2></td></tr>
@@ -152,7 +151,7 @@ Namespaces</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="_model_learner_base_8h.html">ModelLearnerBase.h</a></li>
-    <li class="footer">Generated on Mon Nov 2 2015 20:17:42 for ARTOS by
+    <li class="footer">Generated on Mon Mar 7 2016 23:43:35 for ARTOS by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.7 </li>
   </ul>

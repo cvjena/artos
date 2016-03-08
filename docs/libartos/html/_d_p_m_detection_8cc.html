@@ -30,7 +30,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">ARTOS
-   &#160;<span id="projectnumber">1.2</span>
+   &#160;<span id="projectnumber">2.0</span>
    </div>
    <div id="projectbrief">Adaptive Real-Time Object Detection System</div>
   </td>
@@ -46,7 +46,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
-      <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li><a href="annotated.html"><span>Classes</span></a></li>
       <li class="current"><a href="files.html"><span>Files</span></a></li>
@@ -94,7 +93,7 @@ $(document).ready(function(){initNavTree('_d_p_m_detection_8cc.html','');});
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(10)"><span class="SelectionMark">&#160;</span>Pages</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Friends</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(10)"><span class="SelectionMark">&#160;</span>Macros</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -110,18 +109,19 @@ $(document).ready(function(){initNavTree('_d_p_m_detection_8cc.html','');});
 <div class="contents">
 <div class="textblock"><code>#include &lt;stdlib.h&gt;</code><br />
 <code>#include &lt;iostream&gt;</code><br />
+<code>#include &lt;iomanip&gt;</code><br />
 <code>#include &lt;fstream&gt;</code><br />
 <code>#include &lt;limits&gt;</code><br />
 <code>#include &quot;<a class="el" href="_d_p_m_detection_8h_source.html">DPMDetection.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="sysutils_8h_source.html">sysutils.h</a>&quot;</code><br />
-<code>#include &quot;ffld/Intersector.h&quot;</code><br />
-<code>#include &quot;ffld/timingtools.h&quot;</code><br />
+<code>#include &quot;<a class="el" href="_intersector_8h_source.html">Intersector.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="timingtools_8h_source.html">timingtools.h</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for DPMDetection.cc:</div>
 <div class="dyncontent">
 <div class="center"><img src="_d_p_m_detection_8cc__incl.png" border="0" usemap="#_d_p_m_detection_8cc" alt=""/></div>
 <map name="_d_p_m_detection_8cc" id="_d_p_m_detection_8cc">
-<area shape="rect" id="node6" href="_d_p_m_detection_8h.html" title="DPMDetection.h" alt="" coords="358,95,476,121"/><area shape="rect" id="node24" href="sysutils_8h.html" title="sysutils.h" alt="" coords="2638,95,2716,121"/><area shape="rect" id="node9" href="libartos__def_8h.html" title="libartos_def.h" alt="" coords="155,184,255,211"/></map>
+<area shape="rect" id="node7" href="_d_p_m_detection_8h.html" title="DPMDetection.h" alt="" coords="561,80,679,107"/><area shape="rect" id="node39" href="sysutils_8h.html" title="sysutils.h" alt="" coords="1303,603,1381,629"/><area shape="rect" id="node40" href="_intersector_8h.html" title="Intersector.h" alt="" coords="1381,80,1475,107"/><area shape="rect" id="node42" href="timingtools_8h.html" title="timingtools.h" alt="" coords="1108,80,1204,107"/><area shape="rect" id="node10" href="libartos__def_8h.html" title="libartos_def.h" alt="" coords="331,155,431,181"/><area shape="rect" id="node11" href="_mixture_8h.html" title="Mixture.h" alt="" coords="455,155,531,181"/><area shape="rect" id="node23" href="_j_p_e_g_image_8h.html" title="JPEGImage.h" alt="" coords="364,603,468,629"/><area shape="rect" id="node36" href="_patchwork_8h.html" title="Patchwork.h" alt="" coords="487,229,581,256"/><area shape="rect" id="node12" href="_model_8h.html" title="Model.h" alt="" coords="389,229,456,256"/><area shape="rect" id="node13" href="_feature_pyramid_8h.html" title="FeaturePyramid.h" alt="" coords="360,304,485,331"/><area shape="rect" id="node14" href="_feature_extractor_8h.html" title="FeatureExtractor.h" alt="" coords="340,379,469,405"/><area shape="rect" id="node21" href="defs_8h.html" title="defs.h" alt="" coords="657,453,715,480"/><area shape="rect" id="node25" href="_feature_matrix_8h.html" title="FeatureMatrix.h" alt="" coords="306,677,419,704"/><area shape="rect" id="node33" href="exceptions_8h.html" title="exceptions.h" alt="" coords="937,453,1033,480"/><area shape="rect" id="node29" href="_rectangle_8h.html" title="Rectangle.h" alt="" coords="854,603,945,629"/><area shape="rect" id="node31" href="_synset_image_8h.html" title="SynsetImage.h" alt="" coords="689,528,799,555"/><area shape="rect" id="node37" href="blf_8h.html" title="blf.h" alt="" coords="875,528,921,555"/></map>
 </div>
 </div></div><!-- contents -->
 </div><!-- doc-content -->
@@ -129,7 +129,7 @@ Include dependency graph for DPMDetection.cc:</div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="_d_p_m_detection_8cc.html">DPMDetection.cc</a></li>
-    <li class="footer">Generated on Mon Nov 2 2015 20:17:39 for ARTOS by
+    <li class="footer">Generated on Mon Mar 7 2016 23:43:34 for ARTOS by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.7 </li>
   </ul>

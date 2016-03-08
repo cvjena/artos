@@ -1,4 +1,8 @@
 <map id="learner_add_file_jpeg" name="learner_add_file_jpeg">
-<area shape="rect" id="node2" href="$libartos_8cc.html#a6e5184b1f1cb444a8100dcd463b017b4" title="learner_add_jpeg" alt="" coords="197,5,317,32"/>
-<area shape="rect" id="node3" href="$libartos_8cc.html#a7f0b115c2293574072fc57cc5e5b6137" title="is_valid_learner_handle" alt="" coords="365,5,523,32"/>
+<area shape="rect" id="node2" href="$libartos_8cc.html#a6e5184b1f1cb444a8100dcd463b017b4" title="learner_add_jpeg" alt="" coords="197,31,317,57"/>
+<area shape="rect" id="node3" href="$libartos_8cc.html#a7f0b115c2293574072fc57cc5e5b6137" title="is_valid_learner_handle" alt="" coords="383,5,540,32"/>
+<area shape="rect" id="node4" href="$class_a_r_t_o_s_1_1_j_p_e_g_image.html#a05e9c73c5a6721ad9410b696cad718b5" title="ARTOS::JPEGImage::empty" alt="" coords="366,56,557,83"/>
+<area shape="rect" id="node5" href="$class_a_r_t_o_s_1_1_j_p_e_g_image.html#a6876061ad7198120040466d332a46bdc" title="ARTOS::JPEGImage::width" alt="" coords="608,5,795,32"/>
+<area shape="rect" id="node6" href="$class_a_r_t_o_s_1_1_j_p_e_g_image.html#aa8a99643896fd76976cb6b1629d69746" title="ARTOS::JPEGImage::height" alt="" coords="606,56,797,83"/>
+<area shape="rect" id="node7" href="$class_a_r_t_o_s_1_1_j_p_e_g_image.html#aed01a09f279c86cc1022d10f8a49204c" title="ARTOS::JPEGImage::depth" alt="" coords="608,107,795,133"/>
 </map>

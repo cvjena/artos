@@ -1,0 +1,7 @@
+<map id="evaluator_add_negative_file_jpeg" name="evaluator_add_negative_file_jpeg">
+<area shape="rect" id="node2" href="$libartos_8cc.html#a9410497cc2ce4aa85415e175502a025b" title="is_valid_detector_handle" alt="" coords="227,5,392,32"/>
+<area shape="rect" id="node3" href="$class_a_r_t_o_s_1_1_j_p_e_g_image.html#a05e9c73c5a6721ad9410b696cad718b5" title="ARTOS::JPEGImage::empty" alt="" coords="214,56,405,83"/>
+<area shape="rect" id="node4" href="$class_a_r_t_o_s_1_1_j_p_e_g_image.html#a6876061ad7198120040466d332a46bdc" title="ARTOS::JPEGImage::width" alt="" coords="456,5,643,32"/>
+<area shape="rect" id="node5" href="$class_a_r_t_o_s_1_1_j_p_e_g_image.html#aa8a99643896fd76976cb6b1629d69746" title="ARTOS::JPEGImage::height" alt="" coords="454,56,645,83"/>
+<area shape="rect" id="node6" href="$class_a_r_t_o_s_1_1_j_p_e_g_image.html#aed01a09f279c86cc1022d10f8a49204c" title="ARTOS::JPEGImage::depth" alt="" coords="456,107,643,133"/>
+</map>

@@ -1,0 +1,10 @@
+<map id="ARTOS::Object::empty" name="ARTOS::Object::empty">
+<area shape="rect" id="node2" href="$class_a_r_t_o_s_1_1_object.html#aa8b7117e7bec7bac930b7577a5dc528a" title="ARTOS::Object::name" alt="" coords="225,5,380,32"/>
+<area shape="rect" id="node3" href="$class_a_r_t_o_s_1_1_object.html#a370d8f00e19a2fedbf29c0f99804f1a1" title="ARTOS::Object::pose" alt="" coords="227,56,378,83"/>
+<area shape="rect" id="node4" href="$class_a_r_t_o_s_1_1_object.html#aeb5fb9d9d6b975438b441d31230261e3" title="ARTOS::Object::truncated" alt="" coords="215,107,391,133"/>
+<area shape="rect" id="node5" href="$class_a_r_t_o_s_1_1_object.html#a7316217057e6c76b57cd37b570d8c24f" title="ARTOS::Object::difficult" alt="" coords="221,157,385,184"/>
+<area shape="rect" id="node6" href="$class_a_r_t_o_s_1_1_object.html#a2dd49cdfad84ccaf0ef821438b5e8aa9" title="ARTOS::Object::bndbox" alt="" coords="221,208,385,235"/>
+<area shape="rect" id="node7" href="$class_a_r_t_o_s_1_1_rectangle.html#a33ca9f7369ce59fd11effe229d1cb8e4" title="ARTOS::Rectangle::empty" alt="" coords="213,259,392,285"/>
+<area shape="rect" id="node8" href="$class_a_r_t_o_s_1_1_rectangle.html#af62553af29f32815e5055f67b96f5603" title="ARTOS::Rectangle::width" alt="" coords="442,233,617,260"/>
+<area shape="rect" id="node9" href="$class_a_r_t_o_s_1_1_rectangle.html#a51fcde43e3b8803b7fcf3bba60167894" title="ARTOS::Rectangle::height" alt="" coords="440,284,619,311"/>
+</map>

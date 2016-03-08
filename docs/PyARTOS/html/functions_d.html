@@ -30,7 +30,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">PyARTOS
-   &#160;<span id="projectnumber">1.2</span>
+   &#160;<span id="projectnumber">2.0</span>
    </div>
    <div id="projectbrief">Python interface to libartos</div>
   </td>
@@ -146,23 +146,14 @@ $(document).ready(function(){initNavTree('functions_d.html','');});
 : <a class="el" href="class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_model_widget.html#a7d64ebea2507456dcf154775e9f14324">PyARTOS.GUI.ModelCatalogue.ModelWidget</a>
 , <a class="el" href="class_py_a_r_t_o_s_1_1learning_1_1_model_manager.html#a754d509ac0081d27bcdb8bad62c4aeb1">PyARTOS.learning.ModelManager</a>
 </li>
-<li>destroy_detector
-: <a class="el" href="class_py_a_r_t_o_s_1_1artos__wrapper_1_1___lib_a_r_t_o_s.html#ac5a79e2bada1923d9d7cc8b5f7cd032c">PyARTOS.artos_wrapper._LibARTOS</a>
-</li>
-<li>destroy_learner
-: <a class="el" href="class_py_a_r_t_o_s_1_1artos__wrapper_1_1___lib_a_r_t_o_s.html#a9830ef19fea124d9029a85a8f5f6b0bf">PyARTOS.artos_wrapper._LibARTOS</a>
+<li>deleteSelectedModels()
+: <a class="el" href="class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_catalogue_window.html#a8d160d4b85a8ed041c72ed4ccf0731a2">PyARTOS.GUI.ModelCatalogue.CatalogueWindow</a>
 </li>
 <li>detailsLabels
 : <a class="el" href="class_py_a_r_t_o_s_1_1_g_u_i_1_1_batch_window_1_1_detection_frame.html#a4e919ccffdfe8320c4f138e946ca1bd1">PyARTOS.GUI.BatchWindow.DetectionFrame</a>
 </li>
 <li>detect()
 : <a class="el" href="class_py_a_r_t_o_s_1_1detecting_1_1_detector.html#a3b8470ced4654725ad745fe6a91443fb">PyARTOS.detecting.Detector</a>
-</li>
-<li>detect_file_jpeg
-: <a class="el" href="class_py_a_r_t_o_s_1_1artos__wrapper_1_1___lib_a_r_t_o_s.html#ab7875fec11a35bd4bd42ec2626119f15">PyARTOS.artos_wrapper._LibARTOS</a>
-</li>
-<li>detect_raw
-: <a class="el" href="class_py_a_r_t_o_s_1_1artos__wrapper_1_1___lib_a_r_t_o_s.html#ac2de5491217a172b6ffa8e390fa75e89">PyARTOS.artos_wrapper._LibARTOS</a>
 </li>
 <li>detect_threaded()
 : <a class="el" href="class_py_a_r_t_o_s_1_1_g_u_i_1_1_camera_window_1_1_camera_window.html#ab5d100412854fb6238ffeea467fcda1a">PyARTOS.GUI.CameraWindow.CameraWindow</a>
@@ -206,11 +197,20 @@ $(document).ready(function(){initNavTree('functions_d.html','');});
 <li>devices
 : <a class="el" href="class_py_a_r_t_o_s_1_1_g_u_i_1_1_camera_window_1_1_camera_window.html#ac2d7f578a65ac4249f4763bf34ad52d9">PyARTOS.GUI.CameraWindow.CameraWindow</a>
 </li>
+<li>differentFeatureExtractors()
+: <a class="el" href="class_py_a_r_t_o_s_1_1detecting_1_1_detector.html#a6288c683a4fd2a52ada5c2a1d061a6ec">PyARTOS.detecting.Detector</a>
+</li>
 <li>differentFromDefault()
 : <a class="el" href="class_py_a_r_t_o_s_1_1config_1_1___config.html#a65f55c97cc09b61e8438110a2950722a">PyARTOS.config._Config</a>
 </li>
+<li>disableSelectedModels()
+: <a class="el" href="class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_catalogue_window.html#a0ceee4c4df7c1ab98a987d80e1d4b42c">PyARTOS.GUI.ModelCatalogue.CatalogueWindow</a>
+</li>
 <li>displayDetectionResult()
 : <a class="el" href="class_py_a_r_t_o_s_1_1_g_u_i_1_1_batch_window_1_1_batch_window.html#a6e15378a216ebc72f35d2a35e55592bd">PyARTOS.GUI.BatchWindow.BatchWindow</a>
+</li>
+<li>draw()
+: <a class="el" href="class_py_a_r_t_o_s_1_1_g_u_i_1_1_evaluation_1_1_evaluation_visualization.html#a7258db202198a19914455c26ed0241cb">PyARTOS.GUI.Evaluation.EvaluationVisualization</a>
 </li>
 <li>drawingBegin()
 : <a class="el" href="class_py_a_r_t_o_s_1_1_g_u_i_1_1_annotation_dialog_1_1_annotation_dialog.html#a7056657650036ab4e708a53cedace220">PyARTOS.GUI.AnnotationDialog.AnnotationDialog</a>
@@ -234,13 +234,16 @@ $(document).ready(function(){initNavTree('functions_d.html','');});
 <li>drawToImage()
 : <a class="el" href="class_py_a_r_t_o_s_1_1detecting_1_1_bounding_box.html#aac71ad1a8836a40c9a3cff42b1570c4b">PyARTOS.detecting.BoundingBox</a>
 </li>
+<li>dumpEvaluationResults()
+: <a class="el" href="class_py_a_r_t_o_s_1_1detecting_1_1_detector.html#a8e2aac5d61a3a95c4d83cfacebd8ce0c">PyARTOS.detecting.Detector</a>
+</li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon Nov 2 2015 20:20:00 for PyARTOS by
+    <li class="footer">Generated on Mon Mar 7 2016 23:25:46 for PyARTOS by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.7 </li>
   </ul>

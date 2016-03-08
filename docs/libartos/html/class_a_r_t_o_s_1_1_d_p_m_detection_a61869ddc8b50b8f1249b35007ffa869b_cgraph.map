@@ -1,0 +1,10 @@
+<map id="ARTOS::DPMDetection::initPatchwork" name="ARTOS::DPMDetection::initPatchwork">
+<area shape="rect" id="node2" href="$class_a_r_t_o_s_1_1_patchwork.html#a46e9cff798e51e0c602a8a9cc382b314" title="ARTOS::Patchwork::MaxCols" alt="" coords="230,5,429,32"/>
+<area shape="rect" id="node3" href="$class_a_r_t_o_s_1_1_patchwork.html#af8839b72f5a03b58d755b63237f7b3ab" title="ARTOS::Patchwork::MaxRows" alt="" coords="227,56,432,83"/>
+<area shape="rect" id="node4" href="$class_a_r_t_o_s_1_1_patchwork.html#ad04b64a228e7f166118dcc2b46e1820b" title="ARTOS::Patchwork::NumFeatures" alt="" coords="217,107,442,133"/>
+<area shape="rect" id="node5" href="$namespacestd.html#aef13da5baa79cdc514d9729bc0d870da" title="std::max" alt="" coords="293,157,366,184"/>
+<area shape="rect" id="node6" href="$timingtools_8h.html#a60de64d75454385b23995437f1d72669" title="start" alt="" coords="305,208,353,235"/>
+<area shape="rect" id="node7" href="$class_a_r_t_o_s_1_1_patchwork.html#ace58c9a4b2551a894b68772b8555851a" title="ARTOS::Patchwork::Init" alt="" coords="247,259,411,285"/>
+<area shape="rect" id="node9" href="$timingtools_8h.html#ad13f8e61bc098d4eea0ead7eba3a4075" title="stop" alt="" coords="306,309,353,336"/>
+<area shape="rect" id="node8" href="$class_a_r_t_o_s_1_1_feature_matrix__.html#a60247714115c49c719db4791d9356342" title="ARTOS::FeatureMatrix\l_::raw" alt="" coords="491,251,647,293"/>
+</map>

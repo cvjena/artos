@@ -1,3 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node3" href="$class_py_a_r_t_o_s_1_1_g_u_i_1_1_batch_window_1_1_detection_popup_menu.html" title="PyARTOS.GUI.BatchWindow.\lDetectionPopupMenu" alt="" coords="111,5,311,51"/>
+<area shape="rect" id="node2" href="$class_py_a_r_t_o_s_1_1_g_u_i_1_1_batch_window_1_1_detection_frame.html" title="PyARTOS.GUI.BatchWindow.\lDetectionFrame" alt="" coords="119,5,321,46"/>
+<area shape="rect" id="node3" href="$class_py_a_r_t_o_s_1_1_g_u_i_1_1_camera_window_1_1_detection_frame.html" title="PyARTOS.GUI.CameraWindow.\lDetectionFrame" alt="" coords="113,70,327,111"/>
+<area shape="rect" id="node4" href="$class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_model_widget.html" title="PyARTOS.GUI.ModelCatalogue.\lModelWidget" alt="" coords="113,135,327,177"/>
 </map>

@@ -1,0 +1,17 @@
+<map id="ARTOS::ModelLearnerBase::optimizeThreshold" name="ARTOS::ModelLearnerBase::optimizeThreshold">
+<area shape="rect" id="node2" href="$class_a_r_t_o_s_1_1_mixture.html#a208327a889f6eabd3473ce0a8c65ba3a" title="ARTOS::Mixture::addModel" alt="" coords="269,52,451,79"/>
+<area shape="rect" id="node6" href="$class_a_r_t_o_s_1_1_d_p_m_detection.html#af0a95dcd6dc893401d68fa50a8929338" title="ARTOS::DPMDetection\l::addModel" alt="" coords="279,103,441,145"/>
+<area shape="rect" id="node8" href="$timingtools_8h.html#a60de64d75454385b23995437f1d72669" title="start" alt="" coords="336,169,384,196"/>
+<area shape="rect" id="node9" href="$class_a_r_t_o_s_1_1_model_evaluator.html#a2f2a689eb6663e5ba99d66f921443b23" title="ARTOS::ModelEvaluator\l::testModels" alt="" coords="277,221,443,262"/>
+<area shape="rect" id="node12" href="$class_a_r_t_o_s_1_1_model_evaluator.html#af70708d59db2790f55e85eb0250ef800" title="ARTOS::ModelEvaluator\l::getMaxFMeasure" alt="" coords="277,286,443,327"/>
+<area shape="rect" id="node13" href="$class_a_r_t_o_s_1_1_model_evaluator.html#a8eb513675edaac5d64483b4cb738a00e" title="ARTOS::ModelEvaluator\l::searchOptimalThresholdCombination" alt="" coords="238,351,482,393"/>
+<area shape="rect" id="node16" href="$timingtools_8h.html#ad13f8e61bc098d4eea0ead7eba3a4075" title="stop" alt="" coords="337,417,383,444"/>
+<area shape="rect" id="node3" href="$class_a_r_t_o_s_1_1_model.html#a10abfb84338378da2152bae25d0ab0c2" title="ARTOS::Model::empty" alt="" coords="545,5,700,32"/>
+<area shape="rect" id="node5" href="$class_a_r_t_o_s_1_1_model.html#a7adcef39a7140b43bff04d53e02fc770" title="ARTOS::Model::nbFeatures" alt="" coords="531,56,715,83"/>
+<area shape="rect" id="node4" href="$class_a_r_t_o_s_1_1_model.html#a9a64087a29e741402a35c730cf36a52e" title="ARTOS::Model::nbParts" alt="" coords="763,5,927,32"/>
+<area shape="rect" id="node7" href="$class_a_r_t_o_s_1_1_exception.html#af5062a7cb012135892a141864763d1d5" title="ARTOS::Exception::what" alt="" coords="537,111,708,137"/>
+<area shape="rect" id="node10" href="$namespacestd.html#aef13da5baa79cdc514d9729bc0d870da" title="std::max" alt="" coords="586,228,659,255"/>
+<area shape="rect" id="node11" href="$struct_a_r_t_o_s_1_1_sample.html#a08bbb0580b6fabca4adfe69021552866" title="ARTOS::Sample::bboxes" alt="" coords="537,284,708,311"/>
+<area shape="rect" id="node14" href="$namespace_a_r_t_o_s.html#abb19f751e8c4b1e73d44a8167a8a23c8" title="ARTOS::repeated_harmony\l_search" alt="" coords="531,346,714,387"/>
+<area shape="rect" id="node15" href="$_model_evaluator_8cc.html#a96889736e5f53a5d8d22efd6dd6fc5a0" title="hs_fmeasure_cb" alt="" coords="563,412,682,439"/>
+</map>

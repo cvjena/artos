@@ -1,0 +1,15 @@
+<map id="ARTOS::HOGFeatureExtractor::extract" name="ARTOS::HOGFeatureExtractor::extract">
+<area shape="rect" id="node2" href="$class_a_r_t_o_s_1_1_h_o_g_feature_extractor.html#a3704f3c4e28cc54f269f3badfe8ab26c" title="ARTOS::HOGFeatureExtractor::HOG" alt="" coords="257,302,498,329"/>
+<area shape="rect" id="node11" href="$class_a_r_t_o_s_1_1_feature_matrix__.html#af099428b08a84387a406c6ee799d6f5e" title="ARTOS::FeatureMatrix\l_::rows" alt="" coords="573,463,729,504"/>
+<area shape="rect" id="node12" href="$class_a_r_t_o_s_1_1_feature_matrix__.html#af42771bea40f2ddb8e6ba1e607ecc17d" title="ARTOS::FeatureMatrix\l_::cols" alt="" coords="573,528,729,570"/>
+<area shape="rect" id="node14" href="$class_a_r_t_o_s_1_1_feature_matrix__.html#ae94bb7757c9ca1a018da56aae84b1e84" title="ARTOS::FeatureMatrix\l_::crop" alt="" coords="299,572,455,614"/>
+<area shape="rect" id="node3" href="$namespacestd.html#aef13da5baa79cdc514d9729bc0d870da" title="std::max" alt="" coords="614,361,687,388"/>
+<area shape="rect" id="node4" href="$class_a_r_t_o_s_1_1_j_p_e_g_image.html#a6876061ad7198120040466d332a46bdc" title="ARTOS::JPEGImage::width" alt="" coords="1045,296,1232,322"/>
+<area shape="rect" id="node5" href="$class_a_r_t_o_s_1_1_j_p_e_g_image.html#aa8a99643896fd76976cb6b1629d69746" title="ARTOS::JPEGImage::height" alt="" coords="1043,40,1234,66"/>
+<area shape="rect" id="node6" href="$class_a_r_t_o_s_1_1_j_p_e_g_image.html#aed01a09f279c86cc1022d10f8a49204c" title="ARTOS::JPEGImage::depth" alt="" coords="1045,116,1232,142"/>
+<area shape="rect" id="node7" href="$namespacestd.html#a132e7ea1827f9f0ba7685c771563fc42" title="std::min" alt="" coords="616,178,685,205"/>
+<area shape="rect" id="node8" href="$class_a_r_t_o_s_1_1_j_p_e_g_image.html#a2c6033407c9724c25b9dd3ba8052d4e6" title="ARTOS::JPEGImage::scanLine" alt="" coords="547,77,754,104"/>
+<area shape="rect" id="node10" href="$class_a_r_t_o_s_1_1_feature_matrix__.html#a074dba7e7389eb959eeee2eef0a5a6d3" title="ARTOS::FeatureMatrix\l_::channel" alt="" coords="573,230,729,271"/>
+<area shape="rect" id="node13" href="$class_a_r_t_o_s_1_1_feature_matrix__.html#a24f0f9ada11fc106952f808b10ddfb81" title="ARTOS::FeatureMatrix\l_::setZero" alt="" coords="573,295,729,336"/>
+<area shape="rect" id="node9" href="$class_a_r_t_o_s_1_1_j_p_e_g_image.html#a05e9c73c5a6721ad9410b696cad718b5" title="ARTOS::JPEGImage::empty" alt="" coords="803,77,994,104"/>
+</map>

@@ -1,6 +1,8 @@
 <map id="search_synsets" name="search_synsets">
-<area shape="rect" id="node2" href="$class_a_r_t_o_s_1_1_image_repository.html#a9211412e3267c81081b079ec84dac7bf" title="ARTOS::ImageRepository\l::searchSynsets" alt="" coords="169,49,343,90"/>
-<area shape="rect" id="node3" href="$strutils_8cc.html#aaabaa0e351013e83c538d0c97f219ca8" title="splitString" alt="" coords="432,5,512,32"/>
-<area shape="rect" id="node4" href="$strutils_8cc.html#a9773e1731d0f9b16cb94e62b0ad35353" title="strtolower" alt="" coords="433,56,511,83"/>
-<area shape="rect" id="node5" href="$class_a_r_t_o_s_1_1_synset_iterator.html#ae96086bd598ecc34e59c6fcda311d1ca" title="ARTOS::SynsetIterator\l::ready" alt="" coords="393,107,551,149"/>
+<area shape="rect" id="node2" href="$class_a_r_t_o_s_1_1_image_repository.html#a9211412e3267c81081b079ec84dac7bf" title="ARTOS::ImageRepository\l::searchSynsets" alt="" coords="169,107,343,149"/>
+<area shape="rect" id="node3" href="$strutils_8cc.html#aaabaa0e351013e83c538d0c97f219ca8" title="splitString" alt="" coords="440,5,520,32"/>
+<area shape="rect" id="node4" href="$strutils_8cc.html#a9773e1731d0f9b16cb94e62b0ad35353" title="strtolower" alt="" coords="441,56,519,83"/>
+<area shape="rect" id="node5" href="$class_a_r_t_o_s_1_1_image_repository.html#aa9ce88f05dabd85aff493d01ca3895a5" title="ARTOS::ImageRepository\l::getSynsetIterator" alt="" coords="393,107,567,149"/>
+<area shape="rect" id="node6" href="$class_a_r_t_o_s_1_1_synset_iterator.html#ae96086bd598ecc34e59c6fcda311d1ca" title="ARTOS::SynsetIterator\l::ready" alt="" coords="401,173,559,214"/>
+<area shape="rect" id="node7" href="$namespacestd.html#a132e7ea1827f9f0ba7685c771563fc42" title="std::min" alt="" coords="445,239,515,265"/>
 </map>

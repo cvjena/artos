@@ -1,0 +1,8 @@
+<map id="ARTOS::FeaturePyramid::buildLevels" name="ARTOS::FeaturePyramid::buildLevels">
+<area shape="rect" id="node2" href="$class_a_r_t_o_s_1_1_j_p_e_g_image.html#a05e9c73c5a6721ad9410b696cad718b5" title="ARTOS::JPEGImage::empty" alt="" coords="222,107,413,133"/>
+<area shape="rect" id="node3" href="$class_a_r_t_o_s_1_1_j_p_e_g_image.html#a6876061ad7198120040466d332a46bdc" title="ARTOS::JPEGImage::width" alt="" coords="481,5,668,32"/>
+<area shape="rect" id="node4" href="$class_a_r_t_o_s_1_1_j_p_e_g_image.html#aa8a99643896fd76976cb6b1629d69746" title="ARTOS::JPEGImage::height" alt="" coords="479,107,670,133"/>
+<area shape="rect" id="node6" href="$class_a_r_t_o_s_1_1_j_p_e_g_image.html#a8e43979c7fff922528c689500ee49c5a" title="ARTOS::JPEGImage::resize" alt="" coords="222,56,413,83"/>
+<area shape="rect" id="node5" href="$class_a_r_t_o_s_1_1_j_p_e_g_image.html#aed01a09f279c86cc1022d10f8a49204c" title="ARTOS::JPEGImage::depth" alt="" coords="481,157,668,184"/>
+<area shape="rect" id="node7" href="$class_a_r_t_o_s_1_1_j_p_e_g_image.html#a7604bd4e0f7cf0eaa4c1f8ddd412077d" title="ARTOS::JPEGImage::JPEGImage" alt="" coords="461,56,688,83"/>
+</map>

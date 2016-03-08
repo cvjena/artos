@@ -1,6 +1,7 @@
 <map id="learner_add_synset" name="learner_add_synset">
 <area shape="rect" id="node2" href="$libartos_8cc.html#a7f0b115c2293574072fc57cc5e5b6137" title="is_valid_learner_handle" alt="" coords="199,5,356,32"/>
-<area shape="rect" id="node3" href="$class_a_r_t_o_s_1_1_image_repository.html#a181a1aef6315324ee6df03f61f60e1f4" title="ARTOS::ImageRepository\l::getRepoDirectory" alt="" coords="190,57,365,98"/>
+<area shape="rect" id="node3" href="$class_a_r_t_o_s_1_1_image_repository.html#abfad766d7c93cc561d1d1fc7332cf142" title="ARTOS::ImageRepository\l::getRepoDirectory" alt="" coords="190,57,365,98"/>
 <area shape="rect" id="node4" href="$class_a_r_t_o_s_1_1_image_repository.html#ae0534d95c36c744b9e7209dfad8f30f3" title="ARTOS::ImageRepository\l::getSynset" alt="" coords="190,122,365,163"/>
-<area shape="rect" id="node5" href="$class_a_r_t_o_s_1_1_synset_iterator.html#ae96086bd598ecc34e59c6fcda311d1ca" title="ARTOS::SynsetIterator\l::ready" alt="" coords="414,122,573,163"/>
+<area shape="rect" id="node5" href="$class_a_r_t_o_s_1_1_image_repository.html#aa9ce88f05dabd85aff493d01ca3895a5" title="ARTOS::ImageRepository\l::getSynsetIterator" alt="" coords="414,89,589,130"/>
+<area shape="rect" id="node6" href="$class_a_r_t_o_s_1_1_synset_iterator.html#ae96086bd598ecc34e59c6fcda311d1ca" title="ARTOS::SynsetIterator\l::ready" alt="" coords="422,154,581,195"/>
 </map>

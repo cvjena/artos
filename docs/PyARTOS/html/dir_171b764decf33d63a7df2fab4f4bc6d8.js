@@ -17,6 +17,7 @@ var dir_171b764decf33d63a7df2fab4f4bc6d8 =
       [ "DetectionFrame", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_camera_window_1_1_detection_frame.html", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_camera_window_1_1_detection_frame" ],
       [ "CameraWindow", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_camera_window_1_1_camera_window.html", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_camera_window_1_1_camera_window" ]
     ] ],
+    [ "Evaluation.py", "_evaluation_8py.html", "_evaluation_8py" ],
     [ "gui_utils.py", "gui__utils_8py.html", "gui__utils_8py" ],
     [ "MainFrame.py", "_main_frame_8py.html", [
       [ "MainFrame", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_main_frame_1_1_main_frame.html", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_main_frame_1_1_main_frame" ]
@@ -25,6 +26,7 @@ var dir_171b764decf33d63a7df2fab4f4bc6d8 =
       [ "ModelWidget", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_model_widget.html", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_model_widget" ],
       [ "CatalogueWindow", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_catalogue_window.html", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_catalogue_window" ],
       [ "LearnDialog", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_learn_dialog.html", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_learn_dialog" ],
+      [ "LearnBGDialog", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_learn_b_g_dialog.html", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_learn_b_g_dialog" ],
       [ "HOGInspector", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_h_o_g_inspector.html", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_h_o_g_inspector" ]
     ] ],
     [ "SetupDialog.py", "_setup_dialog_8py.html", "_setup_dialog_8py" ]

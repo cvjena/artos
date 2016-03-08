@@ -8,5 +8,6 @@ var searchData=
   ['repodirectory',['repoDirectory',['../class_py_a_r_t_o_s_1_1imagenet_1_1_image_repository.html#a97c73f0e631a40ca6909a072d33fc6ca',1,'PyARTOS::imagenet::ImageRepository']]],
   ['reset',['reset',['../class_py_a_r_t_o_s_1_1learning_1_1_model_learner.html#ab0176b47e3e07b0e57b4533d170a454d',1,'PyARTOS.learning.ModelLearner.reset()'],['../class_py_a_r_t_o_s_1_1utils_1_1_timer.html#a59f0dfd1f01abccfe176b625d64f8427',1,'PyARTOS.utils.Timer.reset()']]],
   ['rgb2hex',['rgb2hex',['../namespace_py_a_r_t_o_s_1_1_g_u_i_1_1gui__utils.html#af8d26bbe106162a1163469e198867d03',1,'PyARTOS::GUI::gui_utils']]],
+  ['runevaluator',['runEvaluator',['../class_py_a_r_t_o_s_1_1_g_u_i_1_1_evaluation_1_1_evaluation_dialog.html#a71c8d6c6faacaceff9be38e0a2e4edee',1,'PyARTOS::GUI::Evaluation::EvaluationDialog']]],
   ['runs',['runs',['../class_py_a_r_t_o_s_1_1utils_1_1_timer.html#ad3292fd0f046bfd9e95619b05503c4bf',1,'PyARTOS::utils::Timer']]]
 ];

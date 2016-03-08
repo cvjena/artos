@@ -30,7 +30,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">PyARTOS
-   &#160;<span id="projectnumber">1.2</span>
+   &#160;<span id="projectnumber">2.0</span>
    </div>
    <div id="projectbrief">Python interface to libartos</div>
   </td>
@@ -147,6 +147,12 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a9fa44e11783eebbbe45e9a2e6ac561a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6fe6eab89687ec1fb4b8ddf9081515d6"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_py_a_r_t_o_s_1_1learning_1_1_model.html#a6fe6eab89687ec1fb4b8ddf9081515d6">models</a></td></tr>
 <tr class="separator:a6fe6eab89687ec1fb4b8ddf9081515d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a63b139d47d1ffd03baea309f7cc79f44"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_py_a_r_t_o_s_1_1learning_1_1_model.html#a63b139d47d1ffd03baea309f7cc79f44">formatVersion</a></td></tr>
+<tr class="separator:a63b139d47d1ffd03baea309f7cc79f44"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac6efb89d6faff1aec4fa7258253295a1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_py_a_r_t_o_s_1_1learning_1_1_model.html#ac6efb89d6faff1aec4fa7258253295a1">type</a></td></tr>
+<tr class="separator:ac6efb89d6faff1aec4fa7258253295a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af4a5e90dc784732081f8421032545c2d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_py_a_r_t_o_s_1_1learning_1_1_model.html#af4a5e90dc784732081f8421032545c2d">parameters</a></td></tr>
+<tr class="separator:af4a5e90dc784732081f8421032545c2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><pre class="fragment">Reads, modifies and visualizes model mixture files.
@@ -316,6 +322,7 @@ and combines them in a single PIL image.
 `cs` specifies the size of each cell in the HOG images.
 `padding` specifies the padding between the single HOG images.
 Returns the created PIL image, which will be of mode 'RGBA'.
+Raises a TypeError if this model does not use HOG features.
 </pre> 
 </div>
 </div>
@@ -326,6 +333,18 @@ Returns the created PIL image, which will be of mode 'RGBA'.
       <table class="memname">
         <tr>
           <td class="memname">PyARTOS.learning.Model.filename</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a63b139d47d1ffd03baea309f7cc79f44"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">PyARTOS.learning.Model.formatVersion</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -344,6 +363,30 @@ Returns the created PIL image, which will be of mode 'RGBA'.
 
 </div>
 </div>
+<a class="anchor" id="af4a5e90dc784732081f8421032545c2d"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">PyARTOS.learning.Model.parameters</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="ac6efb89d6faff1aec4fa7258253295a1"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">PyARTOS.learning.Model.type</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li><a class="el" href="learning_8py.html">learning.py</a></li>
 </ul>
@@ -353,7 +396,7 @@ Returns the created PIL image, which will be of mode 'RGBA'.
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespace_py_a_r_t_o_s.html">PyARTOS</a></li><li class="navelem"><a class="el" href="namespace_py_a_r_t_o_s_1_1learning.html">learning</a></li><li class="navelem"><a class="el" href="class_py_a_r_t_o_s_1_1learning_1_1_model.html">Model</a></li>
-    <li class="footer">Generated on Mon Nov 2 2015 20:19:59 for PyARTOS by
+    <li class="footer">Generated on Mon Mar 7 2016 23:25:42 for PyARTOS by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.7 </li>
   </ul>

@@ -1,6 +1,8 @@
 var searchData=
 [
+  ['master',['master',['../class_py_a_r_t_o_s_1_1_g_u_i_1_1_evaluation_1_1_evaluation_dialog.html#afdc563451a2a96fd692834b9b5a60604',1,'PyARTOS::GUI::Evaluation::EvaluationDialog']]],
   ['maxaspectclustersvar',['maxAspectClustersVar',['../class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_learn_dialog.html#a1fbaba91b8e5f7c5e7a64f096049dbf3',1,'PyARTOS::GUI::ModelCatalogue::LearnDialog']]],
+  ['maxoffsetvar',['maxOffsetVar',['../class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_learn_b_g_dialog.html#a6365d18066e2ef913a33282db854864e',1,'PyARTOS::GUI::ModelCatalogue::LearnBGDialog']]],
   ['maxsize',['maxSize',['../class_py_a_r_t_o_s_1_1_g_u_i_1_1_annotation_dialog_1_1_annotation_dialog.html#ac94dc2767b7312f1aab22a607a5ac8b0',1,'PyARTOS::GUI::AnnotationDialog::AnnotationDialog']]],
   ['maxvideosize',['maxVideoSize',['../class_py_a_r_t_o_s_1_1_g_u_i_1_1_camera_window_1_1_camera_window.html#af4c6d9c52b7c532a9e1935dade2e9158',1,'PyARTOS::GUI::CameraWindow::CameraWindow']]],
   ['maxwhoclustersvar',['maxWHOClustersVar',['../class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_learn_dialog.html#abb34ea2ec5c551d9cb54438df9239bb8',1,'PyARTOS::GUI::ModelCatalogue::LearnDialog']]],
@@ -13,6 +15,6 @@ var searchData=
   ['modelindex',['modelIndex',['../class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_model_widget.html#a11266a178bf533cb6032c74c7518910b',1,'PyARTOS::GUI::ModelCatalogue::ModelWidget']]],
   ['modelmanager',['modelManager',['../class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_catalogue_window.html#a37c3c8496933983be2f8047a53520ab4',1,'PyARTOS::GUI::ModelCatalogue::CatalogueWindow']]],
   ['modelnumtext',['modelNumText',['../class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_model_widget.html#ad0e8755a56272f10fe007670446fb768',1,'PyARTOS::GUI::ModelCatalogue::ModelWidget']]],
-  ['models',['models',['../class_py_a_r_t_o_s_1_1learning_1_1_model.html#a6fe6eab89687ec1fb4b8ddf9081515d6',1,'PyARTOS.learning.Model.models()'],['../class_py_a_r_t_o_s_1_1learning_1_1_model_manager.html#a5d3296451e4c9e8f287df283cfa171e6',1,'PyARTOS.learning.ModelManager.models()']]],
+  ['models',['models',['../class_py_a_r_t_o_s_1_1_g_u_i_1_1_evaluation_1_1_evaluation_dialog.html#af841c359a16138e783b6a54aa794cca1',1,'PyARTOS.GUI.Evaluation.EvaluationDialog.models()'],['../class_py_a_r_t_o_s_1_1_g_u_i_1_1_evaluation_1_1_evaluation_visualization.html#a89e57d6176c742a81d83f33a5dbc7f16',1,'PyARTOS.GUI.Evaluation.EvaluationVisualization.models()'],['../class_py_a_r_t_o_s_1_1learning_1_1_model.html#a6fe6eab89687ec1fb4b8ddf9081515d6',1,'PyARTOS.learning.Model.models()'],['../class_py_a_r_t_o_s_1_1learning_1_1_model_manager.html#a5d3296451e4c9e8f287df283cfa171e6',1,'PyARTOS.learning.ModelManager.models()']]],
   ['modelwidgets',['modelWidgets',['../class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_catalogue_window.html#a5dfb0170abe84c094a8b3cc54ab68fb0',1,'PyARTOS::GUI::ModelCatalogue::CatalogueWindow']]]
 ];

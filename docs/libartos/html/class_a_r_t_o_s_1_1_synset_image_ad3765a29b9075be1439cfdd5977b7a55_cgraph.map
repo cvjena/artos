@@ -1,0 +1,22 @@
+<map id="ARTOS::SynsetImage::getSamplesFromBoundingBoxes" name="ARTOS::SynsetImage::getSamplesFromBoundingBoxes">
+<area shape="rect" id="node2" href="$class_a_r_t_o_s_1_1_synset_image.html#a5af15f665e54b3b3caa59b8f0af5a99d" title="ARTOS::SynsetImage\l::loadBoundingBoxes" alt="" coords="497,78,650,119"/>
+<area shape="rect" id="node7" href="$class_a_r_t_o_s_1_1_synset_image.html#a19d827e8d0947948e798c3ef8d6daaaa" title="ARTOS::SynsetImage\l::getImage" alt="" coords="275,259,429,301"/>
+<area shape="rect" id="node8" href="$class_a_r_t_o_s_1_1_j_p_e_g_image.html#a05e9c73c5a6721ad9410b696cad718b5" title="ARTOS::JPEGImage::empty" alt="" coords="478,325,669,352"/>
+<area shape="rect" id="node19" href="$class_a_r_t_o_s_1_1_j_p_e_g_image.html#ad2e71e56f959b824e2e6a47a60bd2a17" title="ARTOS::JPEGImage::crop" alt="" coords="483,440,663,467"/>
+<area shape="rect" id="node3" href="$sysutils_8cc.html#aea7fafd2be88e54c39022ea792fd76e2" title="join_path" alt="" coords="793,111,868,137"/>
+<area shape="rect" id="node4" href="$sysutils_8cc.html#a830125924ecdba4b09a0a90b67e1bf26" title="strip_file_extension" alt="" coords="1190,239,1325,265"/>
+<area shape="rect" id="node6" href="$sysutils_8cc.html#aba491b60b98d44c64cbe8faf6fe56c81" title="extract_basename" alt="" coords="766,5,895,32"/>
+<area shape="rect" id="node5" href="$sysutils_8cc.html#a9f553f0e7879b17ba31ff13349402053" title="replace_file_extension" alt="" coords="1374,239,1525,265"/>
+<area shape="rect" id="node12" href="$class_a_r_t_o_s_1_1_synset_image.html#a69d4b185a289d34d0c3509c52add60ae" title="ARTOS::SynsetImage\l::loadImage" alt="" coords="497,202,650,243"/>
+<area shape="rect" id="node9" href="$class_a_r_t_o_s_1_1_j_p_e_g_image.html#a6876061ad7198120040466d332a46bdc" title="ARTOS::JPEGImage::width" alt="" coords="737,401,924,428"/>
+<area shape="rect" id="node10" href="$class_a_r_t_o_s_1_1_j_p_e_g_image.html#aa8a99643896fd76976cb6b1629d69746" title="ARTOS::JPEGImage::height" alt="" coords="735,351,926,377"/>
+<area shape="rect" id="node11" href="$class_a_r_t_o_s_1_1_j_p_e_g_image.html#aed01a09f279c86cc1022d10f8a49204c" title="ARTOS::JPEGImage::depth" alt="" coords="737,300,924,327"/>
+<area shape="rect" id="node13" href="$class_a_r_t_o_s_1_1_tar_extractor.html#aeb14c3ac0857b4e6b442db31770db7ac" title="ARTOS::TarExtractor\l::findFileInArchive" alt="" coords="757,169,905,210"/>
+<area shape="rect" id="node17" href="$class_a_r_t_o_s_1_1_synset_image.html#aed68f13e46589ce2117dc40b961ca98f" title="ARTOS::SynsetImage\l::readImageFromFileOffset" alt="" coords="741,234,920,275"/>
+<area shape="rect" id="node14" href="$class_a_r_t_o_s_1_1_tar_extractor.html#af78b4149fd55c549a7a08eedb660f535" title="ARTOS::TarExtractor\l::isOpen" alt="" coords="993,107,1141,149"/>
+<area shape="rect" id="node15" href="$class_a_r_t_o_s_1_1_tar_extractor.html#a9f3944b118b00227b2976a77ec21fca9" title="ARTOS::TarExtractor\l::findFile" alt="" coords="993,290,1141,331"/>
+<area shape="rect" id="node16" href="$class_a_r_t_o_s_1_1_tar_extractor.html#ae92985e8a217a9975fbce202c51dc56b" title="ARTOS::TarExtractor\l::close" alt="" coords="993,173,1141,214"/>
+<area shape="rect" id="node18" href="$namespacestd.html#aef13da5baa79cdc514d9729bc0d870da" title="std::max" alt="" coords="1030,404,1103,431"/>
+<area shape="rect" id="node20" href="$class_a_r_t_o_s_1_1_j_p_e_g_image.html#a7604bd4e0f7cf0eaa4c1f8ddd412077d" title="ARTOS::JPEGImage::JPEGImage" alt="" coords="717,503,944,529"/>
+<area shape="rect" id="node21" href="$namespacestd.html#a132e7ea1827f9f0ba7685c771563fc42" title="std::min" alt="" coords="796,553,865,580"/>
+</map>

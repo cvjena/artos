@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['loofunc',['LOOFunc',['../class_a_r_t_o_s_1_1_model_evaluator.html#a01f6a6b5df9055807fe5c725b066463d',1,'ARTOS::ModelEvaluator']]]
+  ['hs_5fobjective_5ffunction',['hs_objective_function',['../namespace_a_r_t_o_s.html#a032c14b83f7ca9c93807337a5b9250e5',1,'ARTOS']]]
 ];

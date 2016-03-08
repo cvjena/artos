@@ -1,10 +1,13 @@
 <map id="ImageNet/SynsetIterators.cc" name="ImageNet/SynsetIterators.cc">
-<area shape="rect" id="node2" href="$_synset_iterators_8h.html" title="SynsetIterators.h" alt="" coords="150,229,272,256"/>
-<area shape="rect" id="node16" href="$_synset_8h.html" title="Synset.h" alt="" coords="179,155,252,181"/>
-<area shape="rect" id="node17" href="$_image_repository_8h.html" title="ImageRepository.h" alt="" coords="248,80,379,107"/>
-<area shape="rect" id="node18" href="$libartos__def_8h.html" title="libartos_def.h" alt="" coords="404,80,503,107"/>
-<area shape="rect" id="node19" href="$strutils_8h.html" title="strutils.h" alt="" coords="448,304,520,331"/>
-<area shape="rect" id="node20" href="$sysutils_8h.html" title="sysutils.h" alt="" coords="545,304,623,331"/>
-<area shape="rect" id="node5" href="$_synset_image_8h.html" title="SynsetImage.h" alt="" coords="648,304,758,331"/>
-<area shape="rect" id="node11" href="$_tar_extractor_8h.html" title="TarExtractor.h" alt="" coords="166,304,271,331"/>
+<area shape="rect" id="node2" href="$_synset_iterators_8h.html" title="SynsetIterators.h" alt="" coords="491,229,613,256"/>
+<area shape="rect" id="node22" href="$_synset_8h.html" title="Synset.h" alt="" coords="824,155,897,181"/>
+<area shape="rect" id="node23" href="$_image_repository_8h.html" title="ImageRepository.h" alt="" coords="686,80,817,107"/>
+<area shape="rect" id="node24" href="$libartos__def_8h.html" title="libartos_def.h" alt="" coords="894,80,993,107"/>
+<area shape="rect" id="node25" href="$strutils_8h.html" title="strutils.h" alt="" coords="928,379,1000,405"/>
+<area shape="rect" id="node26" href="$sysutils_8h.html" title="sysutils.h" alt="" coords="825,379,903,405"/>
+<area shape="rect" id="node6" href="$_synset_image_8h.html" title="SynsetImage.h" alt="" coords="486,304,596,331"/>
+<area shape="rect" id="node19" href="$_tar_extractor_8h.html" title="TarExtractor.h" alt="" coords="81,379,185,405"/>
+<area shape="rect" id="node9" href="$_j_p_e_g_image_8h.html" title="JPEGImage.h" alt="" coords="379,379,483,405"/>
+<area shape="rect" id="node17" href="$_rectangle_8h.html" title="Rectangle.h" alt="" coords="262,379,353,405"/>
+<area shape="rect" id="node12" href="$_feature_matrix_8h.html" title="FeatureMatrix.h" alt="" coords="490,453,603,480"/>
 </map>

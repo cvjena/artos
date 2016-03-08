@@ -1,7 +1,6 @@
 var NAVTREE =
 [
   [ "ARTOS", "index.html", [
-    [ "Todo List", "todo.html", null ],
     [ "Namespaces", null, [
       [ "Namespace List", "namespaces.html", "namespaces" ],
       [ "Namespace Members", "namespacemembers.html", [
@@ -19,9 +18,12 @@ var NAVTREE =
       [ "Class Hierarchy", "hierarchy.html", "hierarchy" ],
       [ "Class Members", "functions.html", [
         [ "All", "functions.html", "functions_dup" ],
-        [ "Functions", "functions_func.html", null ],
+        [ "Functions", "functions_func.html", "functions_func" ],
         [ "Variables", "functions_vars.html", null ],
-        [ "Typedefs", "functions_type.html", null ]
+        [ "Typedefs", "functions_type.html", null ],
+        [ "Enumerations", "functions_enum.html", null ],
+        [ "Enumerator", "functions_eval.html", null ],
+        [ "Related Functions", "functions_rela.html", null ]
       ] ]
     ] ],
     [ "Files", null, [
@@ -42,8 +44,10 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "_d_p_m_detection_8cc.html",
-"class_a_r_t_o_s_1_1_synset_image.html#a50eed6eb53b7323881f1f066e8163fa7",
-"struct_a_r_t_o_s_1_1_synset.html#af3e9809523a8c003a35c6bcb7c3b05a1"
+"class_a_r_t_o_s_1_1_feature_matrix__.html#af34827f19a32b0b65fd3c8fd5397d898",
+"class_a_r_t_o_s_1_1_object.html#a2797d2e00d013b11ab1e82e6903fba6e",
+"functions_func_e.html",
+"struct_a_r_t_o_s_1_1_sample.html#a473240bb249c9d97fd6bfebb55671fb4"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

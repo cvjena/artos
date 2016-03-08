@@ -1,0 +1,22 @@
+<map id="evaluator_add_positive_file" name="evaluator_add_positive_file">
+<area shape="rect" id="node2" href="$libartos_8cc.html#a9410497cc2ce4aa85415e175502a025b" title="is_valid_detector_handle" alt="" coords="249,5,415,32"/>
+<area shape="rect" id="node3" href="$class_a_r_t_o_s_1_1_j_p_e_g_image.html#a05e9c73c5a6721ad9410b696cad718b5" title="ARTOS::JPEGImage::empty" alt="" coords="237,107,427,133"/>
+<area shape="rect" id="node4" href="$class_a_r_t_o_s_1_1_j_p_e_g_image.html#a6876061ad7198120040466d332a46bdc" title="ARTOS::JPEGImage::width" alt="" coords="483,31,669,57"/>
+<area shape="rect" id="node5" href="$class_a_r_t_o_s_1_1_j_p_e_g_image.html#aa8a99643896fd76976cb6b1629d69746" title="ARTOS::JPEGImage::height" alt="" coords="481,132,671,159"/>
+<area shape="rect" id="node7" href="$class_a_r_t_o_s_1_1_scene.html#a54f2f60c8c049b84214f3a500df6d9d5" title="ARTOS::Scene::empty" alt="" coords="253,259,411,285"/>
+<area shape="rect" id="node8" href="$class_a_r_t_o_s_1_1_scene.html#a6d0072b5619c3d3c3dd49e3487a67cc8" title="ARTOS::Scene::width" alt="" coords="500,183,652,209"/>
+<area shape="rect" id="node12" href="$class_a_r_t_o_s_1_1_scene.html#af86d62176576eae81feea916e911b0fc" title="ARTOS::Scene::objects" alt="" coords="495,385,657,412"/>
+<area shape="rect" id="node13" href="$class_a_r_t_o_s_1_1_rectangle.html#a852214720fc2e2ce51c255af67180d5f" title="ARTOS::Rectangle::setX" alt="" coords="247,360,417,387"/>
+<area shape="rect" id="node14" href="$class_a_r_t_o_s_1_1_rectangle.html#aeb9afe5d3ed04bc0158205488260b48b" title="ARTOS::Rectangle::x" alt="" coords="501,436,651,463"/>
+<area shape="rect" id="node15" href="$class_a_r_t_o_s_1_1_rectangle.html#a64ba58c728d02e731491581bb0e6c857" title="ARTOS::Rectangle::setY" alt="" coords="247,461,417,488"/>
+<area shape="rect" id="node16" href="$class_a_r_t_o_s_1_1_rectangle.html#a2e8a52081b2efe4f08d4bcabb9ee8cc5" title="ARTOS::Rectangle::y" alt="" coords="501,500,651,527"/>
+<area shape="rect" id="node17" href="$class_a_r_t_o_s_1_1_rectangle.html#af8a285283f01dad19b6ad355a16da95a" title="ARTOS::Rectangle::setWidth" alt="" coords="235,563,429,589"/>
+<area shape="rect" id="node18" href="$class_a_r_t_o_s_1_1_rectangle.html#af62553af29f32815e5055f67b96f5603" title="ARTOS::Rectangle::width" alt="" coords="489,588,663,615"/>
+<area shape="rect" id="node19" href="$class_a_r_t_o_s_1_1_rectangle.html#a1b4e8ba25c9c58078bfe32a3a673e5c4" title="ARTOS::Rectangle::setHeight" alt="" coords="233,664,431,691"/>
+<area shape="rect" id="node20" href="$class_a_r_t_o_s_1_1_rectangle.html#a51fcde43e3b8803b7fcf3bba60167894" title="ARTOS::Rectangle::height" alt="" coords="487,689,665,716"/>
+<area shape="rect" id="node21" href="$struct_a_r_t_o_s_1_1_sample.html#a08bbb0580b6fabca4adfe69021552866" title="ARTOS::Sample::bboxes" alt="" coords="247,765,417,792"/>
+<area shape="rect" id="node6" href="$class_a_r_t_o_s_1_1_j_p_e_g_image.html#aed01a09f279c86cc1022d10f8a49204c" title="ARTOS::JPEGImage::depth" alt="" coords="483,81,669,108"/>
+<area shape="rect" id="node9" href="$class_a_r_t_o_s_1_1_scene.html#a0e0f7a1e3cb17c1d9bad86a796f2b6dd" title="ARTOS::Scene::height" alt="" coords="498,233,654,260"/>
+<area shape="rect" id="node10" href="$class_a_r_t_o_s_1_1_scene.html#aed6c54726930f7fd609f0a62ef87adde" title="ARTOS::Scene::depth" alt="" coords="499,284,653,311"/>
+<area shape="rect" id="node11" href="$class_a_r_t_o_s_1_1_scene.html#aa824d52d8031c93ee4b7ea1224b40e84" title="ARTOS::Scene::filename" alt="" coords="491,335,661,361"/>
+</map>

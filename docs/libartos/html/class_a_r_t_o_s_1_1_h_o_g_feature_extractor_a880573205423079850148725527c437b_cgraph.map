@@ -1,0 +1,9 @@
+<map id="ARTOS::HOGFeatureExtractor::computeOptimalModelSize" name="ARTOS::HOGFeatureExtractor::computeOptimalModelSize">
+<area shape="rect" id="node2" href="$namespacestd.html#aef13da5baa79cdc514d9729bc0d870da" title="std::max" alt="" coords="571,18,645,44"/>
+<area shape="rect" id="node3" href="$class_a_r_t_o_s_1_1_feature_extractor.html#a49cc03865f39905be55b6e893837bb35" title="ARTOS::FeatureExtractor\l::maxImageSize" alt="" coords="271,157,444,198"/>
+<area shape="rect" id="node4" href="$class_a_r_t_o_s_1_1_h_o_g_feature_extractor.html#aee8272d34706f8f77892d37c6c6e2fa7" title="ARTOS::HOGFeatureExtractor\l::pixelsToCells" alt="" coords="256,222,459,264"/>
+<area shape="rect" id="node6" href="$class_a_r_t_o_s_1_1_h_o_g_feature_extractor.html#aca30d09660d29c84db5a1576f6c33343" title="ARTOS::HOGFeatureExtractor\l::cellSize" alt="" coords="507,281,709,322"/>
+<area shape="rect" id="node7" href="$class_a_r_t_o_s_1_1_feature_extractor.html#a00137b4abb85b590a1ccd7e02559fe4f" title="ARTOS::FeatureExtractor\l::commonAspectRatio" alt="" coords="271,40,444,81"/>
+<area shape="rect" id="node8" href="$namespacestd.html#a132e7ea1827f9f0ba7685c771563fc42" title="std::min" alt="" coords="573,87,643,114"/>
+<area shape="rect" id="node5" href="$class_a_r_t_o_s_1_1_feature_extractor.html#a636f9cde076e9bd7a2f9dd59566b5f50" title="ARTOS::FeatureExtractor\l::borderSize" alt="" coords="521,216,695,257"/>
+</map>

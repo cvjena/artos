@@ -10,6 +10,7 @@ var searchData=
   ['config',['config',['../namespace_py_a_r_t_o_s_1_1config.html',1,'PyARTOS']]],
   ['cvcapture',['CvCapture',['../namespace_py_a_r_t_o_s_1_1_camera_1_1_cv_capture.html',1,'PyARTOS::Camera']]],
   ['detecting',['detecting',['../namespace_py_a_r_t_o_s_1_1detecting.html',1,'PyARTOS']]],
+  ['evaluation',['Evaluation',['../namespace_py_a_r_t_o_s_1_1_g_u_i_1_1_evaluation.html',1,'PyARTOS::GUI']]],
   ['gui',['GUI',['../namespace_py_a_r_t_o_s_1_1_g_u_i.html',1,'PyARTOS']]],
   ['gui_5futils',['gui_utils',['../namespace_py_a_r_t_o_s_1_1_g_u_i_1_1gui__utils.html',1,'PyARTOS::GUI']]],
   ['imagenet',['imagenet',['../namespace_py_a_r_t_o_s_1_1imagenet.html',1,'PyARTOS']]],

@@ -1,6 +1,11 @@
 <map id="StationaryBackground.h" name="StationaryBackground.h">
-<area shape="rect" id="node4" href="$defs_8h.html" title="defs.h" alt="" coords="319,155,376,181"/>
-<area shape="rect" id="node11" href="$_synset_iterators_8h.html" title="SynsetIterators.h" alt="" coords="492,80,615,107"/>
-<area shape="rect" id="node14" href="$_synset_image_8h.html" title="SynsetImage.h" alt="" coords="539,155,649,181"/>
-<area shape="rect" id="node16" href="$_tar_extractor_8h.html" title="TarExtractor.h" alt="" coords="674,155,779,181"/>
+<area shape="rect" id="node4" href="$defs_8h.html" title="defs.h" alt="" coords="563,155,620,181"/>
+<area shape="rect" id="node18" href="$_feature_extractor_8h.html" title="FeatureExtractor.h" alt="" coords="891,80,1020,107"/>
+<area shape="rect" id="node25" href="$_synset_iterators_8h.html" title="SynsetIterators.h" alt="" coords="104,155,227,181"/>
+<area shape="rect" id="node7" href="$_j_p_e_g_image_8h.html" title="JPEGImage.h" alt="" coords="644,304,748,331"/>
+<area shape="rect" id="node14" href="$_rectangle_8h.html" title="Rectangle.h" alt="" coords="477,304,568,331"/>
+<area shape="rect" id="node16" href="$_synset_image_8h.html" title="SynsetImage.h" alt="" coords="366,229,476,256"/>
+<area shape="rect" id="node10" href="$_feature_matrix_8h.html" title="FeatureMatrix.h" alt="" coords="854,379,967,405"/>
+<area shape="rect" id="node23" href="$exceptions_8h.html" title="exceptions.h" alt="" coords="908,155,1004,181"/>
+<area shape="rect" id="node28" href="$_tar_extractor_8h.html" title="TarExtractor.h" alt="" coords="81,304,185,331"/>
 </map>

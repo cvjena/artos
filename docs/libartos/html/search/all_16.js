@@ -1,4 +1,7 @@
 var searchData=
 [
-  ['x',['x',['../struct_a_r_t_o_s_1_1_detection.html#a6c7cf4421ca445f27c5706e204bfd49b',1,'ARTOS::Detection']]]
+  ['what',['what',['../class_a_r_t_o_s_1_1_exception.html#af5062a7cb012135892a141864763d1d5',1,'ARTOS::Exception']]],
+  ['width',['width',['../struct_a_r_t_o_s_1_1_size.html#aea68ff157e5cecd85ba6017820d87c86',1,'ARTOS::Size::width()'],['../struct_flat_bounding_box.html#a5808e280feb250da6c2ca1f4ece78f95',1,'FlatBoundingBox::width()'],['../class_a_r_t_o_s_1_1_j_p_e_g_image.html#a6876061ad7198120040466d332a46bdc',1,'ARTOS::JPEGImage::width()'],['../class_a_r_t_o_s_1_1_rectangle.html#af62553af29f32815e5055f67b96f5603',1,'ARTOS::Rectangle::width()'],['../class_a_r_t_o_s_1_1_scene.html#a6d0072b5619c3d3c3dd49e3487a67cc8',1,'ARTOS::Scene::width()']]],
+  ['write_5fresults_5fto_5fbuffer',['write_results_to_buffer',['../libartos_8cc.html#a130ead863678478d5a2b947b0bda8304',1,'libartos.cc']]],
+  ['writetofile',['writeToFile',['../class_a_r_t_o_s_1_1_stationary_background.html#a42c08daea150963119aea4b1a1167cae',1,'ARTOS::StationaryBackground']]]
 ];

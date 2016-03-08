@@ -1,0 +1,5 @@
+<map id="ARTOS::ModelLearner::addPositiveSample" name="ARTOS::ModelLearner::addPositiveSample">
+<area shape="rect" id="node2" href="$class_a_r_t_o_s_1_1_model_learner_base.html#a33481332e2f0289c1108466818470a37" title="ARTOS::ModelLearnerBase\l::addPositiveSample" alt="" coords="208,5,392,46"/>
+<area shape="rect" id="node4" href="$struct_a_r_t_o_s_1_1_sample.html#a08bbb0580b6fabca4adfe69021552866" title="ARTOS::Sample::bboxes" alt="" coords="215,71,385,97"/>
+<area shape="rect" id="node3" href="$class_a_r_t_o_s_1_1_synset_image.html#a39f6740dfbbc5651553af6c31c434719" title="ARTOS::SynsetImage\l::valid" alt="" coords="441,5,594,46"/>
+</map>

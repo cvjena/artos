@@ -1,13 +1,9 @@
 var searchData=
 [
-  ['imageiterator',['ImageIterator',['../class_a_r_t_o_s_1_1_image_iterator.html#acb3f59cb651ae0a3c4244fe21086f529',1,'ARTOS::ImageIterator']]],
-  ['imagenetmodellearner',['ImageNetModelLearner',['../class_a_r_t_o_s_1_1_image_net_model_learner.html#a2af1d43a8c3a497283a8161807e59576',1,'ARTOS::ImageNetModelLearner::ImageNetModelLearner()'],['../class_a_r_t_o_s_1_1_image_net_model_learner.html#ae5b213c9800e46c6844b180e8f379279',1,'ARTOS::ImageNetModelLearner::ImageNetModelLearner(const StationaryBackground &amp;bg, const ImageRepository &amp;repo, const bool loocv=true, const bool verbose=false)'],['../class_a_r_t_o_s_1_1_image_net_model_learner.html#a70b0bd386eb6494d9a83e8a0d2758452',1,'ARTOS::ImageNetModelLearner::ImageNetModelLearner(const std::string &amp;bgFile, const std::string &amp;repoDirectory, const bool loocv=true, const bool verbose=false)']]],
-  ['imagerepository',['ImageRepository',['../class_a_r_t_o_s_1_1_image_repository.html#a92a2fac1f0ad67d7bf8f6ce259fb3d3e',1,'ARTOS::ImageRepository::ImageRepository(const std::string &amp;repoDirectory)'],['../class_a_r_t_o_s_1_1_image_repository.html#a3f982f1244b2866e722e98c6bb08fca8',1,'ARTOS::ImageRepository::ImageRepository(const ImageRepository &amp;other)']]],
-  ['initpatchwork',['initPatchwork',['../class_a_r_t_o_s_1_1_d_p_m_detection.html#a9e875e93dfc610b4865cd63be33176e7',1,'ARTOS::DPMDetection']]],
-  ['interval',['interval',['../class_a_r_t_o_s_1_1_feature_pyramid.html#ab3c9064626fd35cece4369e074a97d65',1,'ARTOS::FeaturePyramid']]],
-  ['is_5fdir',['is_dir',['../sysutils_8cc.html#a673ec6a3fa94cbc71c56abc7c767c37e',1,'is_dir(const string &amp;path):&#160;sysutils.cc'],['../sysutils_8h.html#ad5849662d9826d4f6ac56a07c6088432',1,'is_dir(const std::string &amp;path):&#160;sysutils.h']]],
-  ['is_5ffile',['is_file',['../sysutils_8cc.html#a3b20134fe3370eb84f95a12e7dc72bbb',1,'is_file(const string &amp;path):&#160;sysutils.cc'],['../sysutils_8h.html#a30a27fc5392e67f42f348e3ac4e38add',1,'is_file(const std::string &amp;path):&#160;sysutils.h']]],
-  ['is_5fvalid_5fdetector_5fhandle',['is_valid_detector_handle',['../libartos_8cc.html#a9410497cc2ce4aa85415e175502a025b',1,'libartos.cc']]],
-  ['is_5fvalid_5flearner_5fhandle',['is_valid_learner_handle',['../libartos_8cc.html#a7f0b115c2293574072fc57cc5e5b6137',1,'libartos.cc']]],
-  ['isopen',['isOpen',['../class_a_r_t_o_s_1_1_tar_extractor.html#af78b4149fd55c549a7a08eedb660f535',1,'ARTOS::TarExtractor']]]
+  ['harmony_5fsearch',['harmony_search',['../namespace_a_r_t_o_s.html#a3727c4158b447db97378256edd28b19e',1,'ARTOS']]],
+  ['hasrepositorystructure',['hasRepositoryStructure',['../class_a_r_t_o_s_1_1_image_repository.html#a7d7457665c3c156736293a19e4c6bddb',1,'ARTOS::ImageRepository']]],
+  ['height',['height',['../class_a_r_t_o_s_1_1_j_p_e_g_image.html#aa8a99643896fd76976cb6b1629d69746',1,'ARTOS::JPEGImage::height()'],['../class_a_r_t_o_s_1_1_rectangle.html#a51fcde43e3b8803b7fcf3bba60167894',1,'ARTOS::Rectangle::height()'],['../class_a_r_t_o_s_1_1_scene.html#a0e0f7a1e3cb17c1d9bad86a796f2b6dd',1,'ARTOS::Scene::height()']]],
+  ['hog',['HOG',['../class_a_r_t_o_s_1_1_h_o_g_feature_extractor.html#a3704f3c4e28cc54f269f3badfe8ab26c',1,'ARTOS::HOGFeatureExtractor']]],
+  ['hogfeatureextractor',['HOGFeatureExtractor',['../class_a_r_t_o_s_1_1_h_o_g_feature_extractor.html#ae9b11c5fdc91ada8985bee8fb6a3a5c8',1,'ARTOS::HOGFeatureExtractor::HOGFeatureExtractor()'],['../class_a_r_t_o_s_1_1_h_o_g_feature_extractor.html#a907f23e4f8f97e6e6e3ec755c6ad79c4',1,'ARTOS::HOGFeatureExtractor::HOGFeatureExtractor(const Size &amp;cellSize)']]],
+  ['hs_5ffmeasure_5fcb',['hs_fmeasure_cb',['../_model_evaluator_8cc.html#a96889736e5f53a5d8d22efd6dd6fc5a0',1,'ModelEvaluator.cc']]]
 ];

@@ -1,13 +1,17 @@
 <map id="libartos_def.h" name="libartos_def.h">
-<area shape="rect" id="node2" href="$_d_p_m_detection_8h.html" title="DPMDetection.h" alt="" coords="85,80,203,107"/>
-<area shape="rect" id="node9" href="$_image_repository_8cc.html" title="ImageNet/ImageRepository.cc" alt="" coords="227,80,425,107"/>
-<area shape="rect" id="node10" href="$_synset_image_8cc.html" title="ImageNet/SynsetImage.cc" alt="" coords="451,80,629,107"/>
-<area shape="rect" id="node11" href="$_synset_iterators_8cc.html" title="ImageNet/SynsetIterators.cc" alt="" coords="654,80,844,107"/>
-<area shape="rect" id="node12" href="$libartos_8h.html" title="libartos.h" alt="" coords="869,80,943,107"/>
-<area shape="rect" id="node3" href="$_d_p_m_detection_8cc.html" title="DPMDetection.cc" alt="" coords="6,155,132,181"/>
-<area shape="rect" id="node4" href="$libartos_8cc.html" title="libartos.cc" alt="" coords="547,155,628,181"/>
-<area shape="rect" id="node5" href="$_model_evaluator_8h.html" title="ModelEvaluator.h" alt="" coords="157,155,280,181"/>
-<area shape="rect" id="node6" href="$_model_evaluator_8cc.html" title="ModelEvaluator.cc" alt="" coords="5,229,135,256"/>
-<area shape="rect" id="node7" href="$_model_learner_8cc.html" title="ModelLearner.cc" alt="" coords="159,229,277,256"/>
-<area shape="rect" id="node8" href="$_model_learner_base_8cc.html" title="ModelLearnerBase.cc" alt="" coords="302,229,449,256"/>
+<area shape="rect" id="node2" href="$_d_p_m_detection_8h.html" title="DPMDetection.h" alt="" coords="203,80,321,107"/>
+<area shape="rect" id="node9" href="$_image_repository_8cc.html" title="ImageNet/ImageRepository.cc" alt="" coords="511,80,709,107"/>
+<area shape="rect" id="node10" href="$_synset_image_8cc.html" title="ImageNet/SynsetImage.cc" alt="" coords="735,80,913,107"/>
+<area shape="rect" id="node11" href="$_synset_iterators_8cc.html" title="ImageNet/SynsetIterators.cc" alt="" coords="938,80,1128,107"/>
+<area shape="rect" id="node12" href="$_model_learner_base_8h.html" title="ModelLearnerBase.h" alt="" coords="345,80,485,107"/>
+<area shape="rect" id="node16" href="$libartos_8h.html" title="libartos.h" alt="" coords="5,155,79,181"/>
+<area shape="rect" id="node3" href="$_d_p_m_detection_8cc.html" title="DPMDetection.cc" alt="" coords="105,155,231,181"/>
+<area shape="rect" id="node4" href="$_model_evaluator_8h.html" title="ModelEvaluator.h" alt="" coords="256,155,379,181"/>
+<area shape="rect" id="node5" href="$libartos_8cc.html" title="libartos.cc" alt="" coords="207,304,288,331"/>
+<area shape="rect" id="node6" href="$_model_evaluator_8cc.html" title="ModelEvaluator.cc" alt="" coords="80,229,209,256"/>
+<area shape="rect" id="node7" href="$_model_learner_8cc.html" title="ModelLearner.cc" alt="" coords="458,229,576,256"/>
+<area shape="rect" id="node8" href="$_model_learner_base_8cc.html" title="ModelLearnerBase.cc" alt="" coords="286,229,433,256"/>
+<area shape="rect" id="node13" href="$_model_learner_8h.html" title="ModelLearner.h" alt="" coords="462,155,572,181"/>
+<area shape="rect" id="node14" href="$_image_net_model_learner_8h.html" title="ImageNetModelLearner.h" alt="" coords="601,229,769,256"/>
+<area shape="rect" id="node15" href="$_image_net_model_learner_8cc.html" title="ImageNetModelLearner.cc" alt="" coords="598,304,772,331"/>
 </map>

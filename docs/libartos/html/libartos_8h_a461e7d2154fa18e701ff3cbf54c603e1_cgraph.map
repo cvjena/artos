@@ -1,5 +1,9 @@
 <map id="learner_save" name="learner_save">
 <area shape="rect" id="node2" href="$libartos_8cc.html#a7f0b115c2293574072fc57cc5e5b6137" title="is_valid_learner_handle" alt="" coords="163,5,320,32"/>
-<area shape="rect" id="node3" href="$class_a_r_t_o_s_1_1_model_learner_base.html#a3239865136bcb217fc55e925c6249901" title="ARTOS::ModelLearnerBase\l::getModels" alt="" coords="149,57,333,98"/>
+<area shape="rect" id="node3" href="$class_a_r_t_o_s_1_1_model_learner_base.html#a017b80e39ce80bf5ad3eec1c528cac88" title="ARTOS::ModelLearnerBase\l::getModels" alt="" coords="149,57,333,98"/>
 <area shape="rect" id="node4" href="$class_a_r_t_o_s_1_1_model_learner_base.html#a67b999c285472ac03522f8c327d7aa61" title="ARTOS::ModelLearnerBase\l::save" alt="" coords="149,122,333,163"/>
+<area shape="rect" id="node5" href="$class_a_r_t_o_s_1_1_mixture.html#a208327a889f6eabd3473ce0a8c65ba3a" title="ARTOS::Mixture::addModel" alt="" coords="382,129,565,156"/>
+<area shape="rect" id="node6" href="$class_a_r_t_o_s_1_1_model.html#a10abfb84338378da2152bae25d0ab0c2" title="ARTOS::Model::empty" alt="" coords="628,104,783,131"/>
+<area shape="rect" id="node8" href="$class_a_r_t_o_s_1_1_model.html#a7adcef39a7140b43bff04d53e02fc770" title="ARTOS::Model::nbFeatures" alt="" coords="613,155,797,181"/>
+<area shape="rect" id="node7" href="$class_a_r_t_o_s_1_1_model.html#a9a64087a29e741402a35c730cf36a52e" title="ARTOS::Model::nbParts" alt="" coords="846,104,1010,131"/>
 </map>

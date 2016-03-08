@@ -1,10 +1,13 @@
 <map id="ImageNet/ImageRepository.cc" name="ImageNet/ImageRepository.cc">
-<area shape="rect" id="node2" href="$_image_repository_8h.html" title="ImageRepository.h" alt="" coords="291,80,423,107"/>
-<area shape="rect" id="node17" href="$libartos__def_8h.html" title="libartos_def.h" alt="" coords="546,80,645,107"/>
-<area shape="rect" id="node18" href="$strutils_8h.html" title="strutils.h" alt="" coords="625,304,697,331"/>
-<area shape="rect" id="node19" href="$sysutils_8h.html" title="sysutils.h" alt="" coords="773,304,851,331"/>
-<area shape="rect" id="node5" href="$_synset_8h.html" title="Synset.h" alt="" coords="395,155,468,181"/>
-<area shape="rect" id="node6" href="$_synset_iterators_8h.html" title="SynsetIterators.h" alt="" coords="296,229,419,256"/>
-<area shape="rect" id="node9" href="$_synset_image_8h.html" title="SynsetImage.h" alt="" coords="302,304,412,331"/>
-<area shape="rect" id="node13" href="$_tar_extractor_8h.html" title="TarExtractor.h" alt="" coords="169,304,273,331"/>
+<area shape="rect" id="node2" href="$_image_repository_8h.html" title="ImageRepository.h" alt="" coords="453,80,584,107"/>
+<area shape="rect" id="node24" href="$libartos__def_8h.html" title="libartos_def.h" alt="" coords="708,80,807,107"/>
+<area shape="rect" id="node25" href="$strutils_8h.html" title="strutils.h" alt="" coords="142,379,214,405"/>
+<area shape="rect" id="node26" href="$sysutils_8h.html" title="sysutils.h" alt="" coords="38,379,116,405"/>
+<area shape="rect" id="node5" href="$_synset_8h.html" title="Synset.h" alt="" coords="452,155,526,181"/>
+<area shape="rect" id="node6" href="$_synset_iterators_8h.html" title="SynsetIterators.h" alt="" coords="498,229,620,256"/>
+<area shape="rect" id="node9" href="$_synset_image_8h.html" title="SynsetImage.h" alt="" coords="652,304,762,331"/>
+<area shape="rect" id="node21" href="$_tar_extractor_8h.html" title="TarExtractor.h" alt="" coords="272,304,376,331"/>
+<area shape="rect" id="node11" href="$_j_p_e_g_image_8h.html" title="JPEGImage.h" alt="" coords="838,379,942,405"/>
+<area shape="rect" id="node19" href="$_rectangle_8h.html" title="Rectangle.h" alt="" coords="972,379,1063,405"/>
+<area shape="rect" id="node14" href="$_feature_matrix_8h.html" title="FeatureMatrix.h" alt="" coords="766,453,879,480"/>
 </map>

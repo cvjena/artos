@@ -1,0 +1,13 @@
+<map id="ARTOS::Intersector::operator()" name="ARTOS::Intersector::operator()">
+<area shape="rect" id="node2" href="$namespacestd.html#aef13da5baa79cdc514d9729bc0d870da" title="std::max" alt="" coords="477,171,550,197"/>
+<area shape="rect" id="node3" href="$class_a_r_t_o_s_1_1_rectangle.html#a1f169cef3c9b8307e8dc7c6093bfdd14" title="ARTOS::Rectangle::left" alt="" coords="203,5,365,32"/>
+<area shape="rect" id="node5" href="$namespacestd.html#a132e7ea1827f9f0ba7685c771563fc42" title="std::min" alt="" coords="249,107,319,133"/>
+<area shape="rect" id="node6" href="$class_a_r_t_o_s_1_1_rectangle.html#a8e76ee84d39c8c063cb2ef0e1cb7f5df" title="ARTOS::Rectangle::right" alt="" coords="200,56,368,83"/>
+<area shape="rect" id="node8" href="$class_a_r_t_o_s_1_1_rectangle.html#a8eb6de2c6d532b2175bddd8484196eab" title="ARTOS::Rectangle::top" alt="" coords="203,309,365,336"/>
+<area shape="rect" id="node10" href="$class_a_r_t_o_s_1_1_rectangle.html#a46e18ff7c2ca4fd068442cabcd0b4046" title="ARTOS::Rectangle::bottom" alt="" coords="193,259,375,285"/>
+<area shape="rect" id="node12" href="$class_a_r_t_o_s_1_1_rectangle.html#a68cbcd58fbc7b8aa235917abf4580da7" title="ARTOS::Rectangle::area" alt="" coords="200,208,368,235"/>
+<area shape="rect" id="node4" href="$class_a_r_t_o_s_1_1_rectangle.html#aeb9afe5d3ed04bc0158205488260b48b" title="ARTOS::Rectangle::x" alt="" coords="438,31,589,57"/>
+<area shape="rect" id="node7" href="$class_a_r_t_o_s_1_1_rectangle.html#af62553af29f32815e5055f67b96f5603" title="ARTOS::Rectangle::width" alt="" coords="426,107,601,133"/>
+<area shape="rect" id="node9" href="$class_a_r_t_o_s_1_1_rectangle.html#a2e8a52081b2efe4f08d4bcabb9ee8cc5" title="ARTOS::Rectangle::y" alt="" coords="438,297,589,324"/>
+<area shape="rect" id="node11" href="$class_a_r_t_o_s_1_1_rectangle.html#a51fcde43e3b8803b7fcf3bba60167894" title="ARTOS::Rectangle::height" alt="" coords="424,247,603,273"/>
+</map>

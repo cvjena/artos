@@ -1,4 +1,11 @@
 <map id="FeatureExtractor.cc" name="FeatureExtractor.cc">
-<area shape="rect" id="node2" href="$_feature_extractor_8h.html" title="FeatureExtractor.h" alt="" coords="36,80,165,107"/>
-<area shape="rect" id="node5" href="$_h_o_g_feature_extractor_8h.html" title="HOGFeatureExtractor.h" alt="" coords="139,155,297,181"/>
+<area shape="rect" id="node2" href="$_feature_extractor_8h.html" title="FeatureExtractor.h" alt="" coords="517,155,647,181"/>
+<area shape="rect" id="node27" href="$strutils_8h.html" title="strutils.h" alt="" coords="867,379,939,405"/>
+<area shape="rect" id="node28" href="$_h_o_g_feature_extractor_8h.html" title="HOGFeatureExtractor.h" alt="" coords="444,80,603,107"/>
+<area shape="rect" id="node11" href="$defs_8h.html" title="defs.h" alt="" coords="284,229,341,256"/>
+<area shape="rect" id="node13" href="$_j_p_e_g_image_8h.html" title="JPEGImage.h" alt="" coords="216,379,320,405"/>
+<area shape="rect" id="node15" href="$_feature_matrix_8h.html" title="FeatureMatrix.h" alt="" coords="143,453,256,480"/>
+<area shape="rect" id="node23" href="$exceptions_8h.html" title="exceptions.h" alt="" coords="712,229,808,256"/>
+<area shape="rect" id="node19" href="$_rectangle_8h.html" title="Rectangle.h" alt="" coords="99,379,191,405"/>
+<area shape="rect" id="node21" href="$_synset_image_8h.html" title="SynsetImage.h" alt="" coords="323,304,433,331"/>
 </map>

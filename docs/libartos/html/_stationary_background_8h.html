@@ -30,7 +30,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">ARTOS
-   &#160;<span id="projectnumber">1.2</span>
+   &#160;<span id="projectnumber">2.0</span>
    </div>
    <div id="projectbrief">Adaptive Real-Time Object Detection System</div>
   </td>
@@ -46,7 +46,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
-      <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li><a href="annotated.html"><span>Classes</span></a></li>
       <li class="current"><a href="files.html"><span>Files</span></a></li>
@@ -94,7 +93,7 @@ $(document).ready(function(){initNavTree('_stationary_background_8h.html','');})
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(10)"><span class="SelectionMark">&#160;</span>Pages</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Friends</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(10)"><span class="SelectionMark">&#160;</span>Macros</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -106,7 +105,8 @@ $(document).ready(function(){initNavTree('_stationary_background_8h.html','');})
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#namespaces">Namespaces</a>  </div>
+<a href="#namespaces">Namespaces</a> &#124;
+<a href="#define-members">Macros</a>  </div>
   <div class="headertitle">
 <div class="title">StationaryBackground.h File Reference</div>  </div>
 </div><!--header-->
@@ -114,13 +114,14 @@ $(document).ready(function(){initNavTree('_stationary_background_8h.html','');})
 <div class="textblock"><code>#include &lt;string&gt;</code><br />
 <code>#include &lt;Eigen/Core&gt;</code><br />
 <code>#include &quot;<a class="el" href="defs_8h_source.html">defs.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="_feature_extractor_8h_source.html">FeatureExtractor.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="_synset_iterators_8h_source.html">SynsetIterators.h</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for StationaryBackground.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="_stationary_background_8h__incl.png" border="0" usemap="#_stationary_background_8h" alt=""/></div>
 <map name="_stationary_background_8h" id="_stationary_background_8h">
-<area shape="rect" id="node4" href="defs_8h.html" title="defs.h" alt="" coords="319,155,376,181"/><area shape="rect" id="node11" href="_synset_iterators_8h.html" title="SynsetIterators.h" alt="" coords="492,80,615,107"/><area shape="rect" id="node14" href="_synset_image_8h.html" title="SynsetImage.h" alt="" coords="539,155,649,181"/><area shape="rect" id="node16" href="_tar_extractor_8h.html" title="TarExtractor.h" alt="" coords="674,155,779,181"/></map>
+<area shape="rect" id="node4" href="defs_8h.html" title="defs.h" alt="" coords="563,155,620,181"/><area shape="rect" id="node18" href="_feature_extractor_8h.html" title="FeatureExtractor.h" alt="" coords="891,80,1020,107"/><area shape="rect" id="node25" href="_synset_iterators_8h.html" title="SynsetIterators.h" alt="" coords="104,155,227,181"/><area shape="rect" id="node7" href="_j_p_e_g_image_8h.html" title="JPEGImage.h" alt="" coords="644,304,748,331"/><area shape="rect" id="node14" href="_rectangle_8h.html" title="Rectangle.h" alt="" coords="477,304,568,331"/><area shape="rect" id="node16" href="_synset_image_8h.html" title="SynsetImage.h" alt="" coords="366,229,476,256"/><area shape="rect" id="node10" href="_feature_matrix_8h.html" title="FeatureMatrix.h" alt="" coords="854,379,967,405"/><area shape="rect" id="node23" href="exceptions_8h.html" title="exceptions.h" alt="" coords="908,155,1004,181"/><area shape="rect" id="node28" href="_tar_extractor_8h.html" title="TarExtractor.h" alt="" coords="81,304,185,331"/></map>
 </div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
@@ -141,14 +142,32 @@ Classes</h2></td></tr>
 Namespaces</h2></td></tr>
 <tr class="memitem:namespace_a_r_t_o_s"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_a_r_t_o_s.html">ARTOS</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:aaa9413c18e86a48318fff18b9f13572f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_stationary_background_8h.html#aaa9413c18e86a48318fff18b9f13572f">ARTOS_BG_MAGIC</a>&#160;&#160;&#160;0x04667900</td></tr>
+<tr class="separator:aaa9413c18e86a48318fff18b9f13572f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Macro Definition Documentation</h2>
+<a class="anchor" id="aaa9413c18e86a48318fff18b9f13572f"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define ARTOS_BG_MAGIC&#160;&#160;&#160;0x04667900</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="_stationary_background_8h.html">StationaryBackground.h</a></li>
-    <li class="footer">Generated on Mon Nov 2 2015 20:17:42 for ARTOS by
+    <li class="footer">Generated on Mon Mar 7 2016 23:43:35 for ARTOS by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.7 </li>
   </ul>

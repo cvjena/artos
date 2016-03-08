@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['flatboundingbox',['FlatBoundingBox',['../class_py_a_r_t_o_s_1_1artos__wrapper_1_1_flat_bounding_box.html',1,'PyARTOS::artos_wrapper']]],
-  ['flatdetection',['FlatDetection',['../class_py_a_r_t_o_s_1_1artos__wrapper_1_1_flat_detection.html',1,'PyARTOS::artos_wrapper']]]
+  ['evaluationdialog',['EvaluationDialog',['../class_py_a_r_t_o_s_1_1_g_u_i_1_1_evaluation_1_1_evaluation_dialog.html',1,'PyARTOS::GUI::Evaluation']]],
+  ['evaluationvisualization',['EvaluationVisualization',['../class_py_a_r_t_o_s_1_1_g_u_i_1_1_evaluation_1_1_evaluation_visualization.html',1,'PyARTOS::GUI::Evaluation']]]
 ];

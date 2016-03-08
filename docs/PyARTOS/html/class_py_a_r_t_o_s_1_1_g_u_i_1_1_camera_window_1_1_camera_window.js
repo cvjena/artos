@@ -32,11 +32,13 @@ var class_py_a_r_t_o_s_1_1_g_u_i_1_1_camera_window_1_1_camera_window =
     [ "lblFPS", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_camera_window_1_1_camera_window.html#afbfe539697b0ef2a199efe0185d1ffb9", null ],
     [ "lblModelDir", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_camera_window_1_1_camera_window.html#ace68e99d4cebe45e687751f300da914e", null ],
     [ "lblVideo", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_camera_window_1_1_camera_window.html#a4ea04a6e8bdeddfd142987f19bcf3d5e", null ],
+    [ "lblWarning", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_camera_window_1_1_camera_window.html#a9e7bf6686627165170ddee40038e8522", null ],
     [ "maxVideoSize", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_camera_window_1_1_camera_window.html#af4c6d9c52b7c532a9e1935dade2e9158", null ],
     [ "modelDir", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_camera_window_1_1_camera_window.html#abf40a1298c8272117122d5142b44b512", null ],
     [ "needNewFrame", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_camera_window_1_1_camera_window.html#a29be47e1cb508c585dcb7f056841572f", null ],
     [ "nextColorIndex", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_camera_window_1_1_camera_window.html#a5f8db813c38ae4929ba9eecac6085664", null ],
     [ "numModels", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_camera_window_1_1_camera_window.html#a64c8eddd06c7398f49d3dcd91c16dad5", null ],
     [ "pollId", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_camera_window_1_1_camera_window.html#ab79111f34c88fd0b761ab0873a44b909", null ],
-    [ "terminateThread", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_camera_window_1_1_camera_window.html#a437ba4c725527e7e63777795bee7562b", null ]
+    [ "terminateThread", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_camera_window_1_1_camera_window.html#a437ba4c725527e7e63777795bee7562b", null ],
+    [ "warnMsg", "class_py_a_r_t_o_s_1_1_g_u_i_1_1_camera_window_1_1_camera_window.html#ad0a3642350ee9600c77700a4b7e483d5", null ]
 ];

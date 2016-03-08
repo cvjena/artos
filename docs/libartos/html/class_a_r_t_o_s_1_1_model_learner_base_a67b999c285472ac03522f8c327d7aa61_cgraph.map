@@ -1,0 +1,6 @@
+<map id="ARTOS::ModelLearnerBase::save" name="ARTOS::ModelLearnerBase::save">
+<area shape="rect" id="node2" href="$class_a_r_t_o_s_1_1_mixture.html#a208327a889f6eabd3473ce0a8c65ba3a" title="ARTOS::Mixture::addModel" alt="" coords="238,31,421,57"/>
+<area shape="rect" id="node3" href="$class_a_r_t_o_s_1_1_model.html#a10abfb84338378da2152bae25d0ab0c2" title="ARTOS::Model::empty" alt="" coords="484,5,639,32"/>
+<area shape="rect" id="node5" href="$class_a_r_t_o_s_1_1_model.html#a7adcef39a7140b43bff04d53e02fc770" title="ARTOS::Model::nbFeatures" alt="" coords="469,56,653,83"/>
+<area shape="rect" id="node4" href="$class_a_r_t_o_s_1_1_model.html#a9a64087a29e741402a35c730cf36a52e" title="ARTOS::Model::nbParts" alt="" coords="702,5,866,32"/>
+</map>

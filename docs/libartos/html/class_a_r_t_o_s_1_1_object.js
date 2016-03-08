@@ -1,0 +1,48 @@
+var class_a_r_t_o_s_1_1_object =
+[
+    [ "Name", "class_a_r_t_o_s_1_1_object.html#af221086a5eb4ca632ada7f5ac1b439a4", [
+      [ "AEROPLANE", "class_a_r_t_o_s_1_1_object.html#af221086a5eb4ca632ada7f5ac1b439a4a5e8c23736b21efb667b66f6473f8ce9f", null ],
+      [ "BICYCLE", "class_a_r_t_o_s_1_1_object.html#af221086a5eb4ca632ada7f5ac1b439a4a800d0b2d62b42643f4e4a2cc4f2b740f", null ],
+      [ "BIRD", "class_a_r_t_o_s_1_1_object.html#af221086a5eb4ca632ada7f5ac1b439a4a811f678ae0cea62c36cf927ef13796a0", null ],
+      [ "BOAT", "class_a_r_t_o_s_1_1_object.html#af221086a5eb4ca632ada7f5ac1b439a4afaacc5a65e0ab4f07a3bf756cd4b1834", null ],
+      [ "BOTTLE", "class_a_r_t_o_s_1_1_object.html#af221086a5eb4ca632ada7f5ac1b439a4a1e37ef1678f2e60191f1c355ae9ed021", null ],
+      [ "BUS", "class_a_r_t_o_s_1_1_object.html#af221086a5eb4ca632ada7f5ac1b439a4a3842aa78b845e838b8192cdb2305562e", null ],
+      [ "CAR", "class_a_r_t_o_s_1_1_object.html#af221086a5eb4ca632ada7f5ac1b439a4a5b168b96e2938f1cc58d1ffe5e621d32", null ],
+      [ "CAT", "class_a_r_t_o_s_1_1_object.html#af221086a5eb4ca632ada7f5ac1b439a4a642da9f76a5bcd1183063f2b4f0b7525", null ],
+      [ "CHAIR", "class_a_r_t_o_s_1_1_object.html#af221086a5eb4ca632ada7f5ac1b439a4aa4b99080fcad9134d6a513d49f3d2d62", null ],
+      [ "COW", "class_a_r_t_o_s_1_1_object.html#af221086a5eb4ca632ada7f5ac1b439a4ae8768a93874b1ca08e67cacb4c04cbbe", null ],
+      [ "DININGTABLE", "class_a_r_t_o_s_1_1_object.html#af221086a5eb4ca632ada7f5ac1b439a4a4f1fd1f1cd709b53009a1f5092e44061", null ],
+      [ "DOG", "class_a_r_t_o_s_1_1_object.html#af221086a5eb4ca632ada7f5ac1b439a4a244f7f3618b7786ca0c70a43d024adf9", null ],
+      [ "HORSE", "class_a_r_t_o_s_1_1_object.html#af221086a5eb4ca632ada7f5ac1b439a4a87941d1192f6820a1ed346e922859b38", null ],
+      [ "MOTORBIKE", "class_a_r_t_o_s_1_1_object.html#af221086a5eb4ca632ada7f5ac1b439a4aa8bbc929a03f447383122c901a26e461", null ],
+      [ "PERSON", "class_a_r_t_o_s_1_1_object.html#af221086a5eb4ca632ada7f5ac1b439a4ad80edee59d848498fab5130a9902a8aa", null ],
+      [ "POTTEDPLANT", "class_a_r_t_o_s_1_1_object.html#af221086a5eb4ca632ada7f5ac1b439a4a06ea4c0491a995ced453ad6591776efa", null ],
+      [ "SHEEP", "class_a_r_t_o_s_1_1_object.html#af221086a5eb4ca632ada7f5ac1b439a4a64172b0447111d8c0c91073f005469b7", null ],
+      [ "SOFA", "class_a_r_t_o_s_1_1_object.html#af221086a5eb4ca632ada7f5ac1b439a4a9c4bbe3452d71038fee97de884b35a27", null ],
+      [ "TRAIN", "class_a_r_t_o_s_1_1_object.html#af221086a5eb4ca632ada7f5ac1b439a4adcf1a28edbaf02dd6787638b6a6a12e5", null ],
+      [ "TVMONITOR", "class_a_r_t_o_s_1_1_object.html#af221086a5eb4ca632ada7f5ac1b439a4a2cf9c0d867b0e687fd003166c5455690", null ],
+      [ "UNKNOWN", "class_a_r_t_o_s_1_1_object.html#af221086a5eb4ca632ada7f5ac1b439a4aefec3b8325bf02bcae5b719d1a83cef2", null ]
+    ] ],
+    [ "Pose", "class_a_r_t_o_s_1_1_object.html#ad33d1529322954596e6f7aa9703b8810", [
+      [ "FRONTAL", "class_a_r_t_o_s_1_1_object.html#ad33d1529322954596e6f7aa9703b8810a92b286c11bd43a91467d3f4b33de353b", null ],
+      [ "LEFT", "class_a_r_t_o_s_1_1_object.html#ad33d1529322954596e6f7aa9703b8810aac1b0448d65d7ef774fade63e5d7dced", null ],
+      [ "REAR", "class_a_r_t_o_s_1_1_object.html#ad33d1529322954596e6f7aa9703b8810ade140a367aba810872238a545e6edc3d", null ],
+      [ "RIGHT", "class_a_r_t_o_s_1_1_object.html#ad33d1529322954596e6f7aa9703b8810a02d84ffa6646dbd285047d9aaff05e08", null ],
+      [ "UNSPECIFIED", "class_a_r_t_o_s_1_1_object.html#ad33d1529322954596e6f7aa9703b8810a8bc28a2c0d2cd2e3ff0c53a179ead33b", null ]
+    ] ],
+    [ "Object", "class_a_r_t_o_s_1_1_object.html#a40860402e64d8008fb42329df7097cdb", null ],
+    [ "Object", "class_a_r_t_o_s_1_1_object.html#a1078bdbbda7eec829d8f11717ea65970", null ],
+    [ "bndbox", "class_a_r_t_o_s_1_1_object.html#a2dd49cdfad84ccaf0ef821438b5e8aa9", null ],
+    [ "difficult", "class_a_r_t_o_s_1_1_object.html#a7316217057e6c76b57cd37b570d8c24f", null ],
+    [ "empty", "class_a_r_t_o_s_1_1_object.html#aba86e2335f3c2b2db9be38c188bf04e4", null ],
+    [ "name", "class_a_r_t_o_s_1_1_object.html#aa8b7117e7bec7bac930b7577a5dc528a", null ],
+    [ "pose", "class_a_r_t_o_s_1_1_object.html#a370d8f00e19a2fedbf29c0f99804f1a1", null ],
+    [ "setBndbox", "class_a_r_t_o_s_1_1_object.html#a2797d2e00d013b11ab1e82e6903fba6e", null ],
+    [ "setDifficult", "class_a_r_t_o_s_1_1_object.html#a9d090f14838946494fad4e12480396c0", null ],
+    [ "setName", "class_a_r_t_o_s_1_1_object.html#a86018800797a71678aab85b62d865b1b", null ],
+    [ "setPose", "class_a_r_t_o_s_1_1_object.html#a8bdb30bfb3d86ce087705914a6f08ca1", null ],
+    [ "setStrName", "class_a_r_t_o_s_1_1_object.html#a781abeea6596595e6a008f5e98b4256d", null ],
+    [ "setTruncated", "class_a_r_t_o_s_1_1_object.html#ad2edf2a24c537ce7731e9425a049d224", null ],
+    [ "str_name", "class_a_r_t_o_s_1_1_object.html#ab2de8400f2f0627a89e7c76b2cdb165f", null ],
+    [ "truncated", "class_a_r_t_o_s_1_1_object.html#aeb5fb9d9d6b975438b441d31230261e3", null ]
+];

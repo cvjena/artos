@@ -1,0 +1,12 @@
+<map id="loo_who" name="loo_who">
+<area shape="rect" id="node2" href="$class_a_r_t_o_s_1_1_mixture.html#aa35341d4e3ad879bf8fe29eca6685531" title="ARTOS::Mixture::models" alt="" coords="151,5,321,32"/>
+<area shape="rect" id="node3" href="$class_a_r_t_o_s_1_1_feature_matrix__.html#af099428b08a84387a406c6ee799d6f5e" title="ARTOS::FeatureMatrix\l_::rows" alt="" coords="158,57,314,98"/>
+<area shape="rect" id="node4" href="$class_a_r_t_o_s_1_1_feature_matrix__.html#af42771bea40f2ddb8e6ba1e607ecc17d" title="ARTOS::FeatureMatrix\l_::cols" alt="" coords="158,122,314,163"/>
+<area shape="rect" id="node5" href="$class_a_r_t_o_s_1_1_feature_matrix__.html#a8e6b584bf8a86b64718d0abb6d67ee1e" title="ARTOS::FeatureMatrix\l_::channels" alt="" coords="158,187,314,229"/>
+<area shape="rect" id="node6" href="$class_a_r_t_o_s_1_1_feature_matrix__.html#aac70a5bf0d8226d1d68b18ac81ba7791" title="ARTOS::FeatureMatrix\l_::data" alt="" coords="158,253,314,294"/>
+<area shape="rect" id="node7" href="$class_a_r_t_o_s_1_1_mixture.html#a8d061d6f4cb417cfe1c672216db99215" title="ARTOS::Mixture::featureExtractor" alt="" coords="126,319,346,345"/>
+<area shape="rect" id="node8" href="$class_a_r_t_o_s_1_1_mixture.html#a208327a889f6eabd3473ce0a8c65ba3a" title="ARTOS::Mixture::addModel" alt="" coords="145,369,327,396"/>
+<area shape="rect" id="node9" href="$class_a_r_t_o_s_1_1_model.html#a10abfb84338378da2152bae25d0ab0c2" title="ARTOS::Model::empty" alt="" coords="409,344,564,371"/>
+<area shape="rect" id="node11" href="$class_a_r_t_o_s_1_1_model.html#a7adcef39a7140b43bff04d53e02fc770" title="ARTOS::Model::nbFeatures" alt="" coords="395,395,579,421"/>
+<area shape="rect" id="node10" href="$class_a_r_t_o_s_1_1_model.html#a9a64087a29e741402a35c730cf36a52e" title="ARTOS::Model::nbParts" alt="" coords="627,344,791,371"/>
+</map>

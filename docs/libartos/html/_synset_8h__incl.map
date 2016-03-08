@@ -1,5 +1,8 @@
 <map id="ImageNet/Synset.h" name="ImageNet/Synset.h">
-<area shape="rect" id="node3" href="$_synset_iterators_8h.html" title="SynsetIterators.h" alt="" coords="444,80,567,107"/>
-<area shape="rect" id="node6" href="$_synset_image_8h.html" title="SynsetImage.h" alt="" coords="298,155,408,181"/>
-<area shape="rect" id="node11" href="$_tar_extractor_8h.html" title="TarExtractor.h" alt="" coords="453,155,557,181"/>
+<area shape="rect" id="node3" href="$_synset_iterators_8h.html" title="SynsetIterators.h" alt="" coords="137,80,260,107"/>
+<area shape="rect" id="node7" href="$_synset_image_8h.html" title="SynsetImage.h" alt="" coords="281,155,391,181"/>
+<area shape="rect" id="node19" href="$_tar_extractor_8h.html" title="TarExtractor.h" alt="" coords="81,229,185,256"/>
+<area shape="rect" id="node9" href="$_j_p_e_g_image_8h.html" title="JPEGImage.h" alt="" coords="477,229,581,256"/>
+<area shape="rect" id="node17" href="$_rectangle_8h.html" title="Rectangle.h" alt="" coords="645,229,736,256"/>
+<area shape="rect" id="node12" href="$_feature_matrix_8h.html" title="FeatureMatrix.h" alt="" coords="569,304,681,331"/>
 </map>

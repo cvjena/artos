@@ -1,5 +1,11 @@
 var searchData=
 [
-  ['valid',['valid',['../class_a_r_t_o_s_1_1_synset_image.html#a39f6740dfbbc5651553af6c31c434719',1,'ARTOS::SynsetImage']]],
-  ['verbose',['verbose',['../class_a_r_t_o_s_1_1_d_p_m_detection.html#ae679935bdeccfa79c6de8a3a1d3ab5bc',1,'ARTOS::DPMDetection']]]
+  ['unknown',['UNKNOWN',['../class_a_r_t_o_s_1_1_object.html#af221086a5eb4ca632ada7f5ac1b439a4aefec3b8325bf02bcae5b719d1a83cef2',1,'ARTOS::Object']]],
+  ['unknownfeatureextractorexception',['UnknownFeatureExtractorException',['../class_a_r_t_o_s_1_1_unknown_feature_extractor_exception.html',1,'ARTOS']]],
+  ['unknownfeatureextractorexception',['UnknownFeatureExtractorException',['../class_a_r_t_o_s_1_1_unknown_feature_extractor_exception.html#a86d44b4e306f6e08beab996ae171d7a7',1,'ARTOS::UnknownFeatureExtractorException::UnknownFeatureExtractorException()'],['../class_a_r_t_o_s_1_1_unknown_feature_extractor_exception.html#a25de35224b1693ce8328e9768c41f68f',1,'ARTOS::UnknownFeatureExtractorException::UnknownFeatureExtractorException(const std::string &amp;type)']]],
+  ['unknownparameterexception',['UnknownParameterException',['../class_a_r_t_o_s_1_1_unknown_parameter_exception.html',1,'ARTOS']]],
+  ['unknownparameterexception',['UnknownParameterException',['../class_a_r_t_o_s_1_1_unknown_parameter_exception.html#a1789c7141df08b32b72e6cb1107cbbf5',1,'ARTOS::UnknownParameterException::UnknownParameterException()'],['../class_a_r_t_o_s_1_1_unknown_parameter_exception.html#a52cc1b5b1b5985382e265c1f55afeebf',1,'ARTOS::UnknownParameterException::UnknownParameterException(const std::string &amp;what)'],['../class_a_r_t_o_s_1_1_unknown_parameter_exception.html#a4476911877a81a6f2e7ecae9e9e78010',1,'ARTOS::UnknownParameterException::UnknownParameterException(const std::string &amp;clsName, const std::string &amp;paramName)']]],
+  ['unspecified',['UNSPECIFIED',['../class_a_r_t_o_s_1_1_object.html#ad33d1529322954596e6f7aa9703b8810a8bc28a2c0d2cd2e3ff0c53a179ead33b',1,'ARTOS::Object']]],
+  ['usebeforesetupexception',['UseBeforeSetupException',['../class_a_r_t_o_s_1_1_use_before_setup_exception.html#a8fbf8b227c2e267df30299314fe67bc2',1,'ARTOS::UseBeforeSetupException::UseBeforeSetupException()'],['../class_a_r_t_o_s_1_1_use_before_setup_exception.html#ab0aab6817068769b0884ad53bd957f29',1,'ARTOS::UseBeforeSetupException::UseBeforeSetupException(const std::string &amp;what)']]],
+  ['usebeforesetupexception',['UseBeforeSetupException',['../class_a_r_t_o_s_1_1_use_before_setup_exception.html',1,'ARTOS']]]
 ];

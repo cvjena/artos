@@ -15,7 +15,7 @@ var NAVTREE =
       [ "Class Hierarchy", "hierarchy.html", "hierarchy" ],
       [ "Class Members", "functions.html", [
         [ "All", "functions.html", "functions_dup" ],
-        [ "Functions", "functions_func.html", null ],
+        [ "Functions", "functions_func.html", "functions_func" ],
         [ "Variables", "functions_vars.html", "functions_vars" ]
       ] ]
     ] ],
@@ -28,8 +28,9 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "____init_____8py.html",
-"class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_catalogue_window.html#a5dfb0170abe84c094a8b3cc54ab68fb0",
-"class_py_a_r_t_o_s_1_1learning_1_1_model_learner.html#ab0176b47e3e07b0e57b4533d170a454d"
+"class_py_a_r_t_o_s_1_1_g_u_i_1_1_evaluation_1_1_evaluation_dialog.html#a4ae8856b243047428d1bb47c86c74822",
+"class_py_a_r_t_o_s_1_1_g_u_i_1_1gui__utils_1_1_dialog.html#ad4592288a2d64d0ff0990063a498bdcf",
+"namespace_py_a_r_t_o_s_1_1_camera_1_1_win_capture.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

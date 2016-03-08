@@ -1,0 +1,9 @@
+<map id="evaluator_add_positive_file_jpeg" name="evaluator_add_positive_file_jpeg">
+<area shape="rect" id="node2" href="$libartos_8cc.html#a5a350eadf384969132be1db29210da6f" title="evaluator_add_positive_jpeg" alt="" coords="208,107,395,133"/>
+<area shape="rect" id="node3" href="$libartos_8cc.html#a9410497cc2ce4aa85415e175502a025b" title="is_valid_detector_handle" alt="" coords="456,5,621,32"/>
+<area shape="rect" id="node4" href="$class_a_r_t_o_s_1_1_j_p_e_g_image.html#a05e9c73c5a6721ad9410b696cad718b5" title="ARTOS::JPEGImage::empty" alt="" coords="443,107,634,133"/>
+<area shape="rect" id="node5" href="$class_a_r_t_o_s_1_1_j_p_e_g_image.html#a6876061ad7198120040466d332a46bdc" title="ARTOS::JPEGImage::width" alt="" coords="685,56,872,83"/>
+<area shape="rect" id="node6" href="$class_a_r_t_o_s_1_1_j_p_e_g_image.html#aa8a99643896fd76976cb6b1629d69746" title="ARTOS::JPEGImage::height" alt="" coords="683,157,874,184"/>
+<area shape="rect" id="node8" href="$struct_a_r_t_o_s_1_1_sample.html#a08bbb0580b6fabca4adfe69021552866" title="ARTOS::Sample::bboxes" alt="" coords="453,208,624,235"/>
+<area shape="rect" id="node7" href="$class_a_r_t_o_s_1_1_j_p_e_g_image.html#aed01a09f279c86cc1022d10f8a49204c" title="ARTOS::JPEGImage::depth" alt="" coords="685,107,872,133"/>
+</map>

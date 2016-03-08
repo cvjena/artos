@@ -1,5 +1,5 @@
 <map id="list_synsets" name="list_synsets">
-<area shape="rect" id="node2" href="$class_a_r_t_o_s_1_1_image_repository.html#a49c536e66bcd75be2acd25409b613ca2" title="ARTOS::ImageRepository\l::getNumSynsets" alt="" coords="147,5,322,46"/>
+<area shape="rect" id="node2" href="$class_a_r_t_o_s_1_1_image_repository.html#a4ca464233030b21068bcae2c08cc8a15" title="ARTOS::ImageRepository\l::getNumSynsets" alt="" coords="147,5,322,46"/>
 <area shape="rect" id="node3" href="$class_a_r_t_o_s_1_1_image_repository.html#a18706ff915b43b52ea826aa163a776ac" title="ARTOS::ImageRepository\l::listSynsets" alt="" coords="371,34,546,75"/>
 <area shape="rect" id="node4" href="$sysutils_8cc.html#aea7fafd2be88e54c39022ea792fd76e2" title="join_path" alt="" coords="595,16,669,43"/>
 <area shape="rect" id="node5" href="$strutils_8cc.html#aa7cb820696f8a66d03330e091482020c" title="trim" alt="" coords="610,67,654,93"/>

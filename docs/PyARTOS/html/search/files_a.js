@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['setupdialog_2epy',['SetupDialog.py',['../_setup_dialog_8py.html',1,'']]]
+  ['pygamecapture_2epy',['PygameCapture.py',['../_pygame_capture_8py.html',1,'']]]
 ];

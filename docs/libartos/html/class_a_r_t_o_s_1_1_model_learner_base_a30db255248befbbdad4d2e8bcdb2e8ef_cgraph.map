@@ -1,0 +1,23 @@
+<map id="ARTOS::ModelLearnerBase::initSampleFromSynsetImage" name="ARTOS::ModelLearnerBase::initSampleFromSynsetImage">
+<area shape="rect" id="node2" href="$class_a_r_t_o_s_1_1_synset_image.html#a5af15f665e54b3b3caa59b8f0af5a99d" title="ARTOS::SynsetImage\l::loadBoundingBoxes" alt="" coords="521,82,674,124"/>
+<area shape="rect" id="node7" href="$class_a_r_t_o_s_1_1_synset_image.html#a19d827e8d0947948e798c3ef8d6daaaa" title="ARTOS::SynsetImage\l::getImage" alt="" coords="277,282,430,324"/>
+<area shape="rect" id="node9" href="$class_a_r_t_o_s_1_1_j_p_e_g_image.html#a6876061ad7198120040466d332a46bdc" title="ARTOS::JPEGImage::width" alt="" coords="744,348,931,375"/>
+<area shape="rect" id="node10" href="$class_a_r_t_o_s_1_1_j_p_e_g_image.html#aa8a99643896fd76976cb6b1629d69746" title="ARTOS::JPEGImage::height" alt="" coords="742,399,933,426"/>
+<area shape="rect" id="node19" href="$class_a_r_t_o_s_1_1_rectangle.html#af8a285283f01dad19b6ad355a16da95a" title="ARTOS::Rectangle::setWidth" alt="" coords="256,450,451,476"/>
+<area shape="rect" id="node21" href="$class_a_r_t_o_s_1_1_rectangle.html#a1b4e8ba25c9c58078bfe32a3a673e5c4" title="ARTOS::Rectangle::setHeight" alt="" coords="254,500,453,527"/>
+<area shape="rect" id="node3" href="$sysutils_8cc.html#aea7fafd2be88e54c39022ea792fd76e2" title="join_path" alt="" coords="800,115,875,142"/>
+<area shape="rect" id="node4" href="$sysutils_8cc.html#a830125924ecdba4b09a0a90b67e1bf26" title="strip_file_extension" alt="" coords="1179,184,1314,211"/>
+<area shape="rect" id="node6" href="$sysutils_8cc.html#aba491b60b98d44c64cbe8faf6fe56c81" title="extract_basename" alt="" coords="773,64,902,91"/>
+<area shape="rect" id="node5" href="$sysutils_8cc.html#a9f553f0e7879b17ba31ff13349402053" title="replace_file_extension" alt="" coords="1363,184,1514,211"/>
+<area shape="rect" id="node8" href="$class_a_r_t_o_s_1_1_j_p_e_g_image.html#a05e9c73c5a6721ad9410b696cad718b5" title="ARTOS::JPEGImage::empty" alt="" coords="502,298,693,324"/>
+<area shape="rect" id="node12" href="$class_a_r_t_o_s_1_1_synset_image.html#a69d4b185a289d34d0c3509c52add60ae" title="ARTOS::SynsetImage\l::loadImage" alt="" coords="521,200,674,241"/>
+<area shape="rect" id="node11" href="$class_a_r_t_o_s_1_1_j_p_e_g_image.html#aed01a09f279c86cc1022d10f8a49204c" title="ARTOS::JPEGImage::depth" alt="" coords="744,298,931,324"/>
+<area shape="rect" id="node13" href="$class_a_r_t_o_s_1_1_tar_extractor.html#aeb14c3ac0857b4e6b442db31770db7ac" title="ARTOS::TarExtractor\l::findFileInArchive" alt="" coords="763,166,911,208"/>
+<area shape="rect" id="node17" href="$class_a_r_t_o_s_1_1_synset_image.html#aed68f13e46589ce2117dc40b961ca98f" title="ARTOS::SynsetImage\l::readImageFromFileOffset" alt="" coords="748,232,927,273"/>
+<area shape="rect" id="node14" href="$class_a_r_t_o_s_1_1_tar_extractor.html#af78b4149fd55c549a7a08eedb660f535" title="ARTOS::TarExtractor\l::isOpen" alt="" coords="982,53,1130,94"/>
+<area shape="rect" id="node15" href="$class_a_r_t_o_s_1_1_tar_extractor.html#a9f3944b118b00227b2976a77ec21fca9" title="ARTOS::TarExtractor\l::findFile" alt="" coords="982,236,1130,277"/>
+<area shape="rect" id="node16" href="$class_a_r_t_o_s_1_1_tar_extractor.html#ae92985e8a217a9975fbce202c51dc56b" title="ARTOS::TarExtractor\l::close" alt="" coords="982,118,1130,160"/>
+<area shape="rect" id="node18" href="$namespacestd.html#aef13da5baa79cdc514d9729bc0d870da" title="std::max" alt="" coords="1019,302,1093,328"/>
+<area shape="rect" id="node20" href="$class_a_r_t_o_s_1_1_rectangle.html#af62553af29f32815e5055f67b96f5603" title="ARTOS::Rectangle::width" alt="" coords="510,450,685,476"/>
+<area shape="rect" id="node22" href="$class_a_r_t_o_s_1_1_rectangle.html#a51fcde43e3b8803b7fcf3bba60167894" title="ARTOS::Rectangle::height" alt="" coords="508,500,687,527"/>
+</map>

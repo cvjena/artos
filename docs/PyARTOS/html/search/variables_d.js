@@ -1,15 +1,23 @@
 var searchData=
 [
+  ['rawtestresult_5fp',['RawTestResult_p',['../namespace_py_a_r_t_o_s_1_1artos__wrapper.html#a0fac63c083af1cb08b29bee0edcc81e5',1,'PyARTOS::artos_wrapper']]],
   ['rdbsourcecamera',['rdbSourceCamera',['../class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_learn_dialog.html#adc6546a8e09db88ad62570e3d2686306',1,'PyARTOS::GUI::ModelCatalogue::LearnDialog']]],
+  ['rdbsourcedir',['rdbSourceDir',['../class_py_a_r_t_o_s_1_1_g_u_i_1_1_evaluation_1_1_evaluation_dialog.html#a9378f63d7054c46e21904eaacbf58ffe',1,'PyARTOS::GUI::Evaluation::EvaluationDialog']]],
   ['rdbsourcefiles',['rdbSourceFiles',['../class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_learn_dialog.html#a4a0e6365fd35dfd49fe2f38d725ce782',1,'PyARTOS::GUI::ModelCatalogue::LearnDialog']]],
-  ['repo',['repo',['../class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_learn_dialog.html#addac85c14f1bb07af2f5d787f3ebd88f',1,'PyARTOS::GUI::ModelCatalogue::LearnDialog']]],
+  ['rdbsourcerepo',['rdbSourceRepo',['../class_py_a_r_t_o_s_1_1_g_u_i_1_1_evaluation_1_1_evaluation_dialog.html#aa928b233c652fd87ce88d62cb68d5378',1,'PyARTOS::GUI::Evaluation::EvaluationDialog']]],
+  ['repo',['repo',['../class_py_a_r_t_o_s_1_1_g_u_i_1_1_evaluation_1_1_evaluation_dialog.html#a4ae8856b243047428d1bb47c86c74822',1,'PyARTOS.GUI.Evaluation.EvaluationDialog.repo()'],['../class_py_a_r_t_o_s_1_1_g_u_i_1_1gui__utils_1_1_search_synset_widget.html#aac0009d528a155dc375f8ba187849244',1,'PyARTOS.GUI.gui_utils.SearchSynsetWidget.repo()'],['../class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_learn_dialog.html#addac85c14f1bb07af2f5d787f3ebd88f',1,'PyARTOS.GUI.ModelCatalogue.LearnDialog.repo()']]],
+  ['repodirvar',['repoDirVar',['../class_py_a_r_t_o_s_1_1_g_u_i_1_1_evaluation_1_1_evaluation_dialog.html#a4397c93d90597c31f3f2753d9a62b13f',1,'PyARTOS::GUI::Evaluation::EvaluationDialog']]],
   ['res_5faborted',['RES_ABORTED',['../namespace_py_a_r_t_o_s_1_1artos__wrapper.html#ab9b6b229cccb082c504f343825974780',1,'PyARTOS::artos_wrapper']]],
   ['res_5fdirectory_5fnot_5ffound',['RES_DIRECTORY_NOT_FOUND',['../namespace_py_a_r_t_o_s_1_1artos__wrapper.html#ae213a1bc36406d792047455179670df0',1,'PyARTOS::artos_wrapper']]],
   ['res_5ffile_5faccess_5fdenied',['RES_FILE_ACCESS_DENIED',['../namespace_py_a_r_t_o_s_1_1artos__wrapper.html#a7971d82f8ab2e8b4a5098f1e9c45b36a',1,'PyARTOS::artos_wrapper']]],
   ['res_5ffile_5fnot_5ffound',['RES_FILE_NOT_FOUND',['../namespace_py_a_r_t_o_s_1_1artos__wrapper.html#a83237b091ef4ae4f984ae18c1ccf754d',1,'PyARTOS::artos_wrapper']]],
+  ['res_5findex_5fout_5fof_5fbounds',['RES_INDEX_OUT_OF_BOUNDS',['../namespace_py_a_r_t_o_s_1_1artos__wrapper.html#a768c8f8cd364305949dbf03f83a14509',1,'PyARTOS::artos_wrapper']]],
   ['res_5finternal_5ferror',['RES_INTERNAL_ERROR',['../namespace_py_a_r_t_o_s_1_1artos__wrapper.html#a9cbaeee673c4dd4d640a4e8fe0351653',1,'PyARTOS::artos_wrapper']]],
   ['res_5finvalid_5fhandle',['RES_INVALID_HANDLE',['../namespace_py_a_r_t_o_s_1_1artos__wrapper.html#a30060106959ce49674c997183b87ea22',1,'PyARTOS::artos_wrapper']]],
   ['res_5fok',['RES_OK',['../namespace_py_a_r_t_o_s_1_1artos__wrapper.html#ae578b61271e357be4690eceacd65eeb8',1,'PyARTOS::artos_wrapper']]],
+  ['results',['results',['../class_py_a_r_t_o_s_1_1_g_u_i_1_1_evaluation_1_1_evaluation_visualization.html#a189e89d9f01ee46b28c8741954599b54',1,'PyARTOS::GUI::Evaluation::EvaluationVisualization']]],
+  ['resultsdialog',['resultsDialog',['../class_py_a_r_t_o_s_1_1_g_u_i_1_1_evaluation_1_1_evaluation_dialog.html#ae70e863e1f9c1a3676431769bbf0f1f8',1,'PyARTOS::GUI::Evaluation::EvaluationDialog']]],
+  ['resulttitles',['resultTitles',['../class_py_a_r_t_o_s_1_1_g_u_i_1_1_evaluation_1_1_evaluation_visualization.html#a617863e686f642fc58d204bec0216e50',1,'PyARTOS::GUI::Evaluation::EvaluationVisualization']]],
   ['resultwidgets',['resultWidgets',['../class_py_a_r_t_o_s_1_1_g_u_i_1_1_batch_window_1_1_batch_window.html#ac8eb0f99734f9a688a5dfbbfbfae9aab',1,'PyARTOS::GUI::BatchWindow::BatchWindow']]],
   ['running',['running',['../class_py_a_r_t_o_s_1_1utils_1_1_timer.html#a67d2a8adc7c0955b60afacbc3a955860',1,'PyARTOS::utils::Timer']]]
 ];

@@ -316,7 +316,7 @@ public:
     *
     * @param[in] numRows The number of rows after cropping.
     *
-    * @param[in] numRows The number of columns after cropping.
+    * @param[in] numCols The number of columns after cropping.
     */
     void crop(Index firstRow, Index firstCol, Index numRows, Index numCols)
     {
@@ -348,7 +348,7 @@ public:
     *
     * @param[in] numRows The number of rows after cropping.
     *
-    * @param[in] numRows The number of columns after cropping.
+    * @param[in] numCols The number of columns after cropping.
     *
     * @param[in] numChannels The number of channels after cropping.
     */

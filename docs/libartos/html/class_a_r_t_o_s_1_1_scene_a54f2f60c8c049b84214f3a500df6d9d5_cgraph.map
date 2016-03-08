@@ -1,0 +1,7 @@
+<map id="ARTOS::Scene::empty" name="ARTOS::Scene::empty">
+<area shape="rect" id="node2" href="$class_a_r_t_o_s_1_1_scene.html#a6d0072b5619c3d3c3dd49e3487a67cc8" title="ARTOS::Scene::width" alt="" coords="220,5,372,32"/>
+<area shape="rect" id="node3" href="$class_a_r_t_o_s_1_1_scene.html#a0e0f7a1e3cb17c1d9bad86a796f2b6dd" title="ARTOS::Scene::height" alt="" coords="218,56,374,83"/>
+<area shape="rect" id="node4" href="$class_a_r_t_o_s_1_1_scene.html#aed6c54726930f7fd609f0a62ef87adde" title="ARTOS::Scene::depth" alt="" coords="219,107,373,133"/>
+<area shape="rect" id="node5" href="$class_a_r_t_o_s_1_1_scene.html#aa824d52d8031c93ee4b7ea1224b40e84" title="ARTOS::Scene::filename" alt="" coords="211,157,381,184"/>
+<area shape="rect" id="node6" href="$class_a_r_t_o_s_1_1_scene.html#af86d62176576eae81feea916e911b0fc" title="ARTOS::Scene::objects" alt="" coords="215,208,377,235"/>
+</map>

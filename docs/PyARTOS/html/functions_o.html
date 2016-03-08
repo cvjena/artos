@@ -30,7 +30,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">PyARTOS
-   &#160;<span id="projectnumber">1.2</span>
+   &#160;<span id="projectnumber">2.0</span>
    </div>
    <div id="projectbrief">Python interface to libartos</div>
   </td>
@@ -155,9 +155,14 @@ $(document).ready(function(){initNavTree('functions_o.html','');});
 , <a class="el" href="class_py_a_r_t_o_s_1_1_g_u_i_1_1_camera_sampler_1_1_camera_sample_dialog.html#ac624e46d80ec71d221683c1618e3b759">PyARTOS.GUI.CameraSampler.CameraSampleDialog</a>
 , <a class="el" href="class_py_a_r_t_o_s_1_1_g_u_i_1_1_camera_window_1_1_camera_window.html#a6cf97b9c81ef6a7da8ab6ab329d066c1">PyARTOS.GUI.CameraWindow.CameraWindow</a>
 , <a class="el" href="class_py_a_r_t_o_s_1_1_g_u_i_1_1_camera_window_1_1_detection_frame.html#a34a239d68e8fe611344a308154a8664b">PyARTOS.GUI.CameraWindow.DetectionFrame</a>
+, <a class="el" href="class_py_a_r_t_o_s_1_1_g_u_i_1_1_evaluation_1_1_evaluation_dialog.html#a9efdff4bc1e949a79651ea0a3ae0b72c">PyARTOS.GUI.Evaluation.EvaluationDialog</a>
+, <a class="el" href="class_py_a_r_t_o_s_1_1_g_u_i_1_1_evaluation_1_1_evaluation_visualization.html#ac795f7f4f3cad29ffac0fce1eefe0ae3">PyARTOS.GUI.Evaluation.EvaluationVisualization</a>
+, <a class="el" href="class_py_a_r_t_o_s_1_1_g_u_i_1_1gui__utils_1_1_feature_extractor_settings_widget.html#a5a0deb553077769a651f2fc0a476a480">PyARTOS.GUI.gui_utils.FeatureExtractorSettingsWidget</a>
 , <a class="el" href="class_py_a_r_t_o_s_1_1_g_u_i_1_1gui__utils_1_1_progress_window.html#a6a459b671d105ab3e25e777cb89faf68">PyARTOS.GUI.gui_utils.ProgressWindow</a>
+, <a class="el" href="class_py_a_r_t_o_s_1_1_g_u_i_1_1gui__utils_1_1_search_synset_widget.html#a4d6dc289ae0827906a5a77e7aa56b284">PyARTOS.GUI.gui_utils.SearchSynsetWidget</a>
 , <a class="el" href="class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_catalogue_window.html#a2d2410364d45a203aeeb40ace2a8cca0">PyARTOS.GUI.ModelCatalogue.CatalogueWindow</a>
 , <a class="el" href="class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_h_o_g_inspector.html#af3a6c829f71587d8626d42c5ffdb0ed1">PyARTOS.GUI.ModelCatalogue.HOGInspector</a>
+, <a class="el" href="class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_learn_b_g_dialog.html#a69d31446a37c1d3d42844838a70717e7">PyARTOS.GUI.ModelCatalogue.LearnBGDialog</a>
 , <a class="el" href="class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_learn_dialog.html#afc253d5ab3bd8852d8061418328d5b90">PyARTOS.GUI.ModelCatalogue.LearnDialog</a>
 , <a class="el" href="class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_model_widget.html#ad129eef29c50dc87ae4fb8bfb4126734">PyARTOS.GUI.ModelCatalogue.ModelWidget</a>
 , <a class="el" href="class_py_a_r_t_o_s_1_1_g_u_i_1_1_setup_dialog_1_1_setup_dialog.html#aef1cd91e0c31c6d83850cfadda8c9d44">PyARTOS.GUI.SetupDialog.SetupDialog</a>
@@ -172,8 +177,14 @@ $(document).ready(function(){initNavTree('functions_o.html','');});
 <li>onImageProcessed()
 : <a class="el" href="class_py_a_r_t_o_s_1_1_g_u_i_1_1_batch_window_1_1_batch_window.html#a222fa0b1045fa3e54ec6a8c508ba6186">PyARTOS.GUI.BatchWindow.BatchWindow</a>
 </li>
+<li>onImageSourceChange()
+: <a class="el" href="class_py_a_r_t_o_s_1_1_g_u_i_1_1_evaluation_1_1_evaluation_dialog.html#a69fecd4923ada6140728bac9450cb254">PyARTOS.GUI.Evaluation.EvaluationDialog</a>
+</li>
 <li>onModelDirChange()
 : <a class="el" href="class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_catalogue_window.html#a27588a233c972f8e3a0588da4f0679e6">PyARTOS.GUI.ModelCatalogue.CatalogueWindow</a>
+</li>
+<li>onModelSelect()
+: <a class="el" href="class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_catalogue_window.html#a8c744e2cb60f94e7844e1caf1c9fee78">PyARTOS.GUI.ModelCatalogue.CatalogueWindow</a>
 </li>
 <li>onPost()
 : <a class="el" href="class_py_a_r_t_o_s_1_1_g_u_i_1_1_batch_window_1_1_detection_popup_menu.html#ada061f4213434e0b08ba656430b4f55e">PyARTOS.GUI.BatchWindow.DetectionPopupMenu</a>
@@ -181,8 +192,17 @@ $(document).ready(function(){initNavTree('functions_o.html','');});
 <li>onRemoveBtnClick()
 : <a class="el" href="class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_h_o_g_inspector.html#a6c6767127e6a618ea88ad83ab1c5b969">PyARTOS.GUI.ModelCatalogue.HOGInspector</a>
 </li>
+<li>onRepoDirChange()
+: <a class="el" href="class_py_a_r_t_o_s_1_1_g_u_i_1_1_evaluation_1_1_evaluation_dialog.html#acbba5b0f0eef13225d82f402e3b2cb39">PyARTOS.GUI.Evaluation.EvaluationDialog</a>
+</li>
+<li>onResize()
+: <a class="el" href="class_py_a_r_t_o_s_1_1_g_u_i_1_1_evaluation_1_1_evaluation_visualization.html#a3a81de2cf4971cbdab8194ceaa9d24a5">PyARTOS.GUI.Evaluation.EvaluationVisualization</a>
+</li>
 <li>onRightClick()
 : <a class="el" href="class_py_a_r_t_o_s_1_1_g_u_i_1_1_batch_window_1_1_detection_popup_menu.html#a3e8fbef1cc6383fe4161c8b57ab28b72">PyARTOS.GUI.BatchWindow.DetectionPopupMenu</a>
+</li>
+<li>onSelectAllChange()
+: <a class="el" href="class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_catalogue_window.html#a5f376b758139b84ea4bbbfd9d3181d25">PyARTOS.GUI.ModelCatalogue.CatalogueWindow</a>
 </li>
 <li>openLearnBGDialog()
 : <a class="el" href="class_py_a_r_t_o_s_1_1_g_u_i_1_1_model_catalogue_1_1_catalogue_window.html#a983d40b7c1c606a68287ed1f646ef4c8">PyARTOS.GUI.ModelCatalogue.CatalogueWindow</a>
@@ -211,7 +231,7 @@ $(document).ready(function(){initNavTree('functions_o.html','');});
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon Nov 2 2015 20:20:00 for PyARTOS by
+    <li class="footer">Generated on Mon Mar 7 2016 23:25:46 for PyARTOS by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.7 </li>
   </ul>

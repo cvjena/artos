@@ -1,4 +1,5 @@
 <map id="ARTOS::SynsetImageIterator::operator*" name="ARTOS::SynsetImageIterator::operator*">
-<area shape="rect" id="node2" href="$class_a_r_t_o_s_1_1_synset_image.html#ad9bd6f71a72909211a77116db5496f49" title="ARTOS::SynsetImage\l::readImageFromFileOffset" alt="" coords="248,5,427,46"/>
-<area shape="rect" id="node3" href="$class_a_r_t_o_s_1_1_tar_extractor.html#a50446076576b38a9cd9bbb80c33e9d21" title="ARTOS::TarExtractor\l::getTarPath" alt="" coords="263,70,411,111"/>
+<area shape="rect" id="node2" href="$class_a_r_t_o_s_1_1_synset_image.html#aed68f13e46589ce2117dc40b961ca98f" title="ARTOS::SynsetImage\l::readImageFromFileOffset" alt="" coords="248,5,427,46"/>
+<area shape="rect" id="node4" href="$class_a_r_t_o_s_1_1_tar_extractor.html#a50446076576b38a9cd9bbb80c33e9d21" title="ARTOS::TarExtractor\l::getTarPath" alt="" coords="263,70,411,111"/>
+<area shape="rect" id="node3" href="$namespacestd.html#aef13da5baa79cdc514d9729bc0d870da" title="std::max" alt="" coords="475,12,549,39"/>
 </map>

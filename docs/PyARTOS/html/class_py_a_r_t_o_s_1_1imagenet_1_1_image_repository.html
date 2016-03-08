@@ -30,7 +30,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">PyARTOS
-   &#160;<span id="projectnumber">1.2</span>
+   &#160;<span id="projectnumber">2.0</span>
    </div>
    <div id="projectbrief">Python interface to libartos</div>
   </td>
@@ -143,6 +143,8 @@ Public Member Functions</h2></td></tr>
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:aa52a1fd6700ca7b314eb272fccadb358"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_py_a_r_t_o_s_1_1imagenet_1_1_image_repository.html#aa52a1fd6700ca7b314eb272fccadb358">hasRepositoryStructure</a></td></tr>
 <tr class="separator:aa52a1fd6700ca7b314eb272fccadb358"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a549e10b16aec22e93b2804bf59f96436"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_py_a_r_t_o_s_1_1imagenet_1_1_image_repository.html#a549e10b16aec22e93b2804bf59f96436">type</a></td></tr>
+<tr class="separator:a549e10b16aec22e93b2804bf59f96436"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><pre class="fragment">Provides access to the synsets and images of an image repository.</pre> </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
@@ -211,7 +213,7 @@ synsetId - The ID of the synset.
 num - The maximum number of images to extract.
 Returns: The extracted images as a list of PIL.Image.Image instances.
 
-If the synset archive can not be found, an exception is thrown.
+If the synset can not be found, an exception is thrown.
 </pre> 
 </div>
 </div>
@@ -237,10 +239,6 @@ If the synset archive can not be found, an exception is thrown.
 </table>
 </div><div class="memdoc">
 <pre class="fragment">Checks if a given directory looks like an image repository.
-
-This function checks if the given directory contains the synset list file (synset_wordlist.txt)
-and the directories 'Images' and 'Annotation'. Additionally, the 'Images' directory must contain
-at least one tar file.
 
 Returns a tuple with 2 values, the first one being a boolean value specifying if the given directory
 could be an image repository or not and if not, the second one is an error message telling what
@@ -347,6 +345,35 @@ limit defines the maximum number of returned synsets,
 </pre> 
 </div>
 </div>
+<a class="anchor" id="a549e10b16aec22e93b2804bf59f96436"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">def PyARTOS.imagenet.ImageRepository.type </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">Returns the type identifier of the image repository driver built into ARTOS.
+
+Sometimes one may want to detect which type of image repository is being used by ARTOS,
+i.e. which driver has been compiled in. This function returns the type identifier of the
+image repository driver, which in the case of ImageNet repositories is "ImageNet" and
+"ImageDirectories" in the case of plain directory repositories.
+</pre> 
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li><a class="el" href="imagenet_8py.html">imagenet.py</a></li>
 </ul>
@@ -356,7 +383,7 @@ limit defines the maximum number of returned synsets,
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespace_py_a_r_t_o_s.html">PyARTOS</a></li><li class="navelem"><a class="el" href="namespace_py_a_r_t_o_s_1_1imagenet.html">imagenet</a></li><li class="navelem"><a class="el" href="class_py_a_r_t_o_s_1_1imagenet_1_1_image_repository.html">ImageRepository</a></li>
-    <li class="footer">Generated on Mon Nov 2 2015 20:19:59 for PyARTOS by
+    <li class="footer">Generated on Mon Mar 7 2016 23:25:41 for PyARTOS by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.7 </li>
   </ul>

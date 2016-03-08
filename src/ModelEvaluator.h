@@ -126,7 +126,7 @@ public:
     /**
     * Changes the overlap threshold used for evaluation.
     *
-    * @param[in] eqOverlap Minimum overlap for considering two bounding boxes as equivalent during evaluation
+    * @param[in] newEqOverlap Minimum overlap for considering two bounding boxes as equivalent during evaluation
     * (used to distinguish between true and false positives).
     */
     void setEqOverlap(double newEqOverlap) { this->eqOverlap = newEqOverlap; };

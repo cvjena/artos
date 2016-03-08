@@ -1,0 +1,9 @@
+<map id="evaluator_run" name="evaluator_run">
+<area shape="rect" id="node2" href="$libartos_8cc.html#a9410497cc2ce4aa85415e175502a025b" title="is_valid_detector_handle" alt="" coords="156,5,321,32"/>
+<area shape="rect" id="node3" href="$class_a_r_t_o_s_1_1_d_p_m_detection.html#a1dace107a523f718cdf708c898f80135" title="ARTOS::DPMDetection\l::getNumModels" alt="" coords="157,57,320,98"/>
+<area shape="rect" id="node4" href="$libartos_8cc.html#a7647fc5439e2e06dec23ca1821aaf806" title="progress_proxy" alt="" coords="183,123,294,149"/>
+<area shape="rect" id="node5" href="$class_a_r_t_o_s_1_1_model_evaluator.html#a8ce7879e5b676d38799fe9db66ff0bd9" title="ARTOS::ModelEvaluator\l::setEqOverlap" alt="" coords="155,174,322,215"/>
+<area shape="rect" id="node6" href="$class_a_r_t_o_s_1_1_model_evaluator.html#a2f2a689eb6663e5ba99d66f921443b23" title="ARTOS::ModelEvaluator\l::testModels" alt="" coords="155,239,322,281"/>
+<area shape="rect" id="node7" href="$namespacestd.html#aef13da5baa79cdc514d9729bc0d870da" title="std::max" alt="" coords="419,221,493,248"/>
+<area shape="rect" id="node8" href="$struct_a_r_t_o_s_1_1_sample.html#a08bbb0580b6fabca4adfe69021552866" title="ARTOS::Sample::bboxes" alt="" coords="371,272,541,299"/>
+</map>

@@ -1,0 +1,9 @@
+<map id="ARTOS::ModelLearnerBase::addPositiveSample" name="ARTOS::ModelLearnerBase::addPositiveSample">
+<area shape="rect" id="node2" href="$class_a_r_t_o_s_1_1_j_p_e_g_image.html#a05e9c73c5a6721ad9410b696cad718b5" title="ARTOS::JPEGImage::empty" alt="" coords="238,56,429,83"/>
+<area shape="rect" id="node3" href="$class_a_r_t_o_s_1_1_j_p_e_g_image.html#a6876061ad7198120040466d332a46bdc" title="ARTOS::JPEGImage::width" alt="" coords="480,5,667,32"/>
+<area shape="rect" id="node4" href="$class_a_r_t_o_s_1_1_j_p_e_g_image.html#aa8a99643896fd76976cb6b1629d69746" title="ARTOS::JPEGImage::height" alt="" coords="478,107,669,133"/>
+<area shape="rect" id="node6" href="$class_a_r_t_o_s_1_1_rectangle.html#a33ca9f7369ce59fd11effe229d1cb8e4" title="ARTOS::Rectangle::empty" alt="" coords="244,157,423,184"/>
+<area shape="rect" id="node5" href="$class_a_r_t_o_s_1_1_j_p_e_g_image.html#aed01a09f279c86cc1022d10f8a49204c" title="ARTOS::JPEGImage::depth" alt="" coords="480,56,667,83"/>
+<area shape="rect" id="node7" href="$class_a_r_t_o_s_1_1_rectangle.html#af62553af29f32815e5055f67b96f5603" title="ARTOS::Rectangle::width" alt="" coords="486,157,661,184"/>
+<area shape="rect" id="node8" href="$class_a_r_t_o_s_1_1_rectangle.html#a51fcde43e3b8803b7fcf3bba60167894" title="ARTOS::Rectangle::height" alt="" coords="484,208,663,235"/>
+</map>
