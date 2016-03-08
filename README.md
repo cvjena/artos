@@ -6,9 +6,10 @@ ARTOS – README
 1. What is ARTOS?
 2. Dependencies
 3. Building the library
-4. Setting up the environment
-5. Launching the ARTOS GUI
-6. License and credits
+4. Instructions for usage of CNN features
+5. Setting up the image repository
+6. Launching the ARTOS GUI
+7. License and credits
 
 
 1. What is ARTOS?
@@ -102,9 +103,11 @@ To build *libartos* on **Windows**, use the *CMake GUI* to create a *MinGW Makef
 libraries appropriately.
 
 
-### Build instructions specific to CNN features ###
+4. Instructions for usage of CNN features
+-----------------------------------------
 
-If you would like to use image features extracted from a layer of a Convolutional Neural Network, you'll have to download
+If you are going to use HOG features, just skip this section.  
+But if you would like to use image features extracted from a layer of a Convolutional Neural Network, you'll have to download
 and install *[Caffe][5]* first (use a commit from November 2015 or later). Build instructions for Caffe can be found [here][6].
 
 After that, use CMake to configure ARTOS and set `ARTOS_USE_CAFFE` to `ON`. If Caffe is not located inside your ARTOS build
@@ -117,9 +120,16 @@ Don't forgot to specify at least the mandatory parameters `netFile` and `weights
 `feature_extractor_set_string_param` or `FeatureExtractor::setParam`. A description of all available parameters can be found
 in the documentation of `CaffeFeatureExtractor`.
 
+We strongly advise scaling features extracted from CNNs to the range [-1,1]. `tools/learn_cnn_scales` can be used to learn the
+maximum absolute values of each feature channel and save them to a file for use with the `scalesFile` parameter.
 
-4. Setting up the environment
------------------------------
+We have successfully experimented with the following pre-trained CNNs:
+- [BVLC Reference CaffeNet][7] (layer `relu5`): fast; average relative performance improvement of 54% compared to HOG
+- [VGG ILSVRC 16][8] (layer `conv5_3`): slow; average relative performance improvement of 73% compared to HOG
+
+
+5. Setting up the image repository
+----------------------------------
 
 ARTOS has been designed to work seamlessly with the **[ImageNet][3]** image repository. If you want to use other data instead,
 please refer to the corresponding section below.
@@ -190,7 +200,7 @@ are okay, but `.JPG`, `.JPeG` or `.XML` won't be found.
 Finally, you have to change the `CMake` variable `IMAGE_REPOSITORY_SRC` from `ImageNet` to `ImageDirectories` and re-build `libartos`.
 
 
-5. Launching the ARTOS GUI
+6. Launching the ARTOS GUI
 --------------------------
 
 After you've built *libartos* as described in (3), installed all required Python modules mentioned in (2) and made up your local copy
@@ -207,7 +217,7 @@ about your system and store it in a file called `wisdom.fftw` to speed up fourie
 ***Have fun!***
 
 
-6. License and credits
+7. License and credits
 ----------------------
 
 ARTOS is released under the GNU General Public License (version 3).
@@ -235,3 +245,5 @@ None of them is connected to ARTOS or the University of Jena in any way.
   [4]: http://raptor.berkeleyvision.org/
   [5]: https://github.com/BVLC/caffe/
   [6]: http://caffe.berkeleyvision.org/installation.html
+  [7]: https://github.com/BVLC/caffe/tree/master/models/bvlc_reference_caffenet
+  [8]: https://gist.github.com/ksimonyan/211839e770f7b538e2d8
