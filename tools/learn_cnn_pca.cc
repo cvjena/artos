@@ -1,3 +1,21 @@
+/**
+* @file
+* This tool learns a mean feature vector `m` for image features extracted from the layer
+* of a CNN and a matrix `A` that can be used to reduce the dimensionality of the extracted
+* features `c` by computing: `c' = A^T * (c - m)`.
+*
+* PCA is used to find a matrix `A` that maximizes the amount of variance in the reduced
+* feature space.  
+* `A` and `m` will be written to a binary file which can be used with the `pcaFile` parameter
+* of `CaffeFeatureExtractor`. Refer to the documentation of that class for a description of
+* the file format.
+*
+* Note that feature scaling should be applied before computing the PCA.
+*
+* @author Bjoern Barz <bjoern.barz@uni-jena.de>
+*/
+
+
 #include <iostream>
 #include <fstream>
 #include <cstdlib>
@@ -59,7 +77,8 @@ int main(int argc, char * argv[])
     }
     catch (const Exception & e)
     {
-        cerr << "Could not create feature extractor: " << e.what() << endl;
+        cerr << "Could not create feature extractor: " << e.what() << endl << endl
+             << "Make sure that ARTOS_USE_CAFFE is enabled in CMake." << endl;
         return 3;
     }
     if (fe->numFeatures() < numDim)

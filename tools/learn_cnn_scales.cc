@@ -1,3 +1,16 @@
+/**
+* @file
+* This tool learns the maximum absolute values of feature channels extracted from the layer
+* of a CNN and writes them to a text file. That file can then be used with the `scalesFile`
+* parameter of `CaffeFeatureExtractor` for scaling feature values to the range [-1,1].
+*
+* The use of feature scaling is highly recommended since it protects the learning method
+* of ARTOS from numerical instabilities.
+*
+* @author Bjoern Barz <bjoern.barz@uni-jena.de>
+*/
+
+
 #include <iostream>
 #include <fstream>
 #include <cstdlib>
@@ -47,7 +60,8 @@ int main(int argc, char * argv[])
     }
     catch (const Exception & e)
     {
-        cerr << "Could not create feature extractor: " << e.what() << endl;
+        cerr << "Could not create feature extractor: " << e.what() << endl << endl
+             << "Make sure that ARTOS_USE_CAFFE is enabled in CMake." << endl;
         return 2;
     }
     
