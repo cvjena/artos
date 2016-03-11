@@ -1,4 +1,4 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 2.6.2)
+CMAKE_MINIMUM_REQUIRED(VERSION 2.8.8)
 
 PROJECT(ARTOS)
 
@@ -19,10 +19,18 @@ ENDIF()
 
 #### Build options ####
 OPTION(ARTOS_CACHE_POSITIVES "Keep positive samples in RAM to save time." ON)
+OPTION(ARTOS_USE_CAFFE "Enable CaffeFeatureExtractor. libcaffe has to be installed." OFF)
 OPTION(ARTOS_BUILD_TOOLS "Build C++ files in the tools directory (not required by any part of ARTOS)." ON)
 
 IF(NOT ARTOS_CACHE_POSITIVES)
   ADD_DEFINITIONS(-DNO_CACHE_POSITIVES)
+ENDIF()
+
+IF(ARTOS_USE_CAFFE)
+    SET(SOURCES_CAFFE CaffeFeatureExtractor.cc)
+    ADD_DEFINITIONS(-DARTOS_ENABLE_CAFFE)
+ELSE()
+    SET(SOURCES_CAFFE "")
 ENDIF()
 
 # Select a default build configuration if none was chosen
@@ -51,7 +59,7 @@ SET(SOURCES defs.cc DPMDetection.cc FeatureExtractor.cc FeaturePyramid.cc HOGFea
 ModelLearnerBase.cc ModelLearner.cc ImageNetModelLearner.cc Mixture.cc Model.cc ModelEvaluator.cc
 Object.cc Patchwork.cc Random.cc Rectangle.cc Scene.cc StationaryBackground.cc
 blf.cc harmony_search.cc sysutils.cc strutils.cc timingtools.cc)
-ADD_LIBRARY(artos SHARED ${SOURCES} libartos.cc)
+ADD_LIBRARY(artos SHARED ${SOURCES} ${SOURCES_CAFFE} libartos.cc)
 SET_TARGET_PROPERTIES(artos PROPERTIES VERSION ${BUILD_VERSION} SOVERSION ${API_VERSION})
 
 # Link sub-libraries
@@ -94,6 +102,14 @@ IF(LIBXML2_FOUND)
   INCLUDE_DIRECTORIES(${LIBXML2_INCLUDE_DIR})
   TARGET_LINK_LIBRARIES(artos LINK_PUBLIC ${LIBXML2_LIBRARIES})
   ADD_DEFINITIONS(${LIBXML2_DEFINITIONS})
+ENDIF()
+
+# Caffe
+IF(ARTOS_USE_CAFFE)
+  find_package(Caffe)
+  INCLUDE_DIRECTORIES(${Caffe_INCLUDE_DIRS})
+  TARGET_LINK_LIBRARIES(artos LINK_PUBLIC ${Caffe_LIBRARIES})
+  ADD_DEFINITIONS(${Caffe_DEFINITIONS})
 ENDIF()
 
 
