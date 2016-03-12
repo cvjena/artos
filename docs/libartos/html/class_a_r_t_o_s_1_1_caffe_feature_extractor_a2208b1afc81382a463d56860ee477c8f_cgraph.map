@@ -1,0 +1,19 @@
+<map id="ARTOS::CaffeFeatureExtractor::extract" name="ARTOS::CaffeFeatureExtractor::extract">
+<area shape="rect" id="node2" href="$class_a_r_t_o_s_1_1_j_p_e_g_image.html#aa8a99643896fd76976cb6b1629d69746" title="ARTOS::JPEGImage::height" alt="" coords="1006,52,1197,78"/>
+<area shape="rect" id="node3" href="$class_a_r_t_o_s_1_1_j_p_e_g_image.html#a6876061ad7198120040466d332a46bdc" title="ARTOS::JPEGImage::width" alt="" coords="1008,204,1195,230"/>
+<area shape="rect" id="node4" href="$class_a_r_t_o_s_1_1_caffe_feature_extractor.html#ab92d5976d14cc22f0dcae0ea2bbb1082" title="ARTOS::CaffeFeatureExtractor\l::wrapInputLayers" alt="" coords="259,306,464,347"/>
+<area shape="rect" id="node5" href="$class_a_r_t_o_s_1_1_caffe_feature_extractor.html#af28a38365b0390ef9f09d127d7d686dd" title="ARTOS::CaffeFeatureExtractor\l::preprocess" alt="" coords="259,146,464,187"/>
+<area shape="rect" id="node9" href="$class_a_r_t_o_s_1_1_caffe_feature_extractor.html#a6d69ebdd385ba29ddcab3b4c0d918893" title="ARTOS::CaffeFeatureExtractor\l::pixelsToCells" alt="" coords="259,371,464,412"/>
+<area shape="rect" id="node11" href="$class_a_r_t_o_s_1_1_feature_matrix__.html#ada8c6c5239f7c920fe0f911bed89d642" title="ARTOS::FeatureMatrix\l_::resize" alt="" coords="283,436,439,478"/>
+<area shape="rect" id="node12" href="$class_a_r_t_o_s_1_1_feature_matrix__.html#af099428b08a84387a406c6ee799d6f5e" title="ARTOS::FeatureMatrix\l_::rows" alt="" coords="283,502,439,543"/>
+<area shape="rect" id="node13" href="$class_a_r_t_o_s_1_1_feature_matrix__.html#af42771bea40f2ddb8e6ba1e607ecc17d" title="ARTOS::FeatureMatrix\l_::cols" alt="" coords="283,567,439,608"/>
+<area shape="rect" id="node14" href="$class_a_r_t_o_s_1_1_feature_matrix__.html#a074dba7e7389eb959eeee2eef0a5a6d3" title="ARTOS::FeatureMatrix\l_::channel" alt="" coords="283,632,439,674"/>
+<area shape="rect" id="node15" href="$class_a_r_t_o_s_1_1_caffe_feature_extractor.html#a4d3bf2ef14af41852f93f40b8d1bf0fd" title="ARTOS::CaffeFeatureExtractor\l::cellSize" alt="" coords="259,698,464,739"/>
+<area shape="rect" id="node16" href="$namespacestd.html#aef13da5baa79cdc514d9729bc0d870da" title="std::max" alt="" coords="325,764,398,790"/>
+<area shape="rect" id="node17" href="$namespacestd.html#a132e7ea1827f9f0ba7685c771563fc42" title="std::min" alt="" coords="327,814,396,841"/>
+<area shape="rect" id="node18" href="$class_a_r_t_o_s_1_1_feature_matrix__.html#a8e6b584bf8a86b64718d0abb6d67ee1e" title="ARTOS::FeatureMatrix\l_::channels" alt="" coords="283,866,439,907"/>
+<area shape="rect" id="node6" href="$class_a_r_t_o_s_1_1_j_p_e_g_image.html#aed01a09f279c86cc1022d10f8a49204c" title="ARTOS::JPEGImage::depth" alt="" coords="1008,128,1195,154"/>
+<area shape="rect" id="node7" href="$class_a_r_t_o_s_1_1_j_p_e_g_image.html#a428a467149c63eac24859ab257667be0" title="ARTOS::JPEGImage::bits" alt="" coords="527,153,703,180"/>
+<area shape="rect" id="node8" href="$class_a_r_t_o_s_1_1_j_p_e_g_image.html#a05e9c73c5a6721ad9410b696cad718b5" title="ARTOS::JPEGImage::empty" alt="" coords="766,153,957,180"/>
+<area shape="rect" id="node10" href="$class_a_r_t_o_s_1_1_caffe_feature_extractor.html#a8c8a68068ea7a841893b97b91e19056c" title="ARTOS::CaffeFeatureExtractor\l::getLayerParams" alt="" coords="512,371,717,412"/>
+</map>

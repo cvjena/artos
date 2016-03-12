@@ -1,6 +1,4 @@
 var searchData=
 [
-  ['x',['x',['../struct_a_r_t_o_s_1_1_detection.html#a6c7cf4421ca445f27c5706e204bfd49b',1,'ARTOS::Detection']]],
-  ['x0',['x0',['../struct_a_r_t_o_s_1_1detail_1_1_bilinear.html#a252d77c52b6a9042d0e9840e42c462e5',1,'ARTOS::detail::Bilinear']]],
-  ['x1',['x1',['../struct_a_r_t_o_s_1_1detail_1_1_bilinear.html#a1e1da18cbe4c9d4d778e6e8069d04c2d',1,'ARTOS::detail::Bilinear']]]
+  ['width',['width',['../struct_a_r_t_o_s_1_1_size.html#aea68ff157e5cecd85ba6017820d87c86',1,'ARTOS::Size::width()'],['../struct_flat_bounding_box.html#a5808e280feb250da6c2ca1f4ece78f95',1,'FlatBoundingBox::width()']]]
 ];

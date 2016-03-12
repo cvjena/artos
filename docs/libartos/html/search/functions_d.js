@@ -4,7 +4,7 @@ var searchData=
   ['makeoffsetarray',['makeOffsetArray',['../class_a_r_t_o_s_1_1_stationary_background.html#a6f78ef0362e953f1dd19f131d57d5b04',1,'ARTOS::StationaryBackground']]],
   ['max',['max',['../struct_a_r_t_o_s_1_1_size.html#a339ff3b82d8fb4a7cc8f2ac33c00ec57',1,'ARTOS::Size::max()'],['../namespacestd.html#aef13da5baa79cdc514d9729bc0d870da',1,'std::max()']]],
   ['maxcols',['MaxCols',['../class_a_r_t_o_s_1_1_patchwork.html#a46e9cff798e51e0c602a8a9cc382b314',1,'ARTOS::Patchwork']]],
-  ['maximagesize',['maxImageSize',['../class_a_r_t_o_s_1_1_feature_extractor.html#a49cc03865f39905be55b6e893837bb35',1,'ARTOS::FeatureExtractor']]],
+  ['maximagesize',['maxImageSize',['../class_a_r_t_o_s_1_1_caffe_feature_extractor.html#a541c35ed904a2f4c31d7757f940d1d3e',1,'ARTOS::CaffeFeatureExtractor::maxImageSize()'],['../class_a_r_t_o_s_1_1_feature_extractor.html#a49cc03865f39905be55b6e893837bb35',1,'ARTOS::FeatureExtractor::maxImageSize()']]],
   ['maximummodelsize',['maximumModelSize',['../class_a_r_t_o_s_1_1_model_learner.html#aa7e86665eeb63232cedfb241d991c716',1,'ARTOS::ModelLearner::maximumModelSize()'],['../class_a_r_t_o_s_1_1_model_learner_base.html#a386371ddd7ca507811ba5b46189d0208',1,'ARTOS::ModelLearnerBase::maximumModelSize()']]],
   ['maxmodelsize',['maxModelSize',['../class_a_r_t_o_s_1_1_d_p_m_detection.html#abad1d0e79f1909e84ded0f7ec4e5e117',1,'ARTOS::DPMDetection']]],
   ['maxrows',['MaxRows',['../class_a_r_t_o_s_1_1_patchwork.html#af8839b72f5a03b58d755b63237f7b3ab',1,'ARTOS::Patchwork']]],

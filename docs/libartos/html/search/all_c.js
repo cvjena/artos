@@ -1,5 +1,7 @@
 var searchData=
 [
+  ['layerparams',['LayerParams',['../struct_a_r_t_o_s_1_1_caffe_feature_extractor_1_1_layer_params.html',1,'ARTOS::CaffeFeatureExtractor']]],
+  ['layertype',['layerType',['../struct_a_r_t_o_s_1_1_caffe_feature_extractor_1_1_layer_params.html#a6e6d81daf22a7f73a7e65820e74ef6de',1,'ARTOS::CaffeFeatureExtractor::LayerParams::layerType()'],['../class_a_r_t_o_s_1_1_caffe_feature_extractor.html#accfd469ef38640185b5a5e4797b321ad',1,'ARTOS::CaffeFeatureExtractor::LayerType()']]],
   ['learn',['learn',['../class_a_r_t_o_s_1_1_model_learner_base.html#a757b08af234547ddc8cd0fb9856f290c',1,'ARTOS::ModelLearnerBase']]],
   ['learn_5fbg',['learn_bg',['../libartos_8cc.html#a6c385aa105e32cf7953013cb8a94c356',1,'learn_bg(const char *repo_directory, const char *bg_file, const unsigned int num_images, const unsigned int max_offset, overall_progress_cb_t progress_cb, const bool accurate_autocorrelation):&#160;libartos.cc'],['../libartos_8h.html#ab82b8ae96dd40b445b4fc76b02d8ac2e',1,'learn_bg(const char *repo_directory, const char *bg_file, const unsigned int num_images, const unsigned int max_offset=19, overall_progress_cb_t progress_cb=0, const bool accurate_autocorrelation=false):&#160;libartos.cc']]],
   ['learn_5ffiles_5fjpeg',['learn_files_jpeg',['../libartos_8cc.html#a020bbe4bc6037cac2561cb94081a081b',1,'learn_files_jpeg(const char **imagefiles, const unsigned int num_imagefiles, const FlatBoundingBox *bounding_boxes, const char *bg_file, const char *modelfile, const bool add, const unsigned int max_aspect_clusters, const unsigned int max_who_clusters, const unsigned int th_opt_mode, overall_progress_cb_t progress_cb, const bool debug):&#160;libartos.cc'],['../libartos_8h.html#a53493535e7d74294d4e5b7b7c255be76',1,'learn_files_jpeg(const char **imagefiles, const unsigned int num_imagefiles, const FlatBoundingBox *bounding_boxes, const char *bg_file, const char *modelfile, const bool add=true, const unsigned int max_aspect_clusters=2, const unsigned int max_who_clusters=3, const unsigned int th_opt_mode=ARTOS_THOPT_LOOCV, overall_progress_cb_t progress_cb=0, const bool debug=false):&#160;libartos.cc']]],
@@ -32,6 +34,11 @@ var searchData=
   ['listsynsets',['listSynsets',['../class_a_r_t_o_s_1_1_image_repository.html#a18706ff915b43b52ea826aa163a776ac',1,'ARTOS::ImageRepository']]],
   ['loadboundingboxes',['loadBoundingBoxes',['../class_a_r_t_o_s_1_1_synset_image.html#a5af15f665e54b3b3caa59b8f0af5a99d',1,'ARTOS::SynsetImage::loadBoundingBoxes()'],['../class_a_r_t_o_s_1_1_synset_image.html#a6fe97690fbdadf774c3c1f9d5b5bf934',1,'ARTOS::SynsetImage::loadBoundingBoxes(const char *xmlBuffer, const uint64_t bufsize)']]],
   ['loadimage',['loadImage',['../class_a_r_t_o_s_1_1_synset_image.html#a69d4b185a289d34d0c3509c52add60ae',1,'ARTOS::SynsetImage']]],
+  ['loadlayerinfo',['loadLayerInfo',['../class_a_r_t_o_s_1_1_caffe_feature_extractor.html#a9ea41d2813d8f5fd82e9458544f097d7',1,'ARTOS::CaffeFeatureExtractor']]],
+  ['loadmean',['loadMean',['../class_a_r_t_o_s_1_1_caffe_feature_extractor.html#a972fc423ba355f8e5a6eac852c8027b3',1,'ARTOS::CaffeFeatureExtractor']]],
+  ['loadnetwork',['loadNetwork',['../class_a_r_t_o_s_1_1_caffe_feature_extractor.html#a3b96d438e6831491cf00cfbdd7c1896b',1,'ARTOS::CaffeFeatureExtractor']]],
+  ['loadpcaparams',['loadPCAParams',['../class_a_r_t_o_s_1_1_caffe_feature_extractor.html#a0026143944b8d75d5c3bf4389c795656',1,'ARTOS::CaffeFeatureExtractor']]],
+  ['loadscales',['loadScales',['../class_a_r_t_o_s_1_1_caffe_feature_extractor.html#a8d247903d7b1675b0a0941e4fca15ade',1,'ARTOS::CaffeFeatureExtractor']]],
   ['loo_5fdata_5ft',['loo_data_t',['../structloo__data__t.html',1,'']]],
   ['loo_5fwho',['loo_who',['../_model_learner_8cc.html#a91d69ccde8c4ff04cc3378e4afed9c31',1,'ModelLearner.cc']]],
   ['loofunc',['LOOFunc',['../class_a_r_t_o_s_1_1_model_evaluator.html#a4f83f8a4c574759607b00062858ec5d9',1,'ARTOS::ModelEvaluator']]]

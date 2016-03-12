@@ -21,13 +21,15 @@ namespace ARTOS
 *       mean image or a plain text file with 3 values, one for each channel.
 *     - *scalesFile* (`string`) - path to a text file with the maximum value of each unscaled feature
 *       channel, computed over several images in advance. If specified, the features extracted from the
-*       CNN will be scaled to [-1,1]. **Note:** This parameter must not be set before `layerName`.
+*       CNN will be scaled to [-1,1].  
+*       **Note:** This parameter must not be set before `layerName`.
 *     - *pcaFile* (`string`) - path to a binary file which contains a mean feature vector `m` and a
-*       matrix `A`used for dimensionality reduction. If specified, each feature cell `c  extracted from
-*       the CNN will be transformed to `c' = A^T * (c - m)`, after scaling has been applied.
+*       matrix `A` used for dimensionality reduction. If specified, each feature cell `c` extracted from
+*       the CNN will be transformed to `ĉ = A^T * (c - m)`, after scaling has been applied.
 *       The binary file must start with two integers specifying the number of rows and columns of `A`,
 *       respectively. Those are followed by the coefficients of `m` and `A` (in row-major order), stored
-*       as floats. **Note:** This parameter must not be set before `layerName`.
+*       as floats.  
+*       **Note:** This parameter must not be set before `layerName`.
 *     - *layerName* (`string`) - the name of the layer in the network to extract features from.
 *       Features from multiple layers may be concatened by specifying the names of the layers as
 *       comma-separated list.
@@ -161,6 +163,8 @@ public:
     /**
     * Changes the value of an integer parameter specific to the concrete feature extraction method.
     *
+    * @param[in] paramName The name of the parameter to be set.
+    *
     * @param[in] val The new value for the parameter.
     *
     * @throws UnknownParameterException There is no string parameter with the given name.
@@ -171,6 +175,8 @@ public:
     
     /**
     * Changes the value of a string parameter specific to this algorithm.
+    *
+    * @param[in] paramName The name of the parameter to be set.
     *
     * @param[in] val The new value for the parameter.
     *

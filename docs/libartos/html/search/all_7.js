@@ -17,6 +17,7 @@ var searchData=
   ['getimageiterator',['getImageIterator',['../struct_a_r_t_o_s_1_1_synset.html#a382ad1defcdc486eadb8e6c0741f288a',1,'ARTOS::Synset']]],
   ['getint',['getInt',['../class_a_r_t_o_s_1_1_random.html#a0a5026c38579688e7ef13325a8676fe4',1,'ARTOS::Random::getInt()'],['../class_a_r_t_o_s_1_1_random.html#a2c01b709ae8c53a8f6f4889292891038',1,'ARTOS::Random::getInt(const int max)'],['../class_a_r_t_o_s_1_1_random.html#aad308aceb732340eb76dc0f797d549d5',1,'ARTOS::Random::getInt(const int min, const int max)']]],
   ['getintparam',['getIntParam',['../class_a_r_t_o_s_1_1_feature_extractor.html#aa040e5254b1a165a833c468a34ca7f82',1,'ARTOS::FeatureExtractor']]],
+  ['getlayerparams',['getLayerParams',['../class_a_r_t_o_s_1_1_caffe_feature_extractor.html#a8c8a68068ea7a841893b97b91e19056c',1,'ARTOS::CaffeFeatureExtractor']]],
   ['getmaxfmeasure',['getMaxFMeasure',['../class_a_r_t_o_s_1_1_model_evaluator.html#af70708d59db2790f55e85eb0250ef800',1,'ARTOS::ModelEvaluator']]],
   ['getmaxoffset',['getMaxOffset',['../class_a_r_t_o_s_1_1_stationary_background.html#ab6076681e9ec838fe30ea769e91f7a1b',1,'ARTOS::StationaryBackground']]],
   ['getmixediterator',['getMixedIterator',['../class_a_r_t_o_s_1_1_image_repository.html#a77d5e72e93607f0d072970408a8cfd9b',1,'ARTOS::ImageRepository']]],

@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['_7ecaffefeatureextractor',['~CaffeFeatureExtractor',['../class_a_r_t_o_s_1_1_caffe_feature_extractor.html#a387c7142c83a6ad5dcbb65764ccd3ee2',1,'ARTOS::CaffeFeatureExtractor']]],
   ['_7edpmdetection',['~DPMDetection',['../class_a_r_t_o_s_1_1_d_p_m_detection.html#ac29bce3a8090c5115fedffa18ffa0a56',1,'ARTOS::DPMDetection']]],
   ['_7eexception',['~Exception',['../class_a_r_t_o_s_1_1_exception.html#a1cf45a419c2d3199772c3b0d287b85a8',1,'ARTOS::Exception']]],
   ['_7efeatureextractor',['~FeatureExtractor',['../class_a_r_t_o_s_1_1_feature_extractor.html#a51c5d092d97a862cde83fdf7927b15a3',1,'ARTOS::FeatureExtractor']]],

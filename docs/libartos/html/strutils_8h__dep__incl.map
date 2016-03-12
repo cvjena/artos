@@ -1,7 +1,8 @@
 <map id="strutils.h" name="strutils.h">
-<area shape="rect" id="node2" href="$_feature_extractor_8cc.html" title="FeatureExtractor.cc" alt="" coords="5,80,141,107"/>
-<area shape="rect" id="node3" href="$_image_repository_8cc.html" title="ImageNet/ImageRepository.cc" alt="" coords="167,80,365,107"/>
-<area shape="rect" id="node4" href="$_synset_iterators_8cc.html" title="ImageNet/SynsetIterators.cc" alt="" coords="391,80,581,107"/>
-<area shape="rect" id="node5" href="$_mixture_8cc.html" title="Mixture.cc" alt="" coords="607,80,688,107"/>
-<area shape="rect" id="node6" href="$strutils_8cc.html" title="strutils.cc" alt="" coords="714,80,792,107"/>
+<area shape="rect" id="node2" href="$_caffe_feature_extractor_8cc.html" title="CaffeFeatureExtractor.cc" alt="" coords="5,80,173,107"/>
+<area shape="rect" id="node3" href="$_feature_extractor_8cc.html" title="FeatureExtractor.cc" alt="" coords="198,80,335,107"/>
+<area shape="rect" id="node4" href="$_image_repository_8cc.html" title="ImageNet/ImageRepository.cc" alt="" coords="360,80,559,107"/>
+<area shape="rect" id="node5" href="$_synset_iterators_8cc.html" title="ImageNet/SynsetIterators.cc" alt="" coords="585,80,775,107"/>
+<area shape="rect" id="node6" href="$_mixture_8cc.html" title="Mixture.cc" alt="" coords="800,80,881,107"/>
+<area shape="rect" id="node7" href="$strutils_8cc.html" title="strutils.cc" alt="" coords="907,80,985,107"/>
 </map>

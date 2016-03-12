@@ -98,6 +98,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li><a href="functions_h.html#index_h"><span>h</span></a></li>
       <li><a href="functions_i.html#index_i"><span>i</span></a></li>
       <li><a href="functions_j.html#index_j"><span>j</span></a></li>
+      <li><a href="functions_k.html#index_k"><span>k</span></a></li>
       <li><a href="functions_l.html#index_l"><span>l</span></a></li>
       <li><a href="functions_m.html#index_m"><span>m</span></a></li>
       <li><a href="functions_n.html#index_n"><span>n</span></a></li>
@@ -153,6 +154,9 @@ $(document).ready(function(){initNavTree('functions_c.html','');});
 <li>cacheFilters()
 : <a class="el" href="class_a_r_t_o_s_1_1_mixture.html#aafa8e98dfd20254bbe41ade348e4e635">ARTOS::Mixture</a>
 </li>
+<li>CaffeFeatureExtractor()
+: <a class="el" href="class_a_r_t_o_s_1_1_caffe_feature_extractor.html#a60f75e380d2961206f8566848fc79535">ARTOS::CaffeFeatureExtractor</a>
+</li>
 <li>calculateFMeasures()
 : <a class="el" href="class_a_r_t_o_s_1_1_model_evaluator.html#a0743f2e087623de5964d0fb00dda7d62">ARTOS::ModelEvaluator</a>
 </li>
@@ -165,9 +169,6 @@ $(document).ready(function(){initNavTree('functions_c.html','');});
 <li>cb
 : <a class="el" href="structprogress__params.html#a1ef080c3298d246399b7199b8e741280">progress_params</a>
 </li>
-<li>cell()
-: <a class="el" href="class_a_r_t_o_s_1_1_feature_matrix__.html#ac0deacd0b1f04a668ec3ded3f21ed67d">ARTOS::FeatureMatrix_&lt; Scalar &gt;</a>
-</li>
 <li>Cell
 : <a class="el" href="class_a_r_t_o_s_1_1_feature_matrix__.html#a318097484b3c0c973de16ed094de188a">ARTOS::FeatureMatrix_&lt; Scalar &gt;</a>
 </li>
@@ -178,12 +179,14 @@ $(document).ready(function(){initNavTree('functions_c.html','');});
 : <a class="el" href="class_a_r_t_o_s_1_1_feature_extractor.html#ad82373965ab6ed84604bef48344f3666">ARTOS::FeatureExtractor</a>
 </li>
 <li>cellSize()
-: <a class="el" href="class_a_r_t_o_s_1_1_feature_extractor.html#a19353d0eeb3dc3c3b000eda389727372">ARTOS::FeatureExtractor</a>
+: <a class="el" href="class_a_r_t_o_s_1_1_caffe_feature_extractor.html#a4d3bf2ef14af41852f93f40b8d1bf0fd">ARTOS::CaffeFeatureExtractor</a>
+, <a class="el" href="class_a_r_t_o_s_1_1_feature_extractor.html#a19353d0eeb3dc3c3b000eda389727372">ARTOS::FeatureExtractor</a>
 , <a class="el" href="class_a_r_t_o_s_1_1_h_o_g_feature_extractor.html#aca30d09660d29c84db5a1576f6c33343">ARTOS::HOGFeatureExtractor</a>
 , <a class="el" href="class_a_r_t_o_s_1_1_stationary_background.html#ad19fa1e3a999181960e17eebafa08078">ARTOS::StationaryBackground</a>
 </li>
 <li>cellsToPixels()
-: <a class="el" href="class_a_r_t_o_s_1_1_feature_extractor.html#adfe6256559f41af422dc046978a4e0d3">ARTOS::FeatureExtractor</a>
+: <a class="el" href="class_a_r_t_o_s_1_1_caffe_feature_extractor.html#ae0e37b02e5574f410ec340121dfa06f5">ARTOS::CaffeFeatureExtractor</a>
+, <a class="el" href="class_a_r_t_o_s_1_1_feature_extractor.html#adfe6256559f41af422dc046978a4e0d3">ARTOS::FeatureExtractor</a>
 </li>
 <li>CHAIR
 : <a class="el" href="class_a_r_t_o_s_1_1_object.html#af221086a5eb4ca632ada7f5ac1b439a4aa4b99080fcad9134d6a513d49f3d2d62">ARTOS::Object</a>
@@ -235,6 +238,9 @@ $(document).ready(function(){initNavTree('functions_c.html','');});
 <li>ConstChannelMap
 : <a class="el" href="class_a_r_t_o_s_1_1_feature_matrix__.html#a4a63e6e4191e5dd17abccba74a9babf8">ARTOS::FeatureMatrix_&lt; Scalar &gt;</a>
 </li>
+<li>CONV
+: <a class="el" href="class_a_r_t_o_s_1_1_caffe_feature_extractor.html#accfd469ef38640185b5a5e4797b321ada994c9e5dc26d56b0a78e7fee711689c1">ARTOS::CaffeFeatureExtractor</a>
+</li>
 <li>convolve()
 : <a class="el" href="class_a_r_t_o_s_1_1_mixture.html#a4eb12e1628d11d85de1bc4c4deb0be20">ARTOS::Mixture</a>
 , <a class="el" href="class_a_r_t_o_s_1_1_patchwork.html#a35958cbeef79d788e41be8f7eb9d3814">ARTOS::Patchwork</a>
@@ -270,7 +276,7 @@ $(document).ready(function(){initNavTree('functions_c.html','');});
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon Mar 7 2016 23:43:37 for ARTOS by
+    <li class="footer">Generated on Fri Mar 11 2016 14:53:55 for ARTOS by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.7 </li>
   </ul>

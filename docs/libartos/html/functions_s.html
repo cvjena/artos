@@ -98,6 +98,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li><a href="functions_h.html#index_h"><span>h</span></a></li>
       <li><a href="functions_i.html#index_i"><span>i</span></a></li>
       <li><a href="functions_j.html#index_j"><span>j</span></a></li>
+      <li><a href="functions_k.html#index_k"><span>k</span></a></li>
       <li><a href="functions_l.html#index_l"><span>l</span></a></li>
       <li><a href="functions_m.html#index_m"><span>m</span></a></li>
       <li><a href="functions_n.html#index_n"><span>n</span></a></li>
@@ -246,7 +247,8 @@ $(document).ready(function(){initNavTree('functions_s.html','');});
 : <a class="el" href="class_a_r_t_o_s_1_1_scene.html#ace54c2cdd6cd77d8440a7f78654e4e7d">ARTOS::Scene</a>
 </li>
 <li>setParam()
-: <a class="el" href="class_a_r_t_o_s_1_1_feature_extractor.html#a483733c2c405c2c1cbaa1a59a8554b53">ARTOS::FeatureExtractor</a>
+: <a class="el" href="class_a_r_t_o_s_1_1_caffe_feature_extractor.html#a4d1f5d603a95bf9c75a84186917b51c8">ARTOS::CaffeFeatureExtractor</a>
+, <a class="el" href="class_a_r_t_o_s_1_1_feature_extractor.html#a483733c2c405c2c1cbaa1a59a8554b53">ARTOS::FeatureExtractor</a>
 , <a class="el" href="class_a_r_t_o_s_1_1_h_o_g_feature_extractor.html#a8f1a2519a168ddb4400d1cee39a6b51e">ARTOS::HOGFeatureExtractor</a>
 </li>
 <li>setPlane()
@@ -290,16 +292,19 @@ $(document).ready(function(){initNavTree('functions_s.html','');});
 : <a class="el" href="class_a_r_t_o_s_1_1_feature_matrix__.html#acd2d73339791a6589609ff7331659118">ARTOS::FeatureMatrix_&lt; Scalar &gt;</a>
 </li>
 <li>Size()
-: <a class="el" href="struct_a_r_t_o_s_1_1_size.html#aa80d792c161f99b9ac8cc477f2953906">ARTOS::Size</a>
+: <a class="el" href="struct_a_r_t_o_s_1_1_size.html#aa7cfcef635ac6702f6d1b005cf7547dd">ARTOS::Size</a>
 </li>
 <li>SOFA
 : <a class="el" href="class_a_r_t_o_s_1_1_object.html#af221086a5eb4ca632ada7f5ac1b439a4a9c4bbe3452d71038fee97de884b35a27">ARTOS::Object</a>
 </li>
 <li>StationaryBackground()
-: <a class="el" href="class_a_r_t_o_s_1_1_stationary_background.html#a1a8fadc07b34f8dd6117eac8405f6ab0">ARTOS::StationaryBackground</a>
+: <a class="el" href="class_a_r_t_o_s_1_1_stationary_background.html#a869d75b3f778890f97a7c715a87b1cd5">ARTOS::StationaryBackground</a>
 </li>
 <li>str_name()
 : <a class="el" href="class_a_r_t_o_s_1_1_object.html#ab2de8400f2f0627a89e7c76b2cdb165f">ARTOS::Object</a>
+</li>
+<li>stride
+: <a class="el" href="struct_a_r_t_o_s_1_1_caffe_feature_extractor_1_1_layer_params.html#a72e4ac4e9117b0ea399b840d03515c1b">ARTOS::CaffeFeatureExtractor::LayerParams</a>
 </li>
 <li>STRING
 : <a class="el" href="class_a_r_t_o_s_1_1_feature_extractor.html#a4ac0337372faa62485f06e978b02f134a63b588d5559f64f89a416e656880b949">ARTOS::FeatureExtractor</a>
@@ -311,7 +316,8 @@ $(document).ready(function(){initNavTree('functions_s.html','');});
 : <a class="el" href="struct_a_r_t_o_s_1_1_feature_extractor_1_1_parameter_info.html#a1b64d5f2c8ed84fcccafcbbed4e9e9d0">ARTOS::FeatureExtractor::ParameterInfo</a>
 </li>
 <li>supportsMultiThread()
-: <a class="el" href="class_a_r_t_o_s_1_1_feature_extractor.html#a214bdfa37bf6edf0f64040366f4cda5f">ARTOS::FeatureExtractor</a>
+: <a class="el" href="class_a_r_t_o_s_1_1_caffe_feature_extractor.html#ad87f74a579195b862675fee42425086d">ARTOS::CaffeFeatureExtractor</a>
+, <a class="el" href="class_a_r_t_o_s_1_1_feature_extractor.html#a214bdfa37bf6edf0f64040366f4cda5f">ARTOS::FeatureExtractor</a>
 </li>
 <li>supportsVariableCellSize()
 : <a class="el" href="class_a_r_t_o_s_1_1_feature_extractor.html#af74d0cdb8eb9548dc53ad068797f535a">ARTOS::FeatureExtractor</a>
@@ -334,7 +340,7 @@ $(document).ready(function(){initNavTree('functions_s.html','');});
 : <a class="el" href="class_a_r_t_o_s_1_1_d_p_m_detection.html#ae9eeab175c9f4692befce02f0abbb1cb">ARTOS::DPMDetection</a>
 </li>
 <li>SynsetImage()
-: <a class="el" href="class_a_r_t_o_s_1_1_synset_image.html#a59e87361eb2ccde63270f3ba3111013d">ARTOS::SynsetImage</a>
+: <a class="el" href="class_a_r_t_o_s_1_1_synset_image.html#a65682c0e9c405e0b2e35b4804d8677ba">ARTOS::SynsetImage</a>
 </li>
 <li>SynsetImageIterator()
 : <a class="el" href="class_a_r_t_o_s_1_1_synset_image_iterator.html#a888ddb4590521ec5e8883000ddc226a2">ARTOS::SynsetImageIterator</a>
@@ -351,7 +357,7 @@ $(document).ready(function(){initNavTree('functions_s.html','');});
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon Mar 7 2016 23:43:37 for ARTOS by
+    <li class="footer">Generated on Fri Mar 11 2016 14:53:56 for ARTOS by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.7 </li>
   </ul>

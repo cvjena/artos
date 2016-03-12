@@ -27,5 +27,10 @@ var searchData=
   ['listsynsets',['listSynsets',['../class_a_r_t_o_s_1_1_image_repository.html#a18706ff915b43b52ea826aa163a776ac',1,'ARTOS::ImageRepository']]],
   ['loadboundingboxes',['loadBoundingBoxes',['../class_a_r_t_o_s_1_1_synset_image.html#a5af15f665e54b3b3caa59b8f0af5a99d',1,'ARTOS::SynsetImage::loadBoundingBoxes()'],['../class_a_r_t_o_s_1_1_synset_image.html#a6fe97690fbdadf774c3c1f9d5b5bf934',1,'ARTOS::SynsetImage::loadBoundingBoxes(const char *xmlBuffer, const uint64_t bufsize)']]],
   ['loadimage',['loadImage',['../class_a_r_t_o_s_1_1_synset_image.html#a69d4b185a289d34d0c3509c52add60ae',1,'ARTOS::SynsetImage']]],
+  ['loadlayerinfo',['loadLayerInfo',['../class_a_r_t_o_s_1_1_caffe_feature_extractor.html#a9ea41d2813d8f5fd82e9458544f097d7',1,'ARTOS::CaffeFeatureExtractor']]],
+  ['loadmean',['loadMean',['../class_a_r_t_o_s_1_1_caffe_feature_extractor.html#a972fc423ba355f8e5a6eac852c8027b3',1,'ARTOS::CaffeFeatureExtractor']]],
+  ['loadnetwork',['loadNetwork',['../class_a_r_t_o_s_1_1_caffe_feature_extractor.html#a3b96d438e6831491cf00cfbdd7c1896b',1,'ARTOS::CaffeFeatureExtractor']]],
+  ['loadpcaparams',['loadPCAParams',['../class_a_r_t_o_s_1_1_caffe_feature_extractor.html#a0026143944b8d75d5c3bf4389c795656',1,'ARTOS::CaffeFeatureExtractor']]],
+  ['loadscales',['loadScales',['../class_a_r_t_o_s_1_1_caffe_feature_extractor.html#a8d247903d7b1675b0a0941e4fca15ade',1,'ARTOS::CaffeFeatureExtractor']]],
   ['loo_5fwho',['loo_who',['../_model_learner_8cc.html#a91d69ccde8c4ff04cc3378e4afed9c31',1,'ModelLearner.cc']]]
 ];

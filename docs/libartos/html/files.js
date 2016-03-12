@@ -3,6 +3,11 @@ var files =
     [ "ImageNet", "dir_d829f2a48ced5b4028a1f81b1010f089.html", "dir_d829f2a48ced5b4028a1f81b1010f089" ],
     [ "blf.cc", "blf_8cc.html", "blf_8cc" ],
     [ "blf.h", "blf_8h.html", "blf_8h" ],
+    [ "CaffeFeatureExtractor.cc", "_caffe_feature_extractor_8cc.html", null ],
+    [ "CaffeFeatureExtractor.h", "_caffe_feature_extractor_8h.html", [
+      [ "CaffeFeatureExtractor", "class_a_r_t_o_s_1_1_caffe_feature_extractor.html", "class_a_r_t_o_s_1_1_caffe_feature_extractor" ],
+      [ "LayerParams", "struct_a_r_t_o_s_1_1_caffe_feature_extractor_1_1_layer_params.html", "struct_a_r_t_o_s_1_1_caffe_feature_extractor_1_1_layer_params" ]
+    ] ],
     [ "clustering.h", "clustering_8h.html", "clustering_8h" ],
     [ "defs.cc", "defs_8cc.html", null ],
     [ "defs.h", "defs_8h.html", "defs_8h" ],

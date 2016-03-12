@@ -1,6 +1,7 @@
 var namespace_a_r_t_o_s =
 [
     [ "detail", "namespace_a_r_t_o_s_1_1detail.html", "namespace_a_r_t_o_s_1_1detail" ],
+    [ "CaffeFeatureExtractor", "class_a_r_t_o_s_1_1_caffe_feature_extractor.html", "class_a_r_t_o_s_1_1_caffe_feature_extractor" ],
     [ "DeserializationException", "class_a_r_t_o_s_1_1_deserialization_exception.html", "class_a_r_t_o_s_1_1_deserialization_exception" ],
     [ "Detection", "struct_a_r_t_o_s_1_1_detection.html", "struct_a_r_t_o_s_1_1_detection" ],
     [ "DPMDetection", "class_a_r_t_o_s_1_1_d_p_m_detection.html", "class_a_r_t_o_s_1_1_d_p_m_detection" ],

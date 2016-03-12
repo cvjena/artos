@@ -14,7 +14,7 @@ var searchData=
   ['blf_2eh',['blf.h',['../blf_8h.html',1,'']]],
   ['bndbox',['bndbox',['../class_a_r_t_o_s_1_1_object.html#a2dd49cdfad84ccaf0ef821438b5e8aa9',1,'ARTOS::Object']]],
   ['boat',['BOAT',['../class_a_r_t_o_s_1_1_object.html#af221086a5eb4ca632ada7f5ac1b439a4afaacc5a65e0ab4f07a3bf756cd4b1834',1,'ARTOS::Object']]],
-  ['bordersize',['borderSize',['../class_a_r_t_o_s_1_1_feature_extractor.html#a636f9cde076e9bd7a2f9dd59566b5f50',1,'ARTOS::FeatureExtractor']]],
+  ['bordersize',['borderSize',['../class_a_r_t_o_s_1_1_caffe_feature_extractor.html#af34d8eb8557f8b88b1afd9046a58a56b',1,'ARTOS::CaffeFeatureExtractor::borderSize()'],['../class_a_r_t_o_s_1_1_feature_extractor.html#a636f9cde076e9bd7a2f9dd59566b5f50',1,'ARTOS::FeatureExtractor::borderSize()']]],
   ['bottle',['BOTTLE',['../class_a_r_t_o_s_1_1_object.html#af221086a5eb4ca632ada7f5ac1b439a4a1e37ef1678f2e60191f1c355ae9ed021',1,'ARTOS::Object']]],
   ['bottom',['bottom',['../struct_flat_detection.html#a88d5fddf79b7c8c16eb6565585049e65',1,'FlatDetection::bottom()'],['../class_a_r_t_o_s_1_1_rectangle.html#a46e18ff7c2ca4fd068442cabcd0b4046',1,'ARTOS::Rectangle::bottom()']]],
   ['buildlevels',['buildLevels',['../class_a_r_t_o_s_1_1_feature_pyramid.html#af5047c730b6fa9f9a5a7d323077e3872',1,'ARTOS::FeaturePyramid']]],

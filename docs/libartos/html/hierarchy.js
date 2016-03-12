@@ -14,6 +14,7 @@ var hierarchy =
       [ "ARTOS::UseBeforeSetupException", "class_a_r_t_o_s_1_1_use_before_setup_exception.html", null ]
     ] ],
     [ "ARTOS::FeatureExtractor", "class_a_r_t_o_s_1_1_feature_extractor.html", [
+      [ "ARTOS::CaffeFeatureExtractor", "class_a_r_t_o_s_1_1_caffe_feature_extractor.html", null ],
       [ "ARTOS::HOGFeatureExtractor", "class_a_r_t_o_s_1_1_h_o_g_feature_extractor.html", null ]
     ] ],
     [ "FeatureExtractorInfo", "struct_feature_extractor_info.html", null ],
@@ -35,6 +36,7 @@ var hierarchy =
       [ "ARTOS::SynsetIterator", "class_a_r_t_o_s_1_1_synset_iterator.html", null ]
     ] ],
     [ "ARTOS::JPEGImage", "class_a_r_t_o_s_1_1_j_p_e_g_image.html", null ],
+    [ "ARTOS::CaffeFeatureExtractor::LayerParams", "struct_a_r_t_o_s_1_1_caffe_feature_extractor_1_1_layer_params.html", null ],
     [ "loo_data_t", "structloo__data__t.html", null ],
     [ "ARTOS::Mixture", "class_a_r_t_o_s_1_1_mixture.html", null ],
     [ "ARTOS::Model", "class_a_r_t_o_s_1_1_model.html", null ],

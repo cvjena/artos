@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['name',['Name',['../class_a_r_t_o_s_1_1_object.html#af221086a5eb4ca632ada7f5ac1b439a4',1,'ARTOS::Object']]]
+  ['layertype',['LayerType',['../class_a_r_t_o_s_1_1_caffe_feature_extractor.html#accfd469ef38640185b5a5e4797b321ad',1,'ARTOS::CaffeFeatureExtractor']]]
 ];

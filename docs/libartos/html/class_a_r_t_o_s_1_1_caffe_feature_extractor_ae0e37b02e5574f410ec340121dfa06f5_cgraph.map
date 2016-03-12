@@ -1,0 +1,7 @@
+<map id="ARTOS::CaffeFeatureExtractor::cellsToPixels" name="ARTOS::CaffeFeatureExtractor::cellsToPixels">
+<area shape="rect" id="node2" href="$class_a_r_t_o_s_1_1_feature_extractor.html#adfe6256559f41af422dc046978a4e0d3" title="ARTOS::FeatureExtractor\l::cellsToPixels" alt="" coords="275,5,448,46"/>
+<area shape="rect" id="node3" href="$class_a_r_t_o_s_1_1_caffe_feature_extractor.html#a4d3bf2ef14af41852f93f40b8d1bf0fd" title="ARTOS::CaffeFeatureExtractor\l::cellSize" alt="" coords="259,70,464,111"/>
+<area shape="rect" id="node4" href="$class_a_r_t_o_s_1_1_caffe_feature_extractor.html#a6d69ebdd385ba29ddcab3b4c0d918893" title="ARTOS::CaffeFeatureExtractor\l::pixelsToCells" alt="" coords="259,135,464,177"/>
+<area shape="rect" id="node6" href="$namespacestd.html#aef13da5baa79cdc514d9729bc0d870da" title="std::max" alt="" coords="325,201,398,228"/>
+<area shape="rect" id="node5" href="$class_a_r_t_o_s_1_1_caffe_feature_extractor.html#a8c8a68068ea7a841893b97b91e19056c" title="ARTOS::CaffeFeatureExtractor\l::getLayerParams" alt="" coords="512,135,717,177"/>
+</map>
