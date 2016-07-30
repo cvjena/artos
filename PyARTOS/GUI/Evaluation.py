@@ -22,6 +22,8 @@ try:
 except:
     import Image, ImageTk
 try:
+    import matplotlib
+    matplotlib.use('Agg')
     from matplotlib import pyplot
     HAS_MATPLOTLIB = True
 except:

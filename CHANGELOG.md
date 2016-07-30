@@ -1,8 +1,8 @@
 ARTOS Changelog
 ===============
 
-Version 2.0-rc1 (2016-03-12)
-----------------------------
+Version 2.0 (2016-03-12)
+------------------------
 
 - **[Feature]** Model Evaluation API for libartos and PyARTOS, including GUI support for evaluating models and plotting recall-precision graphs.
 - **[Feature]** ARTOS now ships with `CaffeFeatureExtractor` which uses the *Caffe* library to extract image features from the layer of a CNN
