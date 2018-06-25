@@ -7,7 +7,6 @@ set of models in images.
 
 from . import artos_wrapper, utils
 from .artos_wrapper import libartos
-from . import learning
 try:
     from PIL import Image, ImageDraw
 except:
@@ -220,8 +219,9 @@ class Detector(object):
         If the model can not be added, a LibARTOSException is thrown.
         """
         
+        from .learning import ModelLearner
         synsetId = utils.str2bytes(synsetId) if ((synsetId != '') and (not synsetId is None)) else None
-        if isinstance(model, learning.ModelLearner):
+        if isinstance(model, ModelLearner):
             libartos.add_model_from_learner(self.handle, utils.str2bytes(classname), model.handle, threshold, synsetId)
         else:
             libartos.add_model(self.handle, utils.str2bytes(classname), utils.str2bytes(model), threshold, synsetId)
