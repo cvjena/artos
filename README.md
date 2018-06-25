@@ -1,5 +1,4 @@
-ARTOS – README
-==============
+# ARTOS – README #
 
 **Outline:**
 
@@ -12,8 +11,7 @@ ARTOS – README
 7. License and credits
 
 
-1. What is ARTOS?
------------------
+## 1. What is ARTOS? ##
 
 ARTOS is the Adaptive Real-Time Object Detection System, created at the University of Jena (Germany).
 It can be used to quickly learn models for visual object detection without having to collect a set of samples manually.
@@ -32,8 +30,7 @@ The other part is a Graphical User Interface (*PyARTOS*), written in Python, whi
 in a comfortable way.
 
 
-2. Dependencies
----------------
+## 2. Dependencies ##
 
 ### libartos ###
 
@@ -62,30 +59,29 @@ The following Python modules are required:
 
 - **PIL** (>= 1.1.6):  
   The *Python Imaging Library*.
-      - Python 2:
-          - Packages: *python-imaging* and *python-imaging-tk*
-          - Binaries for Win32: http://www.pythonware.com/products/pil/index.htm
-      - Python 3 and Python 2 64-bit:  
-        Since *PIL* isn't being developed anymore and, thus, not available for Python 3, the *[Pillow][1]* fork can be used as a drop-in replacement.
-          - Packages: *python3-imaging* and *python3-imaging-tk*
-          - Inofficial Pillow binaries: http://www.lfd.uci.edu/~gohlke/pythonlibs/#pillow
+  - Python 2:
+    - Packages: *python-imaging* and *python-imaging-tk*
+    - Binaries for Win32: http://www.pythonware.com/products/pil/index.htm
+  - Python 3 and Python 2 64-bit:  
+  Since *PIL* isn't being developed anymore and, thus, not available for Python 3, the *[Pillow][1]* fork can be used as a drop-in replacement.
+    - Packages: *python3-imaging* and *python3-imaging-tk*
+    - Inofficial Pillow binaries: http://www.lfd.uci.edu/~gohlke/pythonlibs/#pillow
 
 - For live camera detection and taking in-situ training images, at least one of the following
   modules is required to access video devices:
-      - Unix:
-          - **python-opencv**
-          - **pygame**: http://www.pygame.org/download.shtml
-      - Windows: **VideoCapture** (>= 0.9-5): http://videocapture.sourceforge.net/
+  - Unix:
+    - **python-opencv**
+    - **pygame**: http://www.pygame.org/download.shtml
+  - Windows: **VideoCapture** (>= 0.9-5): http://videocapture.sourceforge.net/
 
 - (Optional) **matplotlib** (for plotting recall-precision graphs after model evaluation)
 
-Note that neither *python-opencv* nor *VideoCapture* are available for Python 3 until now (May 2014).  
+Note that *VideoCapture* is not available for Python 3 until now (June 2018).  
 Anyway, adding support for a new or another video capturing module can be done easily by adding a new camera abstraction class
 to the `PyARTOS.Camera` sub-package.
 
 
-3. Building the library
------------------------
+## 3. Building the library ##
 
 Building *libartos* requires **[CMake][2]** (version >= 3.1 recommended) and a **C++ compiler** which supports C++11.
 It has been successfully built using the **GNU C++ Compiler**. Other compilers may be supported too, but have not been tested.
@@ -103,8 +99,7 @@ To build *libartos* on **Windows**, use the *CMake GUI* to create a *MinGW Makef
 libraries appropriately.
 
 
-4. Instructions for usage of CNN features
------------------------------------------
+## 4. Instructions for usage of CNN features ##
 
 If you are going to use HOG features, just skip this section.  
 But if you would like to use image features extracted from a layer of a Convolutional Neural Network, you'll have to download
@@ -124,12 +119,12 @@ We strongly advise scaling features extracted from CNNs to the range [-1,1]. `to
 maximum absolute values of each feature channel and save them to a file for use with the `scalesFile` parameter.
 
 We have successfully experimented with the following pre-trained CNNs:
+
 - [BVLC Reference CaffeNet][7] (layer `relu5`): fast; average relative performance improvement of 54% compared to HOG
 - [VGG ILSVRC 16][8] (layer `conv5_3`): slow; average relative performance improvement of 73% compared to HOG
 
 
-5. Setting up the image repository
-----------------------------------
+## 5. Setting up the image repository ##
 
 ARTOS has been designed to work seamlessly with the **[ImageNet][3]** image repository. If you want to use other data instead,
 please refer to the corresponding section below.
@@ -200,8 +195,7 @@ are okay, but `.JPG`, `.JPeG` or `.XML` won't be found.
 Finally, you have to change the `CMake` variable `IMAGE_REPOSITORY_SRC` from `ImageNet` to `ImageDirectories` and re-build `libartos`.
 
 
-6. Launching the ARTOS GUI
---------------------------
+## 6. Launching the ARTOS GUI ##
 
 After you've built *libartos* as described in (3), installed all required Python modules mentioned in (2) and made up your local copy
 of ImageNet as described in (4), you're ready to go! From the ARTOS root directory run:
@@ -217,8 +211,7 @@ about your system and store it in a file called `wisdom.fftw` to speed up fourie
 ***Have fun!***
 
 
-7. License and credits
-----------------------
+## 7. License and credits ##
 
 ARTOS is released under the GNU General Public License (version 3).
 You should have received a copy of the license text along with ARTOS.
