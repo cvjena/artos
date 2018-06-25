@@ -3,6 +3,7 @@
 #include <cstring>
 #include <vector>
 #include <map>
+#include <utility>
 #include "ModelEvaluator.h"
 #include "ImageNetModelLearner.h"
 #include "ImageRepository.h"
@@ -124,7 +125,15 @@ int detect_jpeg(const unsigned int detector, const JPEGImage & img, FlatDetectio
         if (img.empty())
             return ARTOS_DETECT_RES_INVALID_IMG_DATA;
         vector<Detection> detections;
-        int result = detectors[detector - 1]->detect(img, detections);
+        int result;
+        if (*detection_buf_size == 1)
+        {
+            Detection detection;
+            result = detectors[detector - 1]->detectMax(img, detection);
+            detections.push_back(move(detection));
+        }
+        else
+            result = detectors[detector - 1]->detect(img, detections);
         if (result == ARTOS_RES_OK)
         {
             sort(detections.begin(), detections.end());
