@@ -6,6 +6,8 @@ Development Snapshot
 
 - **[Improvement]** Interfaces in `libartos` and `PyAROTS` for obtaining a detector for a learned model directly without having to serialize the model to disk first.
 - **[Fix]** Fixed Caffe include directory.
+- **[Fix]** `PyARTOS` now searches for `libartos` in the parent directory of the package instead of the package directory itself.
+  This should fix problems when importing `PyARTOS` from external python code.
 
 
 Version 2.0 (2016-03-12)
