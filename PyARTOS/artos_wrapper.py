@@ -519,8 +519,8 @@ class LibARTOSException(Exception):
 def _search_libartos():
     search_names = (config.get('libartos', 'library_path'), 'artos', 'libartos', 'libartos.so', os.path.join('.', 'libartos.so'), \
                     os.path.join('bin', 'artos'), os.path.join('bin', 'libartos'), os.path.join('bin', 'libartos.so'), \
-                    os.path.join(basedir, 'artos'), os.path.join(basedir, 'libartos'), os.path.join(basedir, 'libartos.so'), \
-                    os.path.join(basedir, 'bin', 'artos'), os.path.join(basedir, 'bin', 'libartos'), os.path.join(basedir, 'bin', 'libartos.so'), \
+                    os.path.join(basedir, '..', 'artos'), os.path.join(basedir, '..', 'libartos'), os.path.join(basedir, '..', 'libartos.so'), \
+                    os.path.join(basedir, '..', 'bin', 'artos'), os.path.join(basedir, '..', 'bin', 'libartos'), os.path.join(basedir, '..', 'bin', 'libartos.so'), \
                     util.find_library('artos'))
     for n in search_names:
         if not n is None:
