@@ -13,18 +13,23 @@ using namespace std;
 using namespace ARTOS;
 
 
+vector<ModelEvaluator*> detectors;
+vector<ImageNetModelLearner*> learners;
+
+bool is_valid_detector_handle(const unsigned int detector);
+bool is_valid_learner_handle(const unsigned int learner);
+
+
 //-------------------------------------------------------------------
 //---------------------------- Detecting ----------------------------
 //-------------------------------------------------------------------
 
 
-vector<ModelEvaluator*> detectors;
 map< unsigned int, vector<Sample*> > eval_positive_samples;
 map< unsigned int, vector<JPEGImage> > eval_negative_samples;
 
 int detect_jpeg(const unsigned int detector, const JPEGImage & img, FlatDetection * detection_buf, unsigned int * detection_buf_size);
 void write_results_to_buffer(const vector<Detection> & detections, FlatDetection * detection_buf, unsigned int * detection_buf_size);
-bool is_valid_detector_handle(const unsigned int detector);
 
 
 unsigned int create_detector(const double overlap, const int interval, const bool debug)
@@ -71,6 +76,20 @@ int add_models(const unsigned int detector, const char * modellistfile)
 {
     if (is_valid_detector_handle(detector))
         return detectors[detector - 1]->addModels(modellistfile);
+    else
+        return ARTOS_RES_INVALID_HANDLE;
+}
+
+int add_model_from_learner(const unsigned int detector, const char * classname, const unsigned int learner, const double threshold, const char * synset_id)
+{
+    if (is_valid_detector_handle(detector) && is_valid_learner_handle(learner))
+    {
+        ModelLearnerBase * learner_obj = learners[learner - 1];
+        Mixture mix(learner_obj->getFeatureExtractor());
+        for (size_t i = 0; i < learner_obj->getModels().size(); i++)
+            mix.addModel(Model(learner_obj->getModels()[i], -1 * learner_obj->getThresholds()[i]));
+        return detectors[detector - 1]->addModel(classname, move(mix), threshold, (synset_id != NULL) ? synset_id : "");
+    }
     else
         return ARTOS_RES_INVALID_HANDLE;
 }
@@ -289,9 +308,6 @@ int learn_files_jpeg(const char ** imagefiles, const unsigned int num_imagefiles
 }
 
 
-vector<ImageNetModelLearner*> learners;
-
-bool is_valid_learner_handle(const unsigned int learner);
 int learner_add_jpeg(const unsigned int learner, const JPEGImage & img, const FlatBoundingBox * bboxes, const unsigned int num_bboxes);
 bool progress_proxy(unsigned int current, unsigned int total, void * data);
 

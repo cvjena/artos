@@ -8,7 +8,7 @@ It is used by detecting.Detector, learning.ModelLearner and imagenet.ImageReposi
 an object-oriented high-level API to libartos.
 """
 
-from ctypes import *
+from ctypes import *  # pylint: disable=unused-wildcard-import
 from ctypes import util
 from .utils import basedir
 from .config import config
@@ -163,6 +163,12 @@ class _LibARTOS(object):
         self._register_func('add_models',
             (c_int, c_uint, c_char_p),
             ((1, 'detector'), (1, 'modellistfile'))
+        )
+
+        # add_model_from_learner function
+        self._register_func('add_model_from_learner',
+            (c_int, c_uint, c_char_p, c_uint, c_double, c_char_p),
+            ((1, 'detector'), (1, 'classname'), (1, 'learner'), (1, 'threshold'), (1, 'synset_id', None))
         )
         
         # num_feature_extractors_in_detector function

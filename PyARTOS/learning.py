@@ -11,7 +11,7 @@ can be found here as well.
 
 from . import artos_wrapper, imagenet, utils
 from .artos_wrapper import libartos
-from .detecting import BoundingBox
+from .detecting import BoundingBox, Detector
 
 try:
     from PIL import Image, ImageDraw
@@ -180,6 +180,20 @@ class ModelLearner(object):
         cb = artos_wrapper.progress_cb_t(progressCallback) if not progressCallback is None \
              else ctypes.cast(None, artos_wrapper.progress_cb_t)
         return libartos.learner_optimize_th(self.handle, maxPositive, numNegative, cb)
+
+
+    def getDetector(self, threshold = 0.0, classname = "learned_model", **kwargs):
+        """Creates a new PyARTOS.detecting.Detector instance and adds the models learned before by learn() to it.
+
+        `threshold` specifies the detection threshold for the model and `classname` can be used to distinguish
+        detections made by this model from those belonging to any other models added later to the detector.
+
+        Any remaining keyword arguments will be passed through to the constructor of the detector.
+        """
+
+        detector = Detector(**kwargs)
+        detector.addModel(classname, self, threshold)
+        return detector
 
 
     def save(self, modelfile, add = True):

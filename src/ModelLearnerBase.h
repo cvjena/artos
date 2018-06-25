@@ -7,6 +7,7 @@
 #include "libartos_def.h"
 #include "FeatureExtractor.h"
 #include "SynsetImage.h"
+#include "DPMDetection.h"
 #include "JPEGImage.h"
 #include "Rectangle.h"
 
@@ -215,7 +216,22 @@ public:
                                                          const std::vector<JPEGImage> * negative = NULL,
                                                          const float b = 1.0f,
                                                          ProgressCallback progressCB = NULL, void * cbData = NULL);
-    
+
+    /**
+    * Creates a new detector containing the model learned by learn().
+    * 
+    * @param[in] threshold The detection threshold for the model.
+    *
+    * @param[in] verbose If set to true, debug and timing information will be logged to stderr.
+    *
+    * @param[in] overlap Minimum overlap in non maxima suppression.
+    *
+    * @param[in] interval Number of levels per octave in the feature pyramid.
+    * 
+    * @return New DPMDetection object.
+    */
+    virtual DPMDetection getDetector(double threshold = 0.8, bool verbose = false, double overlap = 0.5, int interval = 10) const;
+
     /**
     * Writes the models learned by learn() to a file.
     *

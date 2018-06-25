@@ -128,6 +128,18 @@ int add_model(const unsigned int detector, const char * classname, const char * 
 int add_models(const unsigned int detector, const char * modellistfile);
 
 /**
+* Adds a model learned by a learner instance to the detection stack of a detector instance.
+* @param[in] detector The handle of the detector instance obtained by create_detector().
+* @param[in] classname The name of the class ('bicycle' for example). It is used to name the objects detected in an image.
+* @param[in] learner The handle of the learner instance obtained by create_learner().
+* @param[in] threshold The detection threshold for this model.
+* @param[in] synset_id Optionally, the ID of the ImageNet synset associated with this model. May be NULL.
+* @return Returns `ARTOS_RES_OK` on success or one of the following error codes on failure:
+*           - `ARTOS_RES_INVALID_HANDLE`
+*/
+int add_model_from_learner(const unsigned int detector, const char * classname, const unsigned int learner, const double threshold, const char * synset_id = 0);
+
+/**
 * Returns the number of different feature extractors among those used by the models added to a detector instance.
 * @param[in] detector The handle of the detector instance obtained by create_detector().
 * @return Returns the number of different feature extractors or -1 if the given detector handle is invalid.

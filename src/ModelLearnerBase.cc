@@ -312,6 +312,18 @@ const vector<float> & ModelLearnerBase::optimizeThreshold(const unsigned int max
 }
 
 
+DPMDetection ModelLearnerBase::getDetector(double threshold, bool verbose, double overlap, int interval) const
+{
+    Mixture mix(this->m_featureExtractor);
+    for (size_t i = 0; i < this->m_models.size(); i++)
+    {
+        Model model(this->m_models[i], -1 * this->m_thresholds[i]);
+        mix.addModel(model);
+    }
+    return DPMDetection(move(mix), threshold, verbose, overlap, interval);
+}
+
+
 bool ModelLearnerBase::save(const string & filename, const bool addToMixture) const
 {
     if (this->m_models.size() == 0)

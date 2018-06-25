@@ -1,6 +1,13 @@
 ARTOS Changelog
 ===============
 
+Development Snapshot
+------------------------------
+
+- **[Improvement]** Interfaces in `libartos` and `PyAROTS` for obtaining a detector for a learned model directly without having to serialize the model to disk first.
+- **[Fix]** Fixed Caffe include directory.
+
+
 Version 2.0 (2016-03-12)
 ------------------------
 

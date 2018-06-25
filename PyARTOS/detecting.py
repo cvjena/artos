@@ -7,6 +7,7 @@ set of models in images.
 
 from . import artos_wrapper, utils
 from .artos_wrapper import libartos
+from . import learning
 try:
     from PIL import Image, ImageDraw
 except:
@@ -208,11 +209,11 @@ class Detector(object):
             pass
 
 
-    def addModel(self, classname, modelfile, threshold = 0.0, synsetId = ''):
+    def addModel(self, classname, model, threshold = 0.0, synsetId = ''):
         """Adds a model to the detection stack.
         
         classname - The name of the class ('bicycle' for example). It is used to name the objects detected in an image.
-        modelfile - The filename of the model to load.
+        model - Either the filename of the model to load or an instance of ModelLearner having learned the model to be added.
         threshold - The detection threshold for this model.
         synsetId  - The ID of the ImageNet synset associated with the class. Will be present in the detection results.
         
@@ -220,7 +221,10 @@ class Detector(object):
         """
         
         synsetId = utils.str2bytes(synsetId) if ((synsetId != '') and (not synsetId is None)) else None
-        libartos.add_model(self.handle, utils.str2bytes(classname), utils.str2bytes(modelfile), threshold, synsetId)
+        if isinstance(model, learning.ModelLearner):
+            libartos.add_model_from_learner(self.handle, utils.str2bytes(classname), model.handle, threshold, synsetId)
+        else:
+            libartos.add_model(self.handle, utils.str2bytes(classname), utils.str2bytes(model), threshold, synsetId)
 
 
     def addModels(self, listfile):
@@ -326,7 +330,7 @@ class Detector(object):
         if (boundingBoxes is not None) and (not utils.is_str(boundingBoxes)) and (len(boundingBoxes) > 0):
             bboxes = (artos_wrapper.FlatBoundingBox * len(boundingBoxes))()
             for i, box in enumerate((BoundingBox(b) for b in boundingBoxes)):
-                bboxes[i] = artos_wrapper.FlatBoundingBox(left = box.left, top = box.top, width = box.width, height = box.height);
+                bboxes[i] = artos_wrapper.FlatBoundingBox(left = box.left, top = box.top, width = box.width, height = box.height)
             numBBoxes = len(bboxes)
         else:
             bboxes = None
