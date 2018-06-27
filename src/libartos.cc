@@ -3,6 +3,8 @@
 #include <cstring>
 #include <vector>
 #include <map>
+#include <streambuf>
+#include <ostream>
 #include <utility>
 #include "ModelEvaluator.h"
 #include "ImageNetModelLearner.h"
@@ -145,6 +147,32 @@ int detect_jpeg(const unsigned int detector, const JPEGImage & img, FlatDetectio
     }
     else
         return ARTOS_RES_INVALID_HANDLE;
+}
+
+int detect_file_featuredump(const unsigned int detector,
+                            const char * feature_dump_file, unsigned int img_width, unsigned int img_height,
+                            FlatDetection * detection_buf, unsigned int * detection_buf_size)
+{
+    if (!is_valid_detector_handle(detector))
+        return ARTOS_RES_INVALID_HANDLE;
+    
+    if (detectors[detector - 1]->differentFeatureExtractors() > 1)
+        return ARTOS_DETECT_RES_MIXED_FEATURES;
+    
+    FeaturePyramid pyramid;
+    if (!pyramid.readFromFile(feature_dump_file))
+        return ARTOS_DETECT_RES_INVALID_FEATURES;
+    
+    vector<Detection> detections;
+    int result = detectors[detector - 1]->detect(img_width, img_height, pyramid, detections);
+    if (result == ARTOS_RES_OK)
+    {
+        sort(detections.begin(), detections.end());
+        write_results_to_buffer(detections, detection_buf, detection_buf_size);
+    }
+    else
+        *detection_buf_size = 0;
+    return result;
 }
 
 void write_results_to_buffer(const vector<Detection> & detections, FlatDetection * detection_buf, unsigned int * detection_buf_size)
@@ -921,6 +949,107 @@ int feature_extractor_set_string_param(const char * param_name, const char * val
         return ARTOS_SETTINGS_RES_INVALID_PARAMETER_VALUE;
     }
     return ARTOS_RES_OK;
+}
+
+
+
+//------------------------------------------------------------------
+//----------------------- Feature Extraction -----------------------
+//------------------------------------------------------------------
+
+
+template<typename char_type>
+struct ostreambuf : public basic_streambuf<char_type, std::char_traits<char_type> >
+{
+    ostreambuf(char_type * buffer, streamsize bufferLength)
+    {
+        this->setp(buffer, buffer + bufferLength);
+    }
+};
+
+
+int extract_features_jpeg(const JPEGImage & img, unsigned char * feature_buf, unsigned int * feature_buf_size,
+                          const unsigned int interval, const unsigned int min_size)
+{
+    if (img.empty())
+        return ARTOS_RES_INVALID_IMG_DATA;
+    
+    int res = ARTOS_RES_OK;
+    FeaturePyramid pyra;
+    try {
+        pyra = FeaturePyramid(img, nullptr, interval, min_size);
+    } catch (const UseBeforeSetupException & e) {
+        res = ARTOS_LEARN_RES_FEATURE_EXTRACTOR_NOT_READY;
+    }
+    if (res != ARTOS_RES_OK)
+        return res;
+    else if (pyra.empty())
+        return ARTOS_RES_INTERNAL_ERROR;
+    
+    if (pyra.serializedSize() > *feature_buf_size)
+    {
+        *feature_buf_size = pyra.serializedSize();
+        return ARTOS_RES_BUFFER_TOO_SMALL;
+    }
+
+    ostreambuf<char> stream_buf(reinterpret_cast<char*>(feature_buf), *feature_buf_size);
+    ostream stream(&stream_buf);
+    stream << pyra;
+    return ARTOS_RES_OK;
+}
+
+
+int save_features_jpeg(const JPEGImage & img, const char * out_file,
+                       const unsigned int interval, const unsigned int min_size)
+{
+    if (img.empty())
+        return ARTOS_RES_INVALID_IMG_DATA;
+    
+    int res = ARTOS_RES_OK;
+    FeaturePyramid pyra;
+    try {
+        pyra = FeaturePyramid(img, nullptr, interval, min_size);
+    } catch (const UseBeforeSetupException & e) {
+        res = ARTOS_LEARN_RES_FEATURE_EXTRACTOR_NOT_READY;
+    }
+    if (res == ARTOS_RES_OK && pyra.empty())
+        res = ARTOS_RES_INTERNAL_ERROR;
+    
+    if (res != ARTOS_RES_OK)
+        return res;
+    else
+        return (pyra.writeToFile(out_file)) ? ARTOS_RES_OK : ARTOS_RES_FILE_ACCESS_DENIED;
+}
+
+
+int extract_features_file_jpeg(const char * imagefile,
+                               unsigned char * feature_buf, unsigned int * feature_buf_size,
+                               const unsigned int interval, const unsigned int min_size)
+{
+    return extract_features_jpeg(JPEGImage(imagefile), feature_buf, feature_buf_size, interval, min_size);
+}
+
+
+int extract_features_raw(const unsigned char * img_data, const unsigned int img_width, const unsigned int img_height, const bool grayscale,
+                         unsigned char * feature_buf, unsigned int * feature_buf_size,
+                         const unsigned int interval, const unsigned int min_size)
+{
+    return extract_features_jpeg(JPEGImage(img_width, img_height, (grayscale) ? 1 : 3, img_data), feature_buf, feature_buf_size, interval, min_size);
+}
+
+
+int save_features_file_jpeg(const char * imagefile, const char * out_file,
+                            const unsigned int interval, const unsigned int min_size)
+{
+    return save_features_jpeg(JPEGImage(imagefile), out_file, interval, min_size);
+}
+
+
+int save_features_raw(const unsigned char * img_data, const unsigned int img_width, const unsigned int img_height, const bool grayscale,
+                      const char * out_file,
+                      const unsigned int interval, const unsigned int min_size)
+{
+    return save_features_jpeg(JPEGImage(img_width, img_height, (grayscale) ? 1 : 3, img_data), out_file, interval, min_size);
 }
 
 

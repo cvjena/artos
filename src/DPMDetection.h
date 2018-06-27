@@ -132,6 +132,24 @@ public:
     int detect ( const JPEGImage & image, std::vector<Detection> & detections );
 
     /**
+    * Matches the models added before using addModel() or addModels() against a given feature pyramid to detect objects.
+    *
+    * @param[in] width The width of the original image. Needed to project the detected bounding boxes back to pixel coordinates.
+    * 
+    * @param[in] height The height of the original image. Needed to project the detected bounding boxes back to pixel coordinates.
+    * 
+    * @param[in] pyramid The feature pyramid containing features of the image at various scales.
+    *
+    * @param[out] detections A vector that will receive information about the detected objects.
+    * 
+    * @param[in] featureExtractorIndex The index of the feature extractor that was used to generate the feature pyramid. Only models
+    * using this feature extractor will be evaluated.
+    *
+    * @return Returns zero on success, otherwise a negative error code.
+    */
+    int detect( int width, int height, const FeaturePyramid & pyramid, std::vector<Detection> & detections, unsigned int featureExtractorIndex = 0 );
+
+    /**
     * Detects only the highest scoring object in a given image which matches one of the models added before using addModel() or addModels().
     *
     * @param[in] image The image.
@@ -324,7 +342,6 @@ protected:
 private:
 
     void init ( bool verbose, double overlap, int interval );
-    int detect( int width, int height, const FeaturePyramid & pyramid, unsigned int featureExtractorIndex, std::vector<Detection> & detections );
 
 };
 

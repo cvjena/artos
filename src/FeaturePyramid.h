@@ -92,6 +92,26 @@ public:
     */
     std::shared_ptr<const FeatureExtractor> featureExtractor() const { return this->m_featureExtractor; };
 
+    /**
+    * Replaces the contents of this feature pyramid with data read from a binary file.
+    * @param[in] filename Path of the file to deserialize the feature pyramid from.
+    * @return True if the file could be read successfully, false if it is inaccessible or invalid.
+    * empty() may also be used to check the status of this operation after it has finished.
+    */
+    bool readFromFile(const std::string & filename);
+    
+    /**
+    * Writes the this feature pyramid to a binary file.
+    * @param[in] filename Path to write the file to.
+    * @return Returns true if this pyramid is not empty and the file could be written successfully, otherwise false.
+    */
+    bool writeToFile(const std::string & filename);
+
+    /**
+    * @return The size of the serialized representation of this feature pyramid (obtained from operator<<) in bytes.
+    */
+    size_t serializedSize() const;
+
 protected:
 
     int m_interval;
@@ -114,6 +134,34 @@ protected:
     void buildLevelsPatchworked(const JPEGImage & img);
 
 };
+
+
+/**
+* Serializes a feature pyramid to a binary stream.
+* 
+* The serial format is as follows:
+* It begins with a 32-bit unsigned integer `l` specifying the number of levels in the pyramid,
+* a 32-bit unsigned integer `i` specifying the number of intervals per octave,
+* and an 8-bit unsigned integer specifying the number of bits used for the floating point format.
+* 
+* `l` serial representations of levels follow. Each one begins with a 64-bit floating point
+* number specifying the scale of the level and three 32-bit integers `n`, `m`, `c`, giving
+* the number of rows, columns, and channels in the feature matrix, respectively.
+* Then follows the actual data of the feature matrix as a sequence of `n*m*c` floating point numbers.
+* 
+* No conversion of endianess is performed.
+* 
+* @param[in] os The stream where the serialization of the feature pyramid should be written.
+* @param[in] pyramid The feature pyramid to be serialized.
+*/
+std::ostream & operator<<(std::ostream & os, const FeaturePyramid & pyramid);
+
+/**
+* Unserializes a feature pyramid from a binary stream given in the format described in operator<<.
+* @param[in] is The stream containing the serialization of the feature pyramid.
+* @param[out] pyramid The FeaturePyramid object which the stream should be unserialized into.
+*/
+std::istream & operator>>(std::istream & is, FeaturePyramid & pyramid);
 
 }
 

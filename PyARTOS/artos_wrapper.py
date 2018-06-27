@@ -32,6 +32,8 @@ RES_FILE_NOT_FOUND = -3
 RES_FILE_ACCESS_DENIED = -4
 RES_ABORTED = -5
 RES_INDEX_OUT_OF_BOUNDS = -6
+RES_INVALID_IMG_DATA = -7
+RES_BUFFER_TOO_SMALL = -8
 RES_INTERNAL_ERROR = -999
 DETECT_RES_INVALID_IMG_DATA = -101
 DETECT_RES_INVALID_MODEL_FILE = -102
@@ -42,6 +44,8 @@ DETECT_RES_NO_IMAGES = -106
 DETECT_RES_NO_RESULTS = -107
 DETECT_RES_INVALID_ANNOTATIONS = -108
 DETECT_RES_TOO_MANY_MODELS = -109
+DETECT_RES_INVALID_FEATURES = -110
+DETECT_RES_MIXED_FEATURES = -111
 LEARN_RES_FAILED = -201
 LEARN_RES_INVALID_BG_FILE = -202
 LEARN_RES_INVALID_IMG_DATA = -203
@@ -182,6 +186,12 @@ class _LibARTOS(object):
         self._register_func('detect_file_jpeg',
             (c_int, c_uint, c_char_p, FlatDetection_p, c_uint_p),
             ((1, 'detector'), (1, 'imagefile'), (1, 'detection_buf'), (1, 'detection_buf_size'))
+        )
+
+        # detect_file_featuredump function
+        self._register_func('detect_file_featuredump',
+            (c_int, c_uint, c_char_p, c_uint, c_uint, FlatDetection_p, c_uint_p),
+            ((1, 'detector'), (1, 'feature_dump_file'), (1, 'img_width'), (1, 'img_height'), (1, 'detection_buf'), (1, 'detection_buf_size'))
         )
         
         # detect_raw function
@@ -391,6 +401,36 @@ class _LibARTOS(object):
             (c_int, c_char_p, c_char_p),
             ((1, 'param_name'), (1, 'value'))
         )
+
+        # extract_features_file_jpeg function
+        self._register_func('extract_features_file_jpeg',
+            (c_int, c_char_p, c_ubyte_p, c_uint_p, c_uint, c_uint),
+            ((1, 'imagefile'), (1, 'feature_buf'), (1, 'feature_buf_size'),
+             (1, 'interval', 10), (1, 'min_size', 5))
+        )
+        
+        # extract_features_raw function
+        self._register_func('extract_features_raw',
+            (c_int, c_ubyte_p, c_uint, c_uint, c_bool, c_ubyte_p, c_uint_p, c_uint, c_uint),
+            ((1, 'img_data'), (1, 'img_width'), (1, 'img_height'), (1, 'grayscale'),
+             (1, 'feature_buf'), (1, 'feature_buf_size'),
+             (1, 'interval', 10), (1, 'min_size', 5))
+        )
+
+        # save_features_file_jpeg function
+        self._register_func('save_features_file_jpeg',
+            (c_int, c_char_p, c_char_p, c_uint, c_uint),
+            ((1, 'imagefile'), (1, 'out_file'),
+             (1, 'interval', 10), (1, 'min_size', 5))
+        )
+        
+        # save_features_raw function
+        self._register_func('save_features_raw',
+            (c_int, c_ubyte_p, c_uint, c_uint, c_bool, c_char_p, c_uint, c_uint),
+            ((1, 'img_data'), (1, 'img_width'), (1, 'img_height'), (1, 'grayscale'),
+             (1, 'out_file'),
+             (1, 'interval', 10), (1, 'min_size', 5))
+        )
         
         # get_image_repository_type function
         self._register_func('get_image_repository_type',
@@ -475,6 +515,8 @@ class LibARTOSException(Exception):
         RES_FILE_ACCESS_DENIED                  : 'Access to file denied',
         RES_ABORTED                             : 'Operation aborted by user',
         RES_INDEX_OUT_OF_BOUNDS                 : 'Index out of bounds',
+        RES_INVALID_IMG_DATA                    : 'Invalid image',
+        RES_BUFFER_TOO_SMALL                    : 'Buffer provided for results was too small',
         RES_INTERNAL_ERROR                      : 'Internal error',
         DETECT_RES_INVALID_IMG_DATA             : 'Invalid image',
         DETECT_RES_INVALID_MODEL_FILE           : 'Model file could not be read or parsed',
@@ -485,6 +527,8 @@ class LibARTOSException(Exception):
         DETECT_RES_NO_RESULTS                   : 'The detector has not been run yet',
         DETECT_RES_INVALID_ANNOTATIONS          : 'Invalid annotation file',
         DETECT_RES_TOO_MANY_MODELS              : 'Evaluating multiple models at once is not supported',
+        DETECT_RES_INVALID_FEATURES             : 'Invalid feature dump file',
+        DETECT_RES_MIXED_FEATURES               : 'Detector contains models for mixed feature types',
         LEARN_RES_FAILED                        : 'Learning the model failed for some reason',
         LEARN_RES_INVALID_BG_FILE               : 'Given background statistics file is invalid',
         LEARN_RES_INVALID_IMG_DATA              : 'Invalid image',

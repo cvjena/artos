@@ -216,27 +216,24 @@ int DPMDetection::detect ( const JPEGImage & image, vector<Detection> & detectio
                     image.width() << " x " << image.height() << endl;
         }
 
-        errcode = this->initPatchwork(pyramid.levels()[0].rows(), pyramid.levels()[0].cols(), pyramid.levels()[0].channels());
+        errcode = this->detect( image.width(), image.height(), pyramid, detections, feIndex);
         if (errcode != ARTOS_RES_OK)
             return errcode;
-
-        if ( this->verbose )
-            start();
-
-        errcode = this->detect( image.width(), image.height(), pyramid, feIndex, detections);
-        if (errcode != ARTOS_RES_OK)
-            return errcode;
-     
-        if (this->verbose)
-            cerr << "Computed the convolutions and distance transforms in " << stop() << " ms" << endl;
     
     }
 
     return errcode;
 }
 
-int DPMDetection::detect(int width, int height, const FeaturePyramid & pyramid, unsigned int featureExtractorIndex, vector<Detection> & detections)
+int DPMDetection::detect(int width, int height, const FeaturePyramid & pyramid, vector<Detection> & detections, unsigned int featureExtractorIndex)
 {
+    int errcode = this->initPatchwork(pyramid.levels()[0].rows(), pyramid.levels()[0].cols(), pyramid.levels()[0].channels());
+    if (errcode != ARTOS_RES_OK)
+        return errcode;
+
+    if ( this->verbose )
+        start();
+    
     for ( map<std::string, Mixture *>::iterator m = this->mixtures.begin(); m != this->mixtures.end(); m++ )
         if (this->featureExtractorIndices[m->first] == featureExtractorIndex)
         {
@@ -322,6 +319,10 @@ int DPMDetection::detect(int width, int height, const FeaturePyramid & pyramid, 
 
             detections.insert ( detections.begin(), single_detections.begin(), single_detections.end() );
         }
+    
+    if (this->verbose)
+        cerr << "Computed the convolutions and distance transforms in " << stop() << " ms" << endl;
+
     return ARTOS_RES_OK;
 }
 

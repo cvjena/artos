@@ -4,7 +4,8 @@ ARTOS Changelog
 Development Snapshot
 ------------------------------
 
-- **[Improvement]** Interfaces in `libartos` and `PyAROTS` for obtaining a detector for a learned model directly without having to serialize the model to disk first.
+- **[Improvement]** Interfaces in `libartos` and `PyARTOS` for obtaining a detector for a learned model directly without having to serialize the model to disk first.
+- **[Improvement]** Interfaces in `libartos` and `PyARTOS` for extracting and storing image features as well as running a detector on pre-computed features.
 - **[Fix]** Fixed Caffe include directory.
 - **[Fix]** `PyARTOS` now searches for `libartos` in the parent directory of the package instead of the package directory itself.
   This should fix problems when importing `PyARTOS` from external python code.

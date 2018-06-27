@@ -17,7 +17,7 @@ try:
     from PIL import Image, ImageDraw
 except:
     import Image, ImageDraw
-import math, re, os, ctypes
+import math, re, os, ctypes, struct
 
 
 
@@ -824,4 +824,84 @@ class FeatureExtractor(object):
         info = (artos_wrapper.FeatureExtractorInfo * numFE.value)()
         libartos.list_feature_extractors(info, numFE)
         return dict((utils.bytes2str(info[i].type), utils.bytes2str(info[i].name)) for i in range(numFE.value))
+    
 
+    @staticmethod
+    def extractFeatures(img, out_file = None, interval = 10, min_size = 5):
+        """Extracts a feature pyramid from a given image using the current default feature extractor.
+
+        img - Either a PIL.Image.Image object or a path to a JPEG file. In the latter case, the image will be read
+              directly by the library.
+        out_file - If specified, the extracted features will be written to a binary file at the given path instead
+                   of being returned.
+        interval - Number of levels per octave in the pyramid (at least 1).
+        min_size - Minimum number of cells in x or y direction in the smallest scale in the pyramid.
+        
+        Returns: If out_file is not given, a dictionary of 3-dimensional numpy arrays will be returned.
+                 The keys of the dictionary are floats specifying the scale of the corresponding level in the feature pyramid.
+        
+        Raises:
+            - `artos_wrapper.LibARTOSException` if an exception occurs during the call to libartos
+            - `RuntimeError` if the feature representation returned by libartos cannot be deserialized
+        """
+
+        if out_file is not None:
+
+            if isinstance(img, Image.Image):
+                imgdata, grayscale = utils.img2buffer(img)
+                libartos.save_features_raw(ctypes.cast(imgdata, artos_wrapper.c_ubyte_p), img.size[0], img.size[1], grayscale, utils.str2bytes(out_file),
+                                           interval=interval, min_size=min_size)
+            else:
+                libartos.save_features_file_jpeg(utils.str2bytes(img), utils.str2bytes(out_file), interval=interval, min_size=min_size)
+
+        else:
+
+            import numpy as np
+
+            # Create an alias for the feature extraction library call, depending on whether the image was given as filename or PIL.Image.Image instance
+            if isinstance(img, Image.Image):
+                imgdata, grayscale = utils.img2buffer(img)
+                libartos_extract_features = lambda buffer, buf_size: libartos.extract_features_raw(
+                        ctypes.cast(imgdata, artos_wrapper.c_ubyte_p), img.size[0], img.size[1], grayscale,
+                        ctypes.cast(buffer, artos_wrapper.c_ubyte_p), buf_size,
+                        interval=interval, min_size=min_size
+                )
+            else:
+                libartos_extract_features = lambda buffer, buf_size: libartos.extract_features_file_jpeg(utils.str2bytes(img),
+                                                                                                         ctypes.cast(buffer, artos_wrapper.c_ubyte_p), buf_size,
+                                                                                                         interval=interval, min_size=min_size)
+            
+            # Allocate buffer with default size of 32 MB
+            buf_size = ctypes.c_uint(2**25)
+            buf = ctypes.create_string_buffer(buf_size.value)
+
+            # Extract features
+            try:
+                libartos_extract_features(buf, buf_size)
+            except artos_wrapper.LibARTOSException as e:
+                if e.errcode == artos_wrapper.RES_BUFFER_TOO_SMALL:
+                    buf = ctypes.create_string_buffer(buf_size.value)
+                    libartos_extract_features(buf, buf_size)
+                else:
+                    raise
+            
+            # Deserialize
+            offset = 0
+            num_levels, num_intervals, fp_bits = struct.unpack_from('=LLB', buf.raw, offset)
+            offset += struct.calcsize('=LLB')
+            if fp_bits not in (32, 64):
+                raise RuntimeError('Features returned by libartos use invalid floating point precision: {} bit'.format(fp_bits))
+            fp_bytes = fp_bits // 8
+            fp_type = np.float32 if fp_bits == 32 else np.float64
+
+            levels = {}
+            for i in range(num_levels):
+                scale, rows, cols, channels = struct.unpack_from('=dLLL', buf.raw, offset)
+                offset += struct.calcsize('=dLLL')
+                data_size = rows * cols * channels * fp_bytes
+                if offset + data_size > buf_size.value:
+                    raise RuntimeError('Unexpected end of feature representation returned by libartos.')
+                levels[scale] = np.ascontiguousarray(np.fromstring(buf.raw[offset:offset+data_size], dtype = fp_type)).reshape(rows, cols, channels).copy()
+                offset += data_size
+
+            return levels

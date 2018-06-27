@@ -1,5 +1,7 @@
 #include "FeaturePyramid.h"
 #include <cmath>
+#include <cstdint>
+#include <fstream>
 #include <algorithm>
 #include <utility>
 #include <Eigen/Core>
@@ -222,4 +224,139 @@ void FeaturePyramid::buildLevelsPatchworked(const JPEGImage & image)
             level.cols() * level.channels()
         );
     }
+}
+
+
+bool FeaturePyramid::readFromFile(const string & filename)
+{
+    ifstream file(filename.c_str(), ifstream::in | ifstream::binary);
+    if (!file.is_open())
+    {
+        *this = FeaturePyramid();
+        return false;
+    }
+
+    file >> *this;
+    return static_cast<bool>(file);
+}
+
+
+bool FeaturePyramid::writeToFile(const string & filename)
+{
+    if (this->empty())
+        return false;
+    
+    ofstream file(filename.c_str(), ofstream::out | ofstream::binary);
+    if (!file.is_open())
+        return false;
+
+    file << *this;
+    return file.good();
+}
+
+
+size_t FeaturePyramid::serializedSize() const
+{
+    size_t bytes = sizeof(uint32_t) * 3 * (this->m_levels.size() + 1) + sizeof(double) * this->m_levels.size();
+    for (const FeatureMatrix & level : this->m_levels)
+        bytes += level.numEl() * sizeof(FeatureScalar);
+    return bytes;
+}
+
+
+ostream & ARTOS::operator<<(ostream & os, const ARTOS::FeaturePyramid & pyramid)
+{
+    uint32_t num_levels, interval, rows, cols, channels;
+    uint8_t float_bits;
+    double scale;
+
+    // Write number of levels and size of floating point representations
+    num_levels = pyramid.levels().size();
+    interval = pyramid.interval();
+    float_bits = static_cast<uint8_t>(sizeof(FeatureScalar) * 8);
+    os.write(reinterpret_cast<char*>(&num_levels), sizeof(uint32_t));
+    os.write(reinterpret_cast<char*>(&interval), sizeof(uint32_t));
+    os.write(reinterpret_cast<char*>(&float_bits), sizeof(uint8_t));
+    
+    // Serialize the individual levels
+    for (int i = 0; i < pyramid.levels().size(); ++i)
+    {
+        // Write scale
+        scale = pyramid.scales()[i];
+        os.write(reinterpret_cast<char*>(&scale), sizeof(double));
+
+        // Write number of rows, columns, and channels
+        rows = pyramid.levels()[i].rows();
+        cols = pyramid.levels()[i].cols();
+        channels = pyramid.levels()[i].channels();
+        os.write(reinterpret_cast<char*>(&rows), sizeof(uint32_t));
+        os.write(reinterpret_cast<char*>(&cols), sizeof(uint32_t));
+        os.write(reinterpret_cast<char*>(&channels), sizeof(uint32_t));
+
+        // Write actual data
+        os.write(reinterpret_cast<const char*>(pyramid.levels()[i].raw()), rows * cols * channels * sizeof(FeatureScalar));
+    }
+    
+    return os;
+}
+
+
+istream & ARTOS::operator>>(istream & is, ARTOS::FeaturePyramid & pyramid)
+{
+    uint32_t num_levels, interval, rows, cols, channels;
+    uint8_t float_bits;
+    double scale;
+
+    // Read number of levels and size of floating point representations
+    is.read(reinterpret_cast<char*>(&num_levels), sizeof(uint32_t));
+    is.read(reinterpret_cast<char*>(&interval), sizeof(uint32_t));
+    is.read(reinterpret_cast<char*>(&float_bits), sizeof(uint8_t));
+    if (!is || num_levels < 1 || (float_bits != 32 && float_bits != 64))
+    {
+        pyramid = FeaturePyramid();
+        return is;
+    }
+    
+    // Deserialize the individual levels
+    vector<FeatureMatrix> levels;
+    vector<double> scales;
+    levels.reserve(num_levels);
+    scales.reserve(num_levels);
+    for (uint32_t i = 0; i < num_levels; ++i)
+    {
+        // Read scale
+        is.read(reinterpret_cast<char*>(&scale), sizeof(double));
+        scales.push_back(scale);
+
+        // Read number of rows, columns, and channels
+        is.read(reinterpret_cast<char*>(&rows), sizeof(uint32_t));
+        is.read(reinterpret_cast<char*>(&cols), sizeof(uint32_t));
+        is.read(reinterpret_cast<char*>(&channels), sizeof(uint32_t));
+
+        // Read actual data
+        if (float_bits == sizeof(FeatureScalar) * 8)
+        {
+            levels.push_back(FeatureMatrix(rows, cols, channels));
+            is.read(reinterpret_cast<char*>(levels.back().raw()), rows * cols * channels * sizeof(FeatureScalar));
+        }
+        else if (float_bits == 32)
+        {
+            FeatureMatrix_<float> level(rows, cols, channels);
+            is.read(reinterpret_cast<char*>(level.raw()), rows * cols * channels * 4);
+            levels.push_back(FeatureMatrix(level));
+        }
+        else
+        {
+            FeatureMatrix_<double> level(rows, cols, channels);
+            is.read(reinterpret_cast<char*>(level.raw()), rows * cols * channels * 8);
+            levels.push_back(FeatureMatrix(level));
+        }
+    }
+    
+    if (is)
+        pyramid = FeaturePyramid(interval, move(levels), &scales);
+    else
+        pyramid = FeaturePyramid();
+
+    return is;
 }
