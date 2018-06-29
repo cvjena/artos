@@ -73,9 +73,12 @@ class _Config(SafeConfigParser):
         """
         
         try:
-            value = SafeConfigParser.get(self, section, option)
+            value = SafeConfigParser.get(self, section, option, raw = True)
         except:
-            value = None
+            try:
+                value = SafeConfigParser.get(self, section, option)
+            except:
+                value = None
         if useDefaults and ((value is None) or (value == '')) \
                 and (section in self.defaults) and (option in self.defaults[section]):
             value = self.defaults[section][option]
@@ -92,9 +95,12 @@ class _Config(SafeConfigParser):
         """
         
         try:
-            value = int(SafeConfigParser.get(self, section, option))
+            value = int(SafeConfigParser.get(self, section, option, raw = True))
         except:
-            value = None
+            try:
+                value = int(SafeConfigParser.get(self, section, option))
+            except:
+                value = None
         if useDefaults and ((value is None) or (value == '')) \
                 and (section in self.defaults) and (option in self.defaults[section]):
             value = self.defaults[section][option]
@@ -130,7 +136,10 @@ class _Config(SafeConfigParser):
                 pass
             return None
         
-        value = toBool(SafeConfigParser.get(self, section, option))
+        try:
+            value = toBool(SafeConfigParser.get(self, section, option, raw = True))
+        except:
+            value = toBool(SafeConfigParser.get(self, section, option))
         if useDefaults and ((value is None) or (value == '')) \
                 and (section in self.defaults) and (option in self.defaults[section]):
             value = toBool(self.defaults[section][option])
@@ -141,9 +150,12 @@ class _Config(SafeConfigParser):
         """Determines if a given option has been set in the configuration file (regardless of default values)."""
         
         try:
-            value = SafeConfigParser.get(self, section, option)
+            value = SafeConfigParser.get(self, section, option, raw = True)
         except:
-            value = None
+            try:
+                value = SafeConfigParser.get(self, section, option)
+            except:
+                value = None
         return (not value is None) and (value != '')
     
     

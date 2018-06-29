@@ -145,4 +145,4 @@ class ImageRepository(object):
         if (libartos is None):
             raise RuntimeError('Can not find libartos')
         
-        return libartos.get_image_repository_type()
+        return utils.bytes2str(libartos.get_image_repository_type())
