@@ -176,7 +176,7 @@ int ModelLearner::m_learn(Eigen::VectorXi & aspectClusterAssignment, vector<int>
         // Get background covariance
         if (this->m_verbose)
             start();
-        Eigen::LLT<ScalarMatrix> llt;
+        Eigen::LLT<ScalarMatrix, Eigen::Upper> llt;
         {
             ScalarMatrix cov = this->m_bg.computeFlattenedCovariance(modelSize.height, modelSize.width, numFeatures);
             if (cov.size() == 0)
@@ -201,12 +201,10 @@ int ModelLearner::m_learn(Eigen::VectorXi & aspectClusterAssignment, vector<int>
                 start();
             }
             // Cholesky decomposition for stable inversion
-            float lambda = 0.0f; // regularizer
-            ScalarMatrix identity = ScalarMatrix::Identity(cov.rows(), cov.cols());
             do
             {
-                lambda += 0.01f; // increase regularizer on every attempt
-                llt.compute(cov + identity * lambda);
+                cov.diagonal().array() += 0.01f; // increase regularization on every attempt
+                llt.compute(cov);
                 if (this->m_verbose && llt.info() != Eigen::Success)
                     cerr << "Cholesky decomposition failed - increasing regularizer." << endl;
             }
