@@ -10,6 +10,7 @@ Development Snapshot
 - **[Fix]** Fixed Caffe include directory.
 - **[Fix]** `PyARTOS` now searches for `libartos` in the parent directory of the package instead of the package directory itself.
   This should fix problems when importing `PyARTOS` from external python code.
+- **[Fix]** Made the progress dialog for learning an in-situ model thread-safe.
 - **[Fix]** Compatibility fixes for Python 3.5.
 
 
