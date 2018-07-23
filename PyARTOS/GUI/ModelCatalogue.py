@@ -913,7 +913,7 @@ class LearnDialog(gui_utils.Dialog):
                             modelfile = os.path.join(self.modelDir, '{}_{}.txt'.format(modelfileBasename, modelfileAppendix))
                 
                     # Learn in a separate thread
-                    progressDialog = gui_utils.ProgressWindow(master = self, parent = self,
+                    progressDialog = gui_utils.ProgressWindow(master = self, parent = self, threadedCallbacks = True,
                             windowTitle = 'Learning model',
                             overallProcessDescription = progressDescription,
                             subProcessDescriptions = ('Reading images...', 'Computing WHO models...', 'Calculating optimal thresholds...')
